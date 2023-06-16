@@ -1,4 +1,4 @@
-import { WorkflowConfigType } from "./workflow.config";
+import { WorkflowConfigType } from "./workflow.config.type";
 
 export type AvailableWorkflowThemeType = 'Cobrança' | 'Comercial';
 export type AvailableWorkflowStatusType = 'published' | 'edition';
