@@ -13,7 +13,20 @@ export interface WorkflowConfigType{
   triggers?: [],
   webhooks?: [],
   notifications?: [],
-  integrations?: Record<AvailableServicesType, (any | undefined)>
+  integrations?: Record<AvailableServicesType, (any | undefined)>,
+  services?: {
+    auth?: {
+      props: { email: string },
+      body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
+      /**
+       * [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
+       * [@temp-password] Enviar senha temporária por email/whatsapp
+       * [@manual]        Cria a senha no momento do cadastro
+       */
+      mode_start: '@link-auth' | '@first-password' | '@manual',
+      notify: { email?: string, whatsapp?: string }
+    }
+  }
   owner?: {
     id?: string
     name: string,
