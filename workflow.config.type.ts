@@ -16,7 +16,7 @@ export interface WorkflowConfigType{
   integrations?: Record<AvailableServicesType, (any | undefined)>,
   services?: {
     auth?: {
-      props: { email: string },
+      props: { email: string, link: string },
       body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
       /**
        * [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
@@ -24,7 +24,7 @@ export interface WorkflowConfigType{
        * [@manual]        Cria a senha no momento do cadastro
        */
       mode_start: '@link-auth' | '@first-password' | '@manual',
-      notify: { email?: string, whatsapp?: string }
+      notify: { email?: string, whatsapp?: string, sms?: string }
     }
   }
   owner?: {
