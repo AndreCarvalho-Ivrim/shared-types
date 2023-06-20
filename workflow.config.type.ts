@@ -24,7 +24,17 @@ export interface WorkflowConfigType{
        * [@manual]        Cria a senha no momento do cadastro
        */
       mode_start: '@link-auth' | '@first-password' | '@manual',
-      notify: { email?: string, whatsapp?: string, sms?: string }
+      notify: { email?: string, whatsapp?: string, sms?: string },
+      routes: {
+        get: Record<string,{
+          body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
+        }>,
+        post: Record<string,{
+          scope?: string,
+          body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
+          mode: 'merge' | 'overwrite'
+        }>,
+      }
     }
   }
   owner?: {
