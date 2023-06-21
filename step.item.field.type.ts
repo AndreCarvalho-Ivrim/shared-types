@@ -13,10 +13,10 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   'group-collapse': 'Grupo de Campos Intercalável'
 };
 
-export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep';
+export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone';
 export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info';
 export type TargetModeType = 'single' | 'multiple' | 'trigger' | 'final';
-export type StepItemModeType = 'field' | 'integration' | 'widget';
+export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
 
 export interface ValueAndNameStringType{
   value: string,

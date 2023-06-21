@@ -1,7 +1,13 @@
 import { WorkflowConfigType } from "./workflow.config.type";
 
-export type AvailableWorkflowThemeType = 'Cobrança' | 'Comercial';
+export type AvailableWorkflowThemeType = 'Cobrança' | 'Comercial' | 'Financeiro';
+export const availableWorkflowTypes : AvailableWorkflowThemeType[] = ['Cobrança','Comercial', 'Financeiro']; 
+
 export type AvailableWorkflowStatusType = 'published' | 'edition';
+export const availableWorkflowStatus : AvailableWorkflowStatusType[] = ['published', 'edition'];
+export const availableWorkflowStatusFormatted = {
+  published: 'Publicado', edition: 'Em Edição'
+}
 export interface WorkflowType{
   _id: string,
   theme: AvailableWorkflowThemeType,

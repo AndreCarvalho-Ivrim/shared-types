@@ -1,7 +1,8 @@
 import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowType } from "."
 
 export interface StepTypeRules{
-  requireds: string[]
+  requireds: string[],
+  customRules?: string
 }
 export interface StepType{
   version?: string,
@@ -15,6 +16,7 @@ export interface StepType{
   is_selected?: boolean,
   position: { x: number, y: number },
   items?: ItemOrViewOrWidgetOrIntegration[],
+  cumulativeFormData?: string,
   target?: string,
   actions?: StepActionType[],
   triggers?: StepTriggerType[]

@@ -16,13 +16,6 @@ export const integrationExcelColumnTypeFormatted : Record<IntegrationExcelColumn
   number: 'Numérico',
   'cpf-cnpj': 'CPF/CNPJ'
 };
-export type AvailableScopeExcelType = 'invoiced' | 'downloaded' | 'defaulter';
-export const availableScopeExcel : AvailableScopeExcelType[] = ['invoiced', 'downloaded', 'defaulter'];
-export const availableScopeExcelFormatted : Record<AvailableScopeExcelType, string> = {
-  invoiced: 'Faturados',
-  downloaded: 'Baixados',
-  defaulter: 'Inadimplentes'
-}
 
 export interface IntegrationExcelType{
   key: string,
@@ -32,7 +25,7 @@ export interface IntegrationExcelType{
   placeholder?: string,
   required?: boolean,
   rules?: {},
-  scope: AvailableScopeExcelType,
+  scope: string,
   columns?: IntegrationExcelColumnType[]
 }
 export interface IntegrationExcelColumnType{
@@ -49,6 +42,6 @@ export interface IntegrationOmieType{
   placeholder?: string,
   required?: boolean,
   rules?: {},
-  scope: AvailableScopeExcelType
+  scope: string
 }
 export type IntegrationsType = IntegrationExcelType | IntegrationOmieType;

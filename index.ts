@@ -3,7 +3,6 @@ import { StepItemType } from './step.item.field.type';
 import { IntegrationsType } from './step.item.integration.type';
 import { StepViewType } from './step.item.view.type';
 import { WidgetType } from './step.item.widget.type';
-import { WorkflowConfigType } from './workflow.config.type';
 
 export interface PermissionType{
   name: string,
@@ -69,37 +68,12 @@ export interface Sheet{
   formatedRows?: any[]
 }
 
-export type AvailableWorkflowThemeType = 'Cobrança' | 'Comercial';
-export const availableWorkflowTypes = ['Cobrança','Comercial']; 
-
-export type AvailableWorkflowStatusType = 'published' | 'edition';
-export const availableWorkflowStatus : AvailableWorkflowStatusType[] = ['published', 'edition'];
-export const availableWorkflowStatusFormatted = {
-  published: 'Publicado', edition: 'Em Edição'
-}
-
-export type AvailableViewModeType = 'table' | 'dashboard';
-
-export interface WorkflowType{
-  _id: string,
-  theme: AvailableWorkflowThemeType,
-  created_at: string,
-  date: string,
-  title: string,
-  description: string,
-  user_id: string,
-  user_name: string,
-  status: AvailableWorkflowStatusType,
-  config?: WorkflowConfigType
-}
-
-export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
-export type ItemOrViewOrWidgetOrIntegration = StepItemType | IntegrationsType | StepViewType | WidgetType;
-
 export interface FlowPermissionOnUserType{
   flow_permission: string,
   flow_actions_permitted: string[],
 }
+
+export type ItemOrViewOrWidgetOrIntegration = StepItemType | IntegrationsType | StepViewType | WidgetType;
 
 export * from './permission.type';
 export * from './workflow.type';

@@ -7,6 +7,7 @@ export interface StepActionType{
   key: string,
   target: string,
   action_permission?: string,
+  isRedirect?: boolean,
   confirm?: StepActionConfirmType,
 }
 export interface StepActionConfirmType{
