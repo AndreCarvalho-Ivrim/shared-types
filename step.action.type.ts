@@ -17,7 +17,7 @@ export interface StepActionConfirmType{
   items?: StepItemType[],
   actions: StepActionTypeOmittedConfirmAndTarget[]
 }
-export interface StepActionTypeOmittedConfirmAndTarget extends Omit<StepActionType,'confirm' | 'target'>{
+export interface StepActionTypeOmittedConfirmAndTarget extends Omit<StepActionType,'confirm' | 'target' | 'action_permission'>{
   confirmation: boolean
 }
 export interface StepTriggerType{

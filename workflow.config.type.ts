@@ -8,7 +8,13 @@ export interface WorkflowConfigType{
     view_mode: AvailableViewModeType,
     columns: ConfigViewModeColumnsType[]
   },
-  filters?: [],
+  filters?: {
+    name: string,
+    type: 'text' | 'date' | 'select',
+    ref: string | string[],
+    options?: string[],
+    autocomplete?: string // somente autocomplete.mode = 'distinct'
+  }[],
   permissions?: ConfigPermissionType,
   triggers?: [],
   webhooks?: [],
@@ -35,7 +41,13 @@ export interface WorkflowConfigType{
           mode: 'merge' | 'overwrite'
         }>,
       }
-    }
+    },
+    autocomplete?: {
+      name: string,
+      mode: 'distinct' | 'search',
+      ref: string,
+      response?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
+    }[]
   }
   owner?: {
     id?: string

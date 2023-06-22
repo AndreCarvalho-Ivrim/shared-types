@@ -1,4 +1,4 @@
-import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowType } from "."
+import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowType } from "."
 
 export interface StepTypeRules{
   requireds: string[],
@@ -25,7 +25,8 @@ export interface StepType{
   action_button?: {
     label: string,
     type: ThemeColorType,
-    action_permission?: string
+    action_permission?: string,
+    confirm?: StepActionConfirmType
   }
 }
 export interface OptionalStepType extends Omit<StepType, 'name' | 'type' | 'position' | 'target_mode' | 'index'>{

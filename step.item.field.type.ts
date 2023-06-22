@@ -33,7 +33,17 @@ export interface StepItemType{
   required?: boolean,
   rules?: {
     min?: number,
-    max?: number
+    max?: number,
+    render?: string
   },
-  items?: ItemOrViewOrWidgetOrIntegration[]
+  observer?: boolean,
+  items?: ItemOrViewOrWidgetOrIntegration[],
+  autocomplete?: {
+    name: string,
+    toFill?: Record<string, string>, // autocomplete.response => field to fill
+    trigger?: { mode: 'keyup' } | {  // 
+      mode: 'clickToNext',
+      target: string
+    }
+  }
 }
