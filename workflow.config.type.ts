@@ -22,7 +22,7 @@ export interface WorkflowConfigType{
   integrations?: Record<AvailableServicesType, (any | undefined)>,
   services?: {
     auth?: {
-      props: { email: string, link: string },
+      props: { email: string, name: string, link: string },
       body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
       /**
        * [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
