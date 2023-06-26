@@ -78,6 +78,7 @@ export type ItemOrViewOrWidgetOrIntegration = StepItemType | IntegrationsType | 
 export * from './permission.type';
 export * from './workflow.type';
 export * from './workflow.config.type';
+export * from './workflow.entities.type';
 export * from './step.action.type';
 export * from './step.item.field.type';
 export * from './step.item.integration.type';
