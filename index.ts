@@ -73,6 +73,7 @@ export interface FlowPermissionOnUserType{
   flow_actions_permitted: string[],
 }
 
+export type StringConditionalTypes = 'prop' | 'operator' | 'value' | 'logic';
 export type ItemOrViewOrWidgetOrIntegration = StepItemType | IntegrationsType | StepViewType | WidgetType;
 
 export * from './permission.type';
