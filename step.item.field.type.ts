@@ -39,7 +39,7 @@ export interface StepItemType{
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
   autocomplete?: {
-    name: string,
+    name: string, // Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities
     toFill?: Record<string, string>, // autocomplete.response => field to fill
     trigger?: { mode: 'keyup' } | {  // 
       mode: 'clickToNext',
