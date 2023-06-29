@@ -114,7 +114,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
         if(op === 'contains'){
           if(!values[i * 2]) matchOperation = false;
           else{
-            if(Array.isArray(values[i * 2]) && !Array.isArray(values[(i*2) + 1])) matchOperation = callbackArrayOperator(
+            if(!Array.isArray(values[i * 2])) values[i * 2] = [values[i * 2] as string | number];
+            if(!Array.isArray(values[(i*2) + 1])) matchOperation = callbackArrayOperator(
               values[i * 2] as Array<string | number>,
               values[(i*2) + 1] as string | number,
               op
