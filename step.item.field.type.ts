@@ -1,6 +1,6 @@
 import { ItemOrViewOrWidgetOrIntegration } from ".";
 
-export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'file' |  'file-multiple' |  'group-collapse';
+export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse';
 export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   text: 'Entrada de Texto',
   textarea: 'Entrada de Texto Grande',
@@ -8,6 +8,7 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   'select-multiple': 'Entrada de Seleção Multipla',
   radio: 'Caixa de Seleção',
   checkbox: 'Caixa de Multipla Escolha',
+  date: 'Date',
   file: 'Upload de Arquivo',
   'file-multiple': 'Upload de Multiplos Arquivos',
   'group-collapse': 'Grupo de Campos Intercalável'
