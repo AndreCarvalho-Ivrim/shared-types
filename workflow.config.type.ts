@@ -2,19 +2,20 @@ import { IntegrationExcelColumnTypeType, PermissionType } from "."
 
 export type AvailableServicesType = 'email'|'whatsapp'|'sms'|'chatbot';
 export type AvailableViewModeType = 'table' | 'dashboard';
+export interface WorkflowConfigFilterType{
+  name: string,
+  type: 'text' | 'date' | 'select',
+  ref: string | string[],
+  options?: string[],
+  autocomplete?: string // somente autocomplete.mode = 'distinct'
+}
 export interface WorkflowConfigType{
   asideButtons?: ConfigAsideButtonType[],
   table?: {
     view_mode: AvailableViewModeType,
     columns: ConfigViewModeColumnsType[]
   },
-  filters?: {
-    name: string,
-    type: 'text' | 'date' | 'select',
-    ref: string | string[],
-    options?: string[],
-    autocomplete?: string // somente autocomplete.mode = 'distinct'
-  }[],
+  filters?: WorkflowConfigFilterType[],
   permissions?: ConfigPermissionType,
   triggers?: [],
   webhooks?: [],
