@@ -31,6 +31,7 @@ export interface ConfigViewModeColumnsType{
 export interface WorkflowViewModeTable{
   view_mode: 'table',
   title: string,
+  slug: string,
   columns: ConfigViewModeColumnsType[],
   order_by?: { ref: string, orientation?: 'desc' | 'asc' }
 }
