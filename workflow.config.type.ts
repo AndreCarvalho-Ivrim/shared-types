@@ -23,22 +23,19 @@ export interface WorkflowConfigObserverFnType{
   unique?: boolean,
   value?: string,
 }
-export interface WorkflowTableColumn{
+export interface ConfigViewModeColumnsType{
   id: string,
   name: string,
-  type: IntegrationExcelColumnTypeType  
+  type: IntegrationExcelColumnTypeType
 }
 export interface WorkflowViewModeTable{
   view_mode: 'table',
-  columns: WorkflowTableColumn[],
+  title: string,
+  columns: ConfigViewModeColumnsType[],
   order_by?: { ref: string, orientation?: 'desc' | 'asc' }
 }
 export interface WorkflowConfigType{
   asideButtons?: ConfigAsideButtonType[],
-  table?: {
-    view_mode: AvailableViewModeType,
-    columns: ConfigViewModeColumnsType[]
-  },
   view_modes: WorkflowViewModeTable[],
   filters?: WorkflowConfigFilterType[],
   permissions?: ConfigPermissionType,
@@ -82,11 +79,6 @@ export interface WorkflowConfigType{
     email: string,
     whatsapp: string
   }
-}
-export interface ConfigViewModeColumnsType{
-  id: string,
-  name: string,
-  type: IntegrationExcelColumnTypeType
 }
 export interface ConfigAsideButtonType{
   icon: 'new' | 'update' | 'delete' | 'alarm' | 'search' | 'models',
