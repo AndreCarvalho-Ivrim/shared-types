@@ -1,7 +1,12 @@
 import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowType } from "."
 
 export interface StepTypeRules{
-  requireds: string[],
+  requireds?: string[],
+  redirect?: {
+    condition: string,
+    to: string,
+    confirm?: StepActionConfirmType
+  }[],
   customRules?: string
 }
 export interface StepType{
