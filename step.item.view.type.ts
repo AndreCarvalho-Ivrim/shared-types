@@ -1,4 +1,4 @@
-import { IntegrationExcelColumnType } from "./step.item.integration.type";
+import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
 interface StepViewBaseType{
   key: string,
@@ -13,17 +13,22 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   description: 'Descrição',
   html: 'Conteúdo Customizado'
 };
-
+export interface StepViewColumnType{
+  id: string,
+  name: string,
+  type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file',
+  required?: boolean
+}
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewDescriptionOrHtmlType;
 export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
-  columns: IntegrationExcelColumnType[]
+  columns: StepViewColumnType[]
 }
 export interface StepViewGroupTableType extends StepViewBaseType{
   id: string,
   type: 'group-table',
-  resume: IntegrationExcelColumnType[],
-  columns: IntegrationExcelColumnType[]
+  resume: StepViewColumnType[],
+  columns: StepViewColumnType[]
 }
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   type: 'description' | 'html',
