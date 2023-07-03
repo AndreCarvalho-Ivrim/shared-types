@@ -37,7 +37,7 @@ export interface WorkflowViewModeTable{
 }
 export interface WorkflowConfigType{
   asideButtons?: ConfigAsideButtonType[],
-  view_modes: WorkflowViewModeTable[],
+  view_modes?: WorkflowViewModeTable[],
   filters?: WorkflowConfigFilterType[],
   permissions?: ConfigPermissionType,
   triggers?: [],
