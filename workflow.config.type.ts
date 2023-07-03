@@ -9,12 +9,37 @@ export interface WorkflowConfigFilterType{
   options?: string[],
   autocomplete?: string // somente autocomplete.mode = 'distinct'
 }
+export interface WorkflowConfigAutocomplete{
+  name: string,
+  mode: 'distinct' | 'search',
+  ref: string,
+  response?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
+}
+export interface WorkflowConfigObserverFnType{
+  name: string,
+  type: 'append',
+  execute: 'before' | 'after',
+  condition?: string,
+  unique?: boolean,
+  value?: string,
+}
+export interface WorkflowTableColumn{
+  id: string,
+  name: string,
+  type: IntegrationExcelColumnTypeType  
+}
+export interface WorkflowViewModeTable{
+  view_mode: 'table',
+  columns: WorkflowTableColumn[],
+  order_by?: { ref: string, orientation?: 'desc' | 'asc' }
+}
 export interface WorkflowConfigType{
   asideButtons?: ConfigAsideButtonType[],
   table?: {
     view_mode: AvailableViewModeType,
     columns: ConfigViewModeColumnsType[]
   },
+  view_modes: WorkflowViewModeTable[],
   filters?: WorkflowConfigFilterType[],
   permissions?: ConfigPermissionType,
   triggers?: [],
@@ -43,12 +68,12 @@ export interface WorkflowConfigType{
         }>,
       }
     },
-    autocomplete?: {
-      name: string,
-      mode: 'distinct' | 'search',
-      ref: string,
-      response?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
-    }[]
+    autocomplete?: WorkflowConfigAutocomplete[],
+    observers?: {
+      onCreate?: WorkflowConfigObserverFnType[],
+      onUpdate?: WorkflowConfigObserverFnType[],
+      onDelete?: WorkflowConfigObserverFnType[]
+    }
   }
   owner?: {
     id?: string
