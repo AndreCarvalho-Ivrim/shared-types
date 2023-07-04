@@ -92,9 +92,24 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
             `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. É obrigatório que o index par seja ocupado por uma propriedade ou valor (${strConditional})`
           );
 
-          values.push(
-            c.type === 'prop' ? datas[c.value] ?? undefined : c.type === 'value' ? c.value : undefined
-          );
+          if(c.type === 'prop') values.push(datas[c.value] ?? undefined);
+          else if(c.type === 'value'){
+            const helpers = getCodeHelpers(c.value);
+            if(!helpers) values.push(c.value)
+            else{
+              let value = c.value;
+              
+              helpers.forEach(([code, param]) => {
+                switch(code){
+                  case '@now': value = handleCodeHelper__now(value, code, param); break;
+                  default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
+                }
+              });
+
+              values.push(value);
+            }
+          }
+          else values.push('');
         }else{
           if(c.type !== 'operator') throw Error(
             `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. É obrigatório que o index ímpar seja ocupado por um operador (${strConditional})`
@@ -166,3 +181,61 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     return false;
   }
 };
+
+export const getCodeHelpers = (value: string) : Array<[string, string?]> | undefined => {
+  if(!value || typeof value !== 'string' || !value.includes('__')) return
+
+  const regex = /__(.*?)__/g;
+  const matches = value.match(regex);
+
+  if(!matches || matches.length === 0) return;
+  
+  const codes = matches.map(match => match.replace(/__/g, ''));
+
+  const extractedContents = codes.map(code => {
+    const regexContent = /([^()]+)\(([^()]+)\)/;
+    const matchContent = regexContent.exec(code);
+    if (matchContent) {
+      return [matchContent[1], matchContent[2]];
+    }
+    return [code];
+  });
+
+  return extractedContents as Array<[string, string?]>;
+}
+export const handleCodeHelper__now = (value: string, code: string, param?: string) => {
+  const date = new Date();
+  var replacer = '';
+  if(param){
+    if(param === 'Y') replacer = String(date.getFullYear());
+    else if(param === 'y') replacer = String(date.getFullYear() - 2000);
+    else if(param === 'm') replacer = String(date.getMonth() + 1).padStart(2,'0');
+    else if(param === 'd') replacer = String(date.getDate()).padStart(2,'0');
+    else if(param.indexOf('+') === 0){
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + Number(param.slice(1)));
+      
+      replacer = `${futureDate.getFullYear()}-${
+        String(futureDate.getMonth() + 1).padStart(2, '0')
+      }-${String(futureDate.getDate()).padStart(2, '0')}`;
+    }
+    else if(param.indexOf('-') === 0){
+      const pastDate = new Date();
+      pastDate.setDate(pastDate.getDate() - Number(param.slice(1)));
+      
+      replacer = `${pastDate.getFullYear()}-${
+        String(pastDate.getMonth() + 1).padStart(2, '0')
+      }-${String(pastDate.getDate()).padStart(2, '0')}`;
+    }
+    else throw new Error(`(${param}) Replacer de data inválido`);
+  }else replacer = `${
+    String(date.getDate()).padStart(2,'0')
+  }/${String(date.getMonth() + 1).padStart(2,'0')}/${
+    date.getFullYear()
+  }`;
+
+  var searchValue = param ? `__${code}(${param})__` : `__${code}__`;
+  do{ value = value.replace(searchValue,replacer) }while(value.includes(searchValue))
+
+  return value;
+}
