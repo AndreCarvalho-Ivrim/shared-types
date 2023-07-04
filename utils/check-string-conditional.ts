@@ -46,6 +46,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
   );
 
   const callbackOperator = (val_1: string | number, val_2: string | number, operator: string) => {
+    if(val_2 === '!!') return !!val_1;
+
     if(isNaN(Number(val_1)) || isNaN(Number(val_2))){
       val_1 = String(val_1);
       val_2 = String(val_2);

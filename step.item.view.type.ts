@@ -32,5 +32,10 @@ export interface StepViewGroupTableType extends StepViewBaseType{
 }
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   type: 'description' | 'html',
-  content: string
+  content: string,
+  replacers?: string[],
+  mask?: 'none' | 'alert-danger',
+  rules?: {
+    render?: string
+  }
 }
