@@ -5,6 +5,7 @@ export interface StepTypeRules{
   redirect?: {
     condition: string,
     to: string,
+    action_permission?: string,
     confirm?: StepActionConfirmType
   }[],
   customRules?: string
