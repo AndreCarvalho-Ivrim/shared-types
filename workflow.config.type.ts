@@ -9,6 +9,22 @@ export interface WorkflowConfigFilterType{
   options?: string[],
   autocomplete?: string // somente autocomplete.mode = 'distinct'
 }
+export interface WorkflowConfigNotificationType{
+  name: string,
+  condition: string,
+  template_id: string,
+  params: Record<string, string>,
+  replacers: Record<string, string>,
+  target: '@data_creator' | '@data_owner' | '@wf_owner' | string,
+  /**
+   * [@data_creator]                Criador do flow data
+   * [@data_owners]                 Responsáveis pelo flow data
+   * [@wf_owner]                    Responsável pelo workflow
+   * [@to:<contact1>[,<contact2>]]  Contato(s) pré-definido(s)
+   * 'path-to-contact'              Caminho para o registro dentro do flow_data.data 
+   *                                que contenha o contato
+   */
+}
 export interface WorkflowConfigAutocomplete{
   name: string,
   mode: 'distinct' | 'search',
@@ -42,21 +58,7 @@ export interface WorkflowConfigType{
   permissions?: ConfigPermissionType,
   triggers?: [],
   webhooks?: [],
-  notifications?: {
-    name: string,
-    template_id: string,
-    params: Record<string, string>,
-    replacers: Record<string, string>,
-    target: '@data_creator' | '@data_owner' | '@wf_owner' | string
-    /**
-     * [@data_creator]                Criador do flow data
-     * [@data_owners]                 Responsáveis pelo flow data
-     * [@wf_owner]                    Responsável pelo workflow
-     * [@to:<contact1>[,<contact2>]]  Contato(s) pré-definido(s)
-     * 'path-to-contact'              Caminho para o registro dentro do flow_data.data 
-     *                                que contenha o contato
-     */
-  }[],
+  notifications?: WorkflowConfigNotificationType[],
   integrations?: Record<AvailableServicesType, (any | undefined)>,
   services?: {
     auth?: {
