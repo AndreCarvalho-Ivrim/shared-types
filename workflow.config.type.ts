@@ -9,6 +9,9 @@ export interface WorkflowConfigFilterType{
   options?: string[],
   autocomplete?: string // somente autocomplete.mode = 'distinct'
 }
+export interface IntegrationEmailSimple{
+
+}
 export interface WorkflowConfigNotificationType{
   name: string,
   condition: string,
@@ -61,7 +64,12 @@ export interface WorkflowConfigType{
   webhooks?: [],
   notifications?: WorkflowConfigNotificationType[],
   integrations?: {
-    email?:    { emailFrom: string },
+    email?: {
+      emailFrom?: string,
+      host?: string,
+      port?: number,
+      auth?: { user: string, pass: string }
+    },
     whatsapp?: { number: string, token: string },
     sms?: any,
     chatbot?: any
