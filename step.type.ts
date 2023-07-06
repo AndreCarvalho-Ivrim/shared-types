@@ -1,4 +1,4 @@
-import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowType } from "."
+import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
 
 export interface StepTypeRules{
   requireds?: string[],
@@ -8,6 +8,18 @@ export interface StepTypeRules{
     action_permission?: string,
     confirm?: StepActionConfirmType
   }[],
+  owner?: ('@data_creator' | '@current_user' | string)[],
+  /**
+   * TIPOS DE USUÁRIOS QUE PODEM SER RESPONSÁVEIS PELO FLOW_DATA (
+   *   @data_creator: Criador do flow data
+   *   @current_user: Usuário atual se tornará o owner
+   *   string: Nome do grupo de permissões(ex. Financeiro), que o usuário deve ter para poder se tornar owner
+   */ 
+  actions?: Record<WorkflowConfigActionsType['id'], {
+    group_permission?: ('@data_creator' | '@data_owner' | '@not-allowed' | string)[],
+    permissionErroMessage?: string,
+    [key: string]: any
+  }>
   customRules?: string
 }
 export interface StepType{
@@ -34,6 +46,11 @@ export interface StepType{
     action_permission?: string,
     confirm?: StepActionConfirmType
   }
+  descriptions?: {
+    execute: '@create' | '@update' | '@delete' | '@always',
+    condition?: string,
+    content: string
+  }[]
 }
 export interface OptionalStepType extends Omit<StepType, 'name' | 'type' | 'position' | 'target_mode' | 'index'>{
   name?: string,

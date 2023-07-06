@@ -34,7 +34,7 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   type: 'description' | 'html',
   content: string,
   replacers?: string[],
-  mask?: 'none' | 'alert-danger',
+  mask?: 'none' | 'alert-danger' | 'alert-info',
   rules?: {
     render?: string
   }

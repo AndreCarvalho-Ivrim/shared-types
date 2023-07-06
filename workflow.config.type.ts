@@ -60,7 +60,12 @@ export interface WorkflowConfigType{
   triggers?: [],
   webhooks?: [],
   notifications?: WorkflowConfigNotificationType[],
-  integrations?: Record<AvailableServicesType, (any | undefined)>,
+  integrations?: {
+    email?:    { emailFrom: string },
+    whatsapp?: { number: string, token: string },
+    sms?: any,
+    chatbot?: any
+  },
   services?: {
     auth?: {
       props: { email: string, name: string, link: string },

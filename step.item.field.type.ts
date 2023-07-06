@@ -1,6 +1,6 @@
 import { ItemOrViewOrWidgetOrIntegration } from ".";
 
-export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse';
+export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse' | 'custom';
 export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   text: 'Entrada de Texto',
   textarea: 'Entrada de Texto Grande',
@@ -11,7 +11,8 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   date: 'Date',
   file: 'Upload de Arquivo',
   'file-multiple': 'Upload de Multiplos Arquivos',
-  'group-collapse': 'Grupo de Campos Intercalável'
+  'group-collapse': 'Grupo de Campos Intercalável',
+  custom: 'Customizado'
 };
 
 export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone';
@@ -46,5 +47,9 @@ export interface StepItemType{
       mode: 'clickToNext',
       target: string
     }
+  },
+  customData?: {
+    mode: string,
+    settings?: any
   }
 }
