@@ -12,12 +12,15 @@ export interface ResultAndResponse{
   result: boolean,
   response: string
 }
-export interface User{
-  id: string;
+export interface ShortUser{
+  id: string,
+  name: string,
   email: string,
   picture: string,
+  whatsapp?: string,
+}
+export interface User extends ShortUser{
   active?: boolean,
-  name: string,
   clients?: Client[],
   permitions?: Permition[],
   permitions_slug?: PossiblePermissions[],
