@@ -1,5 +1,6 @@
 import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
 
+export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
 export interface StepTypeRules{
   requireds?: string[],
   redirect?: {
@@ -47,7 +48,7 @@ export interface StepType{
     confirm?: StepActionConfirmType
   }
   descriptions?: {
-    execute: '@create' | '@update' | '@delete' | '@always',
+    execute: ExecuteDescriptionType,
     condition?: string,
     content: string
   }[]
