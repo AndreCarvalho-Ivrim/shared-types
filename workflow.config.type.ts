@@ -13,6 +13,7 @@ export interface WorkflowConfigNotificationType{
   name: string,
   condition: string,
   template_id: string,
+  type: 'email' | 'message',
   params: Record<string, string>,
   replacers: Record<string, string>,
   target: '@data_creator' | '@data_owner' | '@wf_owner' | string,

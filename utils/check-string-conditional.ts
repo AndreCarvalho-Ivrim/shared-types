@@ -41,7 +41,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     else groupConditionals[unionLen] = [c];
   });
 
-  if(unionConditionals.length !== 0 && (unionConditionals.length * 2) !== groupConditionals.length) throw new Error(
+  if(unionConditionals.length !== 0 && (unionConditionals.length + 1) !== groupConditionals.length) throw new Error(
     `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de uniões e grupos não está dentro do esperado. (${strConditional})`
   );
 
