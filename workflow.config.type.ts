@@ -52,7 +52,7 @@ export interface WorkflowViewModeTable{
   order_by?: { ref: string, orientation?: 'desc' | 'asc' }
 }
 export interface WorkflowConfigType{
-  asideButtons?: ConfigAsideButtonType[],
+  actions?: WorkflowConfigActionsType[],
   view_modes?: WorkflowViewModeTable[],
   filters?: WorkflowConfigFilterType[],
   permissions?: ConfigPermissionType,
@@ -97,9 +97,9 @@ export interface WorkflowConfigType{
     whatsapp: string
   }
 }
-export interface ConfigAsideButtonType{
-  icon: 'new' | 'update' | 'delete' | 'alarm' | 'search' | 'models',
-  id: 'start-flow' | 'list-datas' | 'delete-datas' | 'alarm' | 'search' | 'models',
+export interface WorkflowConfigActionsType{
+  icon?: 'new' | 'update' | 'delete' | 'alarm' | 'search' | 'models',
+  id: 'start-flow' | 'list-datas' | 'delete-datas' | 'alarm' | 'search' | 'models' | string,
   alt: string,
   action_permission?: string
 }
