@@ -49,7 +49,9 @@ export interface StepItemType{
     }
   },
   customData?: {
-    mode: string,
+    mode: AvailableCustomItemModeType,
     settings?: any
   }
 }
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating'];

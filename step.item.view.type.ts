@@ -1,3 +1,4 @@
+import { AvailableCustomItemModeType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
 interface StepViewBaseType{
@@ -16,7 +17,7 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
 export interface StepViewColumnType{
   id: string,
   name: string,
-  type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file',
+  type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file' |  AvailableCustomItemModeType,
   required?: boolean
 }
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewDescriptionOrHtmlType;
