@@ -9,9 +9,6 @@ export interface WorkflowConfigFilterType{
   options?: string[],
   autocomplete?: string // somente autocomplete.mode = 'distinct'
 }
-export interface IntegrationEmailSimple{
-
-}
 export interface WorkflowConfigNotificationType{
   name: string,
   condition: string,
@@ -55,6 +52,38 @@ export interface WorkflowViewModeTable{
   columns: ConfigViewModeColumnsType[],
   order_by?: { ref: string, orientation?: 'desc' | 'asc' }
 }
+export interface WorkflowAuthTemplateType{
+  id: string,
+  type: 'email' | 'message',
+  params: Record<string, string>,
+  matchs: Record<string, string>
+}
+export interface WorkflowAuthType{
+  props: {
+    email: string,
+    name: string,
+    link: string,
+    template?: WorkflowAuthTemplateType[]
+  },
+  body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
+  /**
+   * [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
+   * [@temp-password] Enviar senha temporária por email/whatsapp
+   * [@manual]        Cria a senha no momento do cadastro
+   */
+  mode_start: '@link-auth' | '@first-password' | '@manual',
+  notify: { email?: string, whatsapp?: string, sms?: string },
+  routes: {
+    get: Record<string,{
+      body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
+    }>,
+    post: Record<string,{
+      scope?: string,
+      body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
+      mode: 'merge' | 'overwrite'
+    }>,
+  }
+}
 export interface WorkflowConfigType{
   actions?: WorkflowConfigActionsType[],
   view_modes?: WorkflowViewModeTable[],
@@ -75,37 +104,7 @@ export interface WorkflowConfigType{
     chatbot?: any
   },
   services?: {
-    auth?: {
-      props: {
-        email: string,
-        name: string,
-        link: string,
-        template?: {
-          id: string,
-          type: 'email' | 'message',
-          params: Record<string, string>,
-          matchs: Record<string, string>
-        }[]
-      },
-      body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
-      /**
-       * [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
-       * [@temp-password] Enviar senha temporária por email/whatsapp
-       * [@manual]        Cria a senha no momento do cadastro
-       */
-      mode_start: '@link-auth' | '@first-password' | '@manual',
-      notify: { email?: string, whatsapp?: string, sms?: string },
-      routes: {
-        get: Record<string,{
-          body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
-        }>,
-        post: Record<string,{
-          scope?: string,
-          body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
-          mode: 'merge' | 'overwrite'
-        }>,
-      }
-    },
+    auth?: WorkflowAuthType,
     autocomplete?: WorkflowConfigAutocomplete[],
     observers?: {
       onCreate?: WorkflowConfigObserverFnType[],
