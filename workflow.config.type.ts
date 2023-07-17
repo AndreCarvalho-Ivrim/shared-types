@@ -76,7 +76,17 @@ export interface WorkflowConfigType{
   },
   services?: {
     auth?: {
-      props: { email: string, name: string, link: string },
+      props: {
+        email: string,
+        name: string,
+        link: string,
+        template?: {
+          id: string,
+          type: 'email' | 'message',
+          params: Record<string, string>,
+          matchs: Record<string, string>
+        }[]
+      },
       body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
       /**
        * [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
