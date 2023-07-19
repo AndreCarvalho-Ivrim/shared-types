@@ -7,7 +7,8 @@ export enum PossiblePermissions {
   CONTAS_A_PAGAR = 'cap',
   GESTAO = 'gestao',
   PLANILHA = 'sheet',
-  DASH= 'dash'
+  DASH= 'dash',
+  ISAC= 'isac'
 }
 export interface PermissionType{
   name: string,
