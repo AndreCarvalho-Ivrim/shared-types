@@ -8,7 +8,9 @@ export enum PossiblePermissions {
   GESTAO = 'gestao',
   PLANILHA = 'sheet',
   DASH= 'dash',
-  ISAC= 'isac'
+  ISAC= 'isac',
+  FINANCEIRO= 'financeiro',
+
 }
 export interface PermissionType{
   name: string,
