@@ -4,7 +4,7 @@ export enum PossiblePermissions {
   DASH                 = 'dash',
   ISAC                 = 'isac',
   FINANCEIRO           = 'financeiro',
-  ADMIN_IVRIM          = 'admin-ivrim',
+  ADMIN_HUB            = 'admin-hub',
   INTEGRATION_WHATSAPP = 'integration-whatsapp',
 
   // descontinuado ===============
