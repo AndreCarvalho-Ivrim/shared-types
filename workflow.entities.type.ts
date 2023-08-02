@@ -1,4 +1,10 @@
-export type FlowEntitySchemaTypes = "text" | "number" | "date";
+export type FlowEntitySchemaTypes = "text" | "number" | "date" | "money";
+export interface FlowEntitySubSchema{
+  type: 'sub-schema',
+  label: string,
+  placeholder: string,
+  schema: Record<string, (FlowEntitySubSchema | FlowEntitySchemaInfo)>
+}
 export interface FlowEntitySchemaInfo{
   type: FlowEntitySchemaTypes,
   label: string,
@@ -10,7 +16,7 @@ export interface FlowEntitySchemaInfo{
 export interface FlowEntityInfo{
   title: string,
   description?: string,
-  schema: FlowEntitySchemaTypes | Record<string, FlowEntitySchemaInfo>,
+  schema: FlowEntitySchemaTypes | FlowEntitySubSchema | Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
   permissions?: string | {
     create?: string,
     delete?: string,
