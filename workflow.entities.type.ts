@@ -23,5 +23,6 @@ export interface FlowEntityInfo{
     update?: string,
     select?: string
   },
+  restrictMode?: boolean, // default = true
   created_at?: Date
 }
