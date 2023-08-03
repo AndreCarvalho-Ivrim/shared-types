@@ -3,7 +3,7 @@ export interface FlowEntitySubSchema{
   type: 'sub-schema',
   label: string,
   placeholder: string,
-  schema: Record<string, (FlowEntitySubSchema | FlowEntitySchemaInfo)>
+  schema: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>
 }
 export interface FlowEntitySchemaInfo{
   type: FlowEntitySchemaTypes,
