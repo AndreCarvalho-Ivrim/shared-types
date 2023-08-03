@@ -1,4 +1,4 @@
-export type FlowEntitySchemaTypes = "text" | "number" | "date" | "money";
+export type FlowEntitySchemaTypes = "text" | "number" | "date" | "money" | "file-image" | "boolean";
 export interface FlowEntitySubSchema{
   type: 'sub-schema',
   label: string,
@@ -23,5 +23,6 @@ export interface FlowEntityInfo{
     update?: string,
     select?: string
   },
+  restrictMode?: boolean, // default = true
   created_at?: Date
 }
