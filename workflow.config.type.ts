@@ -34,7 +34,7 @@ export interface WorkflowConfigAutocomplete{
 }
 export interface WorkflowConfigObserverFnType{
   name: string,
-  type: 'append',
+  type: 'append' | 'backup',
   execute: 'before' | 'after',
   condition?: string,
   unique?: boolean,
