@@ -1,4 +1,4 @@
-export type FlowEntitySchemaTypes = "text" | "number" | "date" | "money" | "file-image" | "boolean";
+export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file-image" | "boolean";
 export interface FlowEntitySubSchema{
   type: 'sub-schema',
   label: string,
