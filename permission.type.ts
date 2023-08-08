@@ -1,16 +1,19 @@
 export enum PossiblePermissions {
-  APPROVAL = 'aprovacao',
-  ADMIN =  'admin',
-  FINANCIAL_APPROVAL = 'aprovacao-financeiro',
-  EXCLUSION = 'exclusao',
-  EDITION = 'edicao',
-  CONTAS_A_PAGAR = 'cap',
-  GESTAO = 'gestao',
-  PLANILHA = 'sheet',
-  DASH= 'dash',
-  ISAC= 'isac',
-  FINANCEIRO= 'financeiro',
+  ADMIN                = 'admin',
+  GESTAO               = 'gestao',
+  DASH                 = 'dash',
+  ISAC                 = 'isac',
+  FINANCEIRO           = 'financeiro',
+  ADMIN_HUB            = 'admin-hub',
+  INTEGRATION_WHATSAPP = 'integration-whatsapp',
 
+  // descontinuado ===============
+  APPROVAL             = 'aprovacao',
+  FINANCIAL_APPROVAL   = 'aprovacao-financeiro',
+  EXCLUSION            = 'exclusao',
+  EDITION              = 'edicao',
+  CONTAS_A_PAGAR       = 'cap',
+  PLANILHA             = 'sheet',
 }
 export interface PermissionType{
   name: string,
