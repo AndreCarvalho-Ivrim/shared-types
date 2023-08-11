@@ -9,7 +9,7 @@ export interface FlowEntitySchemaInfo{
   type: FlowEntitySchemaTypes,
   label: string,
   placeholder?: string,
-  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url',
+  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md',
   required: boolean,
   unique?: boolean
 }
