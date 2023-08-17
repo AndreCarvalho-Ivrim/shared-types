@@ -2,10 +2,11 @@ import { IntegrationExcelColumnTypeType, PermissionType } from "."
 
 export type AvailableServicesType = 'email'|'whatsapp'|'sms'|'chatbot';
 export type AvailableViewModeType = 'table' | 'dashboard';
+export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType{
   name: string,
-  type: 'text' | 'date' | 'select',
-  ref: string | string[],
+  type: 'text' | 'date' | 'select' | 'list',
+  ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[],
   autocomplete?: string // somente autocomplete.mode = 'distinct'
 }
