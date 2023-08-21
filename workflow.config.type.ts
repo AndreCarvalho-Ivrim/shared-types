@@ -88,7 +88,7 @@ export interface WorkflowAuthType{
 export interface WorkflowConfigType{
   actions?: WorkflowConfigActionsType[],
   view_modes?: WorkflowViewModeTable[],
-  filters?: WorkflowConfigFilterType[],
+  filters?: Record<string, WorkflowConfigFilterType[]>,
   permissions?: ConfigPermissionType,
   triggers?: [],
   webhooks?: [],
