@@ -35,7 +35,7 @@ export interface StepType{
   is_selected?: boolean,
   position: { x: number, y: number },
   items?: ItemOrViewOrWidgetOrIntegration[],
-  cumulativeFormData?: string,
+  cumulativeFormData?: string[],
   target?: string,
   actions?: StepActionType[],
   triggers?: StepTriggerType[]
