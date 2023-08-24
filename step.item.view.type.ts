@@ -49,5 +49,28 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   mask?: 'none' | 'alert-danger' | 'alert-info',
   rules?: {
     render?: string
+    /** STRING CONDITIONAL
+     * É um formato de escrita, separado com ponto e virgula(;) com o primeiro caracter sendo o
+     * marcador que identificam a função de cada parte da string
+     *   $ -> Para acessar uma propriedade
+     *   # -> Operador de comparação
+     *   * -> Valor
+     *   & -> Operador lógico
+     * 
+     * Alguns helpers que temos:
+     * - Podemos acessar sub propriedades utilizando ponto (.)
+     * - Podemos utilizar dois exclamações (!!) para verificar se um campo é verdadeiro('$prop;#eq;*!!') 
+     * 
+     * Exemplo:
+     * const data = {
+     *    helo: { world: 'by Ivrim' }
+     * }
+     * 
+     * const stringConditional = '$hello.world;#eq;*by Ivrim'
+     * 
+     * // Esse código irá acessar o caminho dentro do objeto, e verificar se o conteúdo é igual ao valor especificado
+     * 
+     * Consultar mais em: shared-types/utils/check-string-conditional.ts
+     */
   }
 }

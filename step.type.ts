@@ -4,7 +4,7 @@ export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@alway
 export interface StepTypeRules{
   requireds?: string[],
   redirect?: {
-    condition: string,
+    condition: string, // String Conditional. Tem acesso aos helpers de data como: __@now(+4)__
     to: string,
     action_permission?: string,
     confirm?: StepActionConfirmType
