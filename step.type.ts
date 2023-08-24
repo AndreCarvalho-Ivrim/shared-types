@@ -3,6 +3,7 @@ import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActio
 export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
 export interface StepTypeRules{
   requireds?: string[],
+  ignores?: string[],
   redirect?: {
     condition: string, // String Conditional. Tem acesso aos helpers de data como: __@now(+4)__
     to: string,
@@ -45,7 +46,8 @@ export interface StepType{
     label: string,
     type: ThemeColorType,
     action_permission?: string,
-    confirm?: StepActionConfirmType
+    confirm?: StepActionConfirmType,
+    rules?: StepTypeRules,
   }
   descriptions?: {
     execute: ExecuteDescriptionType,
