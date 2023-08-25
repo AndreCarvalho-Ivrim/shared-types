@@ -42,7 +42,7 @@ export interface WorkflowConfigObserverFnType{
   value?: string,
 }
 export interface ConfigViewModeColumnsType{
-  id: string,
+  id: '@user' | '@owners' | 'created_at' | 'step' | string,
   name: string,
   type: IntegrationExcelColumnTypeType
 }
