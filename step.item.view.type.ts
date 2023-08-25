@@ -15,7 +15,18 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   html: 'Conteúdo Customizado'
 };
 export interface StepViewColumnType{
-  id: string,
+  id: string, 
+  /** ID com shortcodes para replace
+   * Exemplo:
+   * id_1 = 8 | id_2 = 10
+   * definição: @[id_1]/@[id_2]
+   * resultado: 8/10
+   * 
+   * Também pode ser definido um valor padrão usando pipe(|)
+   * * id_1 = undefined | id_2 = 10
+   * definição: @[id_1|0]/@[id_2]
+   * resultado: 0/10
+   */
   name: string,
   type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file' |  AvailableCustomItemModeType,
   required?: boolean
@@ -35,8 +46,31 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   type: 'description' | 'html',
   content: string,
   replacers?: string[],
-  mask?: 'none' | 'alert-danger' | 'alert-info',
+  mask?: 'none' | 'alert-danger' | 'alert-info' | 'alert-light',
   rules?: {
     render?: string
+    /** STRING CONDITIONAL
+     * É um formato de escrita, separado com ponto e virgula(;) com o primeiro caracter sendo o
+     * marcador que identificam a função de cada parte da string
+     *   $ -> Para acessar uma propriedade
+     *   # -> Operador de comparação
+     *   * -> Valor
+     *   & -> Operador lógico
+     * 
+     * Alguns helpers que temos:
+     * - Podemos acessar sub propriedades utilizando ponto (.)
+     * - Podemos utilizar dois exclamações (!!) para verificar se um campo é verdadeiro('$prop;#eq;*!!') 
+     * 
+     * Exemplo:
+     * const data = {
+     *    helo: { world: 'by Ivrim' }
+     * }
+     * 
+     * const stringConditional = '$hello.world;#eq;*by Ivrim'
+     * 
+     * // Esse código irá acessar o caminho dentro do objeto, e verificar se o conteúdo é igual ao valor especificado
+     * 
+     * Consultar mais em: shared-types/utils/check-string-conditional.ts
+     */
   }
 }

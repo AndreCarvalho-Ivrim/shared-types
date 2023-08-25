@@ -24,7 +24,14 @@ export interface IntegrationExcelType{
   label?: string,
   placeholder?: string,
   required?: boolean,
-  rules?: {},
+  rules?: {
+    duplicity?: {
+      id: string,
+      match: string[],
+      replacers?: string[],
+      mode: 'merge' | 'overwrite' | 'replacer'
+    }
+  },
   scope: string,
   columns?: IntegrationExcelColumnType[]
 }

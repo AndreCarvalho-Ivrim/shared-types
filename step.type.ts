@@ -3,8 +3,9 @@ import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActio
 export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
 export interface StepTypeRules{
   requireds?: string[],
+  ignores?: string[],
   redirect?: {
-    condition: string,
+    condition: string, // String Conditional. Tem acesso aos helpers de data como: __@now(+4)__
     to: string,
     action_permission?: string,
     confirm?: StepActionConfirmType
@@ -35,7 +36,7 @@ export interface StepType{
   is_selected?: boolean,
   position: { x: number, y: number },
   items?: ItemOrViewOrWidgetOrIntegration[],
-  cumulativeFormData?: string,
+  cumulativeFormData?: string[],
   target?: string,
   actions?: StepActionType[],
   triggers?: StepTriggerType[]
@@ -45,7 +46,8 @@ export interface StepType{
     label: string,
     type: ThemeColorType,
     action_permission?: string,
-    confirm?: StepActionConfirmType
+    confirm?: StepActionConfirmType,
+    rules?: StepTypeRules,
   }
   descriptions?: {
     execute: ExecuteDescriptionType,
