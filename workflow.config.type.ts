@@ -35,7 +35,10 @@ export interface WorkflowConfigAutocomplete{
 }
 export interface WorkflowConfigObserverFnType{
   name: string,
-  type: 'append' | 'backup',
+  /** EVENTS -> available names on type event
+   * @prevent-stock-out: Evento de revalidação de estoque na estrutura do WF Duzani
+   */
+  type: 'append' | 'backup' | 'event',
   execute: 'before' | 'after',
   condition?: string,
   unique?: boolean,
