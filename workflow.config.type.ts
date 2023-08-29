@@ -7,7 +7,7 @@ export interface WorkflowConfigFilterType{
   name: string,
   type: 'text' | 'date' | 'select' | 'list',
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
-  options?: string[],
+  options?: string[] | { value: string, name: string }[],
   autocomplete?: string // somente autocomplete.mode = 'distinct'
 }
 export interface WorkflowConfigNotificationType{
