@@ -63,7 +63,13 @@ export interface WorkflowViewModeTable{
    * @array-not-exists-or-eq-0
    * > { $or: [{ "key": { $exists: false } }, { "key": { $size: 0 } }]}
    */
-  filter?: Record<string, string>
+  filter?: Record<string, string>,
+  /** Caso essa opção seja configurada, ele redefinirá o comportamento padrão de redirecionamento
+   *  de steps. Ou seja, quando clicar em um flowData na tabela, em vez de abrir o step atual, ele abrirá
+   *  para o definido abaixo, e o mesmo se aplica após o envio do submit, que ele sempre redirecionará o
+   *  usuário para o step abaixo, a não ser se o target for um stateless_step
+   */
+  redirect_to_stateless_step?: string
 }
 export interface WorkflowAuthTemplateType{
   id: string,
