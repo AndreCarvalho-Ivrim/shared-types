@@ -125,6 +125,7 @@ export interface WorkflowConfigType{
     whatsapp: string
   }
 }
+export type WFCActionRenderIn = 'top' | 'filter-bar'
 export interface WorkflowConfigActionsType{
   icon?: 'new' | 'delete' , /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -141,7 +142,7 @@ export interface WorkflowConfigActionsType{
   action_permission?: string,
   available_view_modes?: string[],
   render?: {
-    in: 'top' | 'filter-bar',
+    in: WFCActionRenderIn,
     condition?: '@when-selected-items' | string
   },
   fn?: {
