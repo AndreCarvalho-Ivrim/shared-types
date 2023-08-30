@@ -55,7 +55,15 @@ export interface WorkflowViewModeTable{
   title: string,
   slug: string,
   columns: ConfigViewModeColumnsType[],
-  order_by?: { ref: string, orientation?: 'desc' | 'asc' }
+  order_by?: { ref: string, orientation?: 'desc' | 'asc' },
+  /** Chave => Valor
+   * > Existem alguns valores pré-definidos que geram pesquisas mais complexas como:
+   * @array-exists-and-gt-0
+   * > { "key": { $exists: true, $not: { $size: 0 } } }
+   * @array-not-exists-or-eq-0
+   * > { $or: [{ "key": { $exists: false } }, { "key": { $size: 0 } }]}
+   */
+  filter?: Record<string, string>
 }
 export interface WorkflowAuthTemplateType{
   id: string,
