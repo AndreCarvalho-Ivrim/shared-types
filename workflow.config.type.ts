@@ -1,4 +1,4 @@
-import { IntegrationExcelColumnTypeType, PermissionType } from "."
+import { IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType } from "."
 
 export type AvailableServicesType = 'email'|'whatsapp'|'sms'|'chatbot';
 export type AvailableViewModeType = 'table' | 'dashboard';
@@ -127,10 +127,32 @@ export interface WorkflowConfigType{
   }
 }
 export interface WorkflowConfigActionsType{
-  icon?: 'new' | 'update' | 'delete' | 'alarm' | 'search' | 'models',
-  id: 'start-flow' | 'list-datas' | 'delete-datas' | 'alarm' | 'search' | 'models' | string,
+  icon?: 'new' | 'delete' , /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
+  /** OS IDS PRÉ-DEFINIDOS POSSUEM FUNÇÕES E COMPORTAMENTOS PRÉ-DEFINIDOS
+   * start-flow: 
+   *  - CHAMA A EXECUÇÃO DA PRIMEIRA ETAPA DO FLUXO
+   *  - É RENDERIZADO NO TOPO DA PÁGINA
+   * delete-datas: 
+   *  - EXCLUÍ MULTIPLOS FLOW_DATAS
+   *  - É RENDERIZADO NA BARRA DE FILTRO AO LADO DO FILTRO DE ETAPAS
+   *  - POSSUI RENDERIZAÇÃO CONDICIONAL, APARECENDO SOMENTE QUANDO EXISTE ITEMS SELECIONADOS
+   */
+  id: 'start-flow' | 'delete-datas' | string, /*[obsoletos]: | 'list-datas' | 'alarm' | 'search' | 'models' */
   alt: string,
-  action_permission?: string
+  action_permission?: string,
+  available_view_modes?: string[],
+  render?: {
+    in: 'top' | 'filter-bar',
+    condition?: '@when-selected-items' | string
+  },
+  fn?: {
+    type: 'call-step',
+    target: string
+   } | {
+    type: 'update-selected',
+    confirm?: StepActionConfirmType,
+    // TODO ESCREVER FUNÇÃO DE ATUALIZAÇÃO
+  }
 }
 export interface ConfigPermissionType{
   groups: PermissionType[]
