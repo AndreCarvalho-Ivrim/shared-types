@@ -8,7 +8,8 @@ export interface WorkflowConfigFilterType{
   type: 'text' | 'date' | 'select' | 'list',
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
-  autocomplete?: string // somente autocomplete.mode = 'distinct'
+  /** somente autocomplete.mode = 'distinct' */
+  autocomplete?: string
 }
 export interface WorkflowConfigNotificationType{
   name: string,
@@ -17,15 +18,15 @@ export interface WorkflowConfigNotificationType{
   type: 'email' | 'message',
   params: Record<string, string>,
   replacers: Record<string, string>,
-  target: '@data_creator' | '@data_owner' | '@wf_owner' | string,
   /**
-   * [@data_creator]                Criador do flow data
-   * [@data_owners]                 Responsáveis pelo flow data
-   * [@wf_owner]                    Responsável pelo workflow
-   * [@to:<contact1>[,<contact2>]]  Contato(s) pré-definido(s)
-   * 'path-to-contact'              Caminho para o registro dentro do flow_data.data 
-   *                                que contenha o contato
+   * - [@data_creator]                Criador do flow data
+   * - [@data_owners]                 Responsáveis pelo flow data
+   * - [@wf_owner]                    Responsável pelo workflow
+   * - [@to:<contact1>[,<contact2>]]  Contato(s) pré-definido(s)
+   * - 'path-to-contact'              Caminho para o registro dentro do flow_data.data 
+   *                                  que contenha o contato
    */
+  target: '@data_creator' | '@data_owner' | '@wf_owner' | string,
 }
 export interface WorkflowConfigAutocomplete{
   name: string,
@@ -34,12 +35,10 @@ export interface WorkflowConfigAutocomplete{
   response?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
 }
 export interface WorkflowConfigObserverFnType{
-  name: string,
   /** EVENTS -> available names on type event
    * @revalidate-when-updated-product: Evento de revalidação de estoque na estrutura do WF Duzani
    */
-
-
+  name: string,
   type: 'append' | 'backup' | 'event',
   execute: 'before' | 'after',
   condition?: string,
@@ -73,9 +72,9 @@ export interface WorkflowAuthType{
   },
   body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
   /**
-   * [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
-   * [@temp-password] Enviar senha temporária por email/whatsapp
-   * [@manual]        Cria a senha no momento do cadastro
+   * - [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
+   * - [@temp-password] Enviar senha temporária por email/whatsapp
+   * - [@manual]        Cria a senha no momento do cadastro
    */
   mode_start: '@link-auth' | '@first-password' | '@manual',
   notify: { email?: string, whatsapp?: string, sms?: string },
@@ -128,14 +127,14 @@ export interface WorkflowConfigType{
 }
 export interface WorkflowConfigActionsType{
   icon?: 'new' | 'delete' , /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
-  /** OS IDS PRÉ-DEFINIDOS POSSUEM FUNÇÕES E COMPORTAMENTOS PRÉ-DEFINIDOS
-   * start-flow: 
-   *  - CHAMA A EXECUÇÃO DA PRIMEIRA ETAPA DO FLUXO
-   *  - É RENDERIZADO NO TOPO DA PÁGINA
-   * delete-datas: 
-   *  - EXCLUÍ MULTIPLOS FLOW_DATAS
-   *  - É RENDERIZADO NA BARRA DE FILTRO AO LADO DO FILTRO DE ETAPAS
-   *  - POSSUI RENDERIZAÇÃO CONDICIONAL, APARECENDO SOMENTE QUANDO EXISTE ITEMS SELECIONADOS
+  /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
+   * #### start-flow: 
+   *  - Chama a execução da primeira etapa do fluxo
+   *  - É renderizado no topo da página<br/>
+   * #### delete-datas: 
+   *  - Excluí multiplos flow_datas
+   *  - É renderizado na barra de filtro ao lado do filtro de etapas
+   *  - Possui renderização condicional, aparecendo somente quando existe items selecionados
    */
   id: 'start-flow' | 'delete-datas' | string, /*[obsoletos]: | 'list-datas' | 'alarm' | 'search' | 'models' */
   alt: string,
