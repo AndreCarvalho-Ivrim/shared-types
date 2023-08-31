@@ -39,18 +39,12 @@ export interface StepType{
   items?: ItemOrViewOrWidgetOrIntegration[],
   cumulative_form_data?: string[],
   target?: string,
-  actions?: StepActionType[],
   triggers?: StepTriggerType[]
   rules?: StepTypeRules,
   status?: AvailableWorkflowStatusType,
   is_stateless?: boolean,
-  action_button?: {
-    label: string,
-    type: ThemeColorType,
-    action_permission?: string,
-    confirm?: StepActionConfirmType,
-    rules?: StepTypeRules,
-  }
+  actions?: StepActionType[],
+  action_button?: Omit<StepActionType, 'key' | 'target' | 'isRedirect'>,
   descriptions?: {
     execute: ExecuteDescriptionType,
     condition?: string,
