@@ -10,6 +10,11 @@ export interface StepActionType{
   isRedirect?: boolean,
   confirm?: StepActionConfirmType,
   rules?: StepTypeRules,
+  append_value?: {
+    only_next_step?: boolean,
+    key: string,
+    value: any
+  }
 }
 export interface StepActionConfirmType{
   title: string,
