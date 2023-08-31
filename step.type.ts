@@ -22,7 +22,8 @@ export interface StepTypeRules{
     permissionErroMessage?: string,
     [key: string]: any
   }>
-  customRules?: string
+  customRules?: string,
+  render?: string
 }
 export interface StepType{
   version?: string,
@@ -36,19 +37,14 @@ export interface StepType{
   is_selected?: boolean,
   position: { x: number, y: number },
   items?: ItemOrViewOrWidgetOrIntegration[],
-  cumulativeFormData?: string[],
+  cumulative_form_data?: string[],
   target?: string,
-  actions?: StepActionType[],
   triggers?: StepTriggerType[]
   rules?: StepTypeRules,
   status?: AvailableWorkflowStatusType,
-  action_button?: {
-    label: string,
-    type: ThemeColorType,
-    action_permission?: string,
-    confirm?: StepActionConfirmType,
-    rules?: StepTypeRules,
-  }
+  is_stateless?: boolean,
+  actions?: StepActionType[],
+  action_button?: Omit<StepActionType, 'key' | 'target' | 'isRedirect'>,
   descriptions?: {
     execute: ExecuteDescriptionType,
     condition?: string,

@@ -45,8 +45,16 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de uniões e grupos não está dentro do esperado. (${strConditional})`
   );
 
-  const callbackOperator = (val_1: string | number, val_2: string | number, operator: string) => {
+  const callbackOperator = (val_1: string | number | boolean, val_2: string | number | boolean, operator: string) => {
+    //#region HANDLE POSSIBLE BOOL
+    [val_1, val_2].forEach((val) => {
+      if(val === 'true') val = true
+      else if(val === 'false') val = false
+    })
+    //#endregion HANDLE POSSIBLE BOOL
+
     if(val_2 === '!!') return !!val_1;
+    if(val_2 === '!')  return !val_1;
 
     if(isNaN(Number(val_1)) || isNaN(Number(val_2))){
       val_1 = String(val_1);
