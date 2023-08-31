@@ -9,13 +9,19 @@ export interface StepActionType{
   action_permission?: string,
   isRedirect?: boolean,
   confirm?: StepActionConfirmType,
+  rules?: StepTypeRules,
+  append_value?: {
+    only_next_step?: boolean,
+    key: string,
+    value: any
+  }
 }
 export interface StepActionConfirmType{
   title: string,
   description?: string,
   rules?: StepTypeRules,
   items?: StepItemType[],
-  actions: StepActionTypeOmittedConfirmAndTarget[]
+  actions: [StepActionTypeOmittedConfirmAndTarget, StepActionTypeOmittedConfirmAndTarget]
 }
 export interface StepActionTypeOmittedConfirmAndTarget extends Omit<StepActionType,'confirm' | 'target' | 'action_permission'>{
   confirmation: boolean
