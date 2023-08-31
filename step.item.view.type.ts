@@ -15,20 +15,30 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   html: 'Conteúdo Customizado'
 };
 export interface StepViewColumnType{
-  id: string, 
-  /** ID com shortcodes para replace
-   * Exemplo:
+  /** 
+   * ID com shortcodes para replace \
+   * Exemplo: \
    * id_1 = 8 | id_2 = 10
-   * definição: @[id_1]/@[id_2]
+   * 
+   * definição: \@[id_1]/@[id_2] \
    * resultado: 8/10
    * 
-   * Também pode ser definido um valor padrão usando pipe(|)
-   * * id_1 = undefined | id_2 = 10
-   * definição: @[id_1|0]/@[id_2]
+   * Também pode ser definido um valor padrão usando pipe(|) \
+   * id_1 = undefined | id_2 = 10
+   * 
+   * definição: \@[id_1|0]/@[id_2] \
    * resultado: 0/10
    */
+  id: string, 
   name: string,
   type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file' |  AvailableCustomItemModeType,
+  /**
+   * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
+   * 
+   * 'true': 'Ativo' \
+   * 'false': 'Inativo'
+   */
+  translate?: Record<string, string>
   required?: boolean
 }
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewDescriptionOrHtmlType;

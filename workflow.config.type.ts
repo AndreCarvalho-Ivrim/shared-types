@@ -46,9 +46,28 @@ export interface WorkflowConfigObserverFnType{
   value?: string,
 }
 export interface ConfigViewModeColumnsType{
-  id: '@user' | '@owners' | 'created_at' | 'step' | string,
+  /** 
+   * É possível adicionar algumas palavras reservadas para uma renderização
+   * customizada, como:
+   * - \@user: Gera o avatar, com email e nome do usuário (criador do flow-data)
+   * - \@owners(em-desenvolvimento): Gera os avatares aninhados com tooltip com nome e email (owners do flow-data)
+   * - created_at: Data de criação do flow_data
+   * - step: Etapa atual do flow_data
+   * - \@title-and-subtitle:id_1,id_2: Usará dois campos para renderização usando o primeiro como titulo e o segundo 
+   *   como subtitulo com uma letra um pouco menor
+   */
+  id: '@user' | '@owners' | 'created_at' | 'step' | '@title-and-subtitle:id_1,id_2' | string,
   name: string,
-  type: IntegrationExcelColumnTypeType
+  type: IntegrationExcelColumnTypeType,
+  /**
+   * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
+   * 
+   * 'true': 'Ativo' \
+   * 'false': 'Inativo'
+   * 
+   * Podendo ter também, '_default' que define o valor padrão caso não seja satisfeito.
+   */
+  translate?: Record<string, string>
 }
 export interface WorkflowViewModeTable{
   view_mode: 'table',
@@ -56,12 +75,10 @@ export interface WorkflowViewModeTable{
   slug: string,
   columns: ConfigViewModeColumnsType[],
   order_by?: { ref: string, orientation?: 'desc' | 'asc' },
-  /** Chave => Valor
-   * > Existem alguns valores pré-definidos que geram pesquisas mais complexas como:
-   * @array-exists-and-gt-0
-   * > { "key": { $exists: true, $not: { $size: 0 } } }
-   * @array-not-exists-or-eq-0
-   * > { $or: [{ "key": { $exists: false } }, { "key": { $size: 0 } }]}
+  /** 
+   * Existem alguns valores pré-definidos que geram pesquisas mais complexas como:
+   * - \@array-exists-and-gt-0: { "key": { $exists: true, $not: { $size: 0 } } }
+   * - \@array-not-exists-or-eq-0: { $or: [{ "key": { $exists: false } }, { "key": { $size: 0 } }]}
    */
   filter?: Record<string, string>,
   /** Caso essa opção seja configurada, ele redefinirá o comportamento padrão de redirecionamento
@@ -143,10 +160,12 @@ export type WFCActionRenderIn = 'top' | 'filter-bar'
 export interface WorkflowConfigActionsType{
   icon?: 'new' | 'delete' , /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
-   * #### start-flow: 
+   * 
+   * start-flow: 
    *  - Chama a execução da primeira etapa do fluxo
-   *  - É renderizado no topo da página<br/>
-   * #### delete-datas: 
+   *  - É renderizado no topo da página
+   * 
+   * delete-data:
    *  - Excluí multiplos flow_datas
    *  - É renderizado na barra de filtro ao lado do filtro de etapas
    *  - Possui renderização condicional, aparecendo somente quando existe items selecionados
