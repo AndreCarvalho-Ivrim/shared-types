@@ -98,16 +98,18 @@ export interface WorkflowAuthType {
   props: {
     email: string,
     name: string,
-    link: string,
+
+    link?: string,
     template?: WorkflowAuthTemplateType[]
   },
   body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
   /**
    * - [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
+   * - [@temp-token]    Enviar um token temporário por email/whatsapp
    * - [@temp-password] Enviar senha temporária por email/whatsapp
    * - [@manual]        Cria a senha no momento do cadastro
    */
-  mode_start: '@link-auth' | '@first-password' | '@manual',
+  mode_start: '@link-auth' | '@temp-token' | '@first-password' | '@manual',
   notify: { email?: string, whatsapp?: string, sms?: string },
   routes: {
     get: Record<string, {
