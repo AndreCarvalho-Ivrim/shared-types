@@ -1,9 +1,9 @@
-import { IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType } from "."
+import { FlowEntitySchemaInfo, FlowEntitySchemaTypes, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType } from "."
 
-export type AvailableServicesType = 'email'|'whatsapp'|'sms'|'chatbot';
+export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
 export type AvailableViewModeType = 'table' | 'dashboard';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
-export interface WorkflowConfigFilterType{
+export interface WorkflowConfigFilterType {
   name: string,
   type: 'text' | 'date' | 'select' | 'list',
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
@@ -11,7 +11,7 @@ export interface WorkflowConfigFilterType{
   /** somente autocomplete.mode = 'distinct' */
   autocomplete?: string
 }
-export interface WorkflowConfigNotificationType{
+export interface WorkflowConfigNotificationType {
   name: string,
   condition: string,
   template_id: string,
@@ -28,11 +28,11 @@ export interface WorkflowConfigNotificationType{
    */
   target: '@data_creator' | '@data_owner' | '@wf_owner' | string,
 }
-export interface WorkflowConfigAutocomplete{
+export interface WorkflowConfigAutocomplete {
   name: string,
   mode: 'distinct' | 'search',
   ref: string,
-  response?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
+  response?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
 }
 export interface WorkflowConfigObserverFnType{
   /** EVENTS -> available names on type event
@@ -69,7 +69,7 @@ export interface ConfigViewModeColumnsType{
    */
   translate?: Record<string, string>
 }
-export interface WorkflowViewModeTable{
+export interface WorkflowViewModeTable {
   view_mode: 'table',
   title: string,
   slug: string,
@@ -88,39 +88,41 @@ export interface WorkflowViewModeTable{
    */
   redirect_to_stateless_step?: string
 }
-export interface WorkflowAuthTemplateType{
+export interface WorkflowAuthTemplateType {
   id: string,
   type: 'email' | 'message',
   params: Record<string, string>,
   matchs: Record<string, string>
 }
-export interface WorkflowAuthType{
+export interface WorkflowAuthType {
   props: {
     email: string,
     name: string,
-    link: string,
+
+    link?: string,
     template?: WorkflowAuthTemplateType[]
   },
-  body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>, 
+  body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
   /**
    * - [@link-auth]     Link para o primeiro login, e em seguida a definição da senha
+   * - [@temp-token]    Enviar um token temporário por email/whatsapp
    * - [@temp-password] Enviar senha temporária por email/whatsapp
    * - [@manual]        Cria a senha no momento do cadastro
    */
-  mode_start: '@link-auth' | '@first-password' | '@manual',
+  mode_start: '@link-auth' | '@temp-token' | '@first-password' | '@manual',
   notify: { email?: string, whatsapp?: string, sms?: string },
   routes: {
-    get: Record<string,{
+    get: Record<string, {
       body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
     }>,
-    post: Record<string,{
+    post: Record<string, {
       scope?: string,
       body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
       mode: 'merge' | 'overwrite'
     }>,
   }
 }
-export interface WorkflowConfigType{
+export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: WorkflowViewModeTable[],
   filters?: Record<string, WorkflowConfigFilterType[]>,
@@ -146,6 +148,17 @@ export interface WorkflowConfigType{
       onCreate?: WorkflowConfigObserverFnType[],
       onUpdate?: WorkflowConfigObserverFnType[],
       onDelete?: WorkflowConfigObserverFnType[]
+    },
+    publicRoutes?: {
+      get?: Record<string, {
+        body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
+      }>,
+      post?: Record<string, {
+        scope?: string,
+        body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
+        mode: 'merge' | 'overwrite',
+        schema?: FlowEntitySchemaTypes | FlowEntitySubSchema | Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
+      }>,
     }
   }
   owner?: {
@@ -187,7 +200,7 @@ export interface WorkflowConfigActionsType{
     // TODO ESCREVER FUNÇÃO DE ATUALIZAÇÃO
   }
 }
-export interface ConfigPermissionType{
+export interface ConfigPermissionType {
   groups: PermissionType[]
   actions: string[]
 }
