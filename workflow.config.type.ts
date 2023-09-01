@@ -170,6 +170,28 @@ export interface WorkflowConfigType {
   }
 }
 export type WFCActionRenderIn = 'top' | 'filter-bar'
+export interface WFCActionFnCallStep{
+  type: 'call-step',
+  target: string
+}
+export interface WFCActionFnUpdateSelected{
+  type: 'update-selected',
+  /**
+   * O que fazer quando atualizar:
+   * - update (default): Apenas atualizar
+   * - update-and-open: Atualiza e abre o último atualizado
+   * - update-and-remove: Atualiza e remove da tabela e do excludeIds 
+   */
+  effect?: 'update' | 'update-and-open' | 'update-and-remove',
+  append_values: Record<string, any>,
+  confirm?: StepActionConfirmType,
+  /**
+   * O que fazer em confirmação múltipla:
+   * - individual-confirmation (default): Cada um terá sua confirmação separadamente 
+   * - one-confirm-all: Ao confirmar a primeira, infere que todas as demais serão confirmadas
+   */
+  confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
+}
 export interface WorkflowConfigActionsType{
   icon?: 'new' | 'delete' , /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -191,14 +213,7 @@ export interface WorkflowConfigActionsType{
     in: WFCActionRenderIn,
     condition?: '@when-selected-items' | string
   },
-  fn?: {
-    type: 'call-step',
-    target: string
-   } | {
-    type: 'update-selected',
-    confirm?: StepActionConfirmType,
-    // TODO ESCREVER FUNÇÃO DE ATUALIZAÇÃO
-  }
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
