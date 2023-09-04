@@ -34,7 +34,7 @@ export interface WorkflowConfigAutocomplete {
   ref: string,
   response?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
 }
-export interface WorkflowConfigObserverFnType{
+export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
    * @revalidate-when-updated-product: Evento de revalidação de estoque na estrutura do WF Duzani
    */
@@ -45,7 +45,7 @@ export interface WorkflowConfigObserverFnType{
   unique?: boolean,
   value?: string,
 }
-export interface ConfigViewModeColumnsType{
+export interface ConfigViewModeColumnsType {
   /** 
    * É possível adicionar algumas palavras reservadas para uma renderização
    * customizada, como:
@@ -100,7 +100,10 @@ export interface WorkflowAuthType {
     name: string,
 
     link?: string,
-    template?: WorkflowAuthTemplateType[]
+    template?: {
+      first_access: WorkflowAuthTemplateType[],
+      forgot_password: WorkflowAuthTemplateType[]
+    }
   },
   body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
   /**
@@ -170,8 +173,8 @@ export interface WorkflowConfigType {
   }
 }
 export type WFCActionRenderIn = 'top' | 'filter-bar'
-export interface WorkflowConfigActionsType{
-  icon?: 'new' | 'delete' , /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
+export interface WorkflowConfigActionsType {
+  icon?: 'new' | 'delete', /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
    * 
    * start-flow: 
@@ -194,7 +197,7 @@ export interface WorkflowConfigActionsType{
   fn?: {
     type: 'call-step',
     target: string
-   } | {
+  } | {
     type: 'update-selected',
     confirm?: StepActionConfirmType,
     // TODO ESCREVER FUNÇÃO DE ATUALIZAÇÃO
