@@ -94,16 +94,16 @@ export interface WorkflowAuthTemplateType {
   params: Record<string, string>,
   matchs: Record<string, string>
 }
+
+export type WorkFlowTemplateKeyType = 'first_access' | 'forgot_password';
+
 export interface WorkflowAuthType {
   props: {
     email: string,
     name: string,
 
     link?: string,
-    template?: {
-      first_access: WorkflowAuthTemplateType[],
-      forgot_password: WorkflowAuthTemplateType[]
-    }
+    template?: Record<WorkFlowTemplateKeyType, WorkflowAuthTemplateType[]>
   },
   body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
   /**
