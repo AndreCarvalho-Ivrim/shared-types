@@ -36,7 +36,16 @@ export interface StepItemType{
   rules?: {
     min?: number,
     max?: number,
-    render?: string
+    render?: string,
+    /**
+     * AVAILABLE CUSTOM RULES\n
+     * Este tipo de regra só funciona quando o Step.rule.customRule === '@find'
+     * - [@find:select (default)]: Irá usar este campo para pesquisa exata ('texto pesquisado' === 'texto no banco')
+     * - [@find:text]: Irá usar este campo para pesquisa parcial ('texto no banco'.includes('texto pesquisado'))
+     * - [@find:date]: Irá usar este campo para pesquisa de range de data ('data no banco' está no 'range pesquisado')
+     * - [@find:list]: Irá usar este campo para pesquisa em uma lista (['array pesquisado'].includes('texto no banco'))
+     */
+    customRules?: string
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],

@@ -1,6 +1,22 @@
 import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
 
 export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
+export type ToastTypes = "success" | "info" | "warning" | "error"
+export interface ToastSettingType{ type: ToastTypes, message: string }
+export interface StepCustomRuleFind{
+  id: '@find',
+  data: {
+    toast?: {
+      found?: ToastSettingType,
+      not_found?: ToastSettingType,
+      /**
+       * A chave do objeto switch é uma string condition, que se for dar match,
+       * irá realizar o código retratado no valor
+       */
+      switch?: Record<string, ToastSettingType>
+    }
+  }
+}
 export interface StepTypeRules{
   requireds?: string[],
   ignores?: string[],
@@ -22,7 +38,16 @@ export interface StepTypeRules{
     permissionErroMessage?: string,
     [key: string]: any
   }>
-  customRules?: string,
+  /**
+   * AVAILABLE CUSTOM RULES
+   * - [@find]: Utilizar o step para pesquisa.
+   * ```
+   *  data: {
+   *     ""
+   *  }
+   * ```
+   */
+  customRules?: StepCustomRuleFind | { id: string, data: any },
   render?: string
 }
 export interface StepType{
