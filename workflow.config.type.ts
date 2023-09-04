@@ -34,7 +34,7 @@ export interface WorkflowConfigAutocomplete {
   ref: string,
   response?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
 }
-export interface WorkflowConfigObserverFnType{
+export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
    * @revalidate-when-updated-product: Evento de revalidação de estoque na estrutura do WF Duzani
    */
@@ -45,7 +45,7 @@ export interface WorkflowConfigObserverFnType{
   unique?: boolean,
   value?: string,
 }
-export interface ConfigViewModeColumnsType{
+export interface ConfigViewModeColumnsType {
   /** 
    * É possível adicionar algumas palavras reservadas para uma renderização
    * customizada, como:
@@ -94,13 +94,16 @@ export interface WorkflowAuthTemplateType {
   params: Record<string, string>,
   matchs: Record<string, string>
 }
+
+export type WorkFlowTemplateKeyType = 'first_access' | 'forgot_password';
+
 export interface WorkflowAuthType {
   props: {
     email: string,
     name: string,
 
     link?: string,
-    template?: WorkflowAuthTemplateType[]
+    template?: Record<WorkFlowTemplateKeyType, WorkflowAuthTemplateType[]>
   },
   body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
   /**
@@ -170,11 +173,11 @@ export interface WorkflowConfigType {
   }
 }
 export type WFCActionRenderIn = 'top' | 'filter-bar'
-export interface WFCActionFnCallStep{
+export interface WFCActionFnCallStep {
   type: 'call-step',
   target: string
 }
-export interface WFCActionFnUpdateSelected{
+export interface WFCActionFnUpdateSelected {
   type: 'update-selected',
   /**
    * O que fazer quando atualizar:
@@ -192,8 +195,8 @@ export interface WFCActionFnUpdateSelected{
    */
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
-export interface WorkflowConfigActionsType{
-  icon?: 'new' | 'delete' , /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
+export interface WorkflowConfigActionsType {
+  icon?: 'new' | 'delete', /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
    * 
    * start-flow: 
