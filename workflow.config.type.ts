@@ -161,6 +161,7 @@ export interface WorkflowConfigType {
       }>,
     }
   }
+  schema?: Record<string,FlowEntitySchemaInfo>,
   owner?: {
     id?: string
     name: string,
