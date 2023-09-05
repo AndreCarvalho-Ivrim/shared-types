@@ -157,10 +157,11 @@ export interface WorkflowConfigType {
         scope?: string,
         body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
         mode: 'merge' | 'overwrite',
-        schema?: FlowEntitySchemaTypes | FlowEntitySubSchema | Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
+        schema?: Record<string, FlowEntitySchemaInfo>,
       }>,
     }
   }
+  schema?: Record<string,FlowEntitySchemaInfo>,
   owner?: {
     id?: string
     name: string,
