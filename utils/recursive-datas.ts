@@ -16,10 +16,18 @@ export const handleRegexId = (id: string, item: { data: any }) => {
   let value = id
   replacers.forEach((replacer) => {
     let temp = getRecursiveValue(replacer.id, item)
-    value = value.replaceAll(
-      `@[${replacer.id}${replacer.default ? `|${replacer.default}`:''}]`,
-      temp ?? replacer.default
-    )
+
+    const toReplace = `@[${replacer.id}${replacer.default ? `|${replacer.default}`:''}]`;
+
+    var max = 50;
+    do{
+      value = value.replace(toReplace, temp ?? replacer.default)
+      max--;
+      if(max === 0){
+        console.error('[findedAuthTemplate->loop] O replacer repetiu mais de 20x');
+        break;
+      }
+    }while(value.includes(toReplace))
   })
   return value;
 }
