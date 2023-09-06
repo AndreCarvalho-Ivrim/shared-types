@@ -1,5 +1,18 @@
 import { StringConditionalTypes } from "..";
+import { getRecursiveValue } from "./recursive-datas";
 
+export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any }) => {
+  const pattern = /\$flow_data:(.*?);/g;
+  const matches = [...conditional.matchAll(pattern)];
+  const contents = matches.map(match => match[1]);
+  
+  contents.map((key) => {
+    const value = getRecursiveValue(key, flow_data);
+    data[`flow_data:${key}`] = value;
+  })
+
+  return data;
+}
 export const checkStringConditional = (strConditional: string, datas: Record<string, any>,conditionalName = 'anonymous') => {
   let condition: {
     type: StringConditionalTypes,
