@@ -39,8 +39,11 @@ export interface StepItemType{
     render?: string,
     /**
      * AVAILABLE CUSTOM RULES\n
-     * Este tipo de regra só funciona quando o Step.rule.customRule === '@find'
-     * - [@find:select (default)]: Irá usar este campo para pesquisa exata ('texto pesquisado' === 'texto no banco')
+     * - [ignore]: Irá ignorar o campo na hora de salvar(só existe para controle de layout[geralmente usado em renderização condicional]), ou pesquisar
+     * 
+     * As regras abaixo só funcionam quando o Step.rule.customRule === '@find'
+     * - [@find:select-unique (default)]: Irá usar este campo para pesquisa exata, e retornará apenas 1 resultado
+     * - [@find:select]: Irá usar este campo para pesquisa exata ('texto pesquisado' === 'texto no banco')
      * - [@find:text]: Irá usar este campo para pesquisa parcial ('texto no banco'.includes('texto pesquisado'))
      * - [@find:date]: Irá usar este campo para pesquisa de range de data ('data no banco' está no 'range pesquisado')
      * - [@find:list]: Irá usar este campo para pesquisa em uma lista (['array pesquisado'].includes('texto no banco'))

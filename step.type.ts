@@ -1,4 +1,4 @@
-import { AvailableWorkflowStatusType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
+import { AvailableWorkflowStatusType, ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
 
 export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
 export type ToastTypes = "success" | "info" | "warning" | "error"
@@ -6,7 +6,9 @@ export interface ToastSettingType{ type: ToastTypes, message: string }
 export interface StepCustomRuleFind{
   id: '@find',
   data: {
+    view_item: ConfigViewModeColumnsType[],
     toast?: {
+      many_found?: ToastSettingType,
       found?: ToastSettingType,
       not_found?: ToastSettingType,
       /**
