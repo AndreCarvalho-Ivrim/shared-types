@@ -1,4 +1,5 @@
 import { FlowEntitySchemaInfo, FlowEntitySchemaTypes, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType } from "."
+import { AvailableIcons } from "./icon.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
 export type AvailableViewModeType = 'table' | 'dashboard';
@@ -72,6 +73,7 @@ export interface ConfigViewModeColumnsType {
 export interface WorkflowViewModeTable {
   view_mode: 'table',
   title: string,
+  icon?: AvailableIcons,
   slug: string,
   columns: ConfigViewModeColumnsType[],
   order_by?: { ref: string, orientation?: 'desc' | 'asc' },
@@ -153,7 +155,7 @@ export interface WorkflowConfigType {
        */
       to: string,
       /** Icones disponíveis na página de icones */
-      icon?: string,
+      icon?: AvailableIcons,
       title: string,
       action_permission?: string,
     }[]
