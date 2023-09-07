@@ -1,3 +1,5 @@
+import { AvailableIcons } from "./icon.type";
+
 export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file-image" | "boolean";
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file-image", "boolean"];
 export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
@@ -17,6 +19,7 @@ export interface FlowEntitySchemaInfo{
 }
 export interface FlowEntityInfo{
   title: string,
+  icon?: AvailableIcons,
   description?: string,
   schema: FlowEntitySchemaTypes | FlowEntitySubSchema | Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
   permissions?: string | {
