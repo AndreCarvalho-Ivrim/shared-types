@@ -48,4 +48,6 @@ export type AvailableIcons =
   'CompanyIcon' |
   'PencilIcon' |
   'MagicWandIcon' |
-  'SquareCheckedIcon'
+  'SquareCheckedIcon' |
+  'PackageIcon' |
+  'ReceiptIcon'
