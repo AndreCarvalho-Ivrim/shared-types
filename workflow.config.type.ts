@@ -1,4 +1,5 @@
 import { FlowEntitySchemaInfo, FlowEntitySchemaTypes, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType } from "."
+import { AvailableIcons } from "./icon.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
 export type AvailableViewModeType = 'table' | 'dashboard';
@@ -72,6 +73,7 @@ export interface ConfigViewModeColumnsType {
 export interface WorkflowViewModeTable {
   view_mode: 'table',
   title: string,
+  icon?: AvailableIcons,
   slug: string,
   columns: ConfigViewModeColumnsType[],
   order_by?: { ref: string, orientation?: 'desc' | 'asc' },
@@ -130,6 +132,34 @@ export interface WorkflowConfigType {
   view_modes?: WorkflowViewModeTable[],
   filters?: Record<string, WorkflowConfigFilterType[]>,
   permissions?: ConfigPermissionType,
+  menu?: {
+    /**
+     * Id de todas as configurações que podem gerar botões para acesso no menu. \
+     * Abaixo terá um exemplo do prefixo de uma view, entidade, entre outros:
+     * 
+     * - view:     view-mode--vm-slug
+     * - entity:   entity--en-id
+     * - shortcut: shortcut--id
+     */
+    ordenation?: string[],
+    shortcuts: {
+      id: string,
+      /**
+       * O **to** pode ser uma url externa ou um shortcode
+       * referência uma url do hub ou do isac.
+       * 
+       * \@hub:nome-da-rota(param) para acessar alguma rota do hub \
+       * \@isac:nome-da-rota(param1,param2) para acessar alguma rota do isac
+       * 
+       * O valor entre parentes é usado para passar 1 ou mais parametros para a rota
+       */
+      to: string,
+      /** Icones disponíveis na página de icones */
+      icon?: AvailableIcons,
+      title: string,
+      action_permission?: string,
+    }[]
+  },
   triggers?: [],
   webhooks?: [],
   notifications?: WorkflowConfigNotificationType[],
