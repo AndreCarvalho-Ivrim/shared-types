@@ -1,4 +1,3 @@
-import { toast } from "react-toastify"
 import { getRecursiveValue } from "./recursive-datas"
 
 export const isacRoutes = {
@@ -63,9 +62,8 @@ export const handleRegexUrl = (url: string) => {
   if(url.includes('@hub:'))   return `${getDomain('hub', true)}${getUrl(url, '@hub:', hubRoutes)}`
   if(url.includes('@isac:'))  return `${getDomain('isac', true)}${getUrl(url, '@isac:', isacRoutes)}`
 
-  toast.error('URL de redirecionamento fora do padrão esperado')
   console.error('[invalid-format:handle-regex-url]', { url })
-  return '#'
+  throw new Error('URL de redirecionamento fora do padrão esperado')
 }
 export const getDomain = (application: 'hub' | 'isac', removeLastSlash = false) => {
   let urls = { hub: '', isac: '' }
