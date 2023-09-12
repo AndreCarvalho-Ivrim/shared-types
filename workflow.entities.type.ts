@@ -16,6 +16,13 @@ export interface FlowEntitySchemaInfo{
   mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url',
   required: boolean,
   unique?: boolean
+  rule?: {
+    format_str?: {
+      replace?: [string, string],
+      split?: { separator: string, splice?: number, revert?: boolean },
+      trim?: boolean,
+    }
+  }
 }
 export interface FlowEntityInfo{
   title: string,
@@ -29,5 +36,14 @@ export interface FlowEntityInfo{
     select?: string
   },
   restrictMode?: boolean, // default = true
-  created_at?: Date
+  created_at?: Date,
+  import?: {
+    association_columns: {
+      name: string,
+      update: boolean,
+      columns: Record<string, string>[]
+    }[],
+    can_add_associations?: boolean,
+    restrictMode?: boolean
+  },
 }
