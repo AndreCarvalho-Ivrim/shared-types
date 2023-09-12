@@ -37,7 +37,7 @@ export interface FlowEntityInfo{
   },
   restrictMode?: boolean, // default = true
   created_at?: Date,
-  import?: {
+  importSheet?: {
     association_columns: {
       name: string,
       update: boolean,
