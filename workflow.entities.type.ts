@@ -24,6 +24,16 @@ export interface FlowEntitySchemaInfo{
     }
   }
 }
+export interface FlowEntityAssociationColumns{
+  name: string,
+  update: boolean,
+  columns: Record<string, string>
+}
+export interface FlowEntityImportSheet{
+  association_columns: FlowEntityAssociationColumns[],
+  can_add_associations?: boolean,
+  restrictMode?: boolean
+}
 export interface FlowEntityInfo{
   title: string,
   icon?: AvailableIcons,
@@ -37,13 +47,5 @@ export interface FlowEntityInfo{
   },
   restrictMode?: boolean, // default = true
   created_at?: Date,
-  importSheet?: {
-    association_columns: {
-      name: string,
-      update: boolean,
-      columns: Record<string, string>
-    }[],
-    can_add_associations?: boolean,
-    restrictMode?: boolean
-  },
+  importSheet?: FlowEntityImportSheet,
 }
