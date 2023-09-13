@@ -41,7 +41,7 @@ export interface FlowEntityInfo{
     association_columns: {
       name: string,
       update: boolean,
-      columns: Record<string, string>[]
+      columns: Record<string, string>
     }[],
     can_add_associations?: boolean,
     restrictMode?: boolean
