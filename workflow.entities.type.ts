@@ -32,7 +32,12 @@ export interface FlowEntityAssociationColumns{
 export interface FlowEntityImportSheet{
   association_columns: FlowEntityAssociationColumns[],
   can_add_associations?: boolean,
-  restrictMode?: boolean
+  restrictMode?: boolean,
+  /**
+   * Se os registros serão adicionados no inicio ou no final. \
+   * Por padrão é append(final)
+   */
+  insert_mode?: 'append' | 'prepend'
 }
 export interface FlowEntityInfo{
   title: string,
