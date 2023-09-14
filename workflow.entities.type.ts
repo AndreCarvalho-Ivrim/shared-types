@@ -80,9 +80,14 @@ export interface FlowEntityInfo{
     }>
   },
   observers?: {
+    /** 
+     * Se adicionar o observer onMultiple, nos cadastros/atualizações \
+     * em massa(importação) o onCreate e o onUpdate serão ignorados.
+     */
+    onMultiple?: WorkflowConfigObserverFnType[],
     onCreate?: WorkflowConfigObserverFnType[],
     onUpdate?: WorkflowConfigObserverFnType[],
-    onDelete?: WorkflowConfigObserverFnType[]
+    onDelete?: WorkflowConfigObserverFnType[],
   },
   permissions?: string | {
     create?: string,
