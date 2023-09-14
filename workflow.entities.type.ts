@@ -1,4 +1,5 @@
 import { AvailableIcons } from "./icon.type";
+import { WorkflowConfigObserverFnType } from "./workflow.config.type";
 
 export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file-image" | "boolean";
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file-image", "boolean"];
@@ -44,13 +45,53 @@ export interface FlowEntityInfo{
   icon?: AvailableIcons,
   description?: string,
   schema: FlowEntitySchemaTypes | FlowEntitySubSchema | Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
+  rules?: {
+    duplicity?: {
+      /**
+       * O id só deve ser preenchido caso queira usar a regra em
+       * um sub-schema
+       */
+      id?: string,
+      match: string[],
+      /**
+       * Se adicionar o ? antes da string, o campo só \
+       * será sobrescrito, se for um campo válido. Exemplo:
+       * 
+       * ["?name", "surname"]
+       * - Neste caso o [name] só será substituido se for válido
+       * - O [surname] sempre será substituido
+       */
+      replacers?: string[],
+      mode: 'merge' | 'overwrite' | 'replacer',
+      /**
+       * Caso exista regra de duplicidade, e o [on] não for \
+       * passado, a regra será aplicada para importação e criação \
+       * individual, solucionando o conflito com o [mode]. \
+       * Caso o on seja passado, a regra de duplicidade será aplicada \
+       * apenas para o caso incluso no on. Neste caso, se o [restrictMode] \
+       * for true, retornará erro no dado que não estiver incluso no on \
+       * caso contrário, apenas irá ignorar
+       */
+      on?: ('create' | 'import')[]
+    },
+    flags: Record<string, {
+      condition: string,
+      message: string
+    }>
+  },
+  observers?: {
+    onCreate?: WorkflowConfigObserverFnType[],
+    onUpdate?: WorkflowConfigObserverFnType[],
+    onDelete?: WorkflowConfigObserverFnType[]
+  },
   permissions?: string | {
     create?: string,
     delete?: string,
     update?: string,
     select?: string
   },
-  restrictMode?: boolean, // default = true
+  /** default = true */
+  restrictMode?: boolean,
   created_at?: Date,
   importSheet?: FlowEntityImportSheet,
 }
