@@ -74,7 +74,7 @@ export interface FlowEntityInfo{
        */
       on?: ('create' | 'import')[]
     },
-    flags: Record<string, {
+    flags?: Record<string, {
       condition: string,
       message: string
     }>
