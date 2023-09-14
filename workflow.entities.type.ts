@@ -81,8 +81,17 @@ export interface FlowEntityInfo{
   },
   observers?: {
     /** 
-     * Se adicionar o observer onMultiple, nos cadastros/atualizações \
-     * em massa(importação) o onCreate e o onUpdate serão ignorados.
+     * O onMultiple serve para otimizar a performance dos outros observadores \
+     * quando é enviado um cadastro multiplo, dessa forma, aglomerando os dados \
+     * e enviando-os simultaneamente para serem tratados. 
+     * 
+     * Porém, ele possui algumas restrições:
+     *
+     * - Se adicionar o observer onMultiple, nos cadastros/atualizações \
+     * em massa(importação) o onCreate-after e o onUpdate-after serão ignorados \
+     * para que seja executado apenas ele.
+     * - Ele não tem suporte ao type=append
+     * - Ele não tem suporte ao execute=before
      */
     onMultiple?: WorkflowConfigObserverFnType[],
     onCreate?: WorkflowConfigObserverFnType[],
