@@ -38,19 +38,13 @@ export interface WorkflowConfigAutocomplete {
 export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
    * 
-   * \@revalidate-when-updated-product: Evento de revalidação de estoque na estrutura do WF Duzani \
-   * \@fill-additional-data-with-match: Evento válido apenas no FlowEntity, para atualizar dados no flow data. \
-   * Obrigatório adicionar a seguinte estrutura no data:
-   * ```
-   *  {
-   *    scope?: string (caminho para um array em um subnível do registro),
-   *    match: Record<string(ref. no flowEntity), string(ref. no flowData)>,
-   *    // Se add ? no começo da key-ref, o replace só ocorrerá caso o campo seja válido
-   *    replacers: Record<string(ref. no flowEntity), string(ref. no flowData)>,
-   *    // Filtro do mongo para especificar os flowDatas atingidos
-   *    query: any
-   * }
-   * ```
+   * \@revalidate-when-updated-product: Evento válido apenas no FlowData, para revalidação de estoque na \
+   * estrutura do WF Duzani.
+   * 
+   * \@search-and-fill-data-with-match: Evento válido apenas no FlowData, para consultar flowEntity auxiliar \
+   * e preencher flowData com dados adicionais.
+   * 
+   * \@fill-additional-data-with-match: Evento válido apenas no FlowEntity, para atualizar dados no flow data.
    */
   name: string,
   type: 'append' | 'backup' | 'event',
@@ -58,6 +52,42 @@ export interface WorkflowConfigObserverFnType {
   condition?: string,
   unique?: boolean,
   value?: string,
+  /** EVENTS -> required data on events[\@search-and-fill-data-with-match, \@fill-additional-data-with-match]
+   * 
+   * \@search-and-fill-data-with-match
+   * ```
+   *  {
+   *    // Caminho para um array em um subnível do registro
+   *    scope: string,
+   *    // { [ref. no flowData]: [ref. no flowEntity] }
+   *    match: Record<string, string>,
+   *    // { [ref. no flowData]: [ref. no flowEntity] }
+   *    // Se add ! no começo da key-ref, o replace só ocorrerá se o campo não for preenchido no flowData
+   *    // Se add ? no começo da value-ref, o replace só ocorrerá caso o campo seja válido no flowEntity
+   *    replacers: Record<string, string>,
+   *    // Nome da entidade dinâmica
+   *    entity: string,
+   *    // { [ref. no flowData]: [ref. no flowEntity] }
+   *    // Caso não de match com nenhum valor da entidade dinâmica, salvar em flowEntity
+   *    noMatchThenSave?: Record<string, string>
+   *  }
+   * ```
+   * 
+   * \@fill-additional-data-with-match
+   * ```
+   *  {
+   *    // Caminho para um array em um subnível do registro
+   *    scope?: string,
+   *    // { [ref. no flowEntity]: [ref. no flowData] }
+   *    match: Record<string, string>,
+   *    // { [ref. no flowEntity]: [ref. no flowData] }
+   *    // Se add ? no começo da key-ref, o replace só ocorrerá caso o campo seja válido
+   *    replacers: Record<string, string>,
+   *    // Filtro do mongo para especificar os flowDatas atingidos
+   *    query: any
+   * }
+   * ```
+   */
   data?: any
 }
 export interface ConfigViewModeColumnsType {
