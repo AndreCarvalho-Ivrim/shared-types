@@ -6,7 +6,13 @@ export type AvailableViewModeType = 'table' | 'dashboard';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
   name: string,
-  type: 'text' | 'date' | 'select' | 'list',
+  /**
+   * - text: Pesquisa case incesitive por aproximação (includes)
+   * - select: Pesquisa por palavra exata (===)
+   * - date: Comparação por range de data (startDate, endDate)
+   * - list: Lista de opções (in)
+   */
+  type: 'text' | 'select' | 'date' | 'list',
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
   /** somente autocomplete.mode = 'distinct' */
