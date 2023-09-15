@@ -6,7 +6,13 @@ export type AvailableViewModeType = 'table' | 'dashboard';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
   name: string,
-  type: 'text' | 'date' | 'select' | 'list',
+  /**
+   * - text: Pesquisa case incesitive por aproximação (includes)
+   * - select: Pesquisa por palavra exata (===)
+   * - date: Comparação por range de data (startDate, endDate)
+   * - list: Lista de opções (in)
+   */
+  type: 'text' | 'select' | 'date' | 'list',
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
   /** somente autocomplete.mode = 'distinct' */
@@ -37,7 +43,14 @@ export interface WorkflowConfigAutocomplete {
 }
 export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
-   * @revalidate-when-updated-product: Evento de revalidação de estoque na estrutura do WF Duzani
+   * 
+   * \@revalidate-when-updated-product: Evento válido apenas no FlowData, para revalidação de estoque na \
+   * estrutura do WF Duzani.
+   * 
+   * \@search-and-fill-data-with-match: Evento válido apenas no FlowData, para consultar flowEntity auxiliar \
+   * e preencher flowData com dados adicionais.
+   * 
+   * \@fill-additional-data-with-match: Evento válido apenas no FlowEntity, para atualizar dados no flow data.
    */
   name: string,
   type: 'append' | 'backup' | 'event',
@@ -45,6 +58,46 @@ export interface WorkflowConfigObserverFnType {
   condition?: string,
   unique?: boolean,
   value?: string,
+  /** EVENTS -> required data on events[\@search-and-fill-data-with-match, \@fill-additional-data-with-match]
+   * 
+   * \@search-and-fill-data-with-match
+   * ```
+   *  {
+   *    // Caminho para um array em um subnível do registro
+   *    scope: string,
+   *    // { [ref. no flowData]: [ref. no flowEntity] }
+   *    match: Record<string, string>,
+   *    // { [ref. no flowData]: [ref. no flowEntity] }
+   *    // Se add ! no começo da key-ref, o replace só ocorrerá se o campo não for preenchido no flowData
+   *    // Se add ? no começo da value-ref, o replace só ocorrerá caso o campo seja válido no flowEntity
+   *    replacers: Record<string, string>,
+   *    // Nome da entidade dinâmica
+   *    entity: string,
+   *    // { [ref. no flowData]: [ref. no flowEntity] }
+   *    // Caso não de match com nenhum valor da entidade dinâmica, salvar em flowEntity
+   *    noMatchThenSave?: Record<string, string>,
+   *    // [<ref.flowData>, <ref.flowEntity>]: Otimiza a pesquisa no flowEntity para buscar 
+   *    // apenas dados relevantes
+   *    filter?: [string, string]
+   *  }
+   * ```
+   * 
+   * \@fill-additional-data-with-match
+   * ```
+   *  {
+   *    // Caminho para um array em um subnível do registro
+   *    scope?: string,
+   *    // { [ref. no flowEntity]: [ref. no flowData] }
+   *    match: Record<string, string>,
+   *    // { [ref. no flowEntity]: [ref. no flowData] }
+   *    // Se add ? no começo da key-ref, o replace só ocorrerá caso o campo seja válido
+   *    replacers: Record<string, string>,
+   *    // Filtro do mongo para especificar os flowDatas atingidos
+   *    query: any
+   * }
+   * ```
+   */
+  data?: any
 }
 export interface ConfigViewModeColumnsType {
   /** 
