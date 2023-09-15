@@ -75,7 +75,10 @@ export interface WorkflowConfigObserverFnType {
    *    entity: string,
    *    // { [ref. no flowData]: [ref. no flowEntity] }
    *    // Caso não de match com nenhum valor da entidade dinâmica, salvar em flowEntity
-   *    noMatchThenSave?: Record<string, string>
+   *    noMatchThenSave?: Record<string, string>,
+   *    // [<ref.flowData>, <ref.flowEntity>]: Otimiza a pesquisa no flowEntity para buscar 
+   *    // apenas dados relevantes
+   *    filter?: [string, string]
    *  }
    * ```
    * 
