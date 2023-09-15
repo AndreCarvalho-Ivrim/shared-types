@@ -64,9 +64,9 @@ export interface FlowEntityInfo{
       replacers?: string[],
       mode: 'merge' | 'overwrite' | 'replacer',
       /**
-       * Caso exista regra de duplicidade, e o [on] não for \
-       * passado, a regra será aplicada para importação e criação \
-       * individual, solucionando o conflito com o [mode]. \
+       * Caso exista regra de duplicidade, e o [on] não for passado,  \
+       * a regra será aplicada para importação e criação individual, \
+       * solucionando o conflito com o [mode]. \
        * Caso o on seja passado, a regra de duplicidade será aplicada \
        * apenas para o caso incluso no on. Neste caso, se o [restrictMode] \
        * for true, retornará erro no dado que não estiver incluso no on \
