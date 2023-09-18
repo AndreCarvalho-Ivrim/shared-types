@@ -45,6 +45,11 @@ export const hubRoutes = {
   gallery: {
     home: () => '/meus-docs',
     show: (id: string) => `/meus-docs/${id}`,
+  },
+  notification: {
+    all: () => '/notificacoes',
+    preference: () => '/notificacoes/preferencias',
+    create: () => '/notificacoes/criar'
   }
 }
 
