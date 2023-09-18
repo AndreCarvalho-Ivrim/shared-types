@@ -21,6 +21,9 @@ export const hubRoutes = {
     login:  () => '/login',
     logout: () => '/logout',
   },
+  profile: {
+    home: () => '/perfil'
+  },
   old_cap: {
     alert:  () => '/alertas',
     home:   () =>  '/compras-e-contas-a-pagar',
@@ -34,7 +37,7 @@ export const hubRoutes = {
   },
   admin_panel: {
     client:     () => '/painel-adm/empresa',
-    home:       () => '/painel-adm',
+    users:       () => '/painel-adm',
     projects:   () => '/painel-adm/projetos',
     dashboards: () => '/painel-adm/dashboards',
   },
