@@ -57,4 +57,5 @@ export type AvailableIcons =
   'StopWatchIcon' |
   'MentionIcon' |
   'ArchiveIcon' |
-  'EnvelopeOpenIcon'
+  'EnvelopeOpenIcon' |
+  'DropboxIcon'

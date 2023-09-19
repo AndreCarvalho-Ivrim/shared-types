@@ -27,7 +27,7 @@ export interface NotificationType{
   redirect_to?: string,
   template_id?: string,
   template_data?: string,
-  is_archive?: boolean,
+  is_archived?: boolean,
   notify_by: string,
   error_notify?: string,
   is_sended?: boolean,
