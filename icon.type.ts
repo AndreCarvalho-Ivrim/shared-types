@@ -55,4 +55,6 @@ export type AvailableIcons =
   'MyDocsIcon' |
   'UserVoiceIcon' |
   'StopWatchIcon' |
-  'MentionIcon'
+  'MentionIcon' |
+  'ArchiveIcon' |
+  'EnvelopeOpenIcon'

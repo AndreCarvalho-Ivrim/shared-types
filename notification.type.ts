@@ -2,9 +2,17 @@ import { AvailableIcons } from "./icon.type";
 
 export type NotificationToType = 'broadcast_hub' | 'broadcast' | 'broadcast_flow_auth' | 'hub_perms' | 'flow_perms' | 'hub_ids' | 'flow_auth_ids';
 export type NotificationTypeType = 'update' | 'mention' | 'alert' | 'reminder' | 'license';
+export const availableNotificationType : NotificationTypeType[] = ['alert','license','mention','reminder','update']
+export const availableNotificationTypeFormatted : Record<NotificationTypeType, string> = {
+  alert: 'Alertas',
+  license: 'Licensa',
+  mention: 'Menções',
+  reminder: 'Lembretes',
+  update: 'Atualizações'
+}
 
 export interface NotificationType{
-  id?: string,
+  id: string,
   title: string,
   type: NotificationTypeType,
   icon?: AvailableIcons,
