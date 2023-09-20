@@ -39,6 +39,7 @@ export type AvailableIcons =
   'HomeIcon' |
   'ProjectIcon' |
   'UsersIcon' |
+  'UserIcon' |
   'ErrorCircleIcon' |
   'LockIcon' |
   'RefreshIcon' |
@@ -50,4 +51,11 @@ export type AvailableIcons =
   'MagicWandIcon' |
   'SquareCheckedIcon' |
   'PackageIcon' |
-  'ReceiptIcon'
+  'ReceiptIcon' |
+  'MyDocsIcon' |
+  'UserVoiceIcon' |
+  'StopWatchIcon' |
+  'MentionIcon' |
+  'ArchiveIcon' |
+  'EnvelopeOpenIcon' |
+  'DropboxIcon'

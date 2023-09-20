@@ -5,6 +5,7 @@ export enum PossiblePermissions {
   ISAC                 = 'isac',
   FINANCEIRO           = 'financeiro',
   ADMIN_HUB            = 'admin-hub',
+  MANAGE_NOTIFICATION  = 'manage-notification',
   INTEGRATION_WHATSAPP = 'integration-whatsapp',
 
   // descontinuado ===============
