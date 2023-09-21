@@ -51,6 +51,8 @@ export interface WorkflowConfigObserverFnType {
    * e preencher flowData com dados adicionais.
    * 
    * \@fill-additional-data-with-match: Evento válido apenas no FlowEntity, para atualizar dados no flow data.
+   * 
+   * \@flow-network: Evento válido apenas no FlowData, para conectar dois workflows
    */
   name: string,
   type: 'append' | 'backup' | 'event',
@@ -94,6 +96,35 @@ export interface WorkflowConfigObserverFnType {
    *    replacers: Record<string, string>,
    *    // Filtro do mongo para especificar os flowDatas atingidos
    *    query: any
+   * }
+   * ```
+   * 
+   * \@flow-network
+   * ```
+   * {
+   *    flow_id: string,
+   *    // { [data_id]: [target_id] }
+   *    match: Record<string, string>,
+   *    // [by-step]: irá usar a validação de um step(do target-wf) para receber os dados
+   *    // [public-route]: irá usar uma a validação de uma rota publica(do target-wf) para receber os dados
+   *    // [inner-data]: vai injetar os dados sem validação
+   *    mode: 'by-step' | 'public-route' | 'data-injection',
+   *    // Se mode [by-step] = [id-da-step-target]
+   *    // Se mode [public-route] = [variant-da-public-route-post]
+   *    // Se mode [data-injection] será desconsiderado
+   *    mode_key?: string
+   *    // Caso queira gerar algum efeito colateral no registro atual após realizar a transferẽncia
+   *    effect?: {
+   *      // { [target_successfuly_id]: [origin_data_id] }
+   *      // Especifica quais dados serão copiados para o registro de origem e onde.
+   *      success?: Record<string, string>
+   *      // Caso gere erro, onde quer armazenar a resposta de erro no registro de origem, 
+   *      // e se quer colocar uma mensagem padrão, ou se não preenchido, usar a retorna no destino
+   *      error?: {
+   *        key: string,
+   *        default?: string
+   *      }
+   *    }
    * }
    * ```
    */
@@ -287,7 +318,7 @@ export interface WorkflowConfigActionsType {
    *  - Chama a execução da primeira etapa do fluxo
    *  - É renderizado no topo da página
    * 
-   * delete-data:
+   * delete-datas:
    *  - Excluí multiplos flow_datas
    *  - É renderizado na barra de filtro ao lado do filtro de etapas
    *  - Possui renderização condicional, aparecendo somente quando existe items selecionados

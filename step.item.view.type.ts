@@ -54,33 +54,40 @@ export interface StepViewGroupTableType extends StepViewBaseType{
 }
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   type: 'description' | 'html',
+  /**
+   * É possível adicionar conteúdo dinâmico utilizando os [replacers] e \
+   * no meio do [content] usar o shortcode \@[id-do-variável]
+   */
   content: string,
   replacers?: string[],
   mask?: 'none' | 'alert-danger' | 'alert-info' | 'alert-light',
   rules?: {
-    render?: string
-    /** STRING CONDITIONAL
+    /** 
+     * STRING CONDITIONAL
+     * 
      * É um formato de escrita, separado com ponto e virgula(;) com o primeiro caracter sendo o
      * marcador que identificam a função de cada parte da string
-     *   $ -> Para acessar uma propriedade
-     *   # -> Operador de comparação
-     *   * -> Valor
-     *   & -> Operador lógico
+     * 
+     *   \$ -> Para acessar uma propriedade \
+     *   \# -> Operador de comparação \
+     *   \* -> Valor \
+     *   \& -> Operador lógico
      * 
      * Alguns helpers que temos:
      * - Podemos acessar sub propriedades utilizando ponto (.)
      * - Podemos utilizar dois exclamações (!!) para verificar se um campo é verdadeiro('$prop;#eq;*!!') 
      * 
      * Exemplo:
-     * const data = {
+     * ```
+     *  const data = {
      *    helo: { world: 'by Ivrim' }
-     * }
+     *  }
      * 
-     * const stringConditional = '$hello.world;#eq;*by Ivrim'
-     * 
-     * // Esse código irá acessar o caminho dentro do objeto, e verificar se o conteúdo é igual ao valor especificado
-     * 
+     *  // Esse código irá acessar o caminho dentro do objeto, e verificar se o conteúdo é igual ao valor especificado
+     *  const stringConditional = '$hello.world;#eq;*by Ivrim'  
+     * ```
      * Consultar mais em: shared-types/utils/check-string-conditional.ts
      */
+    render?: string
   }
 }
