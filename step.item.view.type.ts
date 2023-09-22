@@ -50,7 +50,8 @@ export interface StepViewGroupTableType extends StepViewBaseType{
   id: string,
   type: 'group-table',
   resume: StepViewColumnType[],
-  columns: StepViewColumnType[]
+  columns: StepViewColumnType[],
+  required?: boolean
 }
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   type: 'description' | 'html',
