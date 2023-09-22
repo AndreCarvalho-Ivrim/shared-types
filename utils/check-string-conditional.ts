@@ -216,6 +216,11 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
   }
 };
 
+export const getShortcodes = (content: string) : string[]=> {
+  var sintaxes = /@\[([^\]]+)\]/g;
+  var matches = (content.match(sintaxes) ?? []) as string[];
+  return matches.map(m => m.substr(2, m.length - 3));
+}
 export const getCodeHelpers = (value: string) : Array<[string, string?]> | undefined => {
   if(!value || typeof value !== 'string' || !value.includes('__')) return
 

@@ -53,6 +53,8 @@ export const getRecursiveValue = (id: string, item: { data: any }) => {
 
       value = recursiveValue(item.data, ids[0], ids.slice(1));
     }
+    // CASO NÃO ESTEJA DE FORMA RECURSIVA, E AINDA SIM USE .
+    if(!value && item.data[id]) value = item.data[id]
   }
   else if(item.data[id]) value = item.data[id];
 
