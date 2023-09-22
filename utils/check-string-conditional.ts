@@ -88,6 +88,9 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
       case 'lte': return val_1 <=  val_2;
       case 'gt':  return val_1 >   val_2;
       case 'gte': return val_1 >=  val_2;
+      case 'in':  return val_1 &&  val_2 && String(val_2).split(',').includes(String(val_1));
+      case 'nin': return val_2 &&  !String(val_2).split(',').includes(String(val_1));
+      case 'not': return val_1 !== val_2;
     }
     return false;
   }
