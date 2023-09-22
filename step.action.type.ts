@@ -10,11 +10,11 @@ export interface StepActionType{
   isRedirect?: boolean,
   confirm?: StepActionConfirmType,
   rules?: StepTypeRules,
-  append_value?: {
+  /** { [key]: ...definições } */
+  append_values?: Record<string, {
     only_next_step?: boolean,
-    key: string,
     value: any
-  }
+  }>
 }
 export interface StepActionConfirmType{
   title: string,
