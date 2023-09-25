@@ -19,6 +19,11 @@ export interface StepCustomRuleFind{
     }
   }
 }
+export interface StepCustomRuleCumulative{
+  id: '@cumulative',
+  /** { [cumulative-key]: ...definição } */
+  data: Record<string, { mode: 'append' | 'prepend' }>
+}
 export interface StepTypeRules{
   requireds?: string[],
   ignores?: string[],
@@ -42,14 +47,11 @@ export interface StepTypeRules{
   }>
   /**
    * AVAILABLE CUSTOM RULES
-   * - [@find]: Utilizar o step para pesquisa.
-   * ```
-   *  data: {
-   *     ""
-   *  }
-   * ```
+   * - [@find]: Utilizar o step para pesquisa. Ver tipagem de StepCustomRuleFind
+   * - [@cumulative]: Usado para lidar com o modo de acumular os dados do StepType.cumulative_form_data \
+   * em atualizações
    */
-  customRules?: StepCustomRuleFind | { id: string, data: any },
+  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | { id: string, data: any },
   render?: string
 }
 export interface StepType{
@@ -64,6 +66,10 @@ export interface StepType{
   is_selected?: boolean,
   position: { x: number, y: number },
   items?: ItemOrViewOrWidgetOrIntegration[],
+  /**
+   * Se não tiver rules.customRule[id]=\@cumulative, cada\
+   * requisição irá sobrescrever a anterior
+   */
   cumulative_form_data?: string[],
   target?: string,
   triggers?: StepTriggerType[]

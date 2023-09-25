@@ -88,8 +88,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
       case 'lte': return val_1 <=  val_2;
       case 'gt':  return val_1 >   val_2;
       case 'gte': return val_1 >=  val_2;
-      case 'in':  return val_1 &&  val_2 && String(val_2).split(',').includes(String(val_1));
-      case 'nin': return val_2 &&  !String(val_2).split(',').includes(String(val_1));
+      case 'in':  return !!(val_1 &&  val_2 && String(val_2).split(',').includes(String(val_1)));
+      case 'nin': return !!(val_2 &&  !String(val_2).split(',').includes(String(val_1)));
       case 'not': return val_1 !== val_2;
     }
     return false;
@@ -124,7 +124,9 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
             `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. É obrigatório que o index par seja ocupado por uma propriedade ou valor (${strConditional})`
           );
 
-          if(c.type === 'prop') values.push(datas[c.value] ?? undefined);
+          if(c.type === 'prop') values.push(
+            getRecursiveValue(c.value, { data: datas }) ?? undefined
+          );
           else if(c.type === 'value'){
             const helpers = getCodeHelpers(c.value);
             if(!helpers) values.push(c.value)
@@ -214,6 +216,11 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
   }
 };
 
+export const getShortcodes = (content: string) : string[]=> {
+  var sintaxes = /@\[([^\]]+)\]/g;
+  var matches = (content.match(sintaxes) ?? []) as string[];
+  return matches.map(m => m.substr(2, m.length - 3));
+}
 export const getCodeHelpers = (value: string) : Array<[string, string?]> | undefined => {
   if(!value || typeof value !== 'string' || !value.includes('__')) return
 

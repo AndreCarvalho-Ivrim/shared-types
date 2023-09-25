@@ -32,12 +32,15 @@ export const handleRegexId = (id: string, item: { data: any }) => {
   return value;
 }
 export const getRecursiveValue = (id: string, item: { data: any }) => {
+  if(!item || !item.data) return;
+
   let value : undefined | any = undefined;
 
   const handledRegexId = handleRegexId(id, item)
   if(handledRegexId) return handledRegexId;
 
-  if(id.includes('.')){
+  if(item.data[id]) value = item.data[id];
+  else if(id.includes('.')){
     let ids = id.split('.');
 
     if(ids.length === 0) value = undefined;
@@ -54,7 +57,6 @@ export const getRecursiveValue = (id: string, item: { data: any }) => {
       value = recursiveValue(item.data, ids[0], ids.slice(1));
     }
   }
-  else if(item.data[id]) value = item.data[id];
 
   return value;
 }

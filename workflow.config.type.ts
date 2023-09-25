@@ -99,7 +99,7 @@ export interface WorkflowConfigObserverFnType {
    * }
    * ```
    * 
-   * \@flow-network
+   * \@flow-network [FlowNetworkParams]
    * ```
    * {
    *    flow_id: string,
@@ -109,10 +109,12 @@ export interface WorkflowConfigObserverFnType {
    *    // [public-route]: irá usar uma a validação de uma rota publica(do target-wf) para receber os dados
    *    // [inner-data]: vai injetar os dados sem validação
    *    mode: 'by-step' | 'public-route' | 'data-injection',
-   *    // Se mode [by-step] = [id-da-step-target]
+   *    // Se mode [by-step] = [web-id-da-step-target]
    *    // Se mode [public-route] = [variant-da-public-route-post]
    *    // Se mode [data-injection] será desconsiderado
-   *    mode_key?: string
+   *    mode_key?: string,
+   *    // Necessário apenas se mode [by-step] e a etapa tiver mais de uma ação,
+   *    action_key?: string,
    *    // Caso queira gerar algum efeito colateral no registro atual após realizar a transferẽncia
    *    effect?: {
    *      // { [target_successfuly_id]: [origin_data_id] }
