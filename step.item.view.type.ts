@@ -44,7 +44,7 @@ export interface StepViewColumnType{
   translate?: Record<string, string>
   required?: boolean
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewDescriptionOrHtmlType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewDescriptionOrHtmlType | StepViewRedirectType;
 export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
   columns: StepViewColumnType[]
@@ -81,7 +81,7 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
      * - Podemos acessar sub propriedades utilizando ponto (.)
      * - Podemos utilizar dois exclamações (!!) para verificar se um campo é verdadeiro('$prop;#eq;*!!') 
      * 
-     * Exemplo:
+     * Exemprulesrulesruleslo:
      * ```
      *  const data = {
      *    helo: { world: 'by Ivrim' }
@@ -92,6 +92,26 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
      * ```
      * Consultar mais em: shared-types/utils/check-string-conditional.ts
      */
+    render?: string
+  }
+}
+export interface StepViewRedirectType extends StepViewBaseType{
+  type: 'redirect',
+  /**
+   * Adicione o id se deseja delimitar um escopo. O componente StepViewRedirect \
+   * suporta objetos, ou arrays(neste caso, gerando replicações de si mesmo)
+   */
+  id?: string,
+  resume: StepViewColumnType[],
+  /** 
+   * Se o [to] começar com @hub: ou @isac: será usada a função \
+   * handleRegexUrl para lidar com o endereço de redirecionamento \
+   * no caso contrário, será considerado que é o id de outro flowData \
+   * e fará a transição interna, alterando apenas o SlideOver ou página
+   */ 
+  to: string,
+  rules?: {
+    /** STRING-CONDITIONAL */
     render?: string
   }
 }

@@ -59,6 +59,13 @@ export interface WorkflowConfigObserverFnType {
   execute: 'before' | 'after',
   condition?: string,
   unique?: boolean,
+  /**
+   * - Caso seja type === 'event', os valores válidos para o campo value \
+   * são 'async'(default) ou 'sync', que definem se a requisição irá ou não \
+   * esperar a resposta do evento.
+   * - Caso seja type === 'backup' o value é ignorado
+   * - Caso seja type === 'append' o value é o valor a ser adicionado
+   */
   value?: string,
   /** EVENTS -> required data on events[\@search-and-fill-data-with-match, \@fill-additional-data-with-match]
    * 
