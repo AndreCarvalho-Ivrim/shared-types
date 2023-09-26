@@ -10,12 +10,13 @@ interface StepViewBaseType{
   /** Só funciona se houver o placeholder(titulo) */
   is_collapsed?: boolean 
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'description' | 'html';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'description' | 'html' | 'redirect';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   table: 'Tabela',
   'group-table': 'Grupo de Tabelas',
   description: 'Descrição',
-  html: 'Conteúdo Customizado'
+  html: 'Conteúdo Customizado',
+  redirect: 'Redirecionamento'
 };
 export interface StepViewColumnType{
   /** 
