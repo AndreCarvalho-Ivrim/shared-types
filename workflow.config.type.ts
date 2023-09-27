@@ -196,7 +196,7 @@ export interface WorkflowAuthType {
   props: {
     email: string,
     name: string,
-
+    picture?: string,
     link?: string,
     template?: Record<WorkFlowTemplateKeyType, WorkflowAuthTemplateType[]>
   },
