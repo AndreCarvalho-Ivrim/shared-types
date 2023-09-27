@@ -25,3 +25,12 @@ export interface WorkflowType{
     auth: boolean
   }
 }
+export interface SimpleFlowAuthType{
+  _id: string,
+  name: string
+  picture?: string
+  auth_email: string
+  whatsapp?: string
+  sms?: string
+  email?: string
+}
