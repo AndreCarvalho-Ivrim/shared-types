@@ -35,18 +35,18 @@ export interface NotificationType{
   owner_id?: string,
   is_hub?: boolean,
 }
-
+export interface NotificationPreferenceByType{
+  type: NotificationTypeType,
+  email?: boolean,
+  sms?: boolean,
+  whatsapp?: boolean,
+  plataform?: boolean
+}
 export interface NotificationPreferenceType{
   id: string,
   user_id: string,
   client_id?: string,
   flow_id?: string,
-  notify_by: {
-    type: NotificationTypeType,
-    email?: boolean,
-    sms?: boolean,
-    whatsapp?: boolean,
-    plataform?: boolean
-  }[],
+  notify_by: NotificationPreferenceByType[],
   auto_archive_type: string[],
 }
