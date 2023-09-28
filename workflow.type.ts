@@ -1,3 +1,4 @@
+import { NotificationPreferenceByType, NotificationPreferenceType } from "./notification.type";
 import { WorkflowConfigType } from "./workflow.config.type";
 
 export type AvailableWorkflowThemeType = 'Cobrança' | 'Comercial' | 'Financeiro';
@@ -25,6 +26,9 @@ export interface WorkflowType{
     auth: boolean
   }
 }
+export interface SimpleFlowAuthPreferenceType extends NotificationPreferenceByType{
+  is_archived?: boolean
+}
 export interface SimpleFlowAuthType{
   _id: string,
   name: string
@@ -32,5 +36,6 @@ export interface SimpleFlowAuthType{
   auth_email: string
   whatsapp?: string
   sms?: string
-  email?: string
+  email?: string,
+  preference?: SimpleFlowAuthPreferenceType[]
 }
