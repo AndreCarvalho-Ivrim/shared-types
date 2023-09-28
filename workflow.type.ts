@@ -18,5 +18,19 @@ export interface WorkflowType{
   user_id: string,
   user_name: string,
   status: AvailableWorkflowStatusType,
-  config?: WorkflowConfigType
+  config?: WorkflowConfigType,
+  resume?: {
+    permissions?: WorkflowConfigType['permissions'],
+    integrations?: { email?: boolean, chatbot?: boolean, sms?: boolean, whatsapp?: boolean },
+    auth: boolean
+  }
+}
+export interface SimpleFlowAuthType{
+  _id: string,
+  name: string
+  picture?: string
+  auth_email: string
+  whatsapp?: string
+  sms?: string
+  email?: string
 }
