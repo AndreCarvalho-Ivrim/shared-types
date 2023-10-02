@@ -19,7 +19,7 @@ export const handleStringConditionalExtendingFlowData = (conditional: string, da
 
   return data;
 }
-export const checkStringConditional = (strConditional: string, datas: Record<string, any>,conditionalName = 'anonymous') => {
+export const checkStringConditional = (strConditional: string, datas: Record<string, any>,conditionalName = 'anonymous') : boolean => {
   let condition: {
     type: StringConditionalTypes,
     value: string
@@ -209,7 +209,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
       );
     });
 
-    return unionMatch;
+    return !!unionMatch;
   }catch(e){
     console.error(e);
     return false;
