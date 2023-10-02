@@ -220,6 +220,34 @@ export interface WorkflowAuthType {
     }>,
   }
 }
+export interface WorkflowTriggerType{
+  /** Referência interna */
+  id: string,
+  /** Referência ao evento que será disparado */
+  name: string,
+  title: string,
+  /** Se o evento será feito em segundo plano ou se terá resposta imediata */
+  is_async: boolean,
+  /** Dados adicionais */
+  data: any,
+  /**
+   * ```{ "onload-to-fill-the-page-if-necessary": true }``` \
+   * Atualizar dados da visualização, se não tiver com a tabela preenchida
+   * 
+   * ```
+   *  {
+   *    // Todos valores visualizados nessa função estão dentro do resultAndResponse.data
+   *    "success-message": {
+   *      "condition": "--string-conditional--",
+   *      // Tem suporte a valores dinâmicos da resposta com \@[]
+   *      "response": ["--se-verdadeiro--", "--se-falso--"],
+   *    }
+   *  }
+   * ```
+   * Formatar a mensagem de resposta
+   */
+  effects: Record<string, any>[]
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: WorkflowViewModeTable[],
@@ -253,7 +281,7 @@ export interface WorkflowConfigType {
       action_permission?: string,
     }[]
   },
-  triggers?: [],
+  triggers?: WorkflowTriggerType[],
   webhooks?: [],
   notifications?: WorkflowConfigNotificationType[],
   integrations?: {
@@ -319,6 +347,10 @@ export interface WFCActionFnUpdateSelected {
    */
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
+export interface WFActionFnCallTrigger{
+  type: 'call-trigger',
+  target: string,
+}
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete', /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -340,7 +372,7 @@ export interface WorkflowConfigActionsType {
     in: WFCActionRenderIn,
     condition?: '@when-selected-items' | string
   },
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
