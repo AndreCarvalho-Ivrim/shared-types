@@ -352,7 +352,7 @@ export interface WFActionFnCallTrigger{
   target: string,
 }
 export interface WorkflowConfigActionsType {
-  icon?: 'new' | 'delete', /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
+  icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
    * 
    * start-flow: 
