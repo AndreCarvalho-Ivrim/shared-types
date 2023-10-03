@@ -39,7 +39,7 @@ export const getRecursiveValue = (id: string, item: { data: any }) => {
   const handledRegexId = handleRegexId(id, item)
   if(handledRegexId) return handledRegexId;
 
-  if(item.data[id]) value = item.data[id];
+  if(item.data[id] !== undefined) value = item.data[id];
   else if(id.includes('.')){
     let ids = id.split('.');
 
