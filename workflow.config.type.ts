@@ -223,8 +223,12 @@ export interface WorkflowAuthType {
 export interface WorkflowTriggerType{
   /** Referência interna */
   id: string,
-  /** Referência ao evento que será disparado */
-  name: string,
+  /** 
+   * Referência ao evento que será disparado:
+   * 
+   * \@sync-flow-datas: Sincronizar integração de dois workflows
+   */
+  name: '@sync-flow-datas',
   title: string,
   /** Se o evento será feito em segundo plano ou se terá resposta imediata */
   is_async: boolean,
