@@ -228,11 +228,26 @@ export interface WorkflowTriggerType{
   title: string,
   /** Se o evento será feito em segundo plano ou se terá resposta imediata */
   is_async: boolean,
-  /** Dados adicionais */
+  /**
+   * Dados adicionais
+   * 
+   * \@sync-flow-datas \
+   * ```
+   *  {
+   *    target_flow_id: "id-do-wf-de-destino",
+   *    match: { "id-from-current-wf": "id-from-target-flow" }
+   *  }
+   * ```
+   */
   data: any,
   /**
+   * Effects só são válidos quando ``` is_async = false ```
+   * 
    * ```{ "onload-to-fill-the-page-if-necessary": true }``` \
    * Atualizar dados da visualização, se não tiver com a tabela preenchida
+   * 
+   * ```{ "refresh-flow-datas": { "condition": "--string-conditional--"} | true  } ```
+   * Recarregar dados da visualização
    * 
    * ```
    *  {
@@ -247,7 +262,7 @@ export interface WorkflowTriggerType{
    * ```
    * Formatar a mensagem de resposta
    */
-  effects?: Record<string, any>[]
+  effects?: Record<string, any>
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
