@@ -242,6 +242,7 @@ export interface WorkflowTriggerType{
    *  {
    *    // Todos valores visualizados nessa função estão dentro do resultAndResponse.data
    *    "success-message": {
+   *      // -- opcional
    *      "condition": "--string-conditional--",
    *      // Tem suporte a valores dinâmicos da resposta com \@[]
    *      "response": ["--se-verdadeiro--", "--se-falso--"],
@@ -250,7 +251,7 @@ export interface WorkflowTriggerType{
    * ```
    * Formatar a mensagem de resposta
    */
-  effects: Record<string, any>[]
+  effects?: Record<string, any>[]
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
