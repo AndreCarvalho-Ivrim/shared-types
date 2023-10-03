@@ -58,4 +58,12 @@ export type AvailableIcons =
   'MentionIcon' |
   'ArchiveIcon' |
   'EnvelopeOpenIcon' |
-  'DropboxIcon'
+  'DropboxIcon' |
+  'TrophyIcon' |
+  'GameIcon' |
+  'TriangleUpIcon' |
+  'EquilizerIcon' |
+  'TargetLockIcon' |
+  'HourglassIcon' |
+  'CompassIcon' |
+  'TripIcon'
