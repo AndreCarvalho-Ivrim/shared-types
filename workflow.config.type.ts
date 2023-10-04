@@ -220,6 +220,7 @@ export interface WorkflowAuthType {
     }>,
   }
 }
+export type AvailableTriggerEffects = 'onload-to-fill-the-page-if-necessary' | 'refresh-flow-datas' | 'success-message'
 export interface WorkflowTriggerType{
   /** Referência interna */
   id: string,
@@ -266,7 +267,10 @@ export interface WorkflowTriggerType{
    * ```
    * Formatar a mensagem de resposta
    */
-  effects?: Record<string, any>
+  effects?: Partial<Record<AvailableTriggerEffects, boolean | {
+    condition: string,
+    [key: string]: any
+  }>>,
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
@@ -371,6 +375,10 @@ export interface WFActionFnCallTrigger{
   type: 'call-trigger',
   target: string,
 }
+export interface WFActionFnCallSingleEntity{
+  type: 'call-single-entity',
+  target: string,
+}
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -392,7 +400,7 @@ export interface WorkflowConfigActionsType {
     in: WFCActionRenderIn,
     condition?: '@when-selected-items' | string
   },
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]

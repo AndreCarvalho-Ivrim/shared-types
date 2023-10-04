@@ -1,4 +1,4 @@
-import { AvailableWorkflowStatusType, ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
+import { AvailableTriggerEffects, AvailableWorkflowStatusType, ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
 
 export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
 export type ToastTypes = "success" | "info" | "warning" | "error"
@@ -31,8 +31,17 @@ export interface StepTypeRules{
     condition: string, // String Conditional. Tem acesso aos helpers de data como: __@now(+4)__
     to: string,
     action_permission?: string,
-    confirm?: StepActionConfirmType
+    confirm?: StepActionConfirmType,
   }[],
+  /**
+   * Efeitos colaterais na interface após o envio da etapa
+   * 
+   * - [close-if-successful]: Fechar SlideOver se requisição bem sucedida
+   * */
+  effects?: Partial<Record<AvailableTriggerEffects | 'close-if-successful', boolean | {
+    condition: string,
+    [key: string]: any
+  }>>,
   owner?: ('@data_creator' | '@current_user' | string)[],
   /**
    * TIPOS DE USUÁRIOS QUE PODEM SER RESPONSÁVEIS PELO FLOW_DATA (
