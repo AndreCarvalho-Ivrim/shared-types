@@ -14,7 +14,6 @@ export const isacRoutes = {
   icon:       () => '/icones',
   login:      () => '/login',
   menu:       () => '/menu',
-  defaults:   () => '/defaults',
   admin_hub: {
     workflows: () => '/painel-hub/workflows',
   }
