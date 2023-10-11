@@ -394,6 +394,12 @@ export interface WorkflowConfigActionsType {
    */
   id: 'start-flow' | 'delete-datas' | string, /*[obsoletos]: | 'list-datas' | 'alarm' | 'search' | 'models' */
   alt: string,
+  /**
+   * Pode ser usada uma permissão existente em [wf.config.permissions.actions] \
+   * ou pode ser utilizados shortcodes como:
+   * - [\@data_owners]: Quando apenas os responsáveis pelo registro podem \
+   * executar a ação
+   */
   action_permission?: string,
   available_view_modes?: string[],
   render?: {
