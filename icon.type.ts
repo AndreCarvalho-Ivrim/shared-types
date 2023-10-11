@@ -66,4 +66,5 @@ export type AvailableIcons =
   'TargetLockIcon' |
   'HourglassIcon' |
   'CompassIcon' |
-  'TripIcon'
+  'TripIcon' |
+  'ConnectionIcon'
