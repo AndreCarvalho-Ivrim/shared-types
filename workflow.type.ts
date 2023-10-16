@@ -20,6 +20,8 @@ export interface WorkflowType{
   user_name: string,
   status: AvailableWorkflowStatusType,
   config?: WorkflowConfigType,
+  template?: string,
+  template_params?: any,
   resume?: {
     permissions?: WorkflowConfigType['permissions'],
     integrations?: { email?: boolean, chatbot?: boolean, sms?: boolean, whatsapp?: boolean },
