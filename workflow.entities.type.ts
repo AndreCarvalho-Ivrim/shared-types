@@ -1,8 +1,8 @@
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigObserverFnType } from "./workflow.config.type";
 
-export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file-image" | "boolean" | "select" | "any";
-export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file-image", "boolean", "select"];
+export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file-image" | "boolean" | "select" | "select-multiple" | "any";
+export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file-image", "boolean", "select", "select-multiple"];
 export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
 export interface FlowEntitySubSchema{
   type: 'sub-schema',
@@ -16,6 +16,14 @@ export interface FlowEntitySchemaInfo{
   placeholder?: string,
   mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden',
   options?: { value: string, name: string }[],
+  autocomplete?: {
+    name: string, // Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities
+    toFill?: Record<string, string>, // autocomplete.response => field to fill
+    trigger?: { mode: 'keyup' } | {  // 
+      mode: 'clickToNext',
+      target: string
+    }
+  }
   required: boolean,
   unique?: boolean
   rule?: {
