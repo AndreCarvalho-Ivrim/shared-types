@@ -189,7 +189,10 @@ export interface WorkflowViewModeTable {
      * \@me: Id do usuário logado
      */
     condition: string,
-    filter: Record<string, string>,
+    filter: Record<string, string> | Record<string, {
+      type: WorkflowConfigFilterType['type'],
+      value: string
+    }>,
     /**
      * Se for true, e a condição for verdadeira, interrompera a validação dos próximos filtros
      */
