@@ -163,12 +163,10 @@ export interface ConfigViewModeColumnsType {
    */
   translate?: Record<string, string>
 }
-export interface WorkflowViewModeTable {
-  view_mode: 'table',
+export interface WorkflowViewModeBase{
   title: string,
   icon?: AvailableIcons,
   slug: string,
-  columns: ConfigViewModeColumnsType[],
   order_by?: { ref: string, orientation?: 'desc' | 'asc' },
   /** 
    * Existem alguns valores pré-definidos que geram pesquisas mais complexas como:
@@ -204,6 +202,27 @@ export interface WorkflowViewModeTable {
    *  usuário para o step abaixo, a não ser se o target for um stateless_step
    */
   redirect_to_stateless_step?: string
+}
+export interface WorkflowViewModeKanban extends WorkflowViewModeBase{
+  view_mode: 'kanban',
+  /** Conteúdo do card */
+  resume: {
+    /** Identificador no card */
+    identifier?: string,
+    /** 
+     * Se mostrará o avatar no card:
+     * 
+     * \@creator: Avatar do criador do registro \
+     * \@owner: Avatar dos responsáveis pelo registro \
+     * string: Referência do campo que armazena a imagem customizada do avatar 
+     **/
+    avatar?: "@creator" | "@owner" | string,
+    content: ConfigViewModeColumnsType[]
+  }
+}
+export interface WorkflowViewModeTable extends WorkflowViewModeBase{
+  view_mode: 'table',
+  columns: ConfigViewModeColumnsType[],
 }
 export interface WorkflowAuthTemplateType {
   id: string,
@@ -296,7 +315,7 @@ export interface WorkflowTriggerType{
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
-  view_modes?: WorkflowViewModeTable[],
+  view_modes?: (WorkflowViewModeTable | WorkflowViewModeKanban)[],
   filters?: Record<string, WorkflowConfigFilterType[]>,
   permissions?: ConfigPermissionType,
   menu?: {
