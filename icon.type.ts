@@ -68,4 +68,5 @@ export type AvailableIcons =
   'CompassIcon' |
   'TripIcon' |
   'ConnectionIcon' |
-  'CarouselIcon'
+  'CarouselIcon' |
+  'TimeIcon'

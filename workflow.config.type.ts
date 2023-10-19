@@ -224,6 +224,8 @@ export interface WorkflowViewModeTable extends WorkflowViewModeBase{
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
 }
+export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban;
+
 export interface WorkflowAuthTemplateType {
   id: string,
   type: 'email' | 'message',
@@ -315,7 +317,7 @@ export interface WorkflowTriggerType{
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
-  view_modes?: (WorkflowViewModeTable | WorkflowViewModeKanban)[],
+  view_modes?: AvailableViewModesType[],
   filters?: Record<string, WorkflowConfigFilterType[]>,
   permissions?: ConfigPermissionType,
   menu?: {
