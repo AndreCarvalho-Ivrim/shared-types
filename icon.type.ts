@@ -29,6 +29,7 @@ export type AvailableIcons =
   'MoreVerticalIcon' |
   'WindowsIcon' |
   'GitIcon' |
+  'GitCompareIcon' |
   'WidgetIcon' |
   'FormIcon' |
   'DetalistIcon' |

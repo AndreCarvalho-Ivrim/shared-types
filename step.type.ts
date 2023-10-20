@@ -91,7 +91,24 @@ export interface StepType{
     execute: ExecuteDescriptionType,
     condition?: string,
     content: string
-  }[]
+  }[],
+  /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
+  sla?: {
+    /** Tempo esperado de permanência em uma etapa */
+    stay: number,
+    /**
+     * Controlar indicadores de cor, baseado em quanto tempo falta para cumprimento do sla.
+     * 
+     * A chave será a quantidade de dias exemplo: \
+     * - "-1" (faltando um dia)
+     * - "0"(no dia de vencimento)
+     * - ">1" (qualquer número maior ou igual a um dia após vencimento)
+     * - "<-2" (qualquer número menor ou igual a dois dias de antecendência)
+     * 
+     * O segundo parametro é a classe da cor especificada
+     */
+    color_indicators?: Record<string, 'danger' | 'warning' | 'info' | 'success' | 'dark'>
+  }
 }
 export interface OptionalStepType extends Omit<StepType, 'name' | 'type' | 'position' | 'target_mode' | 'index'>{
   name?: string,
