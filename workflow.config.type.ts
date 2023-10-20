@@ -163,6 +163,24 @@ export interface ConfigViewModeColumnsType {
    */
   translate?: Record<string, string>
 }
+export interface WorkflowViewModeFilterScope{
+  /**
+   * String-conditional, com os hardcodes:
+   * 
+   * \@group_permission: Que usa o grupo de permissão do usuário como base \
+   * \@actions_permissions: Que usa as ações que o usuário pode executar como base \
+   * \@me: Id do usuário logado
+   */
+  condition: string,
+  filter?: Record<string, string> | Record<string, {
+    type: WorkflowConfigFilterType['type'],
+    value: string
+  }>,
+  /**
+   * Se for true, e a condição for verdadeira, interrompera a validação dos próximos filtros
+   */
+  break?: boolean
+}
 export interface WorkflowViewModeBase{
   title: string,
   icon?: AvailableIcons,
@@ -178,24 +196,7 @@ export interface WorkflowViewModeBase{
    * Escopo de visualização do usuário. \
    * Está funcionalidade delimita os dados que este usuário pode interagir
    */
-  filter_scope?: {
-    /**
-     * String-conditional, com os hardcodes:
-     * 
-     * \@group_permission: Que usa o grupo de permissão do usuário como base \
-     * \@actions_permissions: Que usa as ações que o usuário pode executar como base \
-     * \@me: Id do usuário logado
-     */
-    condition: string,
-    filter: Record<string, string> | Record<string, {
-      type: WorkflowConfigFilterType['type'],
-      value: string
-    }>,
-    /**
-     * Se for true, e a condição for verdadeira, interrompera a validação dos próximos filtros
-     */
-    break?: boolean
-  }[]
+  filter_scope?: WorkflowViewModeFilterScope[]
   /** Caso essa opção seja configurada, ele redefinirá o comportamento padrão de redirecionamento
    *  de steps. Ou seja, quando clicar em um flowData na tabela, em vez de abrir o step atual, ele abrirá
    *  para o definido abaixo, e o mesmo se aplica após o envio do submit, que ele sempre redirecionará o
