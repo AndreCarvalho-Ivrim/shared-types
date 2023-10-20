@@ -86,7 +86,7 @@ export const getDomain = (application: 'hub' | 'isac', removeLastSlash = false) 
     urls.hub = PORTAL!;
   }catch(e){ }
   
-  let url = urls[application]
+  let url = urls[application] ?? '';
   if(removeLastSlash && url.substr(-1) === '/') url = url.substr(0, url.length - 1)
 
   return url
