@@ -385,6 +385,8 @@ export interface WorkflowConfigType {
   }
   schema?: Record<string,FlowEntitySchemaInfo>,
   slas?: {
+    title: string,
+    icon?: AvailableIcons,
     notify?: {
       /**
        * Quem será notificado:
