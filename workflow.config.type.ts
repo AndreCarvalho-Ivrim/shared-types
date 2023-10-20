@@ -428,6 +428,7 @@ export interface WorkflowConfigType {
     outher_fields: WorkflowSlaOutherField[]
     permission?: string,
     filter_scope?: WorkflowViewModeFilterScope[]
+    columns: ConfigViewModeColumnsType[]
   }
   owner?: {
     id?: string
