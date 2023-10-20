@@ -425,7 +425,7 @@ export interface WorkflowConfigType {
       /** Com suporte a shortcode \@[variable] para injetar valores dinâmicos */
       content: string
     }[],
-    outher_fields: WorkflowSlaOutherField[]
+    outher_fields?: WorkflowSlaOutherField[]
     permission?: string,
     filter_scope?: WorkflowViewModeFilterScope[]
   }
