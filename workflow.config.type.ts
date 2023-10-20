@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, FlowEntitySchemaTypes, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType } from "."
+import { FlowEntitySchemaInfo, FlowEntitySchemaTypes, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepSlaType } from "."
 import { AvailableIcons } from "./icon.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
@@ -384,6 +384,49 @@ export interface WorkflowConfigType {
     }
   }
   schema?: Record<string,FlowEntitySchemaInfo>,
+  slas?: {
+    notify?: {
+      /**
+       * Quem será notificado:
+       *
+       * - \@creator: Criador do registro 
+       * - \@owners: Responsáveis pelo registro
+       * - \@flow_owner: Responsável pelo fluxo
+       * - \@group_permission:n: Onde o [n] deve ser substituido pelo grupo \
+       *   de permissão do qual deseja notificar todos participantes.
+       * - string: Caminho para o endereço de notificação (email ou telefone)
+       * 
+       * Exceto no caso da string, que é inserido diretamente o endereço de notificação \
+       * selecionando o meio de notificação automaticamente, os demais respeitarão as \
+       * preferências do usuário notificado.
+       */
+      to: '@creator' | '@owners' | '@flow_owner' | '@group_permission:n' | string,
+      /**
+       * Número de dias com base no calculo de SLA \
+       * Alguns códigos podem ser agregados ao número, como:
+       * 
+       * - [>] Sinal de maior que, usado para maior ou igual \
+       *   ( >0 : maior ou igual a 0 )
+       * - [<] Sinal de menor que, usado para menor ou igual \
+       *   ( <0 : menor ou igual a 0 )
+       * - [\~] Usado para valores em um intervalo \
+       *   ( 1~5 : maior ou igual a 1 e menor ou igual a 5 )
+       */
+      when: string,
+      /** Se não for especificado será aplicado a todas etapas */
+      available_steps?: string[],
+      props: {
+        id: string,
+        description: string,
+        show_sla?: boolean
+      },
+      /** Com suporte a shortcode \@[variable] para injetar valores dinâmicos */
+      content: string
+    }[],
+    outher_fields: WorkflowSlaOutherField[]
+    permission?: string,
+    filter_scope?: WorkflowViewModeFilterScope[]
+  }
   owner?: {
     id?: string
     name: string,
@@ -391,6 +434,11 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   }
+}
+export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'>{
+  /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
+  key: string,
+  title: string,
 }
 export type WFCActionRenderIn = 'top' | 'filter-bar'
 export interface WFCActionFnCallStep {
