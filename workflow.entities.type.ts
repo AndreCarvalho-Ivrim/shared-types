@@ -1,5 +1,5 @@
 import { AvailableIcons } from "./icon.type";
-import { WorkflowConfigObserverFnType } from "./workflow.config.type";
+import { ConfigViewModeColumnsType, WorkflowConfigObserverFnType } from "./workflow.config.type";
 
 export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file-image" | "boolean" | "select" | "select-multiple" | "any";
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file-image", "boolean", "select", "select-multiple"];
@@ -54,6 +54,15 @@ export interface FlowEntityInfo{
   icon?: AvailableIcons,
   description?: string,
   schema: FlowEntitySchemaTypes | FlowEntitySubSchema | Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
+  view_mode?: {
+    type: 'grid',
+    className?: string,
+    resume: {
+      picture: string,
+      title: string,
+      content: ConfigViewModeColumnsType[]
+    }
+  },
   rules?: {
     duplicity?: {
       /**
