@@ -14,7 +14,7 @@ export interface FlowEntitySchemaInfo{
   type: FlowEntitySchemaTypes,
   label: string,
   placeholder?: string,
-  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden',
+  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe',
   options?: { value: string, name: string }[],
   autocomplete?: {
     name: string, // Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities
