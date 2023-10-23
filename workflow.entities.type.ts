@@ -49,20 +49,22 @@ export interface FlowEntityImportSheet{
    */
   insert_mode?: 'append' | 'prepend'
 }
+export interface FlowEntityViewModeGrid{
+  type: 'grid',
+  className?: string,
+  resume: {
+    picture: string,
+    title: string,
+    content: ConfigViewModeColumnsType[]
+  }
+}
+export type AvailableFlowEntityViewModes = FlowEntityViewModeGrid
 export interface FlowEntityInfo{
   title: string,
   icon?: AvailableIcons,
   description?: string,
   schema: FlowEntitySchemaTypes | FlowEntitySubSchema | Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
-  view_mode?: {
-    type: 'grid',
-    className?: string,
-    resume: {
-      picture: string,
-      title: string,
-      content: ConfigViewModeColumnsType[]
-    }
-  },
+  view_mode?: AvailableFlowEntityViewModes,
   rules?: {
     duplicity?: {
       /**
