@@ -425,10 +425,17 @@ export interface WorkflowConfigType {
       /** Com suporte a shortcode \@[variable] para injetar valores dinâmicos */
       content: string
     }[],
-    outher_fields?: WorkflowSlaOutherField[]
+    outher_fields?: WorkflowSlaOutherField[],
     permission?: string,
-    filter_scope?: WorkflowViewModeFilterScope[]
-    columns: ConfigViewModeColumnsType[]
+    filter_scope?: WorkflowViewModeFilterScope[],
+    columns: ConfigViewModeColumnsType[],
+    /**
+     * Número negativo representando apartir de quantos dias \
+     * antes do vencimento os itens devem aparecer no painel
+     * 
+     * Por padrão -1d
+     */
+    show_after_from?: number
   }
   owner?: {
     id?: string
