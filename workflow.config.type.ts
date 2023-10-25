@@ -407,12 +407,14 @@ export interface WorkflowConfigType {
        * Número de dias com base no calculo de SLA \
        * Alguns códigos podem ser agregados ao número, como:
        * 
-       * - [>] Sinal de maior que, usado para maior ou igual \
-       *   ( >0 : maior ou igual a 0 )
-       * - [<] Sinal de menor que, usado para menor ou igual \
-       *   ( <0 : menor ou igual a 0 )
-       * - [\~] Usado para valores em um intervalo \
-       *   ( 1~5 : maior ou igual a 1 e menor ou igual a 5 )
+       * - [>] Sinal de maior que, usado para maior ou igual
+       *    > ( >0 : maior ou igual a 0 )
+       * - [<] Sinal de menor que, usado para menor ou igual
+       *    > ( <0 : menor ou igual a 0 )
+       * - [\~] Usado para valores em um intervalo
+       *    > ( 1~5 : maior ou igual a 1 e menor ou igual a 5 )
+       * - [^] Usando para descrever uma progressão aritmética
+       *    > ( 0^2 : dessa forma irá pegar apenas números pares)
        */
       when: string,
       /** Se não for especificado será aplicado a todas etapas */
