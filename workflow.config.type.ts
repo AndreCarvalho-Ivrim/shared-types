@@ -387,7 +387,14 @@ export interface WorkflowConfigType {
   slas?: {
     title: string,
     icon?: AvailableIcons,
+    /** 
+     * Horário aproximado de que os usuários serão notificados(min 8h | max 18h).
+     * 
+     * Default: 9h
+     */
+    time_to_notify?: 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18,
     notify?: {
+      subject: string,
       /**
        * Quem será notificado:
        *
@@ -424,7 +431,13 @@ export interface WorkflowConfigType {
         description: string,
         show_sla?: boolean
       },
-      /** Com suporte a shortcode \@[variable] para injetar valores dinâmicos */
+      /**
+       * Com suporte a shortcode \@[variable] para injetar valores dinâmicos
+       * 
+       * Valores disponíveis:
+       * - wf.title = Titulo do fluxo
+       * - user.(name, email, phone) = Dados do usuário a ser notificado
+       */
       content: string
     }[],
     outher_fields?: WorkflowSlaOutherField[],
@@ -437,7 +450,7 @@ export interface WorkflowConfigType {
      * 
      * Por padrão -1d
      */
-    show_after_from?: number
+    show_after_from?: number,
   }
   owner?: {
     id?: string
