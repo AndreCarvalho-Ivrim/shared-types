@@ -352,7 +352,8 @@ export interface WFConfigSlaNotifyType{
    * - \@group_permission:n: Onde o [n] deve ser substituido pelo grupo \
    *   de permissão do qual deseja notificar todos participantes. Pode ser\
    *   utilizado virgula como separador para mencionar várias permissões
-   * - string: Caminho para o endereço de notificação (email ou telefone)
+   * - string: Caminho para o endereço de notificação (email ou telefone) \
+   *   Pode ser utilizado virgula como separador para indicar vários campos
    * 
    * Exceto no caso da string, que é inserido diretamente o endereço de notificação \
    * selecionando o meio de notificação automaticamente, os demais respeitarão as \
