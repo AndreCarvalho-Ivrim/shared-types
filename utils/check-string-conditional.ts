@@ -274,7 +274,18 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
   }`;
 
   var searchValue = param ? `__${code}(${param})__` : `__${code}__`;
-  do{ value = value.replace(searchValue,replacer) }while(value.includes(searchValue))
+  let max = 40;
+  do{
+    value = value.replace(searchValue,replacer)
+    max--
+    if(max === 0){
+      console.log('[shortcode-replace-in-loop]', {
+        content: value,
+        replacer: searchValue
+      })
+      break;
+    }
+  }while(value.includes(searchValue))
 
   return value;
 }
