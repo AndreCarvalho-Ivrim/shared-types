@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, FlowEntitySchemaTypes, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepSlaType } from "."
+import { FlowEntitySchemaInfo, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
 import { AvailableIcons } from "./icon.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
@@ -499,6 +499,21 @@ export interface WFActionFnCallSingleEntity{
   type: 'call-single-entity',
   target: string,
 }
+export interface WFActionFnDownloadFiles{
+  type: 'download-files',
+  /** Nome que salvará o arquivo */
+  identify: string,
+  paths: string[],
+  fake_files?: {
+    name: string,
+    content: {
+      id: string,
+      title: string,
+      mask?: StepItemAttrMaskType,
+    }[]
+  }[],
+  confirm?: StepActionConfirmType,
+}
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -524,9 +539,10 @@ export interface WorkflowConfigActionsType {
   available_view_modes?: string[],
   render?: {
     in: WFCActionRenderIn,
-    condition?: '@when-selected-items' | string
+    /** Não implementado */
+    condition?: string
   },
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
