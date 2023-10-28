@@ -516,6 +516,12 @@ export interface WFActionFnDownloadFiles{
     }[]
   }[],
   confirm?: StepActionConfirmType,
+  /**
+   * O que fazer em confirmação múltipla:
+   * - individual-confirmation (default): Cada um terá sua confirmação separadamente 
+   * - one-confirm-all: Ao confirmar a primeira, infere que todas as demais serão confirmadas
+   */
+  confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
