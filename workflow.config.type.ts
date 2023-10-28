@@ -316,6 +316,8 @@ export interface WorkflowTriggerType{
     [key: string]: any
   }>>,
 }
+type AvailableTimeToNotify = 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
+export const availableTimeToNotify : AvailableTimeToNotify[] = [8,9,10,11, 12, 13, 14, 15, 16, 17, 18]
 export interface WorkflowConfigSlasType{
   title: string,
   icon?: AvailableIcons,
@@ -324,7 +326,7 @@ export interface WorkflowConfigSlasType{
    * 
    * Default: 9h
    */
-  time_to_notify?: 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18,
+  time_to_notify?: AvailableTimeToNotify,
   notify?: WFConfigSlaNotifyType[],
   outher_fields?: WorkflowSlaOutherField[],
   permission?: string,
@@ -350,7 +352,8 @@ export interface WFConfigSlaNotifyType{
    * - \@group_permission:n: Onde o [n] deve ser substituido pelo grupo \
    *   de permissão do qual deseja notificar todos participantes. Pode ser\
    *   utilizado virgula como separador para mencionar várias permissões
-   * - string: Caminho para o endereço de notificação (email ou telefone)
+   * - string: Caminho para o endereço de notificação (email ou telefone) \
+   *   Pode ser utilizado virgula como separador para indicar vários campos
    * 
    * Exceto no caso da string, que é inserido diretamente o endereço de notificação \
    * selecionando o meio de notificação automaticamente, os demais respeitarão as \
