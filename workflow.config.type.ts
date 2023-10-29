@@ -551,6 +551,13 @@ export interface WorkflowConfigActionsType {
     /** Não implementado */
     condition?: string
   },
+  /**
+   * As funções do tipo WFCActionFnUpdateSelected, WFActionFnDownloadFiles e \
+   * com id delete-datas, são do modo selectable (ou seja, dependem de um item \
+   * selecionado, e geralmente ficam no filter-bar)
+   * 
+   * As demais são funções globais, que são geralmente localizadas no topo.
+   */
   fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles
 }
 export interface ConfigPermissionType {
