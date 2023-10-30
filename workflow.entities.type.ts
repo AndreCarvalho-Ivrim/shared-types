@@ -1,5 +1,5 @@
 import { AvailableIcons } from "./icon.type";
-import { WorkflowConfigObserverFnType } from "./workflow.config.type";
+import { ConfigViewModeColumnsType, WorkflowConfigObserverFnType } from "./workflow.config.type";
 
 export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file-image" | "boolean" | "select" | "select-multiple" | "any";
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file-image", "boolean", "select", "select-multiple"];
@@ -14,7 +14,7 @@ export interface FlowEntitySchemaInfo{
   type: FlowEntitySchemaTypes,
   label: string,
   placeholder?: string,
-  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden',
+  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe',
   options?: { value: string, name: string }[],
   autocomplete?: {
     name: string, // Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities
@@ -49,11 +49,22 @@ export interface FlowEntityImportSheet{
    */
   insert_mode?: 'append' | 'prepend'
 }
+export interface FlowEntityViewModeGrid{
+  type: 'grid',
+  className?: string,
+  resume: {
+    picture: string,
+    title: string,
+    content: ConfigViewModeColumnsType[]
+  }
+}
+export type AvailableFlowEntityViewModes = FlowEntityViewModeGrid
 export interface FlowEntityInfo{
   title: string,
   icon?: AvailableIcons,
   description?: string,
   schema: FlowEntitySchemaTypes | FlowEntitySubSchema | Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
+  view_mode?: AvailableFlowEntityViewModes,
   rules?: {
     duplicity?: {
       /**

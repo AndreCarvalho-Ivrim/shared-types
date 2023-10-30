@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, FlowEntitySchemaTypes, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType } from "."
+import { FlowEntitySchemaInfo, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
 import { AvailableIcons } from "./icon.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
@@ -316,6 +316,79 @@ export interface WorkflowTriggerType{
     [key: string]: any
   }>>,
 }
+type AvailableTimeToNotify = 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
+export const availableTimeToNotify : AvailableTimeToNotify[] = [8,9,10,11, 12, 13, 14, 15, 16, 17, 18]
+export interface WorkflowConfigSlasType{
+  title: string,
+  icon?: AvailableIcons,
+  /** 
+   * Horário aproximado de que os usuários serão notificados(min 8h | max 18h).
+   * 
+   * Default: 9h
+   */
+  time_to_notify?: AvailableTimeToNotify,
+  notify?: WFConfigSlaNotifyType[],
+  outher_fields?: WorkflowSlaOutherField[],
+  permission?: string,
+  filter_scope?: WorkflowViewModeFilterScope[],
+  columns: ConfigViewModeColumnsType[],
+  /**
+   * Número negativo representando apartir de quantos dias \
+   * antes do vencimento os itens devem aparecer no painel
+   * 
+   * Por padrão -1d
+   */
+  show_after_from?: number,
+}
+export interface WFConfigSlaNotifyType{
+  subject: string,
+  /**
+   * Quem será notificado:
+   *
+   * - \@creator: Criador do registro 
+   * - \@owners: Responsáveis pelo registro
+   * - \@flow_auth: O usuário que represta o próprio registro
+   * - \@flow_owner: Responsável pelo fluxo
+   * - \@group_permission:n: Onde o [n] deve ser substituido pelo grupo \
+   *   de permissão do qual deseja notificar todos participantes. Pode ser\
+   *   utilizado virgula como separador para mencionar várias permissões
+   * - string: Caminho para o endereço de notificação (email ou telefone) \
+   *   Pode ser utilizado virgula como separador para indicar vários campos
+   * 
+   * Exceto no caso da string, que é inserido diretamente o endereço de notificação \
+   * selecionando o meio de notificação automaticamente, os demais respeitarão as \
+   * preferências do usuário notificado.
+   */
+  to: '@creator' | '@owners' | '@flow_owner' | '@group_permission:n' | string,
+  /**
+   * Número de dias com base no calculo de SLA \
+   * Alguns códigos podem ser agregados ao número, como:
+   * 
+   * - [>] Sinal de maior que, usado para maior ou igual
+   *    > ( >0 : maior ou igual a 0 )
+   * - [<] Sinal de menor que, usado para menor ou igual
+   *    > ( <0 : menor ou igual a 0 )
+   * - [\~] Usado para valores em um intervalo
+   *    > ( 1~5 : maior ou igual a 1 e menor ou igual a 5 )
+   * - [^] Usando para descrever uma progressão aritmética
+   *    > ( 0^2 : dessa forma irá pegar apenas números pares)
+   */
+  when: string,
+  /** Se não for especificado será aplicado a todas etapas */
+  available_steps?: string[],
+  props: {
+    id: string,
+    description: string,
+    show_sla?: boolean
+  },
+  /**
+   * Com suporte a shortcode \@[variable] para injetar valores dinâmicos
+   * 
+   * Valores disponíveis:
+   * - wf.title = Titulo do fluxo
+   */
+  content: string
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
@@ -384,6 +457,7 @@ export interface WorkflowConfigType {
     }
   }
   schema?: Record<string,FlowEntitySchemaInfo>,
+  slas?: WorkflowConfigSlasType,
   owner?: {
     id?: string
     name: string,
@@ -391,6 +465,11 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   }
+}
+export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'>{
+  /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
+  key: string,
+  title: string,
 }
 export type WFCActionRenderIn = 'top' | 'filter-bar'
 export interface WFCActionFnCallStep {
@@ -423,6 +502,27 @@ export interface WFActionFnCallSingleEntity{
   type: 'call-single-entity',
   target: string,
 }
+export interface WFActionFnDownloadFiles{
+  type: 'download-files',
+  /** Nome que salvará o arquivo */
+  identify: string,
+  paths: string[],
+  fake_files?: {
+    name: string,
+    content: {
+      id: string,
+      title: string,
+      mask?: StepItemAttrMaskType,
+    }[]
+  }[],
+  confirm?: StepActionConfirmType,
+  /**
+   * O que fazer em confirmação múltipla:
+   * - individual-confirmation (default): Cada um terá sua confirmação separadamente 
+   * - one-confirm-all: Ao confirmar a primeira, infere que todas as demais serão confirmadas
+   */
+  confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
+}
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -448,9 +548,17 @@ export interface WorkflowConfigActionsType {
   available_view_modes?: string[],
   render?: {
     in: WFCActionRenderIn,
-    condition?: '@when-selected-items' | string
+    /** Não implementado */
+    condition?: string
   },
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity
+  /**
+   * As funções do tipo WFCActionFnUpdateSelected, WFActionFnDownloadFiles e \
+   * com id delete-datas, são do modo selectable (ou seja, dependem de um item \
+   * selecionado, e geralmente ficam no filter-bar)
+   * 
+   * As demais são funções globais, que são geralmente localizadas no topo.
+   */
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]

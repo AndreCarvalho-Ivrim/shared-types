@@ -8,7 +8,8 @@ export const isacRoutes = {
     test:     (module_name: string) => `/fluxo/${module_name}/teste-de-execucao`,
     exec:     (module_name: string, view_mode?: string) => `/modulo/${module_name}${view_mode ? `/${view_mode}`:``}`,
     entity:   (module_name: string, entity: string) => `/entidade/${module_name}/${entity}`,
-    calendar: (module_name: string) => `/calendario-do-fluxo/${module_name}`
+    calendar: (module_name: string) => `/calendario-do-fluxo/${module_name}`,
+    sla_panel:(module_name: string) => `/painel-sla/${module_name}`
   },
   permission: (module_name: string) => `/permissoes-de-usuarios/${module_name}`,
   icon:       () => '/icones',

@@ -63,6 +63,29 @@ export interface StepTypeRules{
   customRules?: StepCustomRuleFind | StepCustomRuleCumulative | { id: string, data: any },
   render?: string
 }
+export interface StepSlaType{
+  /** Tempo esperado de permanência em uma etapa */
+  stay: number,
+  /**
+   * Controlar indicadores de cor, baseado em quanto tempo falta para cumprimento do sla.
+   * 
+   * A chave será a quantidade de dias exemplo: \
+   * - "-1" (faltando um dia)
+   * - "0"(no dia de vencimento)
+   * - ">1" (qualquer número maior ou igual a um dia após vencimento)
+   * - "<-2" (qualquer número menor ou igual a dois dias de antecendência)
+   * 
+   * O segundo parametro é a classe da cor especificada
+   * 
+   * Caso não seja informado seguirá a regra: <-2 = light | -1 = dark | 0 = warning | >1 = danger
+   */
+  color_indicators?: Record<string, 'danger' | 'warning' | 'info' | 'success' | 'dark' | 'light'>
+  /**
+   * Apartir de que número deseja mostrar o indicador numérico. Geralmente usado números negativos. \
+   * Por padrão inicia em -1
+   */
+  show_after_from?: number
+}
 export interface StepType{
   version?: string,
   _id?: string,
@@ -93,29 +116,7 @@ export interface StepType{
     content: string
   }[],
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
-  sla?: {
-    /** Tempo esperado de permanência em uma etapa */
-    stay: number,
-    /**
-     * Controlar indicadores de cor, baseado em quanto tempo falta para cumprimento do sla.
-     * 
-     * A chave será a quantidade de dias exemplo: \
-     * - "-1" (faltando um dia)
-     * - "0"(no dia de vencimento)
-     * - ">1" (qualquer número maior ou igual a um dia após vencimento)
-     * - "<-2" (qualquer número menor ou igual a dois dias de antecendência)
-     * 
-     * O segundo parametro é a classe da cor especificada
-     * 
-     * Caso não seja informado seguirá a regra: <-2 = light | -1 = dark | 0 = warning | >1 = danger
-     */
-    color_indicators?: Record<string, 'danger' | 'warning' | 'info' | 'success' | 'dark' | 'light'>
-    /**
-     * Apartir de que número deseja mostrar o indicador numérico. Geralmente usado números negativos. \
-     * Por padrão inicia em -1
-     */
-    show_after_from?: number
-  }
+  sla?: StepSlaType
 }
 export interface OptionalStepType extends Omit<StepType, 'name' | 'type' | 'position' | 'target_mode' | 'index'>{
   name?: string,
