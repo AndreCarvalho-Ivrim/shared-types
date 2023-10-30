@@ -47,7 +47,7 @@ export interface StepTypeRules{
    *
    * - \@data_creator: Criador do flow data
    * -  \@current_user: Usuário atual se tornará o owner
-   * - \@flow_data:n: Indicar permissão baseada em um dado do flow_data
+   * - \@custom:x@[y]: Indicar permissão baseada em um dado do flow_data, com suporte a shortcodes
    * - string: Nome do grupo de permissões(ex. Financeiro), que o usuário deve ter para poder se tornar owner
    */
   owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
