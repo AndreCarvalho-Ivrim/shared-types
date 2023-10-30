@@ -65,7 +65,6 @@ export interface StepItemType{
     }
     /** String condition, para filtrar os dados do autocomplete */
     filter_condition?: string,
-
   },
   customData?: {
     mode: AvailableCustomItemModeType,
