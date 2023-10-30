@@ -118,3 +118,10 @@ const handleRecursiveValue = (ids: string[], data: any, value: any, i: number, c
     return data;
   }
 }
+export const replaceAll = (content: string, search: string, replacer: string) => {
+  if(!content || content.length === 0 || !search || search.length === 0 || search === replacer) return content;
+
+  const regex = new RegExp(search, 'g');
+
+  return content.replace(regex, replacer)
+}
