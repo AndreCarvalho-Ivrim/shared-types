@@ -6,6 +6,7 @@ export interface StepActionType{
   type: ThemeColorType,
   key: string,
   target: string,
+  /** Se adicionar \@condition: pode inserir uma string-condition */
   action_permission?: string,
   isRedirect?: boolean,
   confirm?: StepActionConfirmType,

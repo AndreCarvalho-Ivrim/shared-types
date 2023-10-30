@@ -42,13 +42,15 @@ export interface StepTypeRules{
     condition: string,
     [key: string]: any
   }>>,
-  owner?: ('@data_creator' | '@current_user' | string)[],
   /**
-   * TIPOS DE USUÁRIOS QUE PODEM SER RESPONSÁVEIS PELO FLOW_DATA (
-   *   @data_creator: Criador do flow data
-   *   @current_user: Usuário atual se tornará o owner
-   *   string: Nome do grupo de permissões(ex. Financeiro), que o usuário deve ter para poder se tornar owner
-   */ 
+   * Tipos de usuários que podem ser responsáveis pelo flow_data:
+   *
+   * - \@data_creator: Criador do flow data
+   * -  \@current_user: Usuário atual se tornará o owner
+   * - \@flow_data:n: Indicar permissão baseada em um dado do flow_data
+   * - string: Nome do grupo de permissões(ex. Financeiro), que o usuário deve ter para poder se tornar owner
+   */
+  owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
   actions?: Record<WorkflowConfigActionsType['id'], {
     group_permission?: ('@data_creator' | '@data_owner' | '@not-allowed' | string)[],
     permissionErroMessage?: string,
