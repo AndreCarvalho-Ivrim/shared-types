@@ -121,7 +121,8 @@ const handleRecursiveValue = (ids: string[], data: any, value: any, i: number, c
 export const replaceAll = (content: string, search: string, replacer: string) => {
   if(!content || content.length === 0 || !search || search.length === 0 || search === replacer) return content;
 
-  const regex = new RegExp(search, 'g');
+  const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(escapedSearch, 'g');
 
   return content.replace(regex, replacer)
 }
