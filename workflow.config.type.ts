@@ -171,10 +171,10 @@ export interface WorkflowViewModeFilterScope{
    * \@actions_permissions: Que usa as ações que o usuário pode executar como base \
    * \@me: Id do usuário logado
    */
-  condition: string,
+  condition?: string,
   filter?: Record<string, string> | Record<string, {
     type: WorkflowConfigFilterType['type'],
-    value: string
+    value: any
   }>,
   /**
    * Se for true, e a condição for verdadeira, interrompera a validação dos próximos filtros
