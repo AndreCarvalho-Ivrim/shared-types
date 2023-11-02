@@ -4,6 +4,7 @@ export const isacRoutes = {
   home:       () => '/',
   template:   () => '/modelos',
   workflow: {
+    home:     () => '/fluxos',
     create:   (module_name: string) => `/fluxo/${module_name}`,
     test:     (module_name: string) => `/fluxo/${module_name}/teste-de-execucao`,
     exec:     (module_name: string, view_mode?: string) => `/modulo/${module_name}${view_mode ? `/${view_mode}`:``}`,
@@ -59,7 +60,19 @@ export const hubRoutes = {
   }
 }
 
-export const handleRegexUrl = (url: string) => {
+/**
+ * Você pode enviar urls comuns, ou menções a rotas das aplicações hub e isac \
+ * \@hub:\<route_name\> \
+ * \@isac:\<route_name\>
+ * 
+ * Exemplos:
+ * - \@hub:profile.home
+ * - \@isac:workflow.exec(245243131-214142-1241412)
+ *
+ * Passando o token como segundo parametro ele será adicionado automáticamente \
+ * caso seja uma transição de aplicação.
+ */
+export const handleRegexUrl = (url: string, token?: string) => {
   const getUrl = (url: string, prefix: string, routes: Record<string, any>) => {
     let withoutPrefix = url.replace(prefix, '')
     let route_name = withoutPrefix.includes('(') ? withoutPrefix.split('(')[0] : withoutPrefix
@@ -70,8 +83,19 @@ export const handleRegexUrl = (url: string) => {
     return route(...params)
   }
   if(url.substring(0,4) === 'http') return url
-  if(url.includes('@hub:'))   return `${getDomain('hub', true)}${getUrl(url, '@hub:', hubRoutes)}`
-  if(url.includes('@isac:'))  return `${getDomain('isac', true)}${getUrl(url, '@isac:', isacRoutes)}`
+  
+  let handledUrl : string | undefined = undefined
+  if(url.includes('@hub:'))  handledUrl = `${getDomain('hub', true)}${getUrl(url, '@hub:', hubRoutes)}`
+  if(url.includes('@isac:')) handledUrl = `${getDomain('isac', true)}${getUrl(url, '@isac:', isacRoutes)}`
+  if(handledUrl){
+    if(token && handledUrl.substring(0,4) === 'http' && !handledUrl.includes('?token=')){
+      if(handledUrl.includes('?')) return `${handledUrl}&token=${token}`
+      return `${handledUrl}?token=${token}`
+    }
+
+    return handledUrl;
+  }
+
   return url
 }
 export const getDomain = (application: 'hub' | 'isac', removeLastSlash = false) => {
