@@ -41,11 +41,11 @@ export const hubRoutes = {
   },
   admin_panel: {
     client:     () => '/painel-adm/empresa',
-    users:       () => '/painel-adm',
+    users:      () => '/painel-adm',
     projects:   () => '/painel-adm/projetos',
     dashboards: () => '/painel-adm/dashboards',
     integrations: {
-      whatsapp: '/painel-adm/integracao-whatsapp',
+      whatsapp: () => '/painel-adm/integracao-whatsapp',
     }
   },
   icon:   () => '/icones',
@@ -118,7 +118,7 @@ type AvailableRegexUrls =
  * Passando o token como segundo parametro ele será adicionado automáticamente \
  * caso seja uma transição de aplicação.
  */
-export const handleRegexUrl = (url: AvailableRegexUrls, token?: string) => {
+export const handleRegexUrl = (url: AvailableRegexUrls, token?: string) : string => {
   const getUrl = (url: string, prefix: string, routes: Record<string, any>) => {
     let queryParams = ''
     if(url.includes('?')){
@@ -132,6 +132,11 @@ export const handleRegexUrl = (url: AvailableRegexUrls, token?: string) => {
     let params = withoutPrefix.includes('(') ? withoutPrefix.split('(')[1].replace(')','').split(',') : []
 
     const route = getRecursiveValue(route_name, { data: routes })
+
+    if(typeof route !== 'function'){
+      console.error('[invalid-regex-url]', { route, url })
+      return url
+    }
 
     return `${route(...params)}${queryParams}`
   }
