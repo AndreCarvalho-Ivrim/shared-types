@@ -44,6 +44,9 @@ export const hubRoutes = {
     users:       () => '/painel-adm',
     projects:   () => '/painel-adm/projetos',
     dashboards: () => '/painel-adm/dashboards',
+    integrations: {
+      whatsapp: '/painel-adm/integracao-whatsapp',
+    }
   },
   dashboard: {
     home: () => '/co-pilot-dashboard',
@@ -60,7 +63,48 @@ export const hubRoutes = {
   }
 }
 
+type AvailableRegexUrls = 
+  '@isac:home' |
+  '@isac:template' |
+  '@isac:workflow.home' |
+  '@isac:workflow.create(module_name)' |
+  '@isac:workflow.test(module_name)' |
+  '@isac:workflow.exec(module_name, view_mode?)' |
+  '@isac:workflow.entity(module_name, entity)' |
+  '@isac:workflow.calendar(module_name)' |
+  '@isac:workflow.sla_panel(module_name)' |
+  '@isac:permission(module_name)' |
+  '@isac:icon' |
+  '@isac:login' |
+  '@isac:menu' |
+  '@isac:admin_hub.workflows' |
+  '@hub:auth.login' |
+  '@hub:auth.logout' |
+  '@hub:profile.home' |
+  '@hub:old_cap.alert' |
+  '@hub:old_cap.home' |
+  '@hub:old_cap.docs(id)' |
+  '@hub:old_cap.models' |
+  '@hub:reconciliation.home' |
+  '@hub:reconciliation.manage' |
+  '@hub:reconciliation.history' |
+  '@hub:admin_panel.client' |
+  '@hub:admin_panel.users' |
+  '@hub:admin_panel.projects' |
+  '@hub:admin_panel.dashboards' |
+  '@hub:admin_panel.integrations.whatsapp' |
+  '@hub:dashboard.home' |
+  '@hub:dashboard.show(slug)' |
+  '@hub:gallery.home' |
+  '@hub:gallery.show(id)' |
+  '@hub:notification.all' |
+  '@hub:notification.preference' |
+  '@hub:notification.create'
+
 /**
+ * *obs. Use handleRegexUrl('custom-url' as any) para ignorar o erro de tipagem.*
+ * 
+ * 
  * Você pode enviar urls comuns, ou menções a rotas das aplicações hub e isac \
  * \@hub:\<route_name\> \
  * \@isac:\<route_name\>
@@ -72,15 +116,22 @@ export const hubRoutes = {
  * Passando o token como segundo parametro ele será adicionado automáticamente \
  * caso seja uma transição de aplicação.
  */
-export const handleRegexUrl = (url: string, token?: string) => {
+export const handleRegexUrl = (url: AvailableRegexUrls, token?: string) => {
   const getUrl = (url: string, prefix: string, routes: Record<string, any>) => {
+    let queryParams = ''
+    if(url.includes('?')){
+      const splitedUrl = url.split('?');
+      url = splitedUrl[0]
+      if(splitedUrl.length > 1) queryParams = `?${splitedUrl[1]}`
+    }
+
     let withoutPrefix = url.replace(prefix, '')
     let route_name = withoutPrefix.includes('(') ? withoutPrefix.split('(')[0] : withoutPrefix
     let params = withoutPrefix.includes('(') ? withoutPrefix.split('(')[1].replace(')','').split(',') : []
 
     const route = getRecursiveValue(route_name, { data: routes })
 
-    return route(...params)
+    return `${route(...params)}${queryParams}`
   }
   if(url.substring(0,4) === 'http') return url
   
