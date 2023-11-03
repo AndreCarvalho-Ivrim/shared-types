@@ -434,7 +434,17 @@ export interface WorkflowConfigType {
     },
     whatsapp?: { number: string, token: string },
     sms?: any,
-    chatbot?: any
+    chatbot?: any,
+    omie?: {
+      secret_key: string,
+      public_key: string
+    }
+    outhers?: {
+      key: string,
+      name: string,
+      status: boolean,
+      data: any
+    }[]
   },
   services?: {
     auth?: WorkflowAuthType,
@@ -455,9 +465,23 @@ export interface WorkflowConfigType {
         schema?: Record<string, FlowEntitySchemaInfo>,
       }>,
     }
-  }
+  },
   schema?: Record<string,FlowEntitySchemaInfo>,
   slas?: WorkflowConfigSlasType,
+  routines?: {
+    view?: {
+      title: string,
+      icon?: AvailableIcons,
+      permission: string,
+    },
+    executors: {
+      type: 'sync-ivrim-bigdata'
+      name: string,
+      description: string
+      time_to_exec?: 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5 | 5.5
+      data?: any
+    }[],
+  },
   owner?: {
     id?: string
     name: string,
