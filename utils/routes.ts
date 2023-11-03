@@ -48,6 +48,7 @@ export const hubRoutes = {
       whatsapp: '/painel-adm/integracao-whatsapp',
     }
   },
+  icon:   () => '/icones',
   dashboard: {
     home: () => '/co-pilot-dashboard',
     show: (slug: string) => `/co-pilot-dashboard/${slug}`,
@@ -95,6 +96,7 @@ type AvailableRegexUrls =
   '@hub:admin_panel.integrations.whatsapp' |
   '@hub:dashboard.home' |
   '@hub:dashboard.show(slug)' |
+  '@hub:icon' |
   '@hub:gallery.home' |
   '@hub:gallery.show(id)' |
   '@hub:notification.all' |
