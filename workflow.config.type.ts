@@ -468,20 +468,7 @@ export interface WorkflowConfigType {
   },
   schema?: Record<string,FlowEntitySchemaInfo>,
   slas?: WorkflowConfigSlasType,
-  routines?: {
-    view?: {
-      title: string,
-      icon?: AvailableIcons,
-      permission: string,
-    },
-    executors: {
-      type: 'sync-ivrim-bigdata'
-      name: string,
-      description: string
-      time_to_exec?: 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5 | 5.5
-      data?: any
-    }[],
-  },
+  routines?: WorkflowRoutinesType,
   owner?: {
     id?: string
     name: string,
@@ -587,4 +574,32 @@ export interface WorkflowConfigActionsType {
 export interface ConfigPermissionType {
   groups: PermissionType[]
   actions: string[]
+}
+export interface WorkflowRoutinesType{
+  view?: {
+    title: string,
+    icon?: AvailableIcons,
+    permission: string,
+  },
+  executors: AvailableRoutinesExecutorsType[],
+}
+export const availableExecutorsTypes : (AvailableRoutinesExecutorsType['type'])[]= ['sync-ivrim-big-data']
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD
+interface WorkflowRoutinesExecutorBase{
+  name: string,
+  description: string,
+  last_executed_in?: Date,
+  time_to_exec?: number,
+  /**
+   * Intervalo(em dias) em que a rotina repetirá. \
+   * Por padrão o valor é 1 (todo dia)
+   */
+  interval?: number,
+}
+export interface WorkflowRoutinesExecutorIBD extends WorkflowRoutinesExecutorBase{
+  type: 'sync-ivrim-big-data'
+  data?: {
+    db_name: string,
+    exception?: "duzani-theme"
+  }
 }
