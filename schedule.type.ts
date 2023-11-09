@@ -25,7 +25,7 @@ export interface CreateScheduleEvent {
     /** Se é um usuário do flowAuth */
     is_flow_auth?: boolean;
     /** Se o evento foi aceito pelo participante */
-    is_accepted: boolean;
+    is_accepted?: boolean;
   }[],
   reminder?: {
     /** Não está sendo usado, pois a plataforma é selecionada com base nas preferências do usuário */
@@ -43,9 +43,5 @@ export interface CreateScheduleEvent {
    * - [private] Apenas os guests/owners podem ver o evento
    * - [public] Todos podem ver o evento, mesmo não autenticados
    */
-  access_modifier?:  'protected' | 'private' | 'public',
-  client_id: string,
-  user_id: string,
-  flow_id?: string,
-  external_id?: string,
+  access_modifier?:  'protected' | 'private' | 'public'
 }

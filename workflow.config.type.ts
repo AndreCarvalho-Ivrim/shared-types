@@ -140,7 +140,7 @@ export interface WorkflowConfigObserverFnType {
    * }
    * ```
    * 
-   * @calendar-event Ver tipagem de WFCalendarEvent
+   * @calendar-event Ver tipagem de WFCalendarEventType
    */
   data?: any
 }
