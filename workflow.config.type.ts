@@ -53,6 +53,9 @@ export interface WorkflowConfigObserverFnType {
    * \@fill-additional-data-with-match: Evento válido apenas no FlowEntity, para atualizar dados no flow data.
    * 
    * \@flow-network: Evento válido apenas no FlowData, para conectar dois workflows
+   * 
+   * \@calendar-event: Evento válido apenas no FlowData, para gerar eventos no calendário da empresa com base \
+   * nos registros
    */
   name: string,
   type: 'append' | 'backup' | 'event',
@@ -136,6 +139,8 @@ export interface WorkflowConfigObserverFnType {
    *    }
    * }
    * ```
+   * 
+   * @calendar-event Ver tipagem de WFCalendarEvent
    */
   data?: any
 }
@@ -464,6 +469,24 @@ export interface WorkflowConfigType {
         mode: 'merge' | 'overwrite',
         schema?: Record<string, FlowEntitySchemaInfo>,
       }>,
+    },
+    calendar?: {
+      filter_scope?: {
+        /** String Condition baseada no usuário solicitante da request */
+        condition?: string,
+        /**
+         * - [protected] Pode ver todos os eventos da empresa
+         * - [private] Pode ver apenas os eventos que é guest
+         * - [public] Pode ver apenas os eventos públicos
+         */
+        access_modifier?: "protected" | "private" | "public",
+        filter?: Record<string, string> | Record<string, {
+          type: WorkflowConfigFilterType['type'],
+          value: any
+        }>,
+        /** Interromper assim que a condition for true */
+        break?: boolean,
+      }[]
     }
   },
   schema?: Record<string,FlowEntitySchemaInfo>,
