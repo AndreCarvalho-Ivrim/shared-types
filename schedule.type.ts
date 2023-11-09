@@ -8,6 +8,8 @@ export interface CreateScheduleEvent {
   start: Date,
   end: Date,
   description?: string;
+  /** Com suporte a regexUrl */
+  redirect_to?: string;
   location?: string;
   color: 'default' | 'green' | 'red' | 'azure' | 'warning',
   /** Strings para serem utilizadas na pesquisa */
@@ -23,11 +25,12 @@ export interface CreateScheduleEvent {
     /** Se é um usuário do flowAuth */
     is_flow_auth?: boolean;
     /** Se o evento foi aceito pelo participante */
-    isAccept: boolean;
+    is_accepted: boolean;
   }[],
   reminder?: {
     /** Não está sendo usado, pois a plataforma é selecionada com base nas preferências do usuário */
     type: ('email' | 'whatsapp' | 'notification')[],
+    /** Quantida aplicada a unidade de medida */
     quantity: number,
     unit: 'minutes' | 'hour' | 'day' | 'week'
   },
@@ -40,5 +43,9 @@ export interface CreateScheduleEvent {
    * - [private] Apenas os guests/owners podem ver o evento
    * - [public] Todos podem ver o evento, mesmo não autenticados
    */
-  access_modifier?:  'protected' | 'private' | 'public'
+  access_modifier?:  'protected' | 'private' | 'public',
+  client_id: string,
+  user_id: string,
+  flow_id?: string,
+  external_id?: string,
 }
