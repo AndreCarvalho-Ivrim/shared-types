@@ -456,6 +456,14 @@ export interface WorkflowConfigType {
     },
     publicRoutes?: {
       get?: Record<string, {
+        /**
+         * Query Params disponíveis para pesquisa.
+         * 
+         * Record< [query-param] , [path-no-flow-data] >
+         * 
+         * Palavras reservadas: take, skip
+         */
+        available_query_params?: Record<string, string>,
         filter_scope?: WorkflowViewModeFilterScope[],
         /** Se não for informado trará o flow_data.data completo */
         body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
