@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
+import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
 import { AvailableIcons } from "./icon.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
@@ -459,10 +459,13 @@ export interface WorkflowConfigType {
         body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
       }>,
       post?: Record<string, {
+        /** Escopo de alteração dentro do objeto flow_data.data */
         scope?: string,
-        body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
-        mode: 'merge' | 'overwrite',
-        schema?: Record<string, FlowEntitySchemaInfo>,
+        /** Se não for informado trará o flow_data.data completo */
+        body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
+        /** É utilizado apenas quando a requisição inclui find */
+        mode?: 'merge' | 'overwrite',
+        schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
       }>,
     }
   },
