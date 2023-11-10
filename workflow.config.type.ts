@@ -456,6 +456,14 @@ export interface WorkflowConfigType {
     },
     publicRoutes?: {
       get?: Record<string, {
+        auth?: {
+          /**
+           * @simple-token: Token criptografado armazenado no FlowEntity
+           */
+          mode: "@simple-token",
+          entity_key: string,
+          props: { token: string }
+        },
         /**
          * Query Params disponíveis para pesquisa.
          * 
@@ -469,6 +477,14 @@ export interface WorkflowConfigType {
         body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
       }>,
       post?: Record<string, {
+        auth?: {
+          /**
+           * @simple-token: Token criptografado armazenado no FlowEntity
+           */
+          mode: "@simple-token",
+          entity_key: string,
+          props: { token: string }
+        },
         /** Escopo de alteração dentro do objeto flow_data.data */
         scope?: string,
         /** Se não for informado trará o flow_data.data completo */
