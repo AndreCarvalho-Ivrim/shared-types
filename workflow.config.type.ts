@@ -456,14 +456,7 @@ export interface WorkflowConfigType {
     },
     publicRoutes?: {
       get?: Record<string, {
-        auth?: {
-          /**
-           * @simple-token: Token criptografado armazenado no FlowEntity
-           */
-          mode: "@simple-token",
-          entity_key: string,
-          props: { token: string }
-        },
+        auth?: AuthPublicRouteType,
         /**
          * Query Params disponíveis para pesquisa.
          * 
@@ -477,14 +470,7 @@ export interface WorkflowConfigType {
         body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
       }>,
       post?: Record<string, {
-        auth?: {
-          /**
-           * @simple-token: Token criptografado armazenado no FlowEntity
-           */
-          mode: "@simple-token",
-          entity_key: string,
-          props: { token: string }
-        },
+        auth?: AuthPublicRouteType,
         /** Escopo de alteração dentro do objeto flow_data.data */
         scope?: string,
         /** Se não for informado trará o flow_data.data completo */
@@ -507,6 +493,14 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   }
+}
+export interface AuthPublicRouteType{
+  /**
+   * @simple-token: Token criptografado armazenado no FlowEntity
+   */
+  mode: "@simple-token",
+  entity_key: string,
+  props: { token: string }
 }
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'>{
   /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
