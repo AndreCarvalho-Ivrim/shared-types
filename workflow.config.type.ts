@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
+import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
 import { AvailableIcons } from "./icon.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
@@ -456,13 +456,30 @@ export interface WorkflowConfigType {
     },
     publicRoutes?: {
       get?: Record<string, {
-        body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
+        auth?: AuthPublicRouteType,
+        /**
+         * Query Params disponíveis para pesquisa.
+         * 
+         * Record< [query-param] , [path-no-flow-data] >
+         * 
+         * Palavras reservadas: take, skip
+         */
+        available_query_params?: Record<string, string>,
+        filter_scope?: WorkflowViewModeFilterScope[],
+        /** Se não for informado trará o flow_data.data completo */
+        body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
       }>,
       post?: Record<string, {
+        auth?: AuthPublicRouteType,
+        /** Escopo de alteração dentro do objeto flow_data.data */
         scope?: string,
-        body: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
-        mode: 'merge' | 'overwrite',
-        schema?: Record<string, FlowEntitySchemaInfo>,
+        /** Se não for informado trará o flow_data.data completo */
+        body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
+        /** É utilizado apenas quando a requisição inclui find */
+        mode?: 'merge' | 'overwrite',
+        /** Se for true, desabilita a funcionalidade find */
+        only_creation?: boolean,
+        schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
       }>,
     }
   },
@@ -476,6 +493,14 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   }
+}
+export interface AuthPublicRouteType{
+  /**
+   * @simple-token: Token criptografado armazenado no FlowEntity
+   */
+  mode: "@simple-token",
+  entity_key: string,
+  props: { token: string }
 }
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'>{
   /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
