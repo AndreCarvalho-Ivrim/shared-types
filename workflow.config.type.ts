@@ -475,11 +475,21 @@ export interface WorkflowConfigType {
         scope?: string,
         /** Se não for informado trará o flow_data.data completo */
         body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
-        /** É utilizado apenas quando a requisição inclui find */
-        mode?: 'merge' | 'overwrite',
+        /** 
+         * É utilizado apenas quando a requisição inclui find.
+         * 
+         * - [merge] Mascla os dados com o do registro encontrado (interfere apenas flowData.data)
+         * - [overwrite] Sobrescreve os dados do registro encontrado (interfere apenas flowData.data)
+         * - [process] Realiza alguma ação interna configurado em rules
+         */
+        mode?: 'merge' | 'overwrite' | 'process',
         /** Se for true, desabilita a funcionalidade find */
         only_creation?: boolean,
         schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
+        rule?:{
+          available_steps?: string[],
+          append_value?: Record<string, any>
+        }
       }>,
     }
   },
