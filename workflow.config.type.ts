@@ -618,8 +618,8 @@ export interface WorkflowRoutinesType{
   },
   executors: AvailableRoutinesExecutorsType[],
 }
-export const availableExecutorsTypes : (AvailableRoutinesExecutorsType['type'])[]= ['sync-ivrim-big-data']
-export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD
+export const availableExecutorsTypes : (AvailableRoutinesExecutorsType['type'])[]= ['sync-ivrim-big-data', 'integration-omie']
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie
 interface WorkflowRoutinesExecutorBase{
   name: string,
   description: string,
@@ -642,11 +642,26 @@ export interface WorkflowRoutinesExecutorIBD extends WorkflowRoutinesExecutorBas
 }
 export interface WorkflowRoutinesExecutorIBDData{
   db_name: string,
-  exception?: "duzani-theme",
+  exception?: 'duzani-theme',
   data?: {
     client_ivrim: string,
     cost_center: string
   }
 
 }
-export const availableIBDExeptions : (WorkflowRoutinesExecutorIBDData['exception'])[] = ["duzani-theme"]
+export const availableIBDExeptions : (WorkflowRoutinesExecutorIBDData['exception'])[] = ['duzani-theme']
+export interface WorkflowRoutinesExecuterIOmie extends WorkflowRoutinesExecutorBase{
+  type: 'integration-omie',
+  data: {
+    scope: "financial-movements",
+    /** Record<path-no-omie, path-no-flow-data.data> */
+    match: Record<string, string>,
+    query: Record<string, any>,
+    effect: {
+      /** String Conditional */
+      condition?: string,
+      /** Record<path-no-flow-data.data, path-na-resposta> */
+      data: Record<string, string>
+    }
+  }
+}
