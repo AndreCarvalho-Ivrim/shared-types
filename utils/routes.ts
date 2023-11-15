@@ -64,7 +64,7 @@ export const hubRoutes = {
   }
 }
 
-type AvailableRegexUrls = 
+export type AvailableRegexUrls = 
   '@isac:home' |
   '@isac:template' |
   '@isac:workflow.home' |
