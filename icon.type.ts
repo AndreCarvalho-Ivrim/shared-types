@@ -71,4 +71,8 @@ export type AvailableIcons =
   'ConnectionIcon' |
   'CarouselIcon' |
   'TimeIcon' |
-  'CodeIcon'
+  'CodeIcon' |
+  'IsacImageIcon' |
+  'VisionImageIcon' |
+  'ReportImageIcon' |
+  'DashboardImageIcon'
