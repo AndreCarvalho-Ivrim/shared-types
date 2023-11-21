@@ -457,12 +457,15 @@ export interface WorkflowConfigType {
     publicRoutes?: {
       get?: Record<string, {
         /**
-         * Por padrão a rota publica sempre fará uma requisição em \
-         * flow-datas, mas esse comportamento pode ser alterado definindo \
-         * este campo como steps, porém no mode de steps as funções de \
-         * pesquisa, filtro e formatação do body são limitadas
+         * Por padrão a rota publica sempre fará uma requisição em [flow-datas], \
+         * mas esse comportamento pode ser alterado definindo este campo como [steps] \
+         * ou [me], porém os demais modos as funções de pesquisa, filtro e formatação \
+         * do body são limitadas.
+         * 
+         * O modo [me] só é valido caso auth seja preenchido com o tipo [\@network-flow-auth], \
+         * e neste caso, retornará o usuario autenticado.
          */
-        request?: 'flow-datas' | 'steps',
+        request?: 'flow-datas' | 'steps' | 'me',
         auth?: AuthPublicRouteType,
         /**
          * Query Params disponíveis para pesquisa.
