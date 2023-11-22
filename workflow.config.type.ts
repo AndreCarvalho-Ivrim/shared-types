@@ -10,9 +10,12 @@ export interface WorkflowConfigFilterType {
    * - text: Pesquisa case incesitive por aproximação (includes)
    * - select: Pesquisa por palavra exata (===)
    * - date: Comparação por range de data (startDate, endDate)
+   * - date-in: Oposto do anterior, é passado apenas 1 data, e deve ter duas refs \
+   * onde a primeira é data inicial e a segunda afinal, e a verificação testa se a \
+   * data passada está dentro do range do banco
    * - list: Lista de opções (in)
    */
-  type: 'text' | 'select' | 'date' | 'list',
+  type: 'text' | 'select' | 'date' | 'list' | 'date-in',
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
   /** somente autocomplete.mode = 'distinct' */
