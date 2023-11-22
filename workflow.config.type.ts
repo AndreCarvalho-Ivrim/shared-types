@@ -456,6 +456,16 @@ export interface WorkflowConfigType {
     },
     publicRoutes?: {
       get?: Record<string, {
+        /**
+         * Por padrão a rota publica sempre fará uma requisição em [flow-datas], \
+         * mas esse comportamento pode ser alterado definindo este campo como [steps] \
+         * ou [me], porém os demais modos as funções de pesquisa, filtro e formatação \
+         * do body são limitadas.
+         * 
+         * O modo [me] só é valido caso auth seja preenchido com o tipo [\@network-flow-auth], \
+         * e neste caso, retornará o usuario autenticado.
+         */
+        request?: 'flow-datas' | 'steps' | 'me',
         auth?: AuthPublicRouteType,
         /**
          * Query Params disponíveis para pesquisa.
@@ -504,13 +514,24 @@ export interface WorkflowConfigType {
     whatsapp: string
   }
 }
-export interface AuthPublicRouteType{
-  /**
-   * @simple-token: Token criptografado armazenado no FlowEntity
-   */
+export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth;
+export interface AuthPublicRouteSimpleToken{
+  /** Token criptografado e armazenado no FlowEntity */
   mode: "@simple-token",
   entity_key: string,
-  props: { token: string }
+  props: {
+    /** path do token dentro da entidade dinâmica */
+    token: string
+  }
+}
+export interface AuthPublicRouteNetworkFlowAuth{
+  /** Usará o token do flowAuth de outro workflow */
+  mode: "@network-flow-auth",
+  flow_network_id: string,
+  props: {
+    /** path do id do flowAuth, dentro do wf atual */
+    external_id: string
+  }
 }
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'>{
   /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
