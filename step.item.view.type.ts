@@ -3,7 +3,7 @@ import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
 interface StepViewBaseType{
   key: string,
-  mode: 'view',  
+  mode: 'view',
   label?: string,
   /** Título que será renderizado na tabela */
   placeholder?: string,
@@ -65,7 +65,11 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
    */
   content: string,
   replacers?: string[],
-  mask?: 'none' | 'alert-danger' | 'alert-info' | 'alert-light',
+  /**
+   * Para utilizar a mascara de progress-bar é necessário que no conteúdo tenha \
+   * dois números separados por virgula(,)
+   */
+  mask?: 'none' | 'alert-danger' | 'alert-info' | 'alert-light' | 'progress-bar',
   rules?: {
     /** 
      * STRING CONDITIONAL
