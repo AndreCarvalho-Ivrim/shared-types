@@ -12,7 +12,7 @@ export interface WorkflowConfigFilterType {
    * - date: Comparação por range de data (startDate, endDate)
    * - list: Lista de opções (in)
    */
-  type: 'text' | 'select' | 'date' | 'list',
+  type: 'text' | 'select' | 'date' | 'list' | 'strc',
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
   /** somente autocomplete.mode = 'distinct' */
@@ -65,9 +65,12 @@ export interface WorkflowConfigObserverFnType {
    * esperar a resposta do evento.
    * - Caso seja type === 'backup' o value é ignorado
    * - Caso seja type === 'append' o value é o valor a ser adicionado
+   * - Caso seja type === 'append' e value = \@entity é obrigatório informar o \
+   * data com a configuração de como a entidade será integrada ao registro.
    */
-  value?: string,
-  /** EVENTS -> required data on events[\@search-and-fill-data-with-match, \@fill-additional-data-with-match]
+  value?: any,
+  /** 
+   * EVENTS -> required data on events[\@search-and-fill-data-with-match, \@fill-additional-data-with-match, \@flow-network]
    * 
    * \@search-and-fill-data-with-match
    * ```
@@ -136,8 +139,45 @@ export interface WorkflowConfigObserverFnType {
    *    }
    * }
    * ```
+   * 
+   * APPEND -> required data on value = \@entity
+   * 
+   * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
    */
   data?: any
+}
+export interface WFConfigObserverDataEntity{
+  entity_key: string,
+  /** Parâmetros de pesquisa do get-flow-entity-datas */
+  request?: {
+    find?: {
+      key?: string,
+      query?: {
+        ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+        type: WorkflowConfigFilterType['type'],
+        value: any
+      }[]
+    }
+  },
+  /** O que fazer quando receber a resposta */
+  then: {
+    /** Path de qual parte da resposta deseja acessar, se não for inserido, retornará a resposta inteira */
+    get?: string,
+    /**
+     * Caso deseje parsear o objeto(ou array) de resposta, basta passar um \
+     * Record<caminho-que-irá-salvar, conteúdo/caminho-na-resposta>. Para mencionar variáveis é necessário \
+     * usar shortcodes \@[path-na-resposta]
+     */
+    parse?: Record<string, any>,
+    /**
+     * - Se não for passado throw, caso retorne um erro, ou o parametro [get] não seja satisfeito, \
+     * será preenchido com undefined.
+     * - Se for passado o valor \@current a mensagem de erro será disparada.
+     * - Se for passado um valor diferente será emitida uma mensagem de erro com a mensagem \
+     * descrita abaixo
+     */
+    throw?: string
+  }
 }
 export interface ConfigViewModeColumnsType {
   /** 
