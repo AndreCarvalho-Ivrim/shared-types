@@ -15,11 +15,7 @@ export interface WorkflowConfigFilterType {
    * data passada está dentro do range do banco
    * - list: Lista de opções (in)
    */
-<<<<<<< HEAD
-  type: 'text' | 'select' | 'date' | 'list' | 'strc',
-=======
-  type: 'text' | 'select' | 'date' | 'list' | 'date-in',
->>>>>>> cabdbc690749ea049a7d46f7e5a2a344b5b6adec
+  type: 'text' | 'select' | 'date' | 'list' | 'strc' | 'date-in',
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
   /** somente autocomplete.mode = 'distinct' */
