@@ -31,7 +31,7 @@ export const handleRegexId = (id: string, item: { data: any }) => {
   })
   return value;
 }
-export const getRecursiveValue = (id: string, item: { data: any }) => {
+export const getRecursiveValue = (id: string, item: { data: any }) : any => {
   if(!item || !item.data) return;
 
   let value : undefined | any = undefined;
@@ -45,25 +45,27 @@ export const getRecursiveValue = (id: string, item: { data: any }) => {
   if(hasArrayIndex){
     const match = id.match(regex)
 
-    let identifier = id.slice(0, match.index)
-    value = getRecursiveValue(
-      identifier,
-      item
-    )
-
-    if(!Array.isArray(value)) return value;
-    
-    const index = Number(match[1]);
-    if(index >= value.length || isNaN(index)) return undefined;
-
-    let lenComplete = identifier.length + match[0].length + 1
-    if(id.length > lenComplete) return getRecursiveValue(
-      id.slice(lenComplete), {
-        data: value[index]
-      }
-    )
-
-    return value[index];
+    if(match){
+      let identifier = id.slice(0, match.index)
+      value = getRecursiveValue(
+        identifier,
+        item
+      )
+  
+      if(!Array.isArray(value)) return value;
+      
+      const index = Number(match[1]);
+      if(index >= value.length || isNaN(index)) return undefined;
+  
+      let lenComplete = identifier.length + match[0].length + 1
+      if(id.length > lenComplete) return getRecursiveValue(
+        id.slice(lenComplete), {
+          data: value[index]
+        }
+      )
+  
+      return value[index];
+    }
   }
   //#endregion HANDLE ARRAY
 
