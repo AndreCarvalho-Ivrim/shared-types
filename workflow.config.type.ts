@@ -315,8 +315,10 @@ export interface WorkflowTriggerType{
    * Referência ao evento que será disparado:
    * 
    * \@sync-flow-datas: Sincronizar integração de dois workflows
+   * 
+   * \@gamification-action-log: Lidar com logs de ação em gamificação
    */
-  name: '@sync-flow-datas',
+  name: '@sync-flow-datas' | '@gamification-action-log',
   title: string,
   /** Se o evento será feito em segundo plano ou se terá resposta imediata */
   is_async: boolean,
