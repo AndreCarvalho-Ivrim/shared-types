@@ -57,7 +57,27 @@ export interface StepItemType{
   autocomplete?: {
     /** Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities */
     name: string,
-    /** autocomplete.response => field to fill */
+    /**
+     * autocomplete.response => field to fill
+     * ```
+     * interface ToFillOnSelect{
+     *   // Valor mostrado na option do select
+     *   name: '<path-na-resposta>',
+     *   // Valor no value da option do select
+     *   value: '<path-na-resposta>',
+     *   // Gerar preenchimento em outros campos, com base no selecionar
+     *   outhers?: string
+     * }
+     * ```
+     * 
+     * O outhers é uma string contendo a posição em que será armazenado : \
+     * o caminho dentro da resposta, podendo ter multiplos itens separados por ',' \
+     * Exemplo:
+     * 
+     * ```
+     *  "<path-in-flow-data>:<path-in-response>,<outher-path>:<outher-path-in-response>"
+     * ```
+     */
     toFill?: Record<string, string>,
     trigger?: { mode: 'keyup' } | {
       mode: 'clickToNext',
