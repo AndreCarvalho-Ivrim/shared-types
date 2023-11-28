@@ -66,16 +66,8 @@ export interface StepItemType{
      *   // Valor no value da option do select
      *   value: '<path-na-resposta>',
      *   // Gerar preenchimento em outros campos, com base no selecionar
-     *   outhers?: string
+     *   [outhers.<path-no-flow-data>]?: '<path-na-resposta>'
      * }
-     * ```
-     * 
-     * O outhers é uma string contendo a posição em que será armazenado : \
-     * o caminho dentro da resposta, podendo ter multiplos itens separados por ',' \
-     * Exemplo:
-     * 
-     * ```
-     *  "<path-in-flow-data>:<path-in-response>,<outher-path>:<outher-path-in-response>"
      * ```
      */
     toFill?: Record<string, string>,
