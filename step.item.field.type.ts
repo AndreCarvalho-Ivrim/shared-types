@@ -83,5 +83,5 @@ export interface StepItemType{
     settings?: any
   }
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list'];
