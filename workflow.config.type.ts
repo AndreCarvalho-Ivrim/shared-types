@@ -583,7 +583,7 @@ export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'>{
   key: string,
   title: string,
 }
-export type WFCActionRenderIn = 'top' | 'filter-bar'
+export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over'
 export interface WFCActionFnCallStep {
   type: 'call-step',
   target: string

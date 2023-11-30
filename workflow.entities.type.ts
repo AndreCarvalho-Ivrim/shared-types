@@ -42,7 +42,9 @@ export interface FlowEntitySchemaInfo{
       replace?: [string, string],
       split?: { separator: string, splice?: number, revert?: boolean },
       trim?: boolean,
-    }
+    },
+    // default = overwrite
+    conflit?: 'overwrite' | 'merge'
   }
 }
 export interface FlowEntityAssociationColumns{
