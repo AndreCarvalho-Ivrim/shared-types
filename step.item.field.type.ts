@@ -1,4 +1,4 @@
-import { ItemOrViewOrWidgetOrIntegration } from ".";
+import { ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration } from ".";
 
 export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse' | 'custom';
 export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
@@ -78,10 +78,19 @@ export interface StepItemType{
     /** String condition, para filtrar os dados do autocomplete */
     filter_condition?: string,
   },
-  customData?: {
-    mode: AvailableCustomItemModeType,
+  customData?: StepÍtemCustomDataSettings | {
+    mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
   }
 }
 export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list';
 export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list'];
+export interface StepÍtemCustomDataSettings{
+  mode: '@list',
+  settings: {
+    mode: 'inline' | 'modal',
+    /** Título que aparecerá no modal */
+    title?: string,
+    resume: ConfigViewModeColumnsType[]
+  }
+}
