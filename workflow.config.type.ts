@@ -28,6 +28,8 @@ export interface WorkflowConfigNotificationType {
   type: 'email' | 'message',
   params: Record<string, string>,
   replacers: Record<string, string>,
+  /* ANEXO */
+  attachment: string,
   /**
    * - [@data_creator]                Criador do flow data
    * - [@data_owners]                 Responsáveis pelo flow data
