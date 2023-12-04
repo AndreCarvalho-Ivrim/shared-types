@@ -72,6 +72,8 @@ export type AvailableIcons =
   'CarouselIcon' |
   'TimeIcon' |
   'CodeIcon' |
+  'PlusCircleIcon' |
+  'XCircleIcon' |
   'IsacImageIcon' |
   'VisionImageIcon' |
   'ReportImageIcon' |
