@@ -29,7 +29,7 @@ export interface WorkflowConfigNotificationType {
   params: Record<string, string>,
   replacers: Record<string, string>,
   /* ANEXO */
-  attachment: string,
+  attachment?: string,
   /**
    * - [@data_creator]                Criador do flow data
    * - [@data_owners]                 Responsáveis pelo flow data
