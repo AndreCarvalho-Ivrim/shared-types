@@ -80,6 +80,11 @@ export interface ReportType{
     webhook?: any,
     [key: string]: any
   }
+
+  client_id: string;
+  user_id: string;  
+  created_at: Date;
+  updated_at: Date;
 }
 export interface ShortReportType{
   _id: string,
