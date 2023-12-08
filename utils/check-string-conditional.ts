@@ -221,7 +221,16 @@ export const getShortcodes = (content: string) : string[]=> {
   var matches = (content.match(sintaxes) ?? []) as string[];
   return matches.map(m => m.substr(2, m.length - 3));
 }
-export const getCodeHelpers = (value: string) : Array<[string, string?]> | undefined => {
+/**
+ * - Se não existir code helper retornará undefined
+ * - Se exitir code helper a resposta será um array de arrays de 1-3 posições, onde:
+ * 
+ * 1º: Code helper \
+ * 2º: Caso existam parametros, retornará uma string com todos parametros \
+ * 3º: Caso split_params for true e o code helper ter parametros, retornará o array de \
+ * parametros separado, considerando separação por virgular, ou por operadores aritméticos
+ */
+export const getCodeHelpers = (value: string, split_params = false) : Array<[string, string?, string[]?]> | undefined => {
   if(!value || typeof value !== 'string' || !value.includes('__')) return
 
   const regex = /__(.*?)__/g;
@@ -235,7 +244,12 @@ export const getCodeHelpers = (value: string) : Array<[string, string?]> | undef
     const regexContent = /([^()]+)\(([^()]+)\)/;
     const matchContent = regexContent.exec(code);
     if (matchContent) {
-      return [matchContent[1], matchContent[2]];
+      if(split_params) return [
+        matchContent[1],
+        matchContent[2],
+        matchContent[2].split(/[,+*/-]/)
+      ];
+      else return [matchContent[1], matchContent[2]];
     }
     return [code];
   });
