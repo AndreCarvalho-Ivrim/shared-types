@@ -40,7 +40,7 @@ export const getRecursiveValue = (id: string, item: { data: any }) : any => {
   if(handledRegexId) return handledRegexId;
 
   //#region HANDLE ARRAY
-  const regex = /\[(\d+)\]/;
+  const regex = /\[(\w+)\]/;
   const hasArrayIndex = regex.test(id)
   if(hasArrayIndex){
     const match = id.match(regex)
@@ -55,7 +55,14 @@ export const getRecursiveValue = (id: string, item: { data: any }) : any => {
       if(!Array.isArray(value)) return value;
       
       const index = Number(match[1]);
-      if(index >= value.length || isNaN(index)) return undefined;
+      
+      if(isNaN(index)){
+        if(!match[1]) return undefined;
+
+        return value.map((v) => getRecursiveValue(match[1], { data: v }))
+      }
+
+      if(index >= value.length) return undefined;
   
       let lenComplete = identifier.length + match[0].length + 1
       if(id.length > lenComplete) return getRecursiveValue(
