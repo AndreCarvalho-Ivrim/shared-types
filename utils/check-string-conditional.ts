@@ -1,5 +1,5 @@
 import { StringConditionalTypes } from "..";
-import { getRecursiveValue } from "./recursive-datas";
+import { getRecursiveValue, replaceAll } from "./recursive-datas";
 
 export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }) => {
   const pattern = /\$flow_data:(.*?);/g;
@@ -244,11 +244,29 @@ export const getCodeHelpers = (value: string, split_params = false) : Array<[str
     const regexContent = /([^()]+)\(([^()]+)\)/;
     const matchContent = regexContent.exec(code);
     if (matchContent) {
-      if(split_params) return [
-        matchContent[1],
-        matchContent[2],
-        matchContent[2].split(/[,+*/-]/)
-      ];
+      if(split_params){
+        let toSplitParams = matchContent[2]
+        let shortcodes = getShortcodes(toSplitParams)
+
+        let shortcodesToReplace = []
+        shortcodes.forEach((code, i) => {
+          const toReplace = [`param_${i}`,`@[${code}]`]
+          toSplitParams = replaceAll(toSplitParams, toReplace[1], toReplace[0])
+          shortcodesToReplace.push(toReplace)
+        })
+
+        return [
+          matchContent[1],
+          matchContent[2],
+          toSplitParams.split(/[,+*/-]/).map((p) => {
+            shortcodesToReplace.reverse().forEach((toReplace) => {
+              p = replaceAll(p, toReplace[0], toReplace[1])
+            })
+            return p;
+          })
+        ];
+      }
+      
       else return [matchContent[1], matchContent[2]];
     }
     return [code];

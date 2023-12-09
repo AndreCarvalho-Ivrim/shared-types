@@ -61,7 +61,12 @@ export const getRecursiveValue = (id: string, item: { data: any }) : any => {
       if(isNaN(index)){
         if(!arrParam) return undefined;
 
-        return value.map((v) => getRecursiveValue(arrParam, { data: v }))
+        return value.map((v) => {
+          let splitedParams = arrParam.split(',')
+
+          if(splitedParams.length === 1) return getRecursiveValue(splitedParams[0], { data: v })
+          return splitedParams.map(splited => getRecursiveValue(splited, { data: v }))
+        })
       }
 
       if(index >= value.length) return undefined;
