@@ -248,9 +248,9 @@ export const getCodeHelpers = (value: string, split_params = false) : Array<[str
         let toSplitParams = matchContent[2]
         let shortcodes = getShortcodes(toSplitParams)
 
-        let shortcodesToReplace = []
+        let shortcodesToReplace : Array<[string, string]> = []
         shortcodes.forEach((code, i) => {
-          const toReplace = [`param_${i}`,`@[${code}]`]
+          const toReplace : [string, string] = [`param_${i}`,`@[${code}]`]
           toSplitParams = replaceAll(toSplitParams, toReplace[1], toReplace[0])
           shortcodesToReplace.push(toReplace)
         })
