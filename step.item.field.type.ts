@@ -78,13 +78,13 @@ export interface StepItemType{
     /** String condition, para filtrar os dados do autocomplete */
     filter_condition?: string,
   },
-  customData?: StepÍtemCustomDataSettings | {
+  customData?: StepÍtemCustomDataSettings | StepItemCustomDataEditableTable | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
   }
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table'];
 export interface StepÍtemCustomDataSettings{
   mode: '@list',
   settings: {
@@ -92,5 +92,18 @@ export interface StepÍtemCustomDataSettings{
     /** Título que aparecerá no modal */
     title?: string,
     resume: ConfigViewModeColumnsType[]
+  }
+}
+export interface StepItemCDETTableType extends ConfigViewModeColumnsType{
+  required: boolean
+}
+export interface StepItemCustomDataEditableTable{
+  mode: '@editable-table',
+  settings: {
+    /** Título que aparecerá no modal */
+    title?: string,
+    initial_value?: Record<string, any>[],
+    readonly_if_fillable?: boolean,
+    addable?: boolean
   }
 }

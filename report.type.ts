@@ -27,7 +27,7 @@ export interface ReportAnalyticsType{
     request: 'flow_datas' | 'flow_entities',
     /**
      * - Caso request = flow_datas, o target_ids = [wf_id],
-     * - Caso request = flow_entities, o target_ids = [wf_ids, entity_key]
+     * - Caso request = flow_entities, o target_ids = [wf_id, entity_key]
      */
     target_ids: string[],
     /** Record<coluna-na-planilha,path-na-resposta> */
