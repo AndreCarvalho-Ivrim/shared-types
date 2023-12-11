@@ -40,7 +40,7 @@ export interface ReportAnalyticsType{
        * loop em queries
        */
       break?: boolean,
-      query: Record<string, string> | Record<string, {
+      query: Record<string, string | {
         /** SEM SUPORTE A STRC */
         type: WorkflowConfigFilterType['type'],
         value: any
