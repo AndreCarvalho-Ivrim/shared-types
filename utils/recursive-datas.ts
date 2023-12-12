@@ -31,13 +31,58 @@ export const handleRegexId = (id: string, item: { data: any }) => {
   })
   return value;
 }
-export const getRecursiveValue = (id: string, item: { data: any }) => {
+export const getRecursiveValue = (id: string, item: { data: any }) : any => {
   if(!item || !item.data) return;
 
   let value : undefined | any = undefined;
 
   const handledRegexId = handleRegexId(id, item)
   if(handledRegexId) return handledRegexId;
+
+  //#region HANDLE ARRAY
+  const regex =  /\[[^\[\]]+\]/;
+  const hasArrayIndex = regex.test(id)
+  if(hasArrayIndex){
+    const match = id.match(regex)
+
+    if(match){
+      let identifier = id.slice(0, match.index)
+
+      value = getRecursiveValue(
+        identifier,
+        item
+      )
+  
+      if(!Array.isArray(value)) return value;
+      
+      const arrParam = match[0].slice(1,-1);
+      const index = Number(arrParam);
+      
+      if(isNaN(index)){
+        if(!arrParam) return undefined;
+
+        return value.map((v) => {
+          let splitedParams = arrParam.split(',')
+
+          if(splitedParams.length === 1) return getRecursiveValue(splitedParams[0], { data: v })
+          return splitedParams.map(splited => getRecursiveValue(splited, { data: v }))
+        })
+      }
+
+      if(index >= value.length) return undefined;
+  
+      let lenComplete = identifier.length + match[0].length + 1
+      if(id.length > lenComplete) return getRecursiveValue(
+        id.slice(lenComplete), {
+          data: value[index]
+        }
+      )
+  
+      return value[index];
+    }
+  }
+  //#endregion HANDLE ARRAY
+
 
   if(item.data[id] !== undefined) value = item.data[id];
   else if(id.includes('.')){

@@ -1,25 +1,36 @@
 import { AvailableIcons } from "./icon.type";
 import { ConfigViewModeColumnsType, WorkflowConfigObserverFnType } from "./workflow.config.type";
 
-export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file-image" | "boolean" | "select" | "select-multiple" | "any";
-export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file-image", "boolean", "select", "select-multiple"];
+export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any";
+export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
 export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
 export interface FlowEntitySubSchema{
   type: 'sub-schema',
   label: string,
   placeholder: string,
-  schema: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>
+  schema: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
+  required?: boolean
 }
 export interface FlowEntitySchemaInfo{
   type: FlowEntitySchemaTypes,
   label: string,
   placeholder?: string,
-  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe',
+  /**
+   * Funcionalidades especificas de mascara:
+   * - [whatsapp-md]: Lida com os padrões de formatação do whatsapp, \
+   * e na tela de criação habilita a função preview
+   * - [access-token]: Encripta o valor armazenado, ocultoo valor no \
+   * front-end, e não permite atualização, apenas sobreescrita. Além \
+   * de ter recursos de geração de token automática
+   */
+  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe' | 'access-token',
   options?: { value: string, name: string }[],
   autocomplete?: {
-    name: string, // Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities
-    toFill?: Record<string, string>, // autocomplete.response => field to fill
-    trigger?: { mode: 'keyup' } | {  // 
+    /** Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities */ 
+    name: string, 
+    /** autocomplete.response => field to fill */
+    toFill?: Record<string, string>,
+    trigger?: { mode: 'keyup' } | {
       mode: 'clickToNext',
       target: string
     }
@@ -31,7 +42,9 @@ export interface FlowEntitySchemaInfo{
       replace?: [string, string],
       split?: { separator: string, splice?: number, revert?: boolean },
       trim?: boolean,
-    }
+    },
+    // default = overwrite
+    conflit?: 'overwrite' | 'merge'
   }
 }
 export interface FlowEntityAssociationColumns{
