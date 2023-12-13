@@ -39,6 +39,7 @@ export interface WorkflowConfigNotificationType {
    *                                  que contenha o contato
    */
   target: '@data_creator' | '@data_owner' | '@wf_owner' | string,
+  default_target?: string[]
 }
 export interface WorkflowConfigAutocomplete {
   name: string,
