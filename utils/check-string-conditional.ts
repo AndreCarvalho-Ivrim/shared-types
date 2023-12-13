@@ -203,7 +203,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     unionConditionals.forEach((uni, i) => {
       if(unionMatch !== undefined && !unionMatch) return;
       unionMatch = callbackUnion(
-        i === 0 ? matchesConditional[0] : unionMatch,
+        i === 0 ? matchesConditional[0] : unionMatch!,
         matchesConditional[i + 1],
         uni
       );

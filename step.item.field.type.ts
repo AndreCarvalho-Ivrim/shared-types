@@ -125,5 +125,7 @@ export interface StepItemCustomDataEditableTable{
 }
 export interface StepItemCustomDataCepAutocomplete{
   mode: '@cep-autocomplete',
+  /** NÃO UTILIZADO */
+  settings?: any,
   id: string
 }
