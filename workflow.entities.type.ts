@@ -1,8 +1,8 @@
 import { AvailableIcons } from "./icon.type";
 import { ConfigViewModeColumnsType, WorkflowConfigObserverFnType } from "./workflow.config.type";
 
-export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file-image" | "boolean" | "select" | "select-multiple" | "any";
-export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file-image", "boolean", "select", "select-multiple"];
+export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any";
+export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
 export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
 export interface FlowEntitySubSchema{
   type: 'sub-schema',
@@ -42,7 +42,9 @@ export interface FlowEntitySchemaInfo{
       replace?: [string, string],
       split?: { separator: string, splice?: number, revert?: boolean },
       trim?: boolean,
-    }
+    },
+    // default = overwrite
+    conflit?: 'overwrite' | 'merge'
   }
 }
 export interface FlowEntityAssociationColumns{
