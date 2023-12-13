@@ -406,7 +406,7 @@ export interface WFConfigSlaNotifyType{
    * selecionando o meio de notificação automaticamente, os demais respeitarão as \
    * preferências do usuário notificado.
    */
-  to: '@creator' | '@owners' | '@flow_owner' | '@group_permission:n' | string,
+  to: ('@creator' | '@owners' | '@flow_owner' | '@group_permission:n' | string)[],
   /**
    * Número de dias com base no calculo de SLA \
    * Alguns códigos podem ser agregados ao número, como:
