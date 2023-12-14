@@ -27,7 +27,7 @@ interface LevelType{
    */
   unlimit_upgrade?: boolean
 }
-interface UserType{
+interface PlayerType{
   _id: string,
   user: {
     name: string,
