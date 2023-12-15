@@ -28,6 +28,8 @@ export interface WorkflowConfigNotificationType {
   type: 'email' | 'message',
   params: Record<string, string>,
   replacers: Record<string, string>,
+  /* ANEXO */
+  attachment?: string,
   /**
    * - [@data_creator]                Criador do flow data
    * - [@data_owners]                 Responsáveis pelo flow data
@@ -37,6 +39,7 @@ export interface WorkflowConfigNotificationType {
    *                                  que contenha o contato
    */
   target: '@data_creator' | '@data_owner' | '@wf_owner' | string,
+  default_target?: string[]
 }
 export interface WorkflowConfigAutocomplete {
   name: string,
@@ -404,7 +407,7 @@ export interface WFConfigSlaNotifyType{
    * selecionando o meio de notificação automaticamente, os demais respeitarão as \
    * preferências do usuário notificado.
    */
-  to: '@creator' | '@owners' | '@flow_owner' | '@group_permission:n' | string,
+  to: ('@creator' | '@owners' | '@flow_owner' | '@group_permission:n' | string)[],
   /**
    * Número de dias com base no calculo de SLA \
    * Alguns códigos podem ser agregados ao número, como:
@@ -583,7 +586,7 @@ export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'>{
   key: string,
   title: string,
 }
-export type WFCActionRenderIn = 'top' | 'filter-bar'
+export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over'
 export interface WFCActionFnCallStep {
   type: 'call-step',
   target: string

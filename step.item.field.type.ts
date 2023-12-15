@@ -1,4 +1,4 @@
-import { ItemOrViewOrWidgetOrIntegration } from ".";
+import { ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration } from ".";
 
 export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse' | 'custom';
 export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
@@ -55,9 +55,37 @@ export interface StepItemType{
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
   autocomplete?: {
-    /** Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities */
+    /** 
+     * Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities.
+     * 
+     * hardcode válidos:
+     * - \@banks: Lista de bancos
+     * - \@availableBranchsOfActivity: Lista de ramos de atividade
+     * - \@cep-autocomplete: Autocomplete de CEP
+     * - \@options: A lista será determinada no options do item
+     */
     name: string,
-    /** autocomplete.response => field to fill */
+    /**
+     * autocomplete.response => field to fill
+     * ```
+     * interface ToFillOnSelect{
+     *   // Valor mostrado na option do select
+     *   name: '<path-na-resposta>',
+     *   // Valor no value da option do select
+     *   value: '<path-na-resposta>',
+     *   // Gerar preenchimento em outros campos, com base no selecionar
+     *   [outhers.<path-no-flow-data>]?: '<path-na-resposta>'
+     * }
+     * ```
+     * 
+     * Quando autocomplete do tipo \@cep, o segundo parametro do record será \
+     * o id dos campos que serão preenchidos, com o primeiro parametro tendo \
+     * os seguintes valores válidos: logradouro, complemento, bairro, localidade, \
+     * uf, ibge, gia, ddd, siafi, numero.
+     * 
+     * Importante: Para o autocomplete de cep afetar os demais campos é necessário em \
+     * cada respectivo campo configurar o customData com o \@cep-autocomplete
+     */
     toFill?: Record<string, string>,
     trigger?: { mode: 'keyup' } | {
       mode: 'clickToNext',
@@ -66,10 +94,38 @@ export interface StepItemType{
     /** String condition, para filtrar os dados do autocomplete */
     filter_condition?: string,
   },
-  customData?: {
-    mode: AvailableCustomItemModeType,
+  customData?: StepÍtemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | {
+    mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
   }
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table'];
+export interface StepÍtemCustomDataSettings{
+  mode: '@list',
+  settings: {
+    mode: 'inline' | 'modal',
+    /** Título que aparecerá no modal */
+    title?: string,
+    resume: ConfigViewModeColumnsType[]
+  }
+}
+export interface StepItemCDETTableType extends ConfigViewModeColumnsType{
+  required: boolean
+}
+export interface StepItemCustomDataEditableTable{
+  mode: '@editable-table',
+  settings: {
+    /** Título que aparecerá no modal */
+    title?: string,
+    initial_value?: Record<string, any>[],
+    readonly_if_fillable?: boolean,
+    addable?: boolean
+  }
+}
+export interface StepItemCustomDataCepAutocomplete{
+  mode: '@cep-autocomplete',
+  /** NÃO UTILIZADO */
+  settings?: any,
+  id: string
+}

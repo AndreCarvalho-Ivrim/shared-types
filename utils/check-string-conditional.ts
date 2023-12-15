@@ -1,5 +1,5 @@
 import { StringConditionalTypes } from "..";
-import { getRecursiveValue } from "./recursive-datas";
+import { getRecursiveValue, replaceAll } from "./recursive-datas";
 
 export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }) => {
   const pattern = /\$flow_data:(.*?);/g;
@@ -203,8 +203,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     unionConditionals.forEach((uni, i) => {
       if(unionMatch !== undefined && !unionMatch) return;
       unionMatch = callbackUnion(
-        matchesConditional[i * 2],
-        matchesConditional[(i*2) + 1],
+        i === 0 ? matchesConditional[0] : unionMatch!,
+        matchesConditional[i + 1],
         uni
       );
     });
@@ -221,7 +221,16 @@ export const getShortcodes = (content: string) : string[]=> {
   var matches = (content.match(sintaxes) ?? []) as string[];
   return matches.map(m => m.substr(2, m.length - 3));
 }
-export const getCodeHelpers = (value: string) : Array<[string, string?]> | undefined => {
+/**
+ * - Se não existir code helper retornará undefined
+ * - Se exitir code helper a resposta será um array de arrays de 1-3 posições, onde:
+ * 
+ * 1º: Code helper \
+ * 2º: Caso existam parametros, retornará uma string com todos parametros \
+ * 3º: Caso split_params for true e o code helper ter parametros, retornará o array de \
+ * parametros separado, considerando separação por virgular, ou por operadores aritméticos
+ */
+export const getCodeHelpers = (value: string, split_params = false) : Array<[string, string?, string[]?]> | undefined => {
   if(!value || typeof value !== 'string' || !value.includes('__')) return
 
   const regex = /__(.*?)__/g;
@@ -235,7 +244,30 @@ export const getCodeHelpers = (value: string) : Array<[string, string?]> | undef
     const regexContent = /([^()]+)\(([^()]+)\)/;
     const matchContent = regexContent.exec(code);
     if (matchContent) {
-      return [matchContent[1], matchContent[2]];
+      if(split_params){
+        let toSplitParams = matchContent[2]
+        let shortcodes = getShortcodes(toSplitParams)
+
+        let shortcodesToReplace : Array<[string, string]> = []
+        shortcodes.forEach((code, i) => {
+          const toReplace : [string, string] = [`param_${i}`,`@[${code}]`]
+          toSplitParams = replaceAll(toSplitParams, toReplace[1], toReplace[0])
+          shortcodesToReplace.push(toReplace)
+        })
+
+        return [
+          matchContent[1],
+          matchContent[2],
+          toSplitParams.split(/[,+*/-]/).map((p) => {
+            shortcodesToReplace.reverse().forEach((toReplace) => {
+              p = replaceAll(p, toReplace[0], toReplace[1])
+            })
+            return p;
+          })
+        ];
+      }
+      
+      else return [matchContent[1], matchContent[2]];
     }
     return [code];
   });
