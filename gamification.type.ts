@@ -31,7 +31,7 @@ interface PlayerType{
   _id: string,
   user: {
     name: string,
-    picture?: string,
+    avatar?: string,
     external_id: string,
     cpfcnpj: string,
     email: string,
@@ -42,6 +42,7 @@ interface PlayerType{
     total_exp: number,
     coins: number,
     offensive: number,
+    last_access?: Date,
     position?: number,
     level: string,
     campaign_id: string,
@@ -103,6 +104,8 @@ interface ActionLogType{
   created_at: Date,
   mission_type: AvailableMissionType,
   data?: any,
+  /** ID de referência para realizar a auditoria */
+  audit_scope_id?: string,
 }
 interface MissionHistoryType{
   mission_id: string,
@@ -115,7 +118,7 @@ interface MissionHistoryType{
 interface RankingType{
   _id: string,
   name: string,
-  picture?: string,
+  avatar?: string,
   exp: number,
 }
 interface AchievementType{
@@ -135,4 +138,16 @@ interface OffensiveType{
 interface RuleType{
   exp: Partial<Record<(AvailableMissionType | '@level' | '@trail' | '@podium'), number>>
   offensives: '@login' | '@3min'
+}
+interface FeedbackType{
+  exp: number,
+  offensive?: number,
+  missions?: {
+    type: 'update' | 'new' | 'finished',
+    old_percent: number,
+    new_percent: number,
+    exp?: number,
+    id: string,
+  }[],
+  position?: { old?: number, new: number }
 }
