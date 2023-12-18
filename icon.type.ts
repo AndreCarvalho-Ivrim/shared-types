@@ -77,4 +77,8 @@ export type AvailableIcons =
   'IsacImageIcon' |
   'VisionImageIcon' |
   'ReportImageIcon' |
-  'DashboardImageIcon'
+  'DashboardImageIcon' |
+  'StatsIcon' |
+  'HomeSaleIcon' |
+  'CartIcon' |
+  'PieChartIcon'

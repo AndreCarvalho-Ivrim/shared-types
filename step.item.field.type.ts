@@ -55,7 +55,15 @@ export interface StepItemType{
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
   autocomplete?: {
-    /** Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities */
+    /** 
+     * Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities.
+     * 
+     * hardcode válidos:
+     * - \@banks: Lista de bancos
+     * - \@availableBranchsOfActivity: Lista de ramos de atividade
+     * - \@cep-autocomplete: Autocomplete de CEP
+     * - \@options: A lista será determinada no options do item
+     */
     name: string,
     /**
      * autocomplete.response => field to fill
@@ -69,6 +77,14 @@ export interface StepItemType{
      *   [outhers.<path-no-flow-data>]?: '<path-na-resposta>'
      * }
      * ```
+     * 
+     * Quando autocomplete do tipo \@cep, o segundo parametro do record será \
+     * o id dos campos que serão preenchidos, com o primeiro parametro tendo \
+     * os seguintes valores válidos: logradouro, complemento, bairro, localidade, \
+     * uf, ibge, gia, ddd, siafi, numero.
+     * 
+     * Importante: Para o autocomplete de cep afetar os demais campos é necessário em \
+     * cada respectivo campo configurar o customData com o \@cep-autocomplete
      */
     toFill?: Record<string, string>,
     trigger?: { mode: 'keyup' } | {
@@ -78,7 +94,7 @@ export interface StepItemType{
     /** String condition, para filtrar os dados do autocomplete */
     filter_condition?: string,
   },
-  customData?: StepÍtemCustomDataSettings | StepItemCustomDataEditableTable | {
+  customData?: StepÍtemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
   }
@@ -106,4 +122,10 @@ export interface StepItemCustomDataEditableTable{
     readonly_if_fillable?: boolean,
     addable?: boolean
   }
+}
+export interface StepItemCustomDataCepAutocomplete{
+  mode: '@cep-autocomplete',
+  /** NÃO UTILIZADO */
+  settings?: any,
+  id: string
 }
