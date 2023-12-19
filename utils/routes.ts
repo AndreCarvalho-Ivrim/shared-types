@@ -26,6 +26,7 @@ export const isacRoutes = {
 export const hubRoutes = {
   auth: {
     login: () => '/login',
+    showCodeToken: (email:string) => `/esqueci-senha/${email}`,
     logout: () => '/logout',
   },
   profile: {
