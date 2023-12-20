@@ -476,27 +476,7 @@ export interface WorkflowConfigType {
   triggers?: WorkflowTriggerType[],
   webhooks?: [],
   notifications?: WorkflowConfigNotificationType[],
-  integrations?: {
-    email?: {
-      emailFrom?: string,
-      host?: string,
-      port?: number,
-      auth?: { user: string, pass: string }
-    },
-    whatsapp?: { number: string, token: string },
-    sms?: any,
-    chatbot?: any,
-    omie?: {
-      secret_key: string,
-      public_key: string
-    }
-    outhers?: {
-      key: string,
-      name: string,
-      status: boolean,
-      data: any
-    }[]
-  },
+  integrations?: WorkflowConfigIntegrationsType,
   services?: {
     auth?: WorkflowAuthType,
     autocomplete?: WorkflowConfigAutocomplete[],
@@ -582,6 +562,27 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   }
+}
+export interface WorkflowConfigIntegrationsType{
+  email?: {
+    emailFrom: string,
+    host?: string,
+    port?: number,
+    auth?: { user: string, pass: string }
+  },
+  whatsapp?: { number: string, token: string },
+  sms?: any,
+  chatbot?: any,
+  omie?: {
+    secret_key: string,
+    public_key: string
+  }
+  outhers?: {
+    key: string,
+    name: string,
+    status: boolean,
+    data: any
+  }[]
 }
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth;
 export interface AuthPublicRouteSimpleToken{
