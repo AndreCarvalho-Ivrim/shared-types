@@ -1,7 +1,7 @@
 import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
 import { AvailableIcons } from "./icon.type";
 
-export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
+export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie';
 export type AvailableViewModeType = 'table' | 'dashboard';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
@@ -476,27 +476,7 @@ export interface WorkflowConfigType {
   triggers?: WorkflowTriggerType[],
   webhooks?: [],
   notifications?: WorkflowConfigNotificationType[],
-  integrations?: {
-    email?: {
-      emailFrom?: string,
-      host?: string,
-      port?: number,
-      auth?: { user: string, pass: string }
-    },
-    whatsapp?: { number: string, token: string },
-    sms?: any,
-    chatbot?: any,
-    omie?: {
-      secret_key: string,
-      public_key: string
-    }
-    outhers?: {
-      key: string,
-      name: string,
-      status: boolean,
-      data: any
-    }[]
-  },
+  integrations?: WorkflowConfigIntegrationsType,
   services?: {
     auth?: WorkflowAuthType,
     autocomplete?: WorkflowConfigAutocomplete[],
@@ -582,6 +562,27 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   }
+}
+export interface WorkflowConfigIntegrationsType{
+  email?: {
+    emailFrom: string,
+    host?: string,
+    port?: number,
+    auth?: { user: string, pass: string }
+  },
+  whatsapp?: { number: string, token: string },
+  sms?: any,
+  chatbot?: any,
+  omie?: {
+    secret_key: string,
+    public_key: string
+  }
+  outhers?: {
+    key: string,
+    name: string,
+    status: boolean,
+    data: any
+  }[]
 }
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth;
 export interface AuthPublicRouteSimpleToken{
