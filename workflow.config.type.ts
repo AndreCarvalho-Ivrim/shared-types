@@ -1,7 +1,7 @@
 import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
 import { AvailableIcons } from "./icon.type";
 
-export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot';
+export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie';
 export type AvailableViewModeType = 'table' | 'dashboard';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
@@ -59,6 +59,9 @@ export interface WorkflowConfigObserverFnType {
    * \@fill-additional-data-with-match: Evento válido apenas no FlowEntity, para atualizar dados no flow data.
    * 
    * \@flow-network: Evento válido apenas no FlowData, para conectar dois workflows
+   * 
+   * \@calendar-event: Evento válido apenas no FlowData, para gerar eventos no calendário da empresa com base \
+   * nos registros
    */
   name: string,
   type: 'append' | 'backup' | 'event',
@@ -209,7 +212,7 @@ export interface ConfigViewModeColumnsType {
    */
   translate?: Record<string, string>
 }
-export interface WorkflowViewModeFilterScope{
+export interface WorkflowViewModeFilterScope {
   /**
    * String-conditional, com os hardcodes:
    * 
@@ -227,7 +230,7 @@ export interface WorkflowViewModeFilterScope{
    */
   break?: boolean
 }
-export interface WorkflowViewModeBase{
+export interface WorkflowViewModeBase {
   title: string,
   icon?: AvailableIcons,
   slug: string,
@@ -250,7 +253,7 @@ export interface WorkflowViewModeBase{
    */
   redirect_to_stateless_step?: string
 }
-export interface WorkflowViewModeKanban extends WorkflowViewModeBase{
+export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
   view_mode: 'kanban',
   /** Conteúdo do card */
   resume: {
@@ -267,7 +270,7 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase{
     content: ConfigViewModeColumnsType[]
   }
 }
-export interface WorkflowViewModeTable extends WorkflowViewModeBase{
+export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
 }
@@ -311,7 +314,7 @@ export interface WorkflowAuthType {
   }
 }
 export type AvailableTriggerEffects = 'onload-to-fill-the-page-if-necessary' | 'refresh-flow-datas' | 'success-message'
-export interface WorkflowTriggerType{
+export interface WorkflowTriggerType {
   /** Referência interna */
   id: string,
   /** 
@@ -365,8 +368,8 @@ export interface WorkflowTriggerType{
   }>>,
 }
 type AvailableTimeToNotify = 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
-export const availableTimeToNotify : AvailableTimeToNotify[] = [8,9,10,11, 12, 13, 14, 15, 16, 17, 18]
-export interface WorkflowConfigSlasType{
+export const availableTimeToNotify: AvailableTimeToNotify[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+export interface WorkflowConfigSlasType {
   title: string,
   icon?: AvailableIcons,
   /** 
@@ -388,7 +391,7 @@ export interface WorkflowConfigSlasType{
    */
   show_after_from?: number,
 }
-export interface WFConfigSlaNotifyType{
+export interface WFConfigSlaNotifyType {
   subject: string,
   /**
    * Quem será notificado:
@@ -473,27 +476,7 @@ export interface WorkflowConfigType {
   triggers?: WorkflowTriggerType[],
   webhooks?: [],
   notifications?: WorkflowConfigNotificationType[],
-  integrations?: {
-    email?: {
-      emailFrom?: string,
-      host?: string,
-      port?: number,
-      auth?: { user: string, pass: string }
-    },
-    whatsapp?: { number: string, token: string },
-    sms?: any,
-    chatbot?: any,
-    omie?: {
-      secret_key: string,
-      public_key: string
-    }
-    outhers?: {
-      key: string,
-      name: string,
-      status: boolean,
-      data: any
-    }[]
-  },
+  integrations?: WorkflowConfigIntegrationsType,
   services?: {
     auth?: WorkflowAuthType,
     autocomplete?: WorkflowConfigAutocomplete[],
@@ -544,14 +527,32 @@ export interface WorkflowConfigType {
         /** Se for true, desabilita a funcionalidade find */
         only_creation?: boolean,
         schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
-        rule?:{
+        rule?: {
           available_steps?: string[],
           append_value?: Record<string, any>
         }
       }>,
+    },
+    calendar?: {
+      filter_scope?: {
+        /** String Condition baseada no usuário solicitante da request */
+        condition?: string,
+        /**
+         * - [protected] Pode ver todos os eventos da empresa
+         * - [private] Pode ver apenas os eventos que é guest
+         * - [public] Pode ver apenas os eventos públicos
+         */
+        access_modifier?: "protected" | "private" | "public",
+        filter?: Record<string, string> | Record<string, {
+          type: WorkflowConfigFilterType['type'],
+          value: any
+        }>,
+        /** Interromper assim que a condition for true */
+        break?: boolean,
+      }[]
     }
   },
-  schema?: Record<string,FlowEntitySchemaInfo>,
+  schema?: Record<string, FlowEntitySchemaInfo>,
   slas?: WorkflowConfigSlasType,
   routines?: WorkflowRoutinesType,
   owner?: {
@@ -561,6 +562,27 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   }
+}
+export interface WorkflowConfigIntegrationsType{
+  email?: {
+    emailFrom: string,
+    host?: string,
+    port?: number,
+    auth?: { user: string, pass: string }
+  },
+  whatsapp?: { number: string, token: string },
+  sms?: any,
+  chatbot?: any,
+  omie?: {
+    secret_key: string,
+    public_key: string
+  }
+  outhers?: {
+    key: string,
+    name: string,
+    status: boolean,
+    data: any
+  }[]
 }
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth;
 export interface AuthPublicRouteSimpleToken{
@@ -581,7 +603,7 @@ export interface AuthPublicRouteNetworkFlowAuth{
     external_id: string
   }
 }
-export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'>{
+export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
   /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
   key: string,
   title: string,
@@ -609,15 +631,15 @@ export interface WFCActionFnUpdateSelected {
    */
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
-export interface WFActionFnCallTrigger{
+export interface WFActionFnCallTrigger {
   type: 'call-trigger',
   target: string,
 }
-export interface WFActionFnCallSingleEntity{
+export interface WFActionFnCallSingleEntity {
   type: 'call-single-entity',
   target: string,
 }
-export interface WFActionFnDownloadFiles{
+export interface WFActionFnDownloadFiles {
   type: 'download-files',
   /** Nome que salvará o arquivo */
   identify: string,
@@ -679,7 +701,7 @@ export interface ConfigPermissionType {
   groups: PermissionType[]
   actions: string[]
 }
-export interface WorkflowRoutinesType{
+export interface WorkflowRoutinesType {
   view?: {
     title: string,
     icon?: AvailableIcons,
@@ -687,9 +709,9 @@ export interface WorkflowRoutinesType{
   },
   executors: AvailableRoutinesExecutorsType[],
 }
-export const availableExecutorsTypes : (AvailableRoutinesExecutorsType['type'])[]= ['sync-ivrim-big-data']
-export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD
-interface WorkflowRoutinesExecutorBase{
+export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie']
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie
+interface WorkflowRoutinesExecutorBase {
   name: string,
   description: string,
   last_executed_in?: Date,
@@ -705,17 +727,32 @@ interface WorkflowRoutinesExecutorBase{
    */
   interval?: number,
 }
-export interface WorkflowRoutinesExecutorIBD extends WorkflowRoutinesExecutorBase{
+export interface WorkflowRoutinesExecutorIBD extends WorkflowRoutinesExecutorBase {
   type: 'sync-ivrim-big-data'
   data?: WorkflowRoutinesExecutorIBDData
 }
-export interface WorkflowRoutinesExecutorIBDData{
+export interface WorkflowRoutinesExecutorIBDData {
   db_name: string,
-  exception?: "duzani-theme",
+  exception?: 'duzani-theme',
   data?: {
     client_ivrim: string,
     cost_center: string
   }
 
 }
-export const availableIBDExeptions : (WorkflowRoutinesExecutorIBDData['exception'])[] = ["duzani-theme"]
+export const availableIBDExeptions: (WorkflowRoutinesExecutorIBDData['exception'])[] = ['duzani-theme']
+export interface WorkflowRoutinesExecuterIOmie extends WorkflowRoutinesExecutorBase {
+  type: 'integration-omie',
+  data: {
+    scope: "financial-movements",
+    /** Record<path-no-omie, path-no-flow-data.data> */
+    match: Record<string, string>,
+    query: Record<string, any>,
+    effects: {
+      /** String Conditional */
+      condition?: string,
+      /** Record<path-no-flow-data.data, path-na-resposta> */
+      data: Record<string, string>
+    }[]
+  }
+}

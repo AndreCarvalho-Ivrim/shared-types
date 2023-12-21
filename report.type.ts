@@ -54,7 +54,12 @@ export interface ReportAnalyticsType{
      * ! Ainda não há suporte para mais de uma referência cumulativa !
      */
     cumulative?: string[]
-  }>
+  }>,
+  format?: Record<string, {
+    type: 'date' | 'datetime' | 'money'    
+  }>,
+  /** default: csv */
+  convert_to?: 'csv' | 'xlsx'
 }
 export interface ReportType{
   _id: string,
@@ -93,5 +98,6 @@ export interface ShortReportType{
   /** URL de download de um report estático */
   url?: string,
   analytics?: boolean,
-  params?: ReportAnalyticsType['params']  
+  params?: ReportAnalyticsType['params'],
+  extension?: 'xlsx' | 'csv'
 }
