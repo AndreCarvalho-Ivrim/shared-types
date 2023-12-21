@@ -54,6 +54,7 @@ export type AvailableIcons =
   'PackageIcon' |
   'ReceiptIcon' |
   'MyDocsIcon' |
+  'MyFinanceIcon' |
   'UserVoiceIcon' |
   'StopWatchIcon' |
   'MentionIcon' |

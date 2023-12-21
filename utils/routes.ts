@@ -61,6 +61,10 @@ export const hubRoutes = {
     home: () => '/meus-docs',
     show: (id: string) => `/meus-docs/${id}`,
   },
+  finance_report: {
+    home: () => '/finance-report',
+    show: (id: string) => `/finance-report/${id}`,
+  },
   notification: {
     all: () => '/notificacoes',
     preference: () => '/notificacoes/preferencias',
@@ -104,6 +108,8 @@ export type AvailableRegexUrls =
   '@hub:icon' |
   '@hub:gallery.home' |
   '@hub:gallery.show(id)' |
+  '@hub:finance_report.home' |
+  '@hub:finance_report.show(id)' |
   '@hub:notification.all' |
   '@hub:notification.preference' |
   '@hub:notification.create'
