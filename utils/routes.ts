@@ -61,9 +61,8 @@ export const hubRoutes = {
     home: () => '/meus-docs',
     show: (id: string) => `/meus-docs/${id}`,
   },
-  finance_report: {
-    home: () => '/finance-report',
-    show: (id: string) => `/finance-report/${id}`,
+  closing_folder: {
+    home: (paths?: string[]) => `/fechamento-financeiro/${(paths ?? []).join('/')}`,
   },
   notification: {
     all: () => '/notificacoes',
@@ -108,8 +107,7 @@ export type AvailableRegexUrls =
   '@hub:icon' |
   '@hub:gallery.home' |
   '@hub:gallery.show(id)' |
-  '@hub:finance_report.home' |
-  '@hub:finance_report.show(id)' |
+  '@hub:closing_folder.home' |
   '@hub:notification.all' |
   '@hub:notification.preference' |
   '@hub:notification.create'
