@@ -1,11 +1,12 @@
 export interface ClosingFolderType{
-  _id   : string
+  _id?   : string
   title : string
+  slug?  : string
   description? : string
-  type  : 'dir' | 'file'
-  items : (ClosingFolderDir | ClosingFolderFile)[]
-  created_at: Date
-  updated_at: Date
+  type  : 'dir'
+  items? : (ClosingFolderDir | ClosingFolderFile)[]
+  created_at?: Date
+  updated_at?: Date
   client_id : string
   user_id : string
 
