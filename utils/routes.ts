@@ -61,6 +61,9 @@ export const hubRoutes = {
     home: () => '/meus-docs',
     show: (id: string) => `/meus-docs/${id}`,
   },
+  closing_folder: {
+    home: (paths?: string[]) => `/fechamento-financeiro/${(paths ?? []).join('/')}`,
+  },
   notification: {
     all: () => '/notificacoes',
     preference: () => '/notificacoes/preferencias',
@@ -104,6 +107,7 @@ export type AvailableRegexUrls =
   '@hub:icon' |
   '@hub:gallery.home' |
   '@hub:gallery.show(id)' |
+  '@hub:closing_folder.home' |
   '@hub:notification.all' |
   '@hub:notification.preference' |
   '@hub:notification.create'
