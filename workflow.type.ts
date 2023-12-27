@@ -17,6 +17,7 @@ export interface WorkflowType{
   title: string,
   description: string,
   user_id: string,
+  hidden?: boolean;
   user_name: string,
   status: AvailableWorkflowStatusType,
   config?: WorkflowConfigType,
