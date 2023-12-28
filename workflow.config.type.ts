@@ -483,7 +483,8 @@ export interface WorkflowConfigType {
     observers?: {
       onCreate?: WorkflowConfigObserverFnType[],
       onUpdate?: WorkflowConfigObserverFnType[],
-      onDelete?: WorkflowConfigObserverFnType[]
+      onDelete?: WorkflowConfigObserverFnType[],
+      onChangeOwner?: WorkflowConfigObserverFnType[]
     },
     publicRoutes?: {
       get?: Record<string, {
