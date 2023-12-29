@@ -155,7 +155,7 @@ export interface WorkflowConfigObserverFnType {
    */
   data?: any
 }
-export interface WFConfigObserverDataEntity{
+export interface WFConfigObserverDataEntity {
   entity_key: string,
   /** Parâmetros de pesquisa do get-flow-entity-datas */
   request?: {
@@ -563,7 +563,7 @@ export interface WorkflowConfigType {
     whatsapp: string
   }
 }
-export interface WorkflowConfigIntegrationsType{
+export interface WorkflowConfigIntegrationsType {
   email?: {
     emailFrom: string,
     host?: string,
@@ -576,7 +576,14 @@ export interface WorkflowConfigIntegrationsType{
   omie?: {
     secret_key: string,
     public_key: string
-  }
+  },
+  rds_marketing?: {
+    client_id: string,
+    client_secret: string,
+    refresh_token?: string,
+    access_token?: string,
+    expires_in?: number
+  },
   outhers?: {
     key: string,
     name: string,
@@ -585,7 +592,7 @@ export interface WorkflowConfigIntegrationsType{
   }[]
 }
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth;
-export interface AuthPublicRouteSimpleToken{
+export interface AuthPublicRouteSimpleToken {
   /** Token criptografado e armazenado no FlowEntity */
   mode: "@simple-token",
   entity_key: string,
@@ -594,7 +601,7 @@ export interface AuthPublicRouteSimpleToken{
     token: string
   }
 }
-export interface AuthPublicRouteNetworkFlowAuth{
+export interface AuthPublicRouteNetworkFlowAuth {
   /** Usará o token do flowAuth de outro workflow */
   mode: "@network-flow-auth",
   flow_network_id: string,
