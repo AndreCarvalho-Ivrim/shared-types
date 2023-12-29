@@ -45,8 +45,17 @@ export interface StepTypeRuleRedirect{
   confirm?: StepActionConfirmType,
 }
 export interface StepTypeRules{
+  /**
+   * Está propriedade serve para forçar o preenchimento \
+   * de campos especificos, mesmo não sendo required
+   */
   requireds?: string[],
+  /** 
+   * Esta propriedade serve para força o não preenchimento de \
+   * campos especificos
+   */
   ignores?: string[],
+  /** Ignora validação de formulário */
   redirect?: StepTypeRuleRedirect[],
   /**
    * Efeitos colaterais na interface após o envio da etapa
@@ -66,6 +75,7 @@ export interface StepTypeRules{
    * - string: Nome do grupo de permissões(ex. Financeiro), que o usuário deve ter para poder se tornar owner
    */
   owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
+  /** Configura permissões personalizadas de ações dentro desta etapa */
   actions?: Record<WorkflowConfigActionsType['id'], {
     group_permission?: ('@data_creator' | '@data_owner' | '@not-allowed' | string)[],
     permissionErroMessage?: string,
@@ -79,6 +89,12 @@ export interface StepTypeRules{
    * - [@select-owner]: Utilizar o botão para chamar o modal de seleção de owners
    */
   customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | { id: string, data: any },
+  /**
+   * STRC \
+   * Os valores observados são os itens com observer: true e caso \
+   * queira referência o flowData atual é necessário passar o code \
+   * [$flow_data:] antes do nome da prop.
+   */
   render?: string
 }
 export interface StepSlaType{
