@@ -82,4 +82,5 @@ export type AvailableIcons =
   'StatsIcon' |
   'HomeSaleIcon' |
   'CartIcon' |
-  'PieChartIcon'
+  'PieChartIcon' |
+  'CopyIcon'
