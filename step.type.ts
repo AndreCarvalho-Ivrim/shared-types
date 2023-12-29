@@ -24,15 +24,30 @@ export interface StepCustomRuleCumulative{
   /** { [cumulative-key]: ...definição } */
   data: Record<string, { mode: 'append' | 'prepend' }>
 }
+export interface StepCustomRuleSelectOwner{
+  id: '@select-owner',
+  data: {
+    /**
+     * Efeito colateral após atualização de owners:
+     * - [reload-page]: Recarrega a página
+     * - [reload-and-reopen]: Recarrega a página e abre novamente o flowData
+     * - [update-current]: Faz request para atualizar dados do flowData atual
+     * - [update-owners]: Usa a reposta da atualização para atualizar o flowData
+     */
+    effect?: 'reload-page' | 'reload-and-reopen' | 'update-current' | 'update-owners',
+
+  }
+}
+export interface StepTypeRuleRedirect{
+  condition: string, // String Conditional. Tem acesso aos helpers de data como: __@now(+4)__
+  to: string,
+  action_permission?: string,
+  confirm?: StepActionConfirmType,
+}
 export interface StepTypeRules{
   requireds?: string[],
   ignores?: string[],
-  redirect?: {
-    condition: string, // String Conditional. Tem acesso aos helpers de data como: __@now(+4)__
-    to: string,
-    action_permission?: string,
-    confirm?: StepActionConfirmType,
-  }[],
+  redirect?: StepTypeRuleRedirect[],
   /**
    * Efeitos colaterais na interface após o envio da etapa
    * 
@@ -61,8 +76,9 @@ export interface StepTypeRules{
    * - [@find]: Utilizar o step para pesquisa. Ver tipagem de StepCustomRuleFind
    * - [@cumulative]: Usado para lidar com o modo de acumular os dados do StepType.cumulative_form_data \
    * em atualizações
+   * - [@select-owner]: Utilizar o botão para chamar o modal de seleção de owners
    */
-  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | { id: string, data: any },
+  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | { id: string, data: any },
   render?: string
 }
 export interface StepSlaType{
