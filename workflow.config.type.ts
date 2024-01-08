@@ -754,7 +754,20 @@ export interface WorkflowRoutinesExecuterIOmie extends WorkflowRoutinesExecutorB
     scope: "financial-movements",
     /** Record<path-no-omie, path-no-flow-data.data> */
     match: Record<string, string>,
+    /** Query para selecionar flowDatas */
     query: Record<string, any>,
+    /**
+     * Estratégia de recuperação de flowDatas, utilizada quando \
+     * os registros do omie não deram match com os flowDatas disponíveis,
+     * pode ser configurada uma pesquisa de recuperação nos demais
+     * flowDatas.
+     */
+    recovery?: {
+      /** Condição para o movimento ser válido p/ recuperação  */
+      condition?: string,
+      /** Query adicionada na pesquisa de mais flowDatas */
+      query: Record<string, any>,
+    },
     effects: {
       /** String Conditional */
       condition?: string,
