@@ -440,6 +440,12 @@ export interface WFConfigSlaNotifyType {
    */
   content: string
 }
+export type WorkflowWebhookType = Record<string, {
+  type: 'RDStation Marketing' | 'ISAC',
+  name: string,
+  relations?: Record<string, string> ,
+  props?: any
+}>
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
@@ -474,7 +480,7 @@ export interface WorkflowConfigType {
     }[]
   },
   triggers?: WorkflowTriggerType[],
-  webhooks?: [],
+  webhooks?: WorkflowWebhookType,
   notifications?: WorkflowConfigNotificationType[],
   integrations?: WorkflowConfigIntegrationsType,
   services?: {
