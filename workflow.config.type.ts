@@ -446,6 +446,22 @@ export type WorkflowWebhookType = Record<string, {
   relations?: Record<string, string> | undefined;
   props?: any
 }>
+export interface PublicViewFlowDataType{
+  mode: 'flow-data',
+  available_steps: string[],
+  restrictions?: {
+    /** STRC para validar se o flow_data pode ou não ser acessado */
+    condition: string,
+    /** Mensagem de erro caso a condição seja verdadeira */
+    message: string
+  }[],
+  protected?: {
+    fields: Record<string, StepItemType>,
+    title: string,
+    description?: string,
+    buttonText?: string
+  }
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
@@ -550,22 +566,7 @@ export interface WorkflowConfigType {
        * - (feature) flow-entity: Irá interagir com uma entidade dinâmica especifica
        * - (feature) flow: Irá interagir com todos(ou apenas parte) registros do fluxo
        */
-      view?: Record<string, {
-        mode: 'flow-data',
-        available_steps: string[],
-        restrictions?: {
-          /** STRC para validar se o flow_data pode ou não ser acessado */
-          condition: string,
-          /** Mensagem de erro caso a condição seja verdadeira */
-          message: string
-        }[],
-        protected?: {
-          fields: Record<string, StepItemType>,
-          title: string,
-          description?: string,
-          buttonText?: string
-        }
-      } | {
+      view?: Record<string, PublicViewFlowDataType | {
         mode: 'flow-entity' | 'flow'
       }>
     },
