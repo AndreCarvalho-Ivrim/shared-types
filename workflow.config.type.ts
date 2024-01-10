@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
+import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType } from "."
 import { AvailableIcons } from "./icon.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing';
@@ -539,6 +539,35 @@ export interface WorkflowConfigType {
           append_value?: Record<string, any>
         }
       }>,
+      /**
+       * Visualizações públicas são páginas abertas,
+       * que podem ser montadas com base em stateless-step,
+       * ou flow-entities
+       * 
+       * O mode definirá o escopo de interação do usuário convidado:
+       * 
+       * - flow-data: Irá interagir com apenas um registro
+       * - (feature) flow-entity: Irá interagir com uma entidade dinâmica especifica
+       * - (feature) flow: Irá interagir com todos(ou apenas parte) registros do fluxo
+       */
+      view?: Record<string, {
+        mode: 'flow-data',
+        available_steps: string[],
+        restrictions?: {
+          /** STRC para validar se o flow_data pode ou não ser acessado */
+          condition: string,
+          /** Mensagem de erro caso a condição seja verdadeira */
+          message: string
+        }[],
+        protected?: {
+          fields: Record<string, StepItemType>,
+          title: string,
+          description?: string,
+          buttonText?: string
+        }
+      } | {
+        mode: 'flow-entity' | 'flow'
+      }>
     },
     calendar?: {
       filter_scope?: {

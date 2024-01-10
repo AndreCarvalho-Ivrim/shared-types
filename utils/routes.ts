@@ -21,6 +21,11 @@ export const isacRoutes = {
   menu: () => '/menu',
   admin_hub: {
     workflows: () => '/painel-hub/workflows',
+  },
+  public: {
+    workflow: (flow_id: string, variation: string, params?: Record<string, string>) => `public/fluxo/${flow_id}/${variation}${
+      params ? `?${Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&')}`:''
+    }`
   }
 }
 export const hubRoutes = {
