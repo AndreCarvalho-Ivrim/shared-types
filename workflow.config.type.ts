@@ -443,7 +443,7 @@ export interface WFConfigSlaNotifyType {
 export type WorkflowWebhookType = Record<string, {
   type: 'RDStation Marketing' | 'ISAC',
   name: string,
-  relations?: Record<string, string> ,
+  relations?: Record<string, string> | undefined;
   props?: any
 }>
 export interface WorkflowConfigType {
