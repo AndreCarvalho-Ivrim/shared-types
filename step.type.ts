@@ -44,6 +44,10 @@ export interface StepTypeRuleRedirect{
   action_permission?: string,
   confirm?: StepActionConfirmType,
 }
+export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page', boolean | {
+  condition?: string,
+  [key: string]: any
+}>>
 export interface StepTypeRules{
   /**
    * Está propriedade serve para forçar o preenchimento \
@@ -61,11 +65,25 @@ export interface StepTypeRules{
    * Efeitos colaterais na interface após o envio da etapa
    * 
    * - [close-if-successful]: Fechar SlideOver se requisição bem sucedida
+   * - [result-page]: Página de Resultado. Este efeito carrega uma variável de estado \
+   * para ser renderizada em uma página de sucesso. Para funcionamento correto é necessário \
+   * seguir a tipagem:
+   * 
+   * ```
+   * "result-page": {
+   *  // condition --ignorado
+   *  variations: Array<{
+   *    condition: string,
+   *    // mensagem principal
+   *    message: string,
+   *    // Possui suporte a shortcodes
+   *    subtitle?: string,
+   *    type: "success" | "danger" | "warning" | "light" | "info"
+   *  }>
+   * }
+   * ```
    * */
-  effects?: Partial<Record<AvailableTriggerEffects | 'close-if-successful', boolean | {
-    condition: string,
-    [key: string]: any
-  }>>,
+  effects?: StepTypeRulesEffects,
   /**
    * Tipos de usuários que podem ser responsáveis pelo flow_data:
    *
