@@ -222,6 +222,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 /** Lida com shortcodes do tipo \@[\<variavel>] */
 export const getShortcodes = (content: string) : string[]=> {
   var sintaxes = /@\[([^\]]+)\]/g;
+  if(!content) return [];
   var matches = (content.match(sintaxes) ?? []) as string[];
   return matches.map(m => m.substr(2, m.length - 3));
 }
