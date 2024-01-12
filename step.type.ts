@@ -24,24 +24,66 @@ export interface StepCustomRuleCumulative{
   /** { [cumulative-key]: ...definição } */
   data: Record<string, { mode: 'append' | 'prepend' }>
 }
+export interface StepCustomRuleSelectOwner{
+  id: '@select-owner',
+  data: {
+    /**
+     * Efeito colateral após atualização de owners:
+     * - [reload-page]: Recarrega a página
+     * - [reload-and-reopen]: Recarrega a página e abre novamente o flowData
+     * - [update-current]: Faz request para atualizar dados do flowData atual
+     * - [update-owners]: Usa a reposta da atualização para atualizar o flowData
+     */
+    effect?: 'reload-page' | 'reload-and-reopen' | 'update-current' | 'update-owners',
+
+  }
+}
+export interface StepTypeRuleRedirect{
+  condition: string, // String Conditional. Tem acesso aos helpers de data como: __@now(+4)__
+  to: string,
+  action_permission?: string,
+  confirm?: StepActionConfirmType,
+}
+export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page', boolean | {
+  condition?: string,
+  [key: string]: any
+}>>
 export interface StepTypeRules{
+  /**
+   * Está propriedade serve para forçar o preenchimento \
+   * de campos especificos, mesmo não sendo required
+   */
   requireds?: string[],
+  /** 
+   * Esta propriedade serve para força o não preenchimento de \
+   * campos especificos
+   */
   ignores?: string[],
-  redirect?: {
-    condition: string, // String Conditional. Tem acesso aos helpers de data como: __@now(+4)__
-    to: string,
-    action_permission?: string,
-    confirm?: StepActionConfirmType,
-  }[],
+  /** Ignora validação de formulário */
+  redirect?: StepTypeRuleRedirect[],
   /**
    * Efeitos colaterais na interface após o envio da etapa
    * 
    * - [close-if-successful]: Fechar SlideOver se requisição bem sucedida
+   * - [result-page]: Página de Resultado. Este efeito carrega uma variável de estado \
+   * para ser renderizada em uma página de sucesso. Para funcionamento correto é necessário \
+   * seguir a tipagem:
+   * 
+   * ```
+   * "result-page": {
+   *  // condition --ignorado
+   *  variations: Array<{
+   *    condition: string,
+   *    // mensagem principal
+   *    message: string,
+   *    // Possui suporte a shortcodes
+   *    subtitle?: string,
+   *    type: "success" | "danger" | "warning" | "light" | "info"
+   *  }>
+   * }
+   * ```
    * */
-  effects?: Partial<Record<AvailableTriggerEffects | 'close-if-successful', boolean | {
-    condition: string,
-    [key: string]: any
-  }>>,
+  effects?: StepTypeRulesEffects,
   /**
    * Tipos de usuários que podem ser responsáveis pelo flow_data:
    *
@@ -51,6 +93,7 @@ export interface StepTypeRules{
    * - string: Nome do grupo de permissões(ex. Financeiro), que o usuário deve ter para poder se tornar owner
    */
   owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
+  /** Configura permissões personalizadas de ações dentro desta etapa */
   actions?: Record<WorkflowConfigActionsType['id'], {
     group_permission?: ('@data_creator' | '@data_owner' | '@not-allowed' | string)[],
     permissionErroMessage?: string,
@@ -61,8 +104,15 @@ export interface StepTypeRules{
    * - [@find]: Utilizar o step para pesquisa. Ver tipagem de StepCustomRuleFind
    * - [@cumulative]: Usado para lidar com o modo de acumular os dados do StepType.cumulative_form_data \
    * em atualizações
+   * - [@select-owner]: Utilizar o botão para chamar o modal de seleção de owners
    */
-  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | { id: string, data: any },
+  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | { id: string, data: any },
+  /**
+   * STRC \
+   * Os valores observados são os itens com observer: true e caso \
+   * queira referência o flowData atual é necessário passar o code \
+   * [$flow_data:] antes do nome da prop.
+   */
   render?: string
 }
 export interface StepSlaType{

@@ -175,7 +175,11 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
           }
         }
         else{
-          if(Array.isArray(values[i * 2]) || Array.isArray(values[(i*2) + 1])) throw new Error(
+          if((
+            Array.isArray(values[i * 2]) || Array.isArray(values[(i*2) + 1])
+          ) && !(
+            typeof values[(i*2) + 1] === 'string' && ['!!','!'].includes(values[(i*2) + 1] as string)
+          )) throw new Error(
             `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Não é possível executar essa operação em um valor do tipo lista. (${strConditional})`
           )
           else matchOperation = callbackOperator(
@@ -218,6 +222,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 /** Lida com shortcodes do tipo \@[\<variavel>] */
 export const getShortcodes = (content: string) : string[]=> {
   var sintaxes = /@\[([^\]]+)\]/g;
+  if(!content) return [];
   var matches = (content.match(sintaxes) ?? []) as string[];
   return matches.map(m => m.substr(2, m.length - 3));
 }

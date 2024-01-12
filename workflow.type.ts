@@ -27,7 +27,7 @@ export interface WorkflowType{
     permissions?: WorkflowConfigType['permissions'],
     integrations?: { email?: boolean, chatbot?: boolean, sms?: boolean, whatsapp?: boolean },
     auth: boolean
-  }
+  },
 }
 export interface SimpleFlowAuthPreferenceType extends NotificationPreferenceByType{
   is_archived?: boolean

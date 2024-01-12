@@ -1,7 +1,7 @@
-import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepSlaType } from "."
+import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType } from "."
 import { AvailableIcons } from "./icon.type";
 
-export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie';
+export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing';
 export type AvailableViewModeType = 'table' | 'dashboard';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
@@ -443,9 +443,25 @@ export interface WFConfigSlaNotifyType {
 export type WorkflowWebhookType = Record<string, {
   type: 'RDStation Marketing' | 'ISAC',
   name: string,
-  relations?: Record<string, string> ,
+  relations?: Record<string, string> | undefined;
   props?: any
 }>
+export interface PublicViewFlowDataType{
+  mode: 'flow-data',
+  available_steps: string[],
+  restrictions?: {
+    /** STRC para validar se o flow_data pode ou não ser acessado */
+    condition: string,
+    /** Mensagem de erro caso a condição seja verdadeira */
+    message: string
+  }[],
+  protected?: {
+    fields: Record<string, StepItemType>,
+    title: string,
+    description?: string,
+    buttonText?: string
+  }
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
@@ -489,7 +505,8 @@ export interface WorkflowConfigType {
     observers?: {
       onCreate?: WorkflowConfigObserverFnType[],
       onUpdate?: WorkflowConfigObserverFnType[],
-      onDelete?: WorkflowConfigObserverFnType[]
+      onDelete?: WorkflowConfigObserverFnType[],
+      onChangeOwner?: WorkflowConfigObserverFnType[]
     },
     publicRoutes?: {
       get?: Record<string, {
@@ -538,6 +555,20 @@ export interface WorkflowConfigType {
           append_value?: Record<string, any>
         }
       }>,
+      /**
+       * Visualizações públicas são páginas abertas,
+       * que podem ser montadas com base em stateless-step,
+       * ou flow-entities
+       * 
+       * O mode definirá o escopo de interação do usuário convidado:
+       * 
+       * - flow-data: Irá interagir com apenas um registro
+       * - (feature) flow-entity: Irá interagir com uma entidade dinâmica especifica
+       * - (feature) flow: Irá interagir com todos(ou apenas parte) registros do fluxo
+       */
+      view?: Record<string, PublicViewFlowDataType | {
+        mode: 'flow-entity' | 'flow'
+      }>
     },
     calendar?: {
       filter_scope?: {

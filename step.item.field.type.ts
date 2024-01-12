@@ -22,7 +22,8 @@ export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
 
 export interface ValueAndNameStringType{
   value: string,
-  name: string
+  name: string,
+  condition?: string
 }
 export interface StepItemType{
   key: string,
