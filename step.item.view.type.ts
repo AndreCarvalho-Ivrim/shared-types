@@ -10,13 +10,14 @@ interface StepViewBaseType{
   /** Só funciona se houver o placeholder(titulo) */
   is_collapsed?: boolean 
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'description' | 'html' | 'redirect';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'description' | 'html' | 'redirect' | 'list';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   table: 'Tabela',
   'group-table': 'Grupo de Tabelas',
   description: 'Descrição',
   html: 'Conteúdo Customizado',
-  redirect: 'Redirecionamento'
+  redirect: 'Redirecionamento',
+  list: 'Lista'
 };
 export interface StepViewColumnType{
   /** 
@@ -45,7 +46,7 @@ export interface StepViewColumnType{
   translate?: Record<string, string>
   required?: boolean
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewDescriptionOrHtmlType | StepViewRedirectType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType;
 export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
   columns: StepViewColumnType[]
@@ -55,6 +56,11 @@ export interface StepViewGroupTableType extends StepViewBaseType{
   type: 'group-table',
   resume: StepViewColumnType[],
   columns: StepViewColumnType[],
+  required?: boolean
+}
+export interface StepViewListType extends StepViewBaseType{
+  id: string,
+  type: 'list',
   required?: boolean
 }
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{

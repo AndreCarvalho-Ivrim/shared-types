@@ -23,11 +23,12 @@ export interface WorkflowType{
   config?: WorkflowConfigType,
   template?: string,
   template_params?: any,
+  hidden?: boolean,
   resume?: {
     permissions?: WorkflowConfigType['permissions'],
     integrations?: { email?: boolean, chatbot?: boolean, sms?: boolean, whatsapp?: boolean },
     auth: boolean
-  }
+  },
 }
 export interface SimpleFlowAuthPreferenceType extends NotificationPreferenceByType{
   is_archived?: boolean
