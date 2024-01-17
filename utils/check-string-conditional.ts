@@ -283,11 +283,24 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
   const date = new Date();
   var replacer = '';
   if(param){
-    if(param === 'Y') replacer = String(date.getFullYear());
-    else if(param === 'y') replacer = String(date.getFullYear() - 2000);
-    else if(param === 'm') replacer = String(date.getMonth() + 1).padStart(2,'0');
-    else if(param === 'd') replacer = String(date.getDate()).padStart(2,'0');
-    else if(param.indexOf('+') === 0){
+    const replaceDateChar = (p: string, value: string) => {
+      let replacer = '';
+      if(p === 'Y') replacer = String(date.getFullYear());
+      else if(p === 'y') replacer = String(date.getFullYear() - 2000);
+      else if(p === 'm') replacer = String(date.getMonth() + 1).padStart(2,'0');
+      else if(p === 'd') replacer = String(date.getDate()).padStart(2,'0');
+      else if(p === 'h') replacer = String(date.getHours()).padStart(2,'0');
+      else if(p === 'i') replacer = String(date.getMinutes()).padStart(2,'0');
+      else if(p === 's') replacer = String(date.getSeconds()).padStart(2,'0');
+      
+      if(!replacer) return value;
+
+      return replaceAll(value, p, replacer)
+    }
+
+    const chars = ['Y','y','m','d','h','i','s']
+    
+    if(param.indexOf('+') === 0){
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + Number(param.slice(1)));
       
@@ -302,6 +315,12 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
       replacer = `${pastDate.getFullYear()}-${
         String(pastDate.getMonth() + 1).padStart(2, '0')
       }-${String(pastDate.getDate()).padStart(2, '0')}`;
+    }
+    else if(chars.some((char) => param.includes(char))){
+      replacer = chars.reduce((acc,curr) => {
+        if(acc.includes(curr)) return replaceDateChar(curr, acc)
+        return acc;
+      }, param)
     }
     else throw new Error(`(${param}) Replacer de data inválido`);
   }else replacer = `${
