@@ -43,7 +43,20 @@ export interface FlowEntitySchemaInfo{
       split?: { separator: string, splice?: number, revert?: boolean },
       trim?: boolean,
     },
-    // default = overwrite
+    /**
+     * default = overwrite
+     * 
+     * Para utilizar o merge em campos de texto ou numéricos é obrigatório \
+     * enviar um string onde os dois primeiros caracteres = ++
+     * 
+     * ```
+     * <valor-armazenado>: "hello"
+     * 
+     * <novo-valor>: "++ world"
+     * 
+     * <valor-final>: "hello world"
+     * ```
+     */ 
     conflit?: 'overwrite' | 'merge'
   }
 }

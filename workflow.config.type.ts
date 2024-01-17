@@ -449,6 +449,7 @@ export type WorkflowWebhookType = Record<string, {
 export interface PublicViewFlowDataType{
   mode: 'flow-data',
   available_steps: string[],
+  ignore_flow_data_id?: boolean,
   restrictions?: {
     /** STRC para validar se o flow_data pode ou não ser acessado */
     condition: string,
@@ -527,6 +528,15 @@ export interface WorkflowConfigType {
          * Record< [query-param] , [path-no-flow-data] >
          * 
          * Palavras reservadas: take, skip
+         * 
+         * Toda a pesquisa será feita por comparação absoluta, a menos \
+         * que o valor inicie com ~. Ex:
+         * 
+         * ```
+         * { id: '~path.id' }
+         * ```
+         * 
+         * Desse jeito fará a pesquisa parcial case insensitive.
          */
         available_query_params?: Record<string, string>,
         filter_scope?: WorkflowViewModeFilterScope[],
