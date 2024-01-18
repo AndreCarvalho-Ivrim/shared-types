@@ -167,6 +167,10 @@ export interface StepType{
     condition?: string,
     content: string
   }[],
+  /** Válido apenas quando step.type === 'page' */
+  page?: {
+    classNames?: Partial<Record<'wrapper', string>>
+  }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
   sla?: StepSlaType
 }

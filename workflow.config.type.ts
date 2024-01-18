@@ -450,6 +450,7 @@ export type WorkflowWebhookType = Record<string, WorkflowWebhookInfoType>
 export interface PublicViewFlowDataType {
   mode: 'flow-data',
   available_steps: string[],
+  ignore_flow_data_id?: boolean,
   restrictions?: {
     /** STRC para validar se o flow_data pode ou não ser acessado */
     condition: string,
