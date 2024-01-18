@@ -28,3 +28,45 @@ export function handleCustomPermissions({ newFlowData, flowData, permissions }:{
     return perm
   })
 }
+export function handleCustomActionsPermission({ actions, flowData, newFlowData }: {
+  flowData: any,
+  newFlowData?: any,
+  actions: string[]
+}) : string[]{
+  if(!actions) return []
+
+  return actions.reduce((acc, curr) => {
+    if(!curr) return acc;
+
+    if(curr.includes('@custom-actions:')){
+      let parsed = curr.replace('@custom-actions:','')
+
+      const shortcodes = getShortcodes(parsed);
+      shortcodes.forEach((shortcode) => {
+        let valueToReplace : any | undefined = undefined 
+        
+        if(newFlowData) valueToReplace = getRecursiveValue(shortcode, newFlowData)
+        if(!valueToReplace && valueToReplace !== 0) valueToReplace = getRecursiveValue(shortcode, flowData)
+        
+        if(typeof valueToReplace !== 'string'){
+          if(!Array.isArray(valueToReplace)) valueToReplace = ''
+          else{
+            valueToReplace = valueToReplace.filter((v: any) => typeof v === 'string')
+            if(valueToReplace.length === 0) valueToReplace = ''
+            else valueToReplace = valueToReplace.join(',')
+          }
+        }
+        
+        parsed = replaceAll(parsed, `@[${shortcode}]`, valueToReplace)
+      })
+
+      curr = parsed
+    }
+    
+    if(!curr) return acc;
+    return [
+      ...acc,
+      ...curr.split(',')
+    ];
+  }, [] as string[])
+}
