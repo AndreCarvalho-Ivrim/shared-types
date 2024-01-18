@@ -440,13 +440,14 @@ export interface WFConfigSlaNotifyType {
    */
   content: string
 }
-export type WorkflowWebhookType = Record<string, {
+export interface WorkflowWebhookInfoType {
   type: 'RDStation Marketing' | 'ISAC',
   name: string,
   relations?: Record<string, string> | undefined;
   props?: any
-}>
-export interface PublicViewFlowDataType{
+}
+export type WorkflowWebhookType = Record<string, WorkflowWebhookInfoType>
+export interface PublicViewFlowDataType {
   mode: 'flow-data',
   available_steps: string[],
   ignore_flow_data_id?: boolean,
