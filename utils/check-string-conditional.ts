@@ -64,7 +64,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de uniões e grupos não está dentro do esperado. (${strConditional})`
   );
 
-  const callbackOperator = (val_1: string | number | boolean, val_2: string | number | boolean, operator: string) => {
+  const callbackOperator = (val_1: string | number | boolean | any[], val_2: string | number | boolean | any[], operator: string) => {
+
     //#region HANDLE POSSIBLE BOOL
     [val_1, val_2].forEach((val) => {
       if(val === 'true') val = true
@@ -75,21 +76,41 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     if(val_2 === '!!') return !!val_1;
     if(val_2 === '!')  return !val_1;
 
-    if(isNaN(Number(val_1)) || isNaN(Number(val_2))){
-      val_1 = String(val_1);
-      val_2 = String(val_2);
+    if(Array.isArray(val_1)) throw new Error(
+      'O primeiro valor não pode ser uma lista'
+    )
+    if(Array.isArray(val_2)){
+      if(operator !== 'in' && operator !== 'nin') throw new Error(
+        `Está operação(${operator}) não pode ser realizada com itens do tipo lista`
+      )
+
+      val_2 = val_2.map((v) => String(v))
     }else{
-      val_1 = Number(val_1);
-      val_2 = Number(val_2);
+      if(isNaN(Number(val_1)) || isNaN(Number(val_2))){
+        val_1 = String(val_1);
+        val_2 = String(val_2);
+      }else{
+        val_1 = Number(val_1);
+        val_2 = Number(val_2);
+      }
     }
+
     switch (operator) {
       case 'eq':  return val_1 === val_2;
       case 'lt':  return val_1 <   val_2;
       case 'lte': return val_1 <=  val_2;
       case 'gt':  return val_1 >   val_2;
       case 'gte': return val_1 >=  val_2;
-      case 'in':  return !!(val_1 &&  val_2 && String(val_2).split(',').includes(String(val_1)));
-      case 'nin': return !!(val_2 &&  !String(val_2).split(',').includes(String(val_1)));
+      case 'in':
+        if(!val_2 || (Array.isArray(val_2) && val_2.length === 0)) return false;
+        if(!Array.isArray(val_2)) val_2 = String(val_2).split(',');
+
+        return val_2.includes(String(val_1));
+      case 'nin': 
+        if(!val_2 || (Array.isArray(val_2) && val_2.length === 0)) return true;
+        if(!Array.isArray(val_2)) val_2 = String(val_2).split(',');
+
+        return !val_2.includes(String(val_1));
       case 'not': return val_1 !== val_2;
     }
     return false;
@@ -179,12 +200,14 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
             Array.isArray(values[i * 2]) || Array.isArray(values[(i*2) + 1])
           ) && !(
             typeof values[(i*2) + 1] === 'string' && ['!!','!'].includes(values[(i*2) + 1] as string)
+          ) && !(
+            !Array.isArray(values[i * 2]) && ['nin', 'in'].includes(op)
           )) throw new Error(
             `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Não é possível executar essa operação em um valor do tipo lista. (${strConditional})`
           )
           else matchOperation = callbackOperator(
-            values[i * 2] as string | number,
-            values[(i*2) + 1] as string | number,
+            values[i * 2],
+            values[(i*2) + 1],
             op
           );
         }
