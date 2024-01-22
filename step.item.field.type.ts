@@ -99,7 +99,13 @@ export interface StepItemType{
       mode: 'clickToNext',
       target: string
     }
-    /** String condition, para filtrar os dados do autocomplete */
+    /**
+     * String condition, para filtrar os dados do autocomplete. \
+     * Para acessar variáveis considere que:
+     * - $\<variavel>: É uma variável dentro do valor retornado
+     * - $flow_data:\<variavel>: É uma variável dentro do flow_data
+     * - $observer:\<variavel>: É uma variável observável alterada em tempo de execução
+     */
     filter_condition?: string,
   },
   customData?: StepÍtemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | {

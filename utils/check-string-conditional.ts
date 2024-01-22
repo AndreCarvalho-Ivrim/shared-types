@@ -1,22 +1,42 @@
 import { StringConditionalTypes } from "..";
 import { getRecursiveValue, replaceAll } from "./recursive-datas";
 
-export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }) => {
-  const pattern = /\$flow_data:(.*?);/g;
-  const matches = [...conditional.matchAll(pattern)];
+export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, prefix : 'flow_data' | 'observer' = 'flow_data') => {
+  const pattern = prefix === 'flow_data' ? /\$flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
+  const matches = conditional.split(';').reduce((acc, curr) => [
+    ...acc,
+    ...((curr.matchAll(pattern) as any) ?? []) as string[]
+  ],[] as string[]) as string[];
+
   const contents = matches.map(match => match[1]);
   
+  console.log({
+    prefix, matches, pattern, conditional
+  })
   contents.map((key) => {
     const value = getRecursiveValue(key, {
       data: {
         ...flow_data.data,
-        _id: flow_data._id,
-        current_step_id: flow_data.current_step_id
+        ...(prefix === 'flow_data' ? {
+          _id: flow_data._id,
+          current_step_id: flow_data.current_step_id
+        }:{})
       }
     });
-    data[`flow_data:${key}`] = value;
+    data[`${prefix}:${key}`] = value;
   })
 
+  return data;
+}
+export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, observer: Record<string, any>) => {
+  if(observer && Object.keys(observer).length > 0) data = handleStringConditionalExtendingFlowData(
+    conditional, data, { data: observer }, 'observer'
+  )
+  if(flow_data) data = handleStringConditionalExtendingFlowData(
+    conditional, data, flow_data
+  )
+
+  console.log({ data, flow_data, conditional, observer })
   return data;
 }
 export const checkStringConditional = (strConditional: string, datas: Record<string, any>,conditionalName = 'anonymous') : boolean => {
