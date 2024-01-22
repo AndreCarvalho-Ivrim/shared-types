@@ -10,9 +10,6 @@ export const handleStringConditionalExtendingFlowData = (conditional: string, da
 
   const contents = matches.map(match => match[1]);
   
-  console.log({
-    prefix, matches, pattern, conditional
-  })
   contents.map((key) => {
     const value = getRecursiveValue(key, {
       data: {
@@ -35,8 +32,6 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
   if(flow_data) data = handleStringConditionalExtendingFlowData(
     conditional, data, flow_data
   )
-
-  console.log({ data, flow_data, conditional, observer })
   return data;
 }
 export const checkStringConditional = (strConditional: string, datas: Record<string, any>,conditionalName = 'anonymous') : boolean => {
