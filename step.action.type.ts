@@ -11,7 +11,12 @@ export interface StepActionType{
   isRedirect?: boolean,
   confirm?: StepActionConfirmType,
   rules?: StepTypeRules,
-  /** { [key]: ...definições } */
+  /**
+   * { [key]: ...definições }
+   * 
+   * Se a key = \@owner irá alterar o owner do flow-data. E se o \
+   * valor for \@me irá atribuir o usuário atual como owner
+   */
   append_values?: Record<string, {
     only_next_step?: boolean,
     value: any
