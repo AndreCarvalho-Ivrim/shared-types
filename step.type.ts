@@ -99,6 +99,8 @@ export interface StepTypeRules{
    * - string: Nome do grupo de permissões(ex. Financeiro), que o usuário deve ter para poder se tornar owner
    */
   owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
+  /** Seguindo as mesmas regras de owner */
+  can_change_owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
   /** Configura permissões personalizadas de ações dentro desta etapa */
   actions?: Record<WorkflowConfigActionsType['id'], {
     group_permission?: ('@data_creator' | '@data_owner' | '@not-allowed' | string)[],

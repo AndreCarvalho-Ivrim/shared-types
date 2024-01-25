@@ -44,6 +44,8 @@ export interface StepItemType{
      * - -2d ou +2d (menos ou mais de dois dias)
      */
     minDate?: '@today' | '@now' | '@tomorrow' | string
+    /** Segue a mesma regra do minDate */
+    maxDate?: '@today' | '@now' | '@tomorrow' | string
     render?: string,
     /**
      * AVAILABLE CUSTOM RULES\n
