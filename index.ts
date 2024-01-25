@@ -53,7 +53,10 @@ export interface Client{
   sheet?: Sheet
   users?: User[],
 
-  active?: boolean
+  active?: boolean,
+
+  userCategories?: UserCategory[],
+
 }
 export interface UserCategory{
   id: string,
