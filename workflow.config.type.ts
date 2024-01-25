@@ -765,7 +765,7 @@ export interface WorkflowRoutinesType {
   executors: AvailableRoutinesExecutorsType[],
 }
 export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie']
-export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow
 interface WorkflowRoutinesExecutorBase {
   name: string,
   description: string,
@@ -821,6 +821,20 @@ export interface WorkflowRoutinesExecuterIOmie extends WorkflowRoutinesExecutorB
       condition?: string,
       /** Record<path-no-flow-data.data, path-na-resposta> */
       data: Record<string, string>
+    }[]
+  }
+}
+export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
+  type: 'manage-flow',
+  data: {
+    /** Query de consulta do flowData. Com suporte a codehelpers */
+    query: any,
+    /** Efeitos colaterais nos registros encontrados */
+    effects: {
+      condition?: string,
+      /** Se for true, irá interromper a execução a primeira ocorrência verdadeira */
+      breakExec?: boolean,
+      append: Record<string, any>
     }[]
   }
 }

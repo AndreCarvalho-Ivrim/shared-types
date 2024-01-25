@@ -130,19 +130,37 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     }
     return false;
   }
-  const callbackArrayOperator = (arr: (string | number)[], val: string | number, operator: 'contains') => {
-    let isNumber = !isNaN(Number(val)) && !arr.find(v => isNaN(Number(v)));
-    if(isNumber){
-      val = Number(val);
-      arr = arr.map(v => Number(v));
-    }else{
-      val = String(val);
-      arr = arr.map(v => String(v));
+  const callbackArrayOperator = (arr: (string | number)[], val: string | number, operator: 'contains' | 'filled') => {
+    if(operator === 'filled'){
+      const len = arr.length;
+      let isFilled = len > 0
+      if(!isFilled) return isFilled;
+
+      if(typeof val !== 'string' || (!(
+        ['>','<'].includes(val.slice(0, 1)) && !isNaN(Number(val.slice(1)))
+      ) && isNaN(Number(val)))) return isFilled
+
+      if(['>','<'].includes(val.slice(0, 1))){
+        const num = Number(val.slice(1));
+        return val.slice(0, 1) === '>' ? len > num : len < num
+      }
+
+      return len == Number(val)
     }
 
-    switch(operator){
-      case 'contains': return arr.includes(val);
+    if(operator === 'contains'){
+      let isNumber = !isNaN(Number(val)) && !arr.find(v => isNaN(Number(v)));
+      if(isNumber){
+        val = Number(val);
+        arr = arr.map(v => Number(v));
+      }else{
+        val = String(val);
+        arr = arr.map(v => String(v));
+      }
+
+      return arr.includes(val);
     }
+
     return false;
   }
 
@@ -196,7 +214,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
       operators.forEach((op, i) => {
         if(matchOperation !== undefined && !matchOperation) return;
 
-        if(op === 'contains'){
+        if(op === 'contains' || op === 'filled'){
           if(!values[i * 2]) matchOperation = false;
           else{
             if(!Array.isArray(values[i * 2])) values[i * 2] = [values[i * 2] as string | number];
