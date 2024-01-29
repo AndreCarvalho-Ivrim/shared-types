@@ -44,7 +44,7 @@ export interface StepTypeRuleRedirect{
   action_permission?: string,
   confirm?: StepActionConfirmType,
 }
-export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page', boolean | {
+export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete', boolean | {
   condition?: string,
   [key: string]: any
 }>>
@@ -82,6 +82,10 @@ export interface StepTypeRules{
    *  }>
    * }
    * ```
+   * 
+   * - [redirect-and-autocomplete]: Usado junto com a regra de step find, definindo que após encontrar \ 
+   * ou não um registro, vai redirecionar para a etapa de destino ou para etapa especificada em [redirec...]: { target: string }, e usar o conteúdo encontrado apenas \
+   * para autocomplete
    * */
   effects?: StepTypeRulesEffects,
   /**
@@ -95,6 +99,8 @@ export interface StepTypeRules{
    * - string: Nome do grupo de permissões(ex. Financeiro), que o usuário deve ter para poder se tornar owner
    */
   owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
+  /** Seguindo as mesmas regras de owner */
+  can_change_owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
   /** Configura permissões personalizadas de ações dentro desta etapa */
   actions?: Record<WorkflowConfigActionsType['id'], {
     group_permission?: ('@data_creator' | '@data_owner' | '@not-allowed' | string)[],

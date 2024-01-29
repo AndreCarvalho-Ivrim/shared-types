@@ -50,12 +50,13 @@ export const hubRoutes = {
   },
   admin_panel: {
     client: () => '/painel-adm/empresa',
+    companies: () => '/painel-adm/companies',
     users: () => '/painel-adm',
     projects: () => '/painel-adm/projetos',
     dashboards: () => '/painel-adm/dashboards',
     integrations: {
       whatsapp: () => '/painel-adm/integracao-whatsapp',
-    }
+    },
   },
   icon: () => '/icones',
   dashboard: {
@@ -92,6 +93,7 @@ export type AvailableRegexUrls =
   '@isac:login' |
   '@isac:menu' |
   '@isac:admin_hub.workflows' |
+  '@hub:admin_panel.companies' |
   '@hub:auth.login' |
   '@hub:auth.logout' |
   '@hub:profile.home' |
