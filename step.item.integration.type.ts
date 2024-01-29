@@ -1,12 +1,12 @@
 export type IntegrationTypeType = 'excel' | 'omie';
-export const integrationTypeFormatted : Record<IntegrationTypeType, string> = {
+export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   excel: 'Excel (Importação)',
   omie: 'Integração c/ Omie'
 };
 
 export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
-export const integrationExcelColumnType : IntegrationExcelColumnTypeType[] = ['text', 'date', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj'];
-export const integrationExcelColumnTypeFormatted : Record<IntegrationExcelColumnTypeType, string> = {
+export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj'];
+export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnTypeType, string> = {
   text: 'Texto',
   date: 'Data',
   email: 'Email',
@@ -17,10 +17,10 @@ export const integrationExcelColumnTypeFormatted : Record<IntegrationExcelColumn
   'cpf-cnpj': 'CPF/CNPJ'
 };
 
-export interface IntegrationExcelType{
+export interface IntegrationExcelType {
   key: string,
   type: 'excel',
-  mode: 'integration',  
+  mode: 'integration',
   label?: string,
   placeholder?: string,
   required?: boolean,
@@ -30,21 +30,27 @@ export interface IntegrationExcelType{
       match: string[],
       replacers?: string[],
       mode: 'merge' | 'overwrite' | 'replacer'
+    },
+    unique?: {
+      match: string[],
+      replacers?: string[],
+      mode: 'merge' | 'overwrite' | 'replacer' | 'error',
+      error_message?: string
     }
   },
   scope: string,
   columns?: IntegrationExcelColumnType[]
 }
-export interface IntegrationExcelColumnType{
+export interface IntegrationExcelColumnType {
   id: string,
   name: string,
   type: IntegrationExcelColumnTypeType,
   required?: boolean
 }
-export interface IntegrationOmieType{
+export interface IntegrationOmieType {
   key: string,
   type: 'omie',
-  mode: 'integration',  
+  mode: 'integration',
   label?: string,
   placeholder?: string,
   required?: boolean,
