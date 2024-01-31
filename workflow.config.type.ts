@@ -152,6 +152,8 @@ export interface WorkflowConfigObserverFnType {
    * APPEND -> required data on value = \@entity
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
+   * 
+   * \@webhook: o data deve conter a prop webhook com o slug da webhook chamada.
    */
   data?: any
 }
@@ -443,7 +445,12 @@ export interface WFConfigSlaNotifyType {
 export interface WorkflowWebhookInfoType {
   type: 'RDStation Marketing' | 'ISAC',
   name: string,
-  relations?: Record<string, string> | undefined;
+  relations?: Record<string, any> | undefined;
+  /**
+   * Se [type] === 'ISAC' as props devem ser:
+   * - url (string | required)
+   * - ref (string | opcional) A ref é um identificador de referência do registro
+   */          
   props?: any
 }
 export type WorkflowWebhookType = Record<string, WorkflowWebhookInfoType>
