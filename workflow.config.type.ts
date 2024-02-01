@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType } from "."
+import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, ThemeColorType } from "."
 import { AvailableIcons } from "./icon.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing';
@@ -255,6 +255,14 @@ export interface WorkflowViewModeBase {
    */
   redirect_to_stateless_step?: string
 }
+export interface KanbanFlagType{
+  condition: string,
+  type: ThemeColorType,
+  availableSteps?: string[],
+  /** Um caracter que será mostrado na flag */
+  subtitle?: string,
+  tooltip?: string
+}
 export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
   view_mode: 'kanban',
   /** Conteúdo do card */
@@ -270,7 +278,8 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
      **/
     avatar?: "@creator" | "@owner" | string,
     content: ConfigViewModeColumnsType[]
-  }
+  },
+  flags?: KanbanFlagType[]
 }
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
