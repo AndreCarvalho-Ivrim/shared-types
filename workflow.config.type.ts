@@ -47,6 +47,28 @@ export interface WorkflowConfigAutocomplete {
   ref: string,
   response?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
 }
+export interface WfConfigObserverBackupData{
+  mode: 'create' | 'create-or-update' | 'update',
+  /** Obrigatório se mode = 'create-or-update' | 'update' */
+  matchs?: string,
+  /**
+   * Válido apenas se houver matchs
+   * - replace-all(default): substitui todos os valores
+   * - replace-if-truth: só substitui os valores válidos
+   */
+  conflit?: 'replace-all' | 'replace-if-truth',
+  /** Efeito colateral no flowData */
+  effects?: {
+    /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+    only: 'success' | 'error' | 'always',
+    condition?: string,
+    /** Valores que serão atualizados no flowData */
+    values: Record<string, any>,
+    /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+    breakExec?: boolean
+  }[]
+
+}
 export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
    * 
@@ -79,6 +101,11 @@ export interface WorkflowConfigObserverFnType {
    */
   value?: any,
   /** 
+   * BACKUP(type)
+   * Se a ideia for fazer um array de backups por flow-data, com o primeiro níve da entidade dinâmica \
+   * sendo um sub-schema baseado no flow-data-id, não é necessário informar o data, mas caso contrário \
+   * defina o data seguindo a tipagem de [WfConfigObserverBackupData]
+   * 
    * EVENTS -> required data on events[\@search-and-fill-data-with-match, \@fill-additional-data-with-match, \@flow-network]
    * 
    * \@search-and-fill-data-with-match
@@ -153,7 +180,7 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
    * 
-   * \@webhook: o data deve conter a prop webhook com o slug da webhook chamada.
+   * \@webhook: o data deve conter a prop webhook com o slug da webhook chamada.   
    */
   data?: any
 }
