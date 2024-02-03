@@ -7,6 +7,16 @@ export interface StepCustomRuleFind{
   id: '@find',
   data: {
     view_item: ConfigViewModeColumnsType[],
+    /**
+     * Onde será a pesquisa, nos flow-datas ou em entidades dinâmicas
+     * - (default) flow-data
+     * - entity: Se for entidade dinâmica é obrigatório informar o id, e é \
+     * obrigatório usar ``` effects: { "redirect-and-autocomplete": ... } ``` \
+     * para que o valor encontrado seja usado como autocomplete
+     */
+    mode?: 'flow-data' | 'entity',
+    /** Id da entidade dinâmica. Usado apenas se mode === 'entity' */
+    id?: string;
     toast?: {
       many_found?: ToastSettingType,
       found?: ToastSettingType,
