@@ -50,7 +50,7 @@ export interface WorkflowConfigAutocomplete {
 export interface WfConfigObserverBackupData{
   mode: 'create' | 'create-or-update' | 'update',
   /** Obrigatório se mode = 'create-or-update' | 'update' */
-  matchs?: string,
+  matchs?: string[],
   /**
    * Válido apenas se houver matchs
    * - replace-all(default): substitui todos os valores
