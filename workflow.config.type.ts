@@ -507,6 +507,23 @@ export interface PublicViewFlowDataType {
     buttonText?: string
   }
 }
+export interface WorkflowMenuShortcut{
+  id: string,
+  /**
+   * O **to** pode ser uma url externa ou um shortcode
+   * referência uma url do hub ou do isac.
+   * 
+   * \@hub:nome-da-rota(param) para acessar alguma rota do hub \
+   * \@isac:nome-da-rota(param1,param2) para acessar alguma rota do isac
+   * 
+   * O valor entre parentes é usado para passar 1 ou mais parametros para a rota
+   */
+  to: string,
+  /** Icones disponíveis na página de icones */
+  icon?: AvailableIcons,
+  title: string,
+  action_permission?: string,
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
@@ -522,23 +539,7 @@ export interface WorkflowConfigType {
      * - shortcut: shortcut--id
      */
     ordenation?: string[],
-    shortcuts: {
-      id: string,
-      /**
-       * O **to** pode ser uma url externa ou um shortcode
-       * referência uma url do hub ou do isac.
-       * 
-       * \@hub:nome-da-rota(param) para acessar alguma rota do hub \
-       * \@isac:nome-da-rota(param1,param2) para acessar alguma rota do isac
-       * 
-       * O valor entre parentes é usado para passar 1 ou mais parametros para a rota
-       */
-      to: string,
-      /** Icones disponíveis na página de icones */
-      icon?: AvailableIcons,
-      title: string,
-      action_permission?: string,
-    }[]
+    shortcuts: WorkflowMenuShortcut[]
   },
   triggers?: WorkflowTriggerType[],
   webhooks?: WorkflowWebhookType,
