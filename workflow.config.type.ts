@@ -157,7 +157,7 @@ export interface WorkflowConfigObserverFnType {
    *    mode: 'by-step' | 'public-route' | 'data-injection',
    *    // Se mode [by-step] = [web-id-da-step-target]
    *    // Se mode [public-route] = [variant-da-public-route-post]
-   *    // Se mode [data-injection] será desconsiderado
+   *    // Se mode [inner-data] será desconsiderado
    *    mode_key?: string,
    *    // Necessário apenas se mode [by-step] e a etapa tiver mais de uma ação,
    *    action_key?: string,
