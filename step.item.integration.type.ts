@@ -37,6 +37,11 @@ export interface IntegrationExcelType {
       mode: 'merge' | 'overwrite' | 'replacer' | 'error',
       error_message?: string
     }
+    /**
+     * Se restrict === true, ele disparará erro caso uma coluna required \
+     * não for preenchido. No caso contrário, ignorará a linha
+     */
+    restrict?: boolean
   },
   scope: string,
   columns?: IntegrationExcelColumnType[]
