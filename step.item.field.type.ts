@@ -66,7 +66,11 @@ export interface StepItemType{
   items?: ItemOrViewOrWidgetOrIntegration[],
   autocomplete?: {
     /** 
-     * Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities.
+     * Se iniciar com @ está se referindo alguma função hardcode, e não ao flow-entities, \
+     * e se quiser usar um flow-entities externo deve iniciar com id do fluxo separado por \
+     * \# como no exemplo abaixo:
+     * 
+     * ``` <flow-id>#<entity-key> ```
      * 
      * hardcode válidos:
      * - \@banks: Lista de bancos

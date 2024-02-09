@@ -69,6 +69,45 @@ export interface WfConfigObserverBackupData{
   }[]
 
 }
+export interface FlowNetworkParams {
+  flow_id: string,
+  /** ``` { [data_id]: [target_id] } ``` */
+  match: Record<string, string>,
+  /** Adicionar um valor no registro de destino */
+  append_values?: Record<string, {
+    value: any
+  }>,
+  /** 
+   * [by-step]: irá usar a validação de um step(do target-wf) para receber os dados \
+   * [public-route]: irá usar uma a validação de uma rota publica(do target-wf) para receber os dados \
+   * [inner-data]: vai injetar os dados sem validação 
+   */
+  mode: 'by-step' | 'public-route' | 'inner-data',
+  /** 
+   * Se mode [by-step] = [web-id-do-step-target] \
+   * Se mode [public-route] = [variant-da-public-route-post] \
+   * Se mode [inner-data] será desconsiderado 
+   */
+  mode_key?: string,
+  /** Necessário apenas se mode [by-step] e a etapa tiver mais de uma ação */
+  action_key?: string
+  /** Caso queira gerar algum efeito colateral no registro atual após realizar a transferẽncia */
+  effect?: {
+    /** 
+     * ```{ [target_successfuly_id]: [origin_data_id] } ``` \
+     * Especifica quais dados serão copiados para o registro de origem e onde. 
+     */
+    success?: Record<string, string>
+    /** 
+     * Caso gere erro, onde quer armazenar a resposta de erro no registro de origem, \
+     * e se quer colocar uma mensagem padrão, ou se não preenchido, usar a retorna no destino 
+     */
+    error?: {
+      key: string,
+      default?: string
+    }
+  }
+}
 export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
    * 
@@ -145,36 +184,7 @@ export interface WorkflowConfigObserverFnType {
    * }
    * ```
    * 
-   * \@flow-network [FlowNetworkParams]
-   * ```
-   * {
-   *    flow_id: string,
-   *    // { [data_id]: [target_id] }
-   *    match: Record<string, string>,
-   *    // [by-step]: irá usar a validação de um step(do target-wf) para receber os dados
-   *    // [public-route]: irá usar uma a validação de uma rota publica(do target-wf) para receber os dados
-   *    // [inner-data]: vai injetar os dados sem validação
-   *    mode: 'by-step' | 'public-route' | 'data-injection',
-   *    // Se mode [by-step] = [web-id-da-step-target]
-   *    // Se mode [public-route] = [variant-da-public-route-post]
-   *    // Se mode [inner-data] será desconsiderado
-   *    mode_key?: string,
-   *    // Necessário apenas se mode [by-step] e a etapa tiver mais de uma ação,
-   *    action_key?: string,
-   *    // Caso queira gerar algum efeito colateral no registro atual após realizar a transferẽncia
-   *    effect?: {
-   *      // { [target_successfuly_id]: [origin_data_id] }
-   *      // Especifica quais dados serão copiados para o registro de origem e onde.
-   *      success?: Record<string, string>
-   *      // Caso gere erro, onde quer armazenar a resposta de erro no registro de origem, 
-   *      // e se quer colocar uma mensagem padrão, ou se não preenchido, usar a retorna no destino
-   *      error?: {
-   *        key: string,
-   *        default?: string
-   *      }
-   *    }
-   * }
-   * ```
+   * \@flow-network: seguir tipagem de [FlowNetworkParams]
    * 
    * APPEND -> required data on value = \@entity
    * 
