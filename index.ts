@@ -94,3 +94,4 @@ export * from './step.item.widget.type';
 export * from './step.type';
 export * from './dashboard.type';
 export * from './closing_folder.type';
+export * from './gallery.type';
