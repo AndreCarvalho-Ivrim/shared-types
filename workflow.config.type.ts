@@ -21,6 +21,17 @@ export interface WorkflowConfigFilterType {
   /** somente autocomplete.mode = 'distinct' */
   autocomplete?: string
 }
+export interface WorkflowNotificationEffectType{
+  /**
+   * Efeito aplicado após envio:
+   * - always(default): Sempre
+   * - success: Apenas se bem sucedido
+   * - error: Apenas se falhar
+   */
+  only?: "always" | "success" | "error",
+  /** { ['flow-data-key']: \<value-to-add> } */
+  append_values: Record<string, any>
+}
 export interface WorkflowConfigNotificationType {
   name: string,
   condition: string,
@@ -39,7 +50,8 @@ export interface WorkflowConfigNotificationType {
    *                                  que contenha o contato
    */
   target: '@data_creator' | '@data_owner' | '@wf_owner' | string,
-  default_target?: string[]
+  default_target?: string[],
+  effects?: Array<WorkflowNotificationEffectType>
 }
 export interface WorkflowConfigAutocomplete {
   name: string,
