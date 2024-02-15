@@ -1,15 +1,15 @@
 import { StringConditionalTypes } from "..";
 import { getRecursiveValue, replaceAll } from "./recursive-datas";
 
-export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, prefix : 'flow_data' | 'observer' = 'flow_data') => {
+export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, prefix: 'flow_data' | 'observer' = 'flow_data') => {
   const pattern = prefix === 'flow_data' ? /\$flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
   const matches = conditional.split(';').reduce((acc, curr) => [
     ...acc,
     ...((curr.matchAll(pattern) as any) ?? []) as string[]
-  ],[] as string[]) as string[];
+  ], [] as string[]) as string[];
 
   const contents = matches.map(match => match[1]);
-  
+
   contents.map((key) => {
     const value = getRecursiveValue(key, {
       data: {
@@ -17,7 +17,7 @@ export const handleStringConditionalExtendingFlowData = (conditional: string, da
         ...(prefix === 'flow_data' ? {
           _id: flow_data._id,
           current_step_id: flow_data.current_step_id
-        }:{})
+        } : {})
       }
     });
     data[`${prefix}:${key}`] = value;
@@ -26,15 +26,15 @@ export const handleStringConditionalExtendingFlowData = (conditional: string, da
   return data;
 }
 export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, observer: Record<string, any>) => {
-  if(observer && Object.keys(observer).length > 0) data = handleStringConditionalExtendingFlowData(
+  if (observer && Object.keys(observer).length > 0) data = handleStringConditionalExtendingFlowData(
     conditional, data, { data: observer }, 'observer'
   )
-  if(flow_data) data = handleStringConditionalExtendingFlowData(
+  if (flow_data) data = handleStringConditionalExtendingFlowData(
     conditional, data, flow_data
   )
   return data;
 }
-export const checkStringConditional = (strConditional: string, datas: Record<string, any>,conditionalName = 'anonymous') : boolean => {
+export const checkStringConditional = (strConditional: string, datas: Record<string, any>, conditionalName = 'anonymous'): boolean => {
   let condition: {
     type: StringConditionalTypes,
     value: string
@@ -42,10 +42,10 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     let identifier = c.substring(0, 1);
     return {
       type:
-        identifier === '$' ? 'prop' : 
-        identifier === '#' ? 'operator' : 
-        identifier === '*' ? 'value' : 
-        identifier === '&' ? 'logic' : undefined,
+        identifier === '$' ? 'prop' :
+          identifier === '#' ? 'operator' :
+            identifier === '*' ? 'value' :
+              identifier === '&' ? 'logic' : undefined,
       value: c.substr(1, c.length - 1)
     } as {
       type: StringConditionalTypes | undefined,
@@ -55,27 +55,27 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     type: StringConditionalTypes,
     value: string
   }[];
-  
-  if(condition.length === 0) return false;
 
-  const unionConditionals : string[] = [];
-  const groupConditionals : Array<{
+  if (condition.length === 0) return false;
+
+  const unionConditionals: string[] = [];
+  const groupConditionals: Array<{
     type: StringConditionalTypes,
     value: string
   }[]> = [];
 
   condition.forEach((c) => {
-    if(c.type === 'logic'){
+    if (c.type === 'logic') {
       unionConditionals.push(c.value);
       return;
     }
 
     let unionLen = unionConditionals.length;
-    if(groupConditionals[unionLen]) groupConditionals[unionLen].push(c);
+    if (groupConditionals[unionLen]) groupConditionals[unionLen].push(c);
     else groupConditionals[unionLen] = [c];
   });
 
-  if(unionConditionals.length !== 0 && (unionConditionals.length + 1) !== groupConditionals.length) throw new Error(
+  if (unionConditionals.length !== 0 && (unionConditionals.length + 1) !== groupConditionals.length) throw new Error(
     `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de uniões e grupos não está dentro do esperado. (${strConditional})`
   );
 
@@ -83,47 +83,47 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
     //#region HANDLE POSSIBLE BOOL
     [val_1, val_2].forEach((val) => {
-      if(val === 'true') val = true
-      else if(val === 'false') val = false
+      if (val === 'true') val = true
+      else if (val === 'false') val = false
     })
     //#endregion HANDLE POSSIBLE BOOL
 
-    if(val_2 === '!!') return !!val_1;
-    if(val_2 === '!')  return !val_1;
+    if (val_2 === '!!') return !!val_1;
+    if (val_2 === '!') return !val_1;
 
-    if(Array.isArray(val_1)) throw new Error(
+    if (Array.isArray(val_1)) throw new Error(
       'O primeiro valor não pode ser uma lista'
     )
-    if(Array.isArray(val_2)){
-      if(operator !== 'in' && operator !== 'nin') throw new Error(
+    if (Array.isArray(val_2)) {
+      if (operator !== 'in' && operator !== 'nin') throw new Error(
         `Está operação(${operator}) não pode ser realizada com itens do tipo lista`
       )
 
       val_2 = val_2.map((v) => String(v))
-    }else{
-      if(isNaN(Number(val_1)) || isNaN(Number(val_2))){
+    } else {
+      if (isNaN(Number(val_1)) || isNaN(Number(val_2))) {
         val_1 = String(val_1);
         val_2 = String(val_2);
-      }else{
+      } else {
         val_1 = Number(val_1);
         val_2 = Number(val_2);
       }
     }
 
     switch (operator) {
-      case 'eq':  return val_1 === val_2;
-      case 'lt':  return val_1 <   val_2;
-      case 'lte': return val_1 <=  val_2;
-      case 'gt':  return val_1 >   val_2;
-      case 'gte': return val_1 >=  val_2;
+      case 'eq': return val_1 === val_2;
+      case 'lt': return val_1 < val_2;
+      case 'lte': return val_1 <= val_2;
+      case 'gt': return val_1 > val_2;
+      case 'gte': return val_1 >= val_2;
       case 'in':
-        if(!val_2 || (Array.isArray(val_2) && val_2.length === 0)) return false;
-        if(!Array.isArray(val_2)) val_2 = String(val_2).split(',');
+        if (!val_2 || (Array.isArray(val_2) && val_2.length === 0)) return false;
+        if (!Array.isArray(val_2)) val_2 = String(val_2).split(',');
 
         return val_2.includes(String(val_1));
-      case 'nin': 
-        if(!val_2 || (Array.isArray(val_2) && val_2.length === 0)) return true;
-        if(!Array.isArray(val_2)) val_2 = String(val_2).split(',');
+      case 'nin':
+        if (!val_2 || (Array.isArray(val_2) && val_2.length === 0)) return true;
+        if (!Array.isArray(val_2)) val_2 = String(val_2).split(',');
 
         return !val_2.includes(String(val_1));
       case 'not': return val_1 !== val_2;
@@ -131,16 +131,16 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     return false;
   }
   const callbackArrayOperator = (arr: (string | number)[], val: string | number, operator: 'contains' | 'filled') => {
-    if(operator === 'filled'){
+    if (operator === 'filled') {
       const len = arr.length;
       let isFilled = len > 0
-      if(!isFilled) return Number(val) === 0;
+      if (!isFilled) return Number(val) === 0;
 
-      if(typeof val !== 'string' || (!(
-        ['>','<'].includes(val.slice(0, 1)) && !isNaN(Number(val.slice(1)))
+      if (typeof val !== 'string' || (!(
+        ['>', '<'].includes(val.slice(0, 1)) && !isNaN(Number(val.slice(1)))
       ) && isNaN(Number(val)))) return isFilled
 
-      if(['>','<'].includes(val.slice(0, 1))){
+      if (['>', '<'].includes(val.slice(0, 1))) {
         const num = Number(val.slice(1));
         return val.slice(0, 1) === '>' ? len > num : len < num
       }
@@ -148,12 +148,12 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
       return len == Number(val)
     }
 
-    if(operator === 'contains'){
+    if (operator === 'contains') {
       let isNumber = !isNaN(Number(val)) && !arr.find(v => isNaN(Number(v)));
-      if(isNumber){
+      if (isNumber) {
         val = Number(val);
         arr = arr.map(v => Number(v));
-      }else{
+      } else {
         val = String(val);
         arr = arr.map(v => String(v));
       }
@@ -164,31 +164,31 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     return false;
   }
 
-  try{
-    let matchesConditional : boolean[] = [];
+  try {
+    let matchesConditional: boolean[] = [];
     groupConditionals.forEach((condition) => {
-      let values : (string | number | (string | number)[])[] = [];
-      let operators : string[] = [];
-      if(condition.length % 2 === 0) throw new Error(
+      let values: (string | number | (string | number)[])[] = [];
+      let operators: string[] = [];
+      if (condition.length % 2 === 0) throw new Error(
         `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Deve seguir o modelo de prop/value, operator, prop/value, ... (${strConditional})`
       );
       condition.forEach((c, i) => {
-        if(i % 2 === 0){
-          if(['logic','operator'].includes(c.type)) throw Error(
+        if (i % 2 === 0) {
+          if (['logic', 'operator'].includes(c.type)) throw Error(
             `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. É obrigatório que o index par seja ocupado por uma propriedade ou valor (${strConditional})`
           );
 
-          if(c.type === 'prop') values.push(
+          if (c.type === 'prop') values.push(
             getRecursiveValue(c.value, { data: datas }) ?? undefined
           );
-          else if(c.type === 'value'){
+          else if (c.type === 'value') {
             const helpers = getCodeHelpers(c.value);
-            if(!helpers) values.push(c.value)
-            else{
+            if (!helpers) values.push(c.value)
+            else {
               let value = c.value;
-              
+
               helpers.forEach(([code, param]) => {
-                switch(code){
+                switch (code) {
                   case '@now': value = handleCodeHelper__now(value, code, param); break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
@@ -198,41 +198,41 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
             }
           }
           else values.push('');
-        }else{
-          if(c.type !== 'operator') throw Error(
+        } else {
+          if (c.type !== 'operator') throw Error(
             `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. É obrigatório que o index ímpar seja ocupado por um operador (${strConditional})`
           );
 
           operators.push(c.value);
         }
       });
-      if(operators.length !== 0 && (operators.length * 2) !== values.length) throw new Error(
+      if (operators.length !== 0 && (operators.length * 2) !== values.length) throw new Error(
         `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de valores e operadores não está dentro do esperado. (${strConditional})`
       );
 
-      let matchOperation : boolean | undefined = undefined;
+      let matchOperation: boolean | undefined = undefined;
       operators.forEach((op, i) => {
-        if(matchOperation !== undefined && !matchOperation) return;
+        if (matchOperation !== undefined && !matchOperation) return;
 
-        if(op === 'contains' || op === 'filled'){
-          if(!values[i * 2]) matchOperation = false;
-          else{
-            if(!Array.isArray(values[i * 2])) values[i * 2] = [values[i * 2] as string | number];
-            if(!Array.isArray(values[(i*2) + 1])) matchOperation = callbackArrayOperator(
+        if (op === 'contains' || op === 'filled') {
+          if (!values[i * 2]) matchOperation = false;
+          else {
+            if (!Array.isArray(values[i * 2])) values[i * 2] = [values[i * 2] as string | number];
+            if (!Array.isArray(values[(i * 2) + 1])) matchOperation = callbackArrayOperator(
               values[i * 2] as Array<string | number>,
-              values[(i*2) + 1] as string | number,
+              values[(i * 2) + 1] as string | number,
               op
             )
             else throw new Error(
-              `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Em uma comparação de 'item contém na lista', a lista deve vir primeiro, e depois o valor a ser procurado. (${strConditional})`    
+              `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Em uma comparação de 'item contém na lista', a lista deve vir primeiro, e depois o valor a ser procurado. (${strConditional})`
             )
           }
         }
-        else{
-          if((
-            Array.isArray(values[i * 2]) || Array.isArray(values[(i*2) + 1])
+        else {
+          if ((
+            Array.isArray(values[i * 2]) || Array.isArray(values[(i * 2) + 1])
           ) && !(
-            typeof values[(i*2) + 1] === 'string' && ['!!','!'].includes(values[(i*2) + 1] as string)
+            typeof values[(i * 2) + 1] === 'string' && ['!!', '!'].includes(values[(i * 2) + 1] as string)
           ) && !(
             !Array.isArray(values[i * 2]) && ['nin', 'in'].includes(op)
           )) throw new Error(
@@ -240,7 +240,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
           )
           else matchOperation = callbackOperator(
             values[i * 2],
-            values[(i*2) + 1],
+            values[(i * 2) + 1],
             op
           );
         }
@@ -257,11 +257,11 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
       return false;
     }
 
-    if(unionConditionals.length === 0) return matchesConditional.length === 0 ? false : matchesConditional[0];
+    if (unionConditionals.length === 0) return matchesConditional.length === 0 ? false : matchesConditional[0];
 
-    let unionMatch : boolean | undefined;
+    let unionMatch: boolean | undefined;
     unionConditionals.forEach((uni, i) => {
-      if(unionMatch !== undefined && !unionMatch) return;
+      if (unionMatch !== undefined && !unionMatch) return;
       unionMatch = callbackUnion(
         i === 0 ? matchesConditional[0] : unionMatch!,
         matchesConditional[i + 1],
@@ -270,15 +270,15 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     });
 
     return !!unionMatch;
-  }catch(e){
+  } catch (e) {
     console.error(e);
     return false;
   }
 };
 /** Lida com shortcodes do tipo \@[\<variavel>] */
-export const getShortcodes = (content: string) : string[]=> {
+export const getShortcodes = (content: string): string[] => {
   var sintaxes = /@\[([^\]]+)\]/g;
-  if(!content) return [];
+  if (!content) return [];
   var matches = (content.match(sintaxes) ?? []) as string[];
   return matches.map(m => m.substr(2, m.length - 3));
 }
@@ -291,27 +291,27 @@ export const getShortcodes = (content: string) : string[]=> {
  * 3º: Caso split_params for true e o code helper ter parametros, retornará o array de \
  * parametros separado, considerando separação por virgular, ou por operadores aritméticos
  */
-export const getCodeHelpers = (value: string, split_params = false) : Array<[string, string?, string[]?]> | undefined => {
-  if(!value || typeof value !== 'string' || !value.includes('__')) return
+export const getCodeHelpers = (value: string, split_params = false): Array<[string, string?, string[]?]> | undefined => {
+  if (!value || typeof value !== 'string' || !value.includes('__')) return
 
   const regex = /__(.*?)__/g;
   const matches = value.match(regex);
 
-  if(!matches || matches.length === 0) return;
-  
+  if (!matches || matches.length === 0) return;
+
   const codes = matches.map(match => match.replace(/__/g, ''));
 
   const extractedContents = codes.map(code => {
     const regexContent = /([^()]+)\(([^()]+)\)/;
     const matchContent = regexContent.exec(code);
     if (matchContent) {
-      if(split_params){
+      if (split_params) {
         let toSplitParams = matchContent[2]
         let shortcodes = getShortcodes(toSplitParams)
 
-        let shortcodesToReplace : Array<[string, string]> = []
+        let shortcodesToReplace: Array<[string, string]> = []
         shortcodes.forEach((code, i) => {
-          const toReplace : [string, string] = [`param_${i}`,`@[${code}]`]
+          const toReplace: [string, string] = [`param_${i}`, `@[${code}]`]
           toSplitParams = replaceAll(toSplitParams, toReplace[1], toReplace[0])
           shortcodesToReplace.push(toReplace)
         })
@@ -327,7 +327,7 @@ export const getCodeHelpers = (value: string, split_params = false) : Array<[str
           })
         ];
       }
-      
+
       else return [matchContent[1], matchContent[2]];
     }
     return [code];
@@ -338,66 +338,161 @@ export const getCodeHelpers = (value: string, split_params = false) : Array<[str
 export const handleCodeHelper__now = (value: string, code: string, param?: string) => {
   const date = new Date();
   var replacer = '';
-  if(param){
+  if (param) {
     const replaceDateChar = (p: string, value: string) => {
       let replacer = '';
-      if(p === 'Y') replacer = String(date.getFullYear());
-      else if(p === 'y') replacer = String(date.getFullYear() - 2000);
-      else if(p === 'm') replacer = String(date.getMonth() + 1).padStart(2,'0');
-      else if(p === 'd') replacer = String(date.getDate()).padStart(2,'0');
-      else if(p === 'h') replacer = String(date.getHours()).padStart(2,'0');
-      else if(p === 'i') replacer = String(date.getMinutes()).padStart(2,'0');
-      else if(p === 's') replacer = String(date.getSeconds()).padStart(2,'0');
-      
-      if(!replacer) return value;
+      if (p === 'Y') replacer = String(date.getFullYear());
+      else if (p === 'y') replacer = String(date.getFullYear() - 2000);
+      else if (p === 'm') replacer = String(date.getMonth() + 1).padStart(2, '0');
+      else if (p === 'd') replacer = String(date.getDate()).padStart(2, '0');
+      else if (p === 'h') replacer = String(date.getHours()).padStart(2, '0');
+      else if (p === 'i') replacer = String(date.getMinutes()).padStart(2, '0');
+      else if (p === 's') replacer = String(date.getSeconds()).padStart(2, '0');
+
+      if (!replacer) return value;
 
       return replaceAll(value, p, replacer)
     }
 
-    const chars = ['Y','y','m','d','h','i','s']
-    
-    if(param.indexOf('+') === 0){
+    const chars = ['Y', 'y', 'm', 'd', 'h', 'i', 's']
+
+    if (param.indexOf('+') === 0) {
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + Number(param.slice(1)));
-      
-      replacer = `${futureDate.getFullYear()}-${
-        String(futureDate.getMonth() + 1).padStart(2, '0')
-      }-${String(futureDate.getDate()).padStart(2, '0')}`;
+
+      replacer = `${futureDate.getFullYear()}-${String(futureDate.getMonth() + 1).padStart(2, '0')
+        }-${String(futureDate.getDate()).padStart(2, '0')}`;
     }
-    else if(param.indexOf('-') === 0){
+    else if (param.indexOf('-') === 0) {
       const pastDate = new Date();
       pastDate.setDate(pastDate.getDate() - Number(param.slice(1)));
-      
-      replacer = `${pastDate.getFullYear()}-${
-        String(pastDate.getMonth() + 1).padStart(2, '0')
-      }-${String(pastDate.getDate()).padStart(2, '0')}`;
+
+      replacer = `${pastDate.getFullYear()}-${String(pastDate.getMonth() + 1).padStart(2, '0')
+        }-${String(pastDate.getDate()).padStart(2, '0')}`;
     }
-    else if(chars.some((char) => param.includes(char))){
-      replacer = chars.reduce((acc,curr) => {
-        if(acc.includes(curr)) return replaceDateChar(curr, acc)
+    else if (chars.some((char) => param.includes(char))) {
+      replacer = chars.reduce((acc, curr) => {
+        if (acc.includes(curr)) return replaceDateChar(curr, acc)
         return acc;
       }, param)
     }
     else throw new Error(`(${param}) Replacer de data inválido`);
-  }else replacer = `${
-    String(date.getDate()).padStart(2,'0')
-  }/${String(date.getMonth() + 1).padStart(2,'0')}/${
-    date.getFullYear()
-  }`;
+  } else replacer = `${String(date.getDate()).padStart(2, '0')
+    }/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()
+    }`;
 
   var searchValue = param ? `__${code}(${param})__` : `__${code}__`;
   let max = 40;
-  do{
-    value = value.replace(searchValue,replacer)
+  do {
+    value = value.replace(searchValue, replacer)
     max--
-    if(max === 0){
+    if (max === 0) {
       console.log('[shortcode-replace-in-loop]', {
         content: value,
         replacer: searchValue
       })
       break;
     }
-  }while(value.includes(searchValue))
+  } while (value.includes(searchValue))
 
   return value;
+}
+
+export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
+  codeHelper: string,
+  chParam: string,
+  parsedParams: any[]
+}) => {
+  let value: any = undefined;
+  if (codeHelper === 'sum') {
+    if (!chParam || (parsedParams ?? []).length === 0) throw new Error(
+      'É obrigatório informar algum valor para usar o code-helper de soma'
+    )
+
+    let arr = [];
+    if (parsedParams.length === 1) arr = parsedParams[0];
+    else arr = parsedParams;
+
+    if (!Array.isArray(arr)) value = 0;
+    else value = arr.reduce((acc, curr) => {
+      let val = typeof curr === 'object' ? 0 : Number(curr);
+      if (isNaN(val)) val = 0;
+      return acc + val;
+    }, 0)
+  } else
+    if (codeHelper === 'sumWithMultiplier') {
+      if (!chParam || (parsedParams ?? []).length === 0) throw new Error(
+        'É obrigatório informar algum valor para usar o code-helper de soma'
+      )
+
+      let arr = [];
+      if (parsedParams.length === 1) arr = parsedParams[0];
+      else arr = parsedParams;
+
+      if (!Array.isArray(arr)) value = 0;
+      else value = arr.reduce((acc, curr) => {
+        if (Array.isArray(curr)) {
+          curr = curr.filter((v) => !(
+            typeof v === 'object' || isNaN(Number(v))
+          )).map((v) => Number(v))
+
+          if (curr.length === 0) return acc;
+
+          curr = (curr as number[]).reduce((acc, curr) => acc * curr, 1)
+        }
+
+        let val = typeof curr === 'object' ? 0 : Number(curr);
+        if (isNaN(val)) val = 0;
+        return acc + val;
+      }, 0)
+    } else
+      if (codeHelper === 'len') {
+        if (!chParam || (parsedParams ?? []).length === 0) throw new Error(
+          'É obrigatório informar algum valor para usar o code-helper de tamanho'
+        )
+
+        let arr = [];
+        if (parsedParams.length === 1) arr = parsedParams[0];
+        else arr = parsedParams;
+
+        if (!Array.isArray(arr)) value = 0;
+        else value = arr.length;
+      } else
+        if (codeHelper === 'linearArithmetic') {
+          if (!chParam || (parsedParams ?? []).length < 2) throw new Error(
+            'É obrigatório informar pelo menos dois valores e um operador para usar o code-helper de calculo aritmético linear'
+          )
+
+          const operators = chParam.match(/[\+\-\*\/]/g) || [];
+
+          value = Array.from(parsedParams.entries()).reduce((acc, [i, curr]) => {
+            if (typeof curr === 'object') return acc;
+
+            let v = Number(curr)
+            if (isNaN(v) || operators.length < (i - 1)) return acc;
+
+            if (i === 0) return v;
+
+            switch (operators[(i - 1)]) {
+              case '+': return acc + v;
+              case '-': return acc - v;
+              case '/': return v === 0 ? undefined : acc / v;
+              case '*': return acc * v;
+              default:
+                console.log(`[invalid-aritmetic-operator${operators[(i - 1)]}]`)
+                throw new Error('Operador inválido')
+            }
+          }, 0)
+        } else
+          if (codeHelper === 'distinct') {
+            if (!chParam || !Array.isArray(parsedParams)) return [];
+
+            return parsedParams.filter((item, index) => parsedParams.findIndex(
+              (curr) => typeof item === 'object' ? JSON.stringify(curr) === JSON.stringify(item) : curr === item
+            ) === index)
+          } else throw new Error(
+            'Não há suporte para este code-helper'
+          )
+
+  return value
 }
