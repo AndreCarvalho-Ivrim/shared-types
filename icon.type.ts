@@ -83,4 +83,5 @@ export type AvailableIcons =
   'HomeSaleIcon' |
   'CartIcon' |
   'PieChartIcon' |
-  'CopyIcon'
+  'CopyIcon' |
+  'CloudRainIcon'

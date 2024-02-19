@@ -466,6 +466,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
           const operators = chParam.match(/[\+\-\*\/]/g) || [];
 
           value = Array.from(parsedParams.entries()).reduce((acc, [i, curr]) => {
+            if (acc === undefined) return acc;
             if (typeof curr === 'object') return acc;
 
             let v = Number(curr)
@@ -482,7 +483,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
                 console.log(`[invalid-aritmetic-operator${operators[(i - 1)]}]`)
                 throw new Error('Operador inválido')
             }
-          }, 0)
+          }, 0 as number | undefined)
         } else
           if (codeHelper === 'distinct') {
             if (!chParam || !Array.isArray(parsedParams)) return [];
