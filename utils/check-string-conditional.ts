@@ -490,9 +490,28 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
             return parsedParams.filter((item, index) => parsedParams.findIndex(
               (curr) => typeof item === 'object' ? JSON.stringify(curr) === JSON.stringify(item) : curr === item
             ) === index)
-          } else throw new Error(
-            'Não há suporte para este code-helper'
-          )
+          } else
+            if (codeHelper === 'groupByAndSum') {
+              if (!chParam || !Array.isArray(parsedParams)) return {};
+              const paramSplit = chParam.split(',');
+
+              const result = parsedParams.reduce((acc, item) => {
+                if (!acc[item[paramSplit[1]]]) {
+                  acc[item[paramSplit[1]]] = 0;
+                }
+
+                acc[item[paramSplit[1]]] += item[paramSplit[2]];
+
+                return acc;
+              }, {});
+
+              return Object.entries(result).map(([name, value]) => ({
+                name,
+                value
+              }));
+            } else throw new Error(
+              'Não há suporte para este code-helper'
+            )
 
   return value
 }
