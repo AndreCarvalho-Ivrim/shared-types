@@ -1,4 +1,5 @@
 export interface FlowDataNote{
+  _id?: string,
   attachments?: Array<{
     url: string,
     id: string,
@@ -7,8 +8,8 @@ export interface FlowDataNote{
   content: string,
   author: string,
   answers?: FlowDataNote[],
-  created_at: Date,
-  updated_at: Date,
+  created_at?: Date,
+  updated_at?: Date,
   /** Id dos usuários que curtiram */
   likes?: string[],
   /** Id dos usuários que deram deslike */
