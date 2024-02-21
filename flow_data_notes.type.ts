@@ -1,3 +1,5 @@
+import { User } from "."
+
 export interface FlowDataNote{
   _id?: string,
   attachments?: Array<{
@@ -13,7 +15,11 @@ export interface FlowDataNote{
   /** Id dos usuários que curtiram */
   likes?: string[],
   /** Id dos usuários que deram deslike */
-  unlikes?: string[]
+  unlikes?: string[],
+  /** (formatação) Dados completos do autor */
+  user?: User,
+  /** (formatação) Data de atualização formatada */
+  smart_updated_at?: string
 }
 export interface FlowDataNotesType{
   _id: string,
