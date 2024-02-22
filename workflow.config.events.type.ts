@@ -1,6 +1,11 @@
 import { CreateScheduleEvent } from "./schedule.type"
+import { WorkflowNotificationEffectType } from "./workflow.config.type"
 
-export interface WFCalendarEventType extends Omit<CreateScheduleEvent, 'start' | 'end' | 'email' | 'guests' | 'tags'>{
+export interface WFCalendarEventType {
+  effects: Array<WorkflowNotificationEffectType>,
+  appointment: WFCalendarEventAppointment
+}
+export interface WFCalendarEventAppointment extends Omit<CreateScheduleEvent, 'start' | 'end' | 'email' | 'guests' | 'tags'>{
   /** Caminho da data no flowData.data */
   start: string,
   /** Caminho da data no flowData.data */
