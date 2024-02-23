@@ -275,7 +275,17 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     return false;
   }
 };
-/** Lida com shortcodes do tipo \@[\<variavel>] */
+/**
+ * Lida com shortcodes do tipo \@[\<variavel>]
+ * 
+ * Obs. Se quiser acessar alguma posição de um array utilize {} em vez de [],\
+ * para não dar erro no regex. Exemplo:
+ * 
+ * ```
+ *  searched: \@[array{0}] 
+ *  extracted: array{0}
+ * ```
+ */
 export const getShortcodes = (content: string): string[] => {
   var sintaxes = /@\[([^\]]+)\]/g;
   if (!content) return [];
