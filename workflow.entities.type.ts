@@ -63,6 +63,9 @@ export interface FlowEntitySchemaInfo{
 export interface FlowEntityAssociationColumns{
   name: string,
   update: boolean,
+  /**
+   * entity-col-key: excel-col-name 
+   */
   columns: Record<string, string>
 }
 export interface FlowEntityImportSheet{

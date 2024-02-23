@@ -1,4 +1,4 @@
-import { AvailableCustomItemModeType } from "./step.item.field.type";
+import { AvailableCustomItemModeType, ThemeColorType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
 interface StepViewBaseType{
@@ -10,7 +10,7 @@ interface StepViewBaseType{
   /** Só funciona se houver o placeholder(titulo) */
   is_collapsed?: boolean 
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   table: 'Tabela',
   'group-table': 'Grupo de Tabelas',
@@ -18,7 +18,8 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   html: 'Conteúdo Customizado',
   redirect: 'Redirecionamento',
   list: 'Lista',
-  markdown: 'Markdown'
+  markdown: 'Markdown',
+  tasks: 'Tarefas'
 };
 export interface StepViewColumnType{
   /** 
@@ -47,7 +48,7 @@ export interface StepViewColumnType{
   translate?: Record<string, string>
   required?: boolean
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
 export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
   columns: StepViewColumnType[]
@@ -57,6 +58,26 @@ export interface StepViewGroupTableType extends StepViewBaseType{
   type: 'group-table',
   resume: StepViewColumnType[],
   columns: StepViewColumnType[],
+  required?: boolean
+}
+export interface StepViewTasksType extends StepViewBaseType{
+  type: 'tasks',
+  /** Id do array de tarefas */
+  id: string,
+  /** Id dentro do arrey referenciando o vencimento da tarefa */
+  expiration: string,
+  resume: StepViewColumnType[],
+  columns: StepViewColumnType[],
+  /**
+   * É necessário ter um status configurado como default para iniciar os \
+   * registros, e pelo menos um com type = success para finalizar a tarefa
+   */
+  status: {
+    name: string,
+    type: ThemeColorType,
+    is_default?: boolean
+  }[]
+  /** Se for required vai mostrar o item mesmo que não haja tasks */
   required?: boolean
 }
 export interface StepViewListType extends StepViewBaseType{
