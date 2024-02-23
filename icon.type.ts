@@ -75,13 +75,12 @@ export type AvailableIcons =
   'CodeIcon' |
   'PlusCircleIcon' |
   'XCircleIcon' |
-  'IsacImageIcon' |
-  'VisionImageIcon' |
-  'ReportImageIcon' |
-  'DashboardImageIcon' |
   'StatsIcon' |
   'HomeSaleIcon' |
   'CartIcon' |
   'PieChartIcon' |
   'CopyIcon' |
-  'CloudRainIcon'
+  'CloudRainIcon' |
+  'PaperClipIcon' |
+  'LikeIcon' |
+  'UnlikeIcon'

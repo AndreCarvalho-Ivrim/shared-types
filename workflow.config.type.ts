@@ -318,6 +318,7 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
   resume: {
     /** Identificador no card */
     identifier?: string,
+    identifier_mask?: 'date' | 'phone' | 'percent' | 'money' | 'cpf-cnpj',
     /** 
      * Se mostrará o avatar no card:
      * 

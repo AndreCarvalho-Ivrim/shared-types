@@ -11,11 +11,10 @@ export interface CreateScheduleEvent {
   /** Com suporte a regexUrl */
   redirect_to?: string;
   location?: string;
-  color: 'default' | 'green' | 'red' | 'azure' | 'warning',
+  color: 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'info',
   /** Strings para serem utilizadas na pesquisa */
-  tags?: string[]
-  /** Para definir uma categoria de evento */
-  type?: string,
+  tags?: string[],
+  type?: 'reminder' | 'reservation',
   guests: {
     email: string;
     whatsapp?: string;
