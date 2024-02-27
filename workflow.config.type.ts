@@ -607,6 +607,7 @@ export interface WorkflowConfigType {
          * Desse jeito fará a pesquisa parcial case insensitive.
          */
         available_query_params?: Record<string, string>,
+        order_by?: Record<string, 'desc' | 'asc'>,
         filter_scope?: WorkflowViewModeFilterScope[],
         /** Se não for informado trará o flow_data.data completo */
         body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
