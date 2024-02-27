@@ -83,4 +83,5 @@ export type AvailableIcons =
   'CloudRainIcon' |
   'PaperClipIcon' |
   'LikeIcon' |
-  'UnlikeIcon'
+  'UnlikeIcon' | 
+  'MobileIcon'

@@ -761,6 +761,11 @@ export interface WFActionFnCallSingleEntity {
   type: 'call-single-entity',
   target: string,
 }
+export interface WFActionFnRedirect {
+  type: 'redirect',
+  to: string,
+  target?: '_blank'
+}
 export interface WFActionFnDownloadFiles {
   type: 'download-files',
   /** Nome que salvará o arquivo */
@@ -817,7 +822,7 @@ export interface WorkflowConfigActionsType {
    * 
    * As demais são funções globais, que são geralmente localizadas no topo.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
