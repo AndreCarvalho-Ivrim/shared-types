@@ -84,4 +84,5 @@ export type AvailableIcons =
   'PaperClipIcon' |
   'LikeIcon' |
   'UnlikeIcon' | 
-  'MobileIcon'
+  'MobileIcon' |
+  'CollapseIcon'
