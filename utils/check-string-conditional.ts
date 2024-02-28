@@ -415,9 +415,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
 }) => {
   let value: any = undefined;
   if (codeHelper === 'sum') {
-    if (!chParam || (parsedParams ?? []).length === 0) throw new Error(
-      'É obrigatório informar algum valor para usar o code-helper de soma'
-    )
+    if (!chParam || (parsedParams ?? []).length === 0) return undefined;
 
     let arr = [];
     if (parsedParams.length === 1) arr = parsedParams[0];
@@ -431,9 +429,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
     }, 0)
   } else
     if (codeHelper === 'sumWithMultiplier') {
-      if (!chParam || (parsedParams ?? []).length === 0) throw new Error(
-        'É obrigatório informar algum valor para usar o code-helper de soma'
-      )
+      if (!chParam || (parsedParams ?? []).length === 0) return;
 
       let arr = [];
       if (parsedParams.length === 1) arr = parsedParams[0];
@@ -457,9 +453,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
       }, 0)
     } else
       if (codeHelper === 'len') {
-        if (!chParam || (parsedParams ?? []).length === 0) throw new Error(
-          'É obrigatório informar algum valor para usar o code-helper de tamanho'
-        )
+        if (!chParam || (parsedParams ?? []).length === 0) return;
 
         let arr = [];
         if (parsedParams.length === 1) arr = parsedParams[0];

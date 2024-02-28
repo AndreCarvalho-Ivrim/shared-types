@@ -41,7 +41,7 @@ export const getRecursiveValue = (id: string, item: { data: any }) : any => {
 
   //#region HANDLE ARRAY
   /** Aceitando acesso de array por [] e por {} */
-  const regex =   /[\[\{](\d+)[\]\}]/; // /\[[^\[\]]+\]/;
+  const regex =   /[\[\{]([\w.]+)[\]\}]/; // /\[[^\[\]]+\]/;
   const hasArrayIndex = regex.test(id)
   if(hasArrayIndex){
     const match = id.match(regex)
