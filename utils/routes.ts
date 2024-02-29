@@ -23,7 +23,7 @@ export const isacRoutes = {
     workflows: () => '/painel-hub/workflows',
   },
   public: {
-    workflow: (flow_id: string, variation: string, params?: Record<string, string>) => `public/fluxo/${flow_id}/${variation}${
+    workflow: (flow_id: string, variation: string, params?: Record<string, string>) => `/public/fluxo/${flow_id}/${variation}${
       params ? `?${Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&')}`:''
     }`
   }
@@ -83,8 +83,8 @@ export type AvailableRegexUrls =
   '@isac:workflow.home' |
   '@isac:workflow.create(module_name)' |
   '@isac:workflow.test(module_name)' |
-  '@isac:workflow.exec(module_name, view_mode?)' |
-  '@isac:workflow.entity(module_name, entity)' |
+  '@isac:workflow.exec(module_name,view_mode?)' |
+  '@isac:workflow.entity(module_name,entity)' |
   '@isac:workflow.calendar(module_name)' |
   '@isac:workflow.sla_panel(module_name)' |
   '@isac:report.home' |
@@ -93,6 +93,7 @@ export type AvailableRegexUrls =
   '@isac:login' |
   '@isac:menu' |
   '@isac:admin_hub.workflows' |
+  '@isac:public.workflow(flow_id,variation,params?)' |
   '@hub:admin_panel.companies' |
   '@hub:auth.login' |
   '@hub:auth.logout' |
