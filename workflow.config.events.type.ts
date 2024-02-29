@@ -3,6 +3,14 @@ import { WorkflowNotificationEffectType } from "./workflow.config.type"
 
 export interface WFCalendarEventType {
   effects: Array<WorkflowNotificationEffectType>,
+  multiple?: {
+    /** Id da posição em que se encontra o array */
+    id: string,
+    /** Condição para que cada nó seja considerado válido */
+    condition?: string,
+    /** Valor que será concatenado ao id do flowData quando no external_id do evento */
+    external_id: string
+  },
   appointment: WFCalendarEventAppointment
 }
 export interface WFCalendarEventAppointment extends Omit<CreateScheduleEvent, 'start' | 'end' | 'email' | 'guests' | 'tags'>{
