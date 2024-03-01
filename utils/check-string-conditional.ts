@@ -34,6 +34,44 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
   )
   return data;
 }
+/**
+ * Condicionais descritas em string, com separador ponto e vírgula. Para explicar a função \
+ * de cada bloco da condicional, é necessário iniciar com um préfixo:
+ * 
+ * $: é utilizado para referênciar variáveis \
+ * \#: é utilizado para referência operadores \
+ * \*: é utilizado para referência valores hardcode \
+ * &: é utilizado para referência operadores lógicos
+ * 
+ * Exemplo: 
+ * 
+ * ``` $variable1;#eq;*value1;&and;$variable;#gte;*2 ```
+ * 
+ * Este exemplo está verificada se a variável ```variable1``` é igual a string "value1" e \
+ * se a variável ```variable2``` é maior ou igual ao número 2.
+ * 
+ * **Operadores**
+ * - eq
+ * - lt
+ * - lte
+ * - gt
+ * - gte
+ * - in
+ * - nin
+ * - not
+ * - filled (exclusivo para arrays)
+ * - contains (exclusivo para arrays)
+ * 
+ * **Operadores Lógicos**
+ * - and
+ * - or
+ * 
+ * **Valores especiais**
+ * - !!: quando usar este simbolo irá verificar se a variável é verdadeira
+ * - !: quando usar este simbolo irá verificar se a variável é falsa
+ * - >0, <2: quando usar o operador filled, podemos usar uma expressão parecida com essa \
+ * para fazer verificações de length (length maior que 0, length menor que 2)
+ */
 export const checkStringConditional = (strConditional: string, datas: Record<string, any>, conditionalName = 'anonymous'): boolean => {
   let condition: {
     type: StringConditionalTypes,
