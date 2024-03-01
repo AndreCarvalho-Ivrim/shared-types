@@ -61,6 +61,10 @@ export interface StepViewGroupTableType extends StepViewBaseType{
   required?: boolean
 }
 export interface StepViewTasksType extends StepViewBaseType{
+  /**
+   * Para funcionamento correto do item view-tasks, é obrigatório adicionar um id único, \
+   * podendo ser adicionado manualmente, ou pelo observer.append usando o helper uuid
+   **/
   type: 'tasks',
   /** Id do array de tarefas */
   id: string,
