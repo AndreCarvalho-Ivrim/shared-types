@@ -133,8 +133,9 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@flow-network: Evento válido apenas no FlowData, para conectar dois workflows
    * 
-   * \@calendar-event: Evento válido apenas no FlowData, para gerar eventos no calendário da empresa com base \
-   * nos registros
+   * \@calendar-event: Evento válido apenas no FlowData, para gerar eventos no calendário da empresa
+   * 
+   * \@delete-from-calendar: Evento válido apenas no FlowData, para excluir eventosd do calendário
    */
   name: string,
   type: 'append' | 'backup' | 'event',
@@ -157,7 +158,7 @@ export interface WorkflowConfigObserverFnType {
    * sendo um sub-schema baseado no flow-data-id, não é necessário informar o data, mas caso contrário \
    * defina o data seguindo a tipagem de [WfConfigObserverBackupData]
    * 
-   * EVENTS -> required data on events[\@search-and-fill-data-with-match, \@fill-additional-data-with-match, \@flow-network]
+   * EVENTS
    * 
    * \@search-and-fill-data-with-match
    * ```
@@ -198,11 +199,15 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@flow-network: seguir tipagem de [FlowNetworkParams]
    * 
+   * \@webhook: o data deve conter a prop webhook com o slug da webhook chamada.
+   * 
+   * \@calendar-event: seguir a tipagem de [WFCalendarEventType]
+   * 
+   * \@delete-from-calendar: seguir a tipagem de [WFDeleteFromCalendarEventType]
+   * 
    * APPEND -> required data on value = \@entity
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
-   * 
-   * \@webhook: o data deve conter a prop webhook com o slug da webhook chamada.   
    */
   data?: any
 }
@@ -575,7 +580,11 @@ export interface WorkflowConfigType {
       onCreate?: WorkflowConfigObserverFnType[],
       onUpdate?: WorkflowConfigObserverFnType[],
       onDelete?: WorkflowConfigObserverFnType[],
-      onChangeOwner?: WorkflowConfigObserverFnType[]
+      onChangeOwner?: WorkflowConfigObserverFnType[],
+      /** Tem acesso a variável _taks_id contendo o id da task alterada */
+      onChangeTask?: WorkflowConfigObserverFnType[],
+      /** Tem acesso a variável _taks_id contendo o id da task excluída */
+      onDeleteTask?: WorkflowConfigObserverFnType[]
     },
     publicRoutes?: {
       get?: Record<string, {
