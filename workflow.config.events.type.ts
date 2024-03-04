@@ -49,4 +49,9 @@ export interface WFCalendarEventAppointment extends Omit<CreateScheduleEvent, 's
 export interface WFDeleteFromCalendarEventType{
   effects: Array<WorkflowNotificationEffectType>,
   multiple?: WFCalendarMultipleType,
+  /**
+   * Utilizado apenas quando não usar a prop multiple, e o external_id do flowData com o evento \
+   * for formado pela concatenação(com #) do flow_data_id(padrão) + algum valor dinâmico
+   */
+  single_external_id?: string
 }
