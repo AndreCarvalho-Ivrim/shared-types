@@ -10,7 +10,7 @@ export interface WFCalendarMultipleType{
   external_id: string
 }
 export interface WFCalendarEventType {
-  effects: Array<WorkflowNotificationEffectType>,
+  effects?: Array<WorkflowNotificationEffectType>,
   multiple?: WFCalendarMultipleType,
   appointment: WFCalendarEventAppointment
 }
@@ -47,7 +47,7 @@ export interface WFCalendarEventAppointment extends Omit<CreateScheduleEvent, 's
   }
 }
 export interface WFDeleteFromCalendarEventType{
-  effects: Array<WorkflowNotificationEffectType>,
+  effects?: Array<WorkflowNotificationEffectType>,
   multiple?: WFCalendarMultipleType,
   /**
    * Utilizado apenas quando não usar a prop multiple, e o external_id do flowData com o evento \
