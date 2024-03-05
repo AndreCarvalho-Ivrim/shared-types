@@ -10,10 +10,11 @@ interface StepViewBaseType{
   /** Só funciona se houver o placeholder(titulo) */
   is_collapsed?: boolean 
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   table: 'Tabela',
   'group-table': 'Grupo de Tabelas',
+  'horizontal-table': 'Tabela Horizontal',
   description: 'Descrição',
   html: 'Conteúdo Customizado',
   redirect: 'Redirecionamento',
@@ -48,7 +49,7 @@ export interface StepViewColumnType{
   translate?: Record<string, string>
   required?: boolean
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
 export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
   columns: StepViewColumnType[]
@@ -59,6 +60,9 @@ export interface StepViewGroupTableType extends StepViewBaseType{
   resume: StepViewColumnType[],
   columns: StepViewColumnType[],
   required?: boolean
+}
+export interface StepViewHorizontalTableType extends Omit<StepViewGroupTableType, "type" > {
+  type: 'horizontal-table',
 }
 export interface StepViewTasksType extends StepViewBaseType{
   /**
