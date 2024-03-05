@@ -1,5 +1,6 @@
 import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, ThemeColorType } from "."
 import { AvailableIcons } from "./icon.type";
+import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing';
 export type AvailableViewModeType = 'table' | 'dashboard';
@@ -686,7 +687,8 @@ export interface WorkflowConfigType {
     cnpj: string,
     email: string,
     whatsapp: string
-  }
+  },
+  rules?: WorkflowConfigRulesType[]
 }
 export interface WorkflowConfigIntegrationsType {
   email?: {
