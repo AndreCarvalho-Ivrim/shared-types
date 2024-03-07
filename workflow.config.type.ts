@@ -84,7 +84,11 @@ export interface WfConfigObserverBackupData{
 }
 export interface FlowNetworkParams {
   flow_id: string,
-  /** ``` { [data_id]: [target_id] } ``` */
+  /** 
+   * ``` { [data_id]: [target_id] } ``` 
+   * Se usar a notação ``` { ".": "." } ```, ou qualquer variação disso, estará fazendo \
+   * referência a raiz do objeto (no caso o flowData.data)
+   */
   match: Record<string, string>,
   /** Adicionar um valor no registro de destino */
   append_values?: Record<string, {
