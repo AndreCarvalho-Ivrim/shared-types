@@ -10,7 +10,7 @@ export interface StepActionType{
   action_permission?: string,
   isRedirect?: boolean,
   confirm?: StepActionConfirmType,
-  rules?: StepTypeRules,
+  rules?: Omit<StepTypeRules, 'actions' | 'can_change_owner'>,
   /**
    * { [key]: ...definições }
    * 

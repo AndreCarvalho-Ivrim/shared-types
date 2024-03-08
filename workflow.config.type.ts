@@ -291,11 +291,17 @@ export interface WorkflowViewModeFilterScope {
    */
   break?: boolean
 }
+export interface ViewModeOrderBy{
+  ref: string,
+  orientation?: 'desc' | 'asc',
+  /** Utilizado apenas quando ViewMode é do tipo kanban e deseja ter um tipo de ordenação diferente por coluna */
+  available_steps?: string[]
+}
 export interface WorkflowViewModeBase {
   title: string,
   icon?: AvailableIcons,
   slug: string,
-  order_by?: { ref: string, orientation?: 'desc' | 'asc' },
+  order_by?: ViewModeOrderBy | ViewModeOrderBy[],
   /** 
    * Existem alguns valores pré-definidos que geram pesquisas mais complexas como:
    * - \@array-exists-and-gt-0: { "key": { $exists: true, $not: { $size: 0 } } }
@@ -337,7 +343,7 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
      * string: Referência do campo que armazena a imagem customizada do avatar 
      **/
     avatar?: "@creator" | "@owner" | string,
-    content: ConfigViewModeColumnsType[]
+    content: (ConfigViewModeColumnsType & { available_steps?: string[] })[]
   },
   flags?: KanbanFlagType[]
 }
