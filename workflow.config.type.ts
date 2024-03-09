@@ -921,7 +921,25 @@ export interface WorkflowRoutinesExecuterIOmie extends WorkflowRoutinesExecutorB
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
   type: 'manage-flow',
   data: {
-    /** Query de consulta do flowData. Com suporte a codehelpers */
+    /** 
+     * Query de consulta do flowData seguindo padrões do mongodb. Com suporte ao \
+     * codehelper ```__@now__```. O codehelper pode ser identificado caso esteja em \
+     * alguma dessas condições:
+     * - value : string
+     * ```
+     *  query: {
+     *    'field': '__@codehelper__'
+     *  }
+     * ```
+     * - value: object, contendo uma das chaves: $lt, $lte, $gt, $gte, $in
+     * ```
+     *  query: {
+     *    'field': {
+     *       $lt: '__@codehelper__'
+     *    }
+     *  }
+     * ```
+     */
     query: any,
     /** Efeitos colaterais nos registros encontrados */
     effects: {
