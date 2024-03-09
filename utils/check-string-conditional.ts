@@ -383,67 +383,92 @@ export const getCodeHelpers = (value: string, split_params = false): Array<[stri
 
   return extractedContents as Array<[string, string?]>;
 }
+/**
+ * Esta função recebe o value(string) contendo o codehelper de data, e faz o replace com o valor resultante.
+ * 
+ * Se não passar parametros(exemplo: ```__@now__```), retornará a data atual no padrão dd/mm/yyyy
+ * 
+ * Parâmetros:
+ * - Pode ser passado adição ou subtração de dias (exemplo: ```__@now(+2)__```). Neste caso o valor retornado \
+ * será no padrão yyyy-mm-dd
+ * - Pode ser passado parametros de formatação usando as nomenclaturas abaixo junto com o separador de sua \
+ * escolha: 
+ * ``` ['Y', 'y', 'm', 'd', 'h', 'i', 's'] ```
+ * - Pode ser passado ambos os parametros, desde que a soma/subtração venha antes, e depois o parametro de \
+ * formatação, usando a separação de vírgula entre os parametros. Exemplo:
+ * ```__@now(-3,d/m/Y)__```
+ * Neste caso retornando a data de três dias atrás no formato dd/mm/yyyy
+ */
 export const handleCodeHelper__now = (value: string, code: string, param?: string) => {
   const date = new Date();
   var replacer = '';
-  if (param) {
-    const replaceDateChar = (p: string, value: string) => {
-      let replacer = '';
-      if (p === 'Y') replacer = String(date.getFullYear());
-      else if (p === 'y') replacer = String(date.getFullYear() - 2000);
-      else if (p === 'm') replacer = String(date.getMonth() + 1).padStart(2, '0');
-      else if (p === 'd') replacer = String(date.getDate()).padStart(2, '0');
-      else if (p === 'h') replacer = String(date.getHours()).padStart(2, '0');
-      else if (p === 'i') replacer = String(date.getMinutes()).padStart(2, '0');
-      else if (p === 's') replacer = String(date.getSeconds()).padStart(2, '0');
 
-      if (!replacer) return value;
+  //#region HELPERS
+  const chars = ['Y', 'y', 'm', 'd', 'h', 'i', 's']
+  const replaceDateChar = (p: string, value: string, date: Date) => {
+    let replacer = '';
+    if (p === 'Y') replacer = String(date.getFullYear());
+    else if (p === 'y') replacer = String(date.getFullYear() - 2000);
+    else if (p === 'm') replacer = String(date.getMonth() + 1).padStart(2, '0');
+    else if (p === 'd') replacer = String(date.getDate()).padStart(2, '0');
+    else if (p === 'h') replacer = String(date.getHours()).padStart(2, '0');
+    else if (p === 'i') replacer = String(date.getMinutes()).padStart(2, '0');
+    else if (p === 's') replacer = String(date.getSeconds()).padStart(2, '0');
 
-      return replaceAll(value, p, replacer)
-    }
+    if (!replacer) return value;
 
-    const chars = ['Y', 'y', 'm', 'd', 'h', 'i', 's']
-
-    if (param.indexOf('+') === 0) {
-      const futureDate = new Date();
-      futureDate.setDate(futureDate.getDate() + Number(param.slice(1)));
-
-      replacer = `${futureDate.getFullYear()}-${String(futureDate.getMonth() + 1).padStart(2, '0')
-        }-${String(futureDate.getDate()).padStart(2, '0')}`;
-    }
-    else if (param.indexOf('-') === 0) {
-      const pastDate = new Date();
-      pastDate.setDate(pastDate.getDate() - Number(param.slice(1)));
-
-      replacer = `${pastDate.getFullYear()}-${String(pastDate.getMonth() + 1).padStart(2, '0')
-        }-${String(pastDate.getDate()).padStart(2, '0')}`;
-    }
-    else if (chars.some((char) => param.includes(char))) {
-      replacer = chars.reduce((acc, curr) => {
-        if (acc.includes(curr)) return replaceDateChar(curr, acc)
+    return replaceAll(value, p, replacer)
+  }
+  const handleFormatReplacers = (chars: string[], param: string, date: Date) : string => {
+    if (chars.some((char) => param.includes(char))) {
+      return chars.reduce((acc, curr) => {
+        if (acc.includes(curr)) return replaceDateChar(curr, acc, date)
         return acc;
       }, param)
     }
     else throw new Error(`(${param}) Replacer de data inválido`);
-  } else replacer = `${String(date.getDate()).padStart(2, '0')
-    }/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()
-    }`;
+  }
+  //#endregion HELPERS
+
+  if(param){
+    let dateIsChanged = true;
+    const splitedParam = param.split(',')
+    const num = splitedParam[0].slice(1);
+
+    if(param.indexOf('+') === 0) date.setDate(
+      date.getDate() + Number(num)
+    );
+    else if(param.indexOf('-') === 0) date.setDate(
+      date.getDate() - Number(num)
+    );
+    else dateIsChanged = false;
+
+    if(dateIsChanged){
+      if(splitedParam.length > 1) replacer = handleFormatReplacers(
+        chars,
+        splitedParam[1],
+        date
+      );
+      else replacer = handleFormatReplacers(
+        chars,
+        'Y-m-d',
+        date
+      );
+    }
+    else replacer = handleFormatReplacers(
+      chars,
+      splitedParam[0],
+      date
+    );
+  }else replacer = handleFormatReplacers(
+    chars,
+    'd/m/Y',
+    date
+  );
 
   var searchValue = param ? `__${code}(${param})__` : `__${code}__`;
-  let max = 40;
-  do {
-    value = value.replace(searchValue, replacer)
-    max--
-    if (max === 0) {
-      console.log('[shortcode-replace-in-loop]', {
-        content: value,
-        replacer: searchValue
-      })
-      break;
-    }
-  } while (value.includes(searchValue))
 
-  return value;
+  return replaceAll(value, searchValue, replacer);
 }
 
 export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
