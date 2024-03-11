@@ -30,7 +30,16 @@ export interface ReportAnalyticsType{
      * - Caso request = flow_entities, o target_ids = [wf_id, entity_key]
      */
     target_ids: string[],
-    /** Record<coluna-na-planilha,path-na-resposta> */
+    /**
+     * Record<coluna-na-planilha,path-na-resposta>
+     * 
+     * Existe os seguintes shortcodes em path-na-resposta, para pegar dados da raiz do registro
+     * - \@id
+     * - \@user_id
+     * - \@created_at
+     * - \@updated_at
+     * - \@step_id
+     * */
     columns: Record<string, string>,
     queries?: Array<{
       /** strc */
@@ -40,8 +49,14 @@ export interface ReportAnalyticsType{
        * loop em queries
        */
       break?: boolean,
+      /**
+       * Use os shortcodes a seguir para referências dados não dinâmicos(fora do data do flowData, \
+       * ou dados gerados automaticamente no flowEntity) de um registro:
+       * 
+       *  - \@created_at : data de criação
+       *  - \@step_id : current_step_id
+       */
       query: Record<string, string | {
-        /** SEM SUPORTE A STRC */
         type: WorkflowConfigFilterType['type'],
         value: any
       }>
@@ -56,7 +71,8 @@ export interface ReportAnalyticsType{
     cumulative?: string[]
   }>,
   format?: Record<string, {
-    type: 'date' | 'datetime' | 'money'    
+    type: 'date' | 'datetime' | 'money' | 'text' | 'boolean',
+    translate?: Record<string, string>
   }>,
   /** default: csv */
   convert_to?: 'csv' | 'xlsx'
