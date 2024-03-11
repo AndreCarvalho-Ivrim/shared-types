@@ -2,6 +2,7 @@ import { StepItemType } from "./step.item.field.type"
 import { StepViewType } from "./step.item.view.type"
 import { WorkflowConfigFilterType } from "./workflow.config.type"
 
+export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean'
 export interface ReportAnalyticsType{
   /**
    * Comportamento na agregação de valores quando existe mais de \
@@ -71,7 +72,7 @@ export interface ReportAnalyticsType{
     cumulative?: string[]
   }>,
   format?: Record<string, {
-    type: 'date' | 'datetime' | 'money' | 'text' | 'boolean',
+    type: ReportFormatTypes,
     translate?: Record<string, string>
   }>,
   /** default: csv */
