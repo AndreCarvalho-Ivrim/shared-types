@@ -303,6 +303,8 @@ export interface WorkflowViewModeBase {
   icon?: AvailableIcons,
   slug: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
+  /** { 'ref-no-flow-data': 'título-visual' } */ 
+  dynamic_order_by?: Record<string, string>
   /** 
    * Existem alguns valores pré-definidos que geram pesquisas mais complexas como:
    * - \@array-exists-and-gt-0: { "key": { $exists: true, $not: { $size: 0 } } }
