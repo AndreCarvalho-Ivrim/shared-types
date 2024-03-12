@@ -17,6 +17,7 @@ export interface WorkflowConfigFilterType {
    * - list: Lista de opções (in)
    */
   type: 'text' | 'select' | 'date' | 'list' | 'strc' | 'date-in',
+  /** Veja a tipagem de WorkflowConfigFilterRefType para ver opções pré-definidas */
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
   /** somente autocomplete.mode = 'distinct' */
