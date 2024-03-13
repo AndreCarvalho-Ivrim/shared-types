@@ -105,7 +105,7 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
    * Para utilizar a mascara de progress-bar é necessário que no conteúdo tenha \
    * dois números separados por virgula(,)
    */
-  mask?: 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'progress-bar',
+  mask?: 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar',
   rules?: {
     /** 
      * STRING CONDITIONAL

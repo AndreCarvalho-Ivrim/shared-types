@@ -547,7 +547,15 @@ export interface PublicViewFlowDataType {
     title: string,
     description?: string,
     buttonText?: string
-  }
+  },
+  /** Parametros da url que ficarão disponível no observers */
+  observable_params?: Record<string, {
+    label?: string,
+    /** No caso do select é obrigatório informar o options*/
+    type: 'text' | 'select',
+    options: string[],
+    required: boolean
+  }>
 }
 export interface WorkflowMenuShortcut{
   id: string,

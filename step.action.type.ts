@@ -5,6 +5,7 @@ export interface StepActionType{
   label: string,
   type: ThemeColorType,
   key: string,
+  /** Se usar \@current-step ira fazer uma atualização sem alterar etapa */
   target: string,
   /** Se adicionar \@condition: pode inserir uma string-condition */
   action_permission?: string,
