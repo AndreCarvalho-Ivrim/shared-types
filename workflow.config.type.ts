@@ -553,7 +553,7 @@ export interface PublicViewFlowDataType {
     label?: string,
     /** No caso do select é obrigatório informar o options*/
     type: 'text' | 'select',
-    options: string[],
+    options?: string[],
     required: boolean
   }>
 }
