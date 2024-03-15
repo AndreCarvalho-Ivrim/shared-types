@@ -313,6 +313,19 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     return false;
   }
 };
+export const makeStrc = (arrStrc: Array<{
+  '$'?: string,
+  '#'?: 'eq' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains',
+  '*'?: string,
+  '&'?: 'and' | 'or'
+}>) => {
+  return arrStrc.map(strc => {
+    if(strc['$']) return `$${strc['$']}`;
+    if(strc['#']) return `#${strc['#']}`;
+    if(strc['*']) return `*${strc['*']}`;
+    if(strc['&']) return `&${strc['&']}`;
+  }).join(';')
+}
 /**
  * Lida com shortcodes do tipo \@[\<variavel>]
  * 
@@ -470,7 +483,18 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
 
   return replaceAll(value, searchValue, replacer);
 }
+// export const handleCodeHelper__diffInDays = (value: string, param: string, data: any) => {
+//   const code = '@diffInDays';
+  
+//   let replacer = ''
+//   if(param && data){
+//     const value = getRecursiveValue(param, { data }); 
+//   }
 
+//   var searchValue = param ? `__${code}(${param})__` : `__${code}__`;
+
+//   return replaceAll(value, searchValue, replacer);
+// }
 export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
   codeHelper: string,
   chParam: string,
