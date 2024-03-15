@@ -133,7 +133,8 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
      * ```
      * Consultar mais em: shared-types/utils/check-string-conditional.ts
      */
-    render?: string
+    render?: string,
+    has_codehelpers?: boolean
   }
 }
 export interface StepViewRedirectType extends StepViewBaseType{
