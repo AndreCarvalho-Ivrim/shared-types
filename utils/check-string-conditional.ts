@@ -483,24 +483,79 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
 
   return replaceAll(value, searchValue, replacer);
 }
-// export const handleCodeHelper__diffInDays = (value: string, param: string, data: any) => {
-//   const code = '@diffInDays';
+export const handleCodeHelper__diffInDays = ({ data, param, value }:{ value: string, param: string, data: any }) => {
+  const code = '@diffInDays';
   
-//   let replacer = ''
-//   if(param && data){
-//     const value = getRecursiveValue(param, { data }); 
-//   }
+  let replacer = ''
+  if(param  && data){
+    const handleParseDate = ({ data, key }:{ key?: string, data: any }) : Date | undefined => {
+      if(!key || ['-','+'].includes(key.slice(0, 1))){
+        const now = new Date();
+        now.setHours(0,0,0,0);
 
-//   var searchValue = param ? `__${code}(${param})__` : `__${code}__`;
+        if(key){
+          const isPlus = key.slice(0, 1) === '+';
+          const num = Number(key.slice(1));
 
-//   return replaceAll(value, searchValue, replacer);
-// }
+          if(isNaN(num)) return;
+
+          now.setDate(
+            isPlus ? now.getDate() + num : now.getDate() - num
+          );
+        }
+
+        return now;
+      }
+
+      const value = getRecursiveValue(key, { data });
+      
+      if(!value) return;
+      
+      if(value instanceof Date){
+        value.setHours(0,0,0,0);
+        return value;
+      }
+      
+      if(typeof value !== 'string' || value.length < 10) return;
+      
+      const separator = value.includes('-') ? '-' : value.includes('/') ? '/' : undefined
+      let splited = value.slice(0, 10).split(separator ?? '')
+      if(!separator || splited.length !== 3) return;
+
+      if(splited[0].length === 2) splited = [...splited.reverse()]
+      return new Date(`${splited.join('-')}T00:00:00`)
+    }
+
+    let [dateFrom, dateTo, isAbs] = param.split(',') as [string?,string?,(string | boolean)?];
+
+    if(!dateFrom || ['null', 'undefined'].includes(dateFrom)) dateFrom = undefined;
+    if(!dateTo || ['null', 'undefined'].includes(dateTo)) dateTo = undefined;
+    isAbs = isAbs === 'true';
+    
+    const date1 = handleParseDate({ key: dateFrom, data });
+    const date2 = handleParseDate({ key: dateTo, data });
+    
+    if(date1 && date2){
+      const diffInMS = date2.getTime() - date1.getTime();
+      let diffInDays = Math.floor(diffInMS / (1000 * 60 * 60 * 24));
+
+      if(isAbs) diffInDays = Math.abs(diffInDays);
+
+      replacer = String(diffInDays); 
+    }
+  }
+  
+  var searchValue = param ? `__${code}(${param})__` : `__${code}__`;
+
+  return replaceAll(value, searchValue, replacer);
+}
 export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
   codeHelper: string,
   chParam: string,
   parsedParams: any[]
 }) => {
   let value: any = undefined;
+  
   if (codeHelper === 'sum') {
     if (!chParam || (parsedParams ?? []).length === 0) return undefined;
 
@@ -515,95 +570,95 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
       return acc + val;
     }, 0)
   } else
-    if (codeHelper === 'sumWithMultiplier') {
-      if (!chParam || (parsedParams ?? []).length === 0) return;
+  if (codeHelper === 'sumWithMultiplier') {
+    if (!chParam || (parsedParams ?? []).length === 0) return;
 
-      let arr = [];
-      if (parsedParams.length === 1) arr = parsedParams[0];
-      else arr = parsedParams;
+    let arr = [];
+    if (parsedParams.length === 1) arr = parsedParams[0];
+    else arr = parsedParams;
 
-      if (!Array.isArray(arr)) value = 0;
-      else value = arr.reduce((acc, curr) => {
-        if (Array.isArray(curr)) {
-          curr = curr.filter((v) => !(
-            typeof v === 'object' || isNaN(Number(v))
-          )).map((v) => Number(v))
+    if (!Array.isArray(arr)) value = 0;
+    else value = arr.reduce((acc, curr) => {
+      if (Array.isArray(curr)) {
+        curr = curr.filter((v) => !(
+          typeof v === 'object' || isNaN(Number(v))
+        )).map((v) => Number(v))
 
-          if (curr.length === 0) return acc;
+        if (curr.length === 0) return acc;
 
-          curr = (curr as number[]).reduce((acc, curr) => acc * curr, 1)
-        }
+        curr = (curr as number[]).reduce((acc, curr) => acc * curr, 1)
+      }
 
-        let val = typeof curr === 'object' ? 0 : Number(curr);
-        if (isNaN(val)) val = 0;
-        return acc + val;
-      }, 0)
-    } else
-      if (codeHelper === 'len') {
-        if (!chParam || (parsedParams ?? []).length === 0) return;
+      let val = typeof curr === 'object' ? 0 : Number(curr);
+      if (isNaN(val)) val = 0;
+      return acc + val;
+    }, 0)
+  } else
+  if (codeHelper === 'len') {
+    if (!chParam || (parsedParams ?? []).length === 0) return;
 
-        let arr = [];
-        if (parsedParams.length === 1) arr = parsedParams[0];
-        else arr = parsedParams;
+    let arr = [];
+    if (parsedParams.length === 1) arr = parsedParams[0];
+    else arr = parsedParams;
 
-        if (!Array.isArray(arr)) value = 0;
-        else value = arr.length;
-      } else
-        if (codeHelper === 'linearArithmetic') {
-          if (!chParam || (parsedParams ?? []).length < 2) throw new Error(
-            'É obrigatório informar pelo menos dois valores e um operador para usar o code-helper de calculo aritmético linear'
-          )
+    if (!Array.isArray(arr)) value = 0;
+    else value = arr.length;
+  } else
+  if (codeHelper === 'linearArithmetic') {
+    if (!chParam || (parsedParams ?? []).length < 2) throw new Error(
+      'É obrigatório informar pelo menos dois valores e um operador para usar o code-helper de calculo aritmético linear'
+    )
 
-          const operators = chParam.match(/[\+\-\*\/]/g) || [];
+    const operators = chParam.match(/[\+\-\*\/]/g) || [];
 
-          value = Array.from(parsedParams.entries()).reduce((acc, [i, curr]) => {
-            if (acc === undefined) return acc;
-            if (typeof curr === 'object') return acc;
+    value = Array.from(parsedParams.entries()).reduce((acc, [i, curr]) => {
+      if (acc === undefined) return acc;
+      if (typeof curr === 'object') return acc;
 
-            let v = Number(curr)
-            if (isNaN(v) || operators.length < (i - 1)) return acc;
+      let v = Number(curr)
+      if (isNaN(v) || operators.length < (i - 1)) return acc;
 
-            if (i === 0) return v;
+      if (i === 0) return v;
 
-            switch (operators[(i - 1)]) {
-              case '+': return acc + v;
-              case '-': return acc - v;
-              case '/': return v === 0 ? undefined : acc / v;
-              case '*': return acc * v;
-              default:
-                console.log(`[invalid-aritmetic-operator${operators[(i - 1)]}]`)
-                throw new Error('Operador inválido')
-            }
-          }, 0 as number | undefined)
-        } else
-          if (codeHelper === 'distinct') {
-            if (!chParam || !Array.isArray(parsedParams)) return [];
+      switch (operators[(i - 1)]) {
+        case '+': return acc + v;
+        case '-': return acc - v;
+        case '/': return v === 0 ? undefined : acc / v;
+        case '*': return acc * v;
+        default:
+          console.log(`[invalid-aritmetic-operator${operators[(i - 1)]}]`)
+          throw new Error('Operador inválido')
+      }
+    }, 0 as number | undefined)
+  } else
+  if (codeHelper === 'distinct') {
+    if (!chParam || !Array.isArray(parsedParams)) return [];
 
-            return parsedParams.filter((item, index) => parsedParams.findIndex(
-              (curr) => typeof item === 'object' ? JSON.stringify(curr) === JSON.stringify(item) : curr === item
-            ) === index)
-          } else
-            if (codeHelper === 'groupByAndSum') {
-              if (!chParam || !Array.isArray(parsedParams)) return {};
-              const paramSplit = chParam.split(',');
+    return parsedParams.filter((item, index) => parsedParams.findIndex(
+      (curr) => typeof item === 'object' ? JSON.stringify(curr) === JSON.stringify(item) : curr === item
+    ) === index)
+  } else
+  if (codeHelper === 'groupByAndSum') {
+    if (!chParam || !Array.isArray(parsedParams)) return {};
+    const paramSplit = chParam.split(',');
 
-              const result = parsedParams.reduce((acc, item) => {
-                if (!acc[item[paramSplit[1]]]) {
-                  acc[item[paramSplit[1]]] = 0;
-                }
+    const result = parsedParams.reduce((acc, item) => {
+      if (!acc[item[paramSplit[1]]]) {
+        acc[item[paramSplit[1]]] = 0;
+      }
 
-                acc[item[paramSplit[1]]] += item[paramSplit[2]];
+      acc[item[paramSplit[1]]] += item[paramSplit[2]];
 
-                return acc;
-              }, {});
+      return acc;
+    }, {});
 
-              return Object.entries(result).map(([name, value]) => ({
-                name,
-                value
-              }));
-            } else throw new Error(
-              'Não há suporte para este code-helper'
-            )
+    return Object.entries(result).map(([name, value]) => ({
+      name,
+      value
+    }));
+  } else throw new Error(
+    'Não há suporte para este code-helper'
+  )
 
   return value
 }
