@@ -290,7 +290,9 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     const callbackUnion = (val_1: boolean, val_2: boolean, condition: string) => {
       switch (condition) {
         case 'and': return val_1 && val_2;
-        case 'or': return val_1 || val_2;
+        case 'or': 
+          if(val_1 || val_2) return true;
+          return;
       }
       return false;
     }
