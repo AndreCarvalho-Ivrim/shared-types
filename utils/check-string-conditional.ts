@@ -16,7 +16,10 @@ export const handleStringConditionalExtendingFlowData = (conditional: string, da
         ...flow_data.data,
         ...(prefix === 'flow_data' ? {
           _id: flow_data._id,
-          current_step_id: flow_data.current_step_id
+          current_step_id: flow_data.current_step_id,
+          changed_step_at: flow_data.changed_step_at,
+          created_at: flow_data.created_at,
+          updated_at: flow_data.updated_at
         } : {})
       }
     });
@@ -64,7 +67,13 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  * 
  * **Operadores Lógicos**
  * - and
- * - or
+ * - or \
+ * sufixo -begin: (o segundo fator da condicional está em uma abertura de parêntese)
+ * - and-begin 
+ * - or-begin
+ * sufixo -end: (o segundo fator da condicional fecha um parêntese aberto)
+ * - and-end
+ * - or-end
  * 
  * **Valores especiais**
  * - !!: quando usar este simbolo irá verificar se a variável é verdadeira
@@ -299,14 +308,61 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
     if (unionConditionals.length === 0) return matchesConditional.length === 0 ? false : matchesConditional[0];
 
-    let unionMatch: boolean | undefined;
-    unionConditionals.forEach((uni, i) => {
-      if (unionMatch !== undefined && !unionMatch) return;
-      unionMatch = callbackUnion(
-        i === 0 ? matchesConditional[0] : unionMatch!,
-        matchesConditional[i + 1],
-        uni
-      );
+    const handleRecursiveUnionMatch = ({ unionConditionals, initialMatch }:{
+      unionConditionals: string[],
+      initialMatch: boolean,
+      matchesConditional: boolean[]
+    }) => {
+      let unionMatch: boolean | undefined;
+      let inParentesesDepth = 0;
+      for(const [i, uni] of unionConditionals.entries()){
+        if (unionMatch !== undefined && !unionMatch) break;
+    
+        let parsedUni = uni;
+        if(uni.includes('-begin')){
+          inParentesesDepth++;
+
+          parsedUni = uni.replace('-begin','')
+
+          const secondMatch = handleRecursiveUnionMatch({
+            unionConditionals: unionConditionals.slice(i + 1),
+            initialMatch: matchesConditional[i + 1],
+            matchesConditional: matchesConditional.slice(i + 1)
+          })
+
+          unionMatch = callbackUnion(
+            i === 0 ? initialMatch : unionMatch!,
+            !!secondMatch,
+            parsedUni
+          );
+
+          continue;
+        }
+        if(uni.includes('-end')) parsedUni = uni.replace('-end','')
+        
+        if(inParentesesDepth === 0) unionMatch = callbackUnion(
+          i === 0 ? matchesConditional[0] : unionMatch!,
+          matchesConditional[i + 1],
+          parsedUni
+        );
+
+        if(uni.includes('-end')){
+          if(inParentesesDepth === 0) break;
+          else inParentesesDepth--;
+        }
+
+        if(inParentesesDepth < 0) throw new Error(
+          'Fechamento de parenteses incorreto'
+        )
+      }
+
+      return unionMatch
+    }
+
+    let unionMatch: boolean | undefined = handleRecursiveUnionMatch({
+      unionConditionals,
+      initialMatch: matchesConditional[0],
+      matchesConditional
     });
 
     return !!unionMatch;
@@ -319,7 +375,7 @@ export const makeStrc = (arrStrc: Array<{
   '$'?: string,
   '#'?: 'eq' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains',
   '*'?: string,
-  '&'?: 'and' | 'or'
+  '&'?: 'and' | 'or' | 'and-begin' | 'or-begin' | 'and-end' | 'or-end'
 }>) => {
   return arrStrc.map(strc => {
     if(strc['$']) return `$${strc['$']}`;
