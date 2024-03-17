@@ -71,9 +71,9 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  * sufixo -begin: (o segundo fator da condicional está em uma abertura de parêntese)
  * - and-begin 
  * - or-begin
- * sufixo -end: (o segundo fator da condicional fecha um parêntese aberto)
- * - and-end
- * - or-end
+ * sufixo [-end,-end, ...]: (o segundo fator da condicional fecha um(ou mais) parênteses aberto)
+ * - and-end | and-end-end | and-end-end-end...
+ * - or-end  | or-end-end  | or-end-end-end...
  * 
  * **Valores especiais**
  * - !!: quando usar este simbolo irá verificar se a variável é verdadeira
@@ -127,7 +127,6 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
   );
 
   const callbackOperator = (val_1: string | number | boolean | any[], val_2: string | number | boolean | any[], operator: string) => {
-
     //#region HANDLE POSSIBLE BOOL
     [val_1, val_2].forEach((val) => {
       if (val === 'true') val = true
@@ -319,10 +318,16 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
         if (unionMatch !== undefined && !unionMatch) break;
     
         let parsedUni = uni;
+        
+        if(uni.includes('-end')) parsedUni = replaceAll(
+          uni, '-end',''
+        );
+
         if(uni.includes('-begin')){
           inParentesesDepth++;
+          if(inParentesesDepth > 1) continue;
 
-          parsedUni = uni.replace('-begin','')
+          parsedUni = parsedUni.replace('-begin','')
 
           const secondMatch = handleRecursiveUnionMatch({
             unionConditionals: unionConditionals.slice(i + 1),
@@ -338,7 +343,6 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
           continue;
         }
-        if(uni.includes('-end')) parsedUni = uni.replace('-end','')
         
         if(inParentesesDepth === 0) unionMatch = callbackUnion(
           i === 0 ? matchesConditional[0] : unionMatch!,
@@ -347,13 +351,14 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
         );
 
         if(uni.includes('-end')){
-          if(inParentesesDepth === 0) break;
-          else inParentesesDepth--;
+          if(inParentesesDepth <= 0) break;
+          else{
+            const countClosures = (uni.match(/-end/g) ?? []).length
+            inParentesesDepth-= countClosures;
+          }
         }
 
-        if(inParentesesDepth < 0) throw new Error(
-          'Fechamento de parenteses incorreto'
-        )
+        if(inParentesesDepth < 0) break;
       }
 
       return unionMatch
@@ -375,7 +380,8 @@ export const makeStrc = (arrStrc: Array<{
   '$'?: string,
   '#'?: 'eq' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains',
   '*'?: string,
-  '&'?: 'and' | 'or' | 'and-begin' | 'or-begin' | 'and-end' | 'or-end'
+  /** Se o -end for mais de 2 fechamentos use o as any para ignorar o erro de tipagem */
+  '&'?: 'and' | 'or' | 'and-begin' | 'or-begin' | 'and-end' | 'or-end' | 'and-end-end' | 'or-end-end'
 }>) => {
   return arrStrc.map(strc => {
     if(strc['$']) return `$${strc['$']}`;
