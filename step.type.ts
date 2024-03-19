@@ -187,7 +187,16 @@ export interface StepType{
   }[],
   /** Válido apenas quando step.type === 'page' */
   page?: {
-    classNames?: Partial<Record<'wrapper', string>>
+    classNames?: {
+      /** DIV QUE ABRAÇA TODO O CONTEÚDO DA ETAPA */
+      wrapper?: string,
+      /** FORM QUE CONTEM OS ITENS, OS BOTÕES, E OS SELECT SEARCHEDS */
+      form?: string,
+      /** DIV QUE ABRAÇA APENAS OS ITENS */
+      container?: string,
+      /** CLASSE PERSONALIZADA POR ITEM ```{ item-key: string }``` */
+      items?: Record<string, string>
+    }
   }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
   sla?: StepSlaType
