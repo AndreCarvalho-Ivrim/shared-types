@@ -58,6 +58,10 @@ export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'clo
   condition?: string,
   [key: string]: any
 }>>
+export interface StepCustomRuleRedirectToStep{
+  /** Use \@current-step no target para redirecionar para o step atual do flow-data */
+  id: '@redirect-to-step'
+}
 export interface StepTypeRules{
   /**
    * Está propriedade serve para forçar o preenchimento \
@@ -124,7 +128,7 @@ export interface StepTypeRules{
    * em atualizações
    * - [@select-owner]: Utilizar o botão para chamar o modal de seleção de owners
    */
-  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | { id: string, data: any },
+  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | StepCustomRuleRedirectToStep,
   /**
    * STRC \
    * Os valores observados são os itens com observer: true e caso \
