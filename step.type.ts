@@ -188,14 +188,18 @@ export interface StepType{
   /** Válido apenas quando step.type === 'page' */
   page?: {
     classNames?: {
-      /** DIV QUE ABRAÇA TODO O CONTEÚDO DA ETAPA */
+      /** DIV que abraça todo o conteúdo da etapa */
       wrapper?: string,
-      /** FORM QUE CONTEM OS ITENS, OS BOTÕES, E OS SELECT SEARCHEDS */
+      /** FORM que contem os itens, os botões, e os select searcheds */
       form?: string,
-      /** DIV QUE ABRAÇA APENAS OS ITENS */
+      /** DIV que abraça apenas os itens */
       container?: string,
-      /** CLASSE PERSONALIZADA POR ITEM ```{ item-key: string }``` */
-      items?: Record<string, string>
+      /** Classe personalizada por item ```{ item-key: string }``` */
+      items?: Record<string, {
+        wrapper?: string,
+        /** Apenas alguns itens, como o group collapse tem suporte ao container */
+        container?: string
+      }>
     }
   }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
