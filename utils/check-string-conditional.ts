@@ -726,3 +726,228 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
 
   return value
 }
+export const handleAndReplaceCodeHelpers = async ({ value, specificFn, data }:{
+  value: string, specificFn?: Partial<Record<'user' | 'count' | 'uuid', (params: {
+    param?: string,
+    value: any
+  }) => Promise<any>>>,
+  /** Não é a raiz do flow-data */
+  data: any
+}) => {
+  if(typeof value !== 'string') return value;
+
+  let returnValue : any = value;
+
+  const errorRequiredParam = (code: string) => `O parametro é obrigatório no codehelper ${code}`
+  const extractedContents = getCodeHelpers(value);
+
+  if (extractedContents && extractedContents.length > 0) {
+    for (const [code, param] of extractedContents) {
+      switch (code) {
+        case '@now': returnValue = handleCodeHelper__now(returnValue, code, param); break;
+        case '@user':
+          if(!specificFn?.user) throw new Error(
+            'É obrigatório passar a função especifica para lidar com o codehelper @user, por parametro'
+          )
+
+          returnValue = await specificFn.user({ param, value: returnValue });
+          break;
+        case '@count':
+          if(!specificFn?.count) throw new Error(
+            'É obrigatório passar a função especifica para lidar com o codehelper @count, por parametro'
+          )
+
+          returnValue = await specificFn.count({ param, value: returnValue });
+          break;
+        case '@uuid':
+          if(!specificFn?.uuid) throw new Error(
+            'É obrigatório passar a função especifica para lidar com o codehelper @uuid, por parametro'
+          )
+
+          returnValue = await specificFn.uuid({ param, value: returnValue });
+          break;
+        case 'sum':
+          if(!param) throw new Error(errorRequiredParam(code))
+
+          const valueCurrentSum = getRecursiveValue(param, { data });
+
+          returnValue = handleCodeHelpers({
+            codeHelper: code,
+            chParam: param,
+            parsedParams: valueCurrentSum
+          }); break;
+        case 'lenDistinct':
+          if(!param) throw new Error(errorRequiredParam(code))
+
+          const valueCurrentDistinct = getRecursiveValue(param, { data });
+
+          returnValue = handleCodeHelpers({
+            chParam: param,
+            codeHelper: 'distinct',
+            parsedParams: valueCurrentDistinct
+          })
+
+          if(Array.isArray(returnValue)) returnValue = handleCodeHelpers({
+            codeHelper: 'len',
+            chParam: param,
+            parsedParams: returnValue
+          });
+          else returnValue = undefined;
+          break;
+        case 'groupByAndSum':
+          if(!param) throw new Error(errorRequiredParam(code))
+          
+          const paramSplit = param.split(',');
+          const valueCurrentGroup = getRecursiveValue(paramSplit[0], { data });
+
+          returnValue = handleCodeHelpers({
+            codeHelper: code,
+            chParam: param,
+            parsedParams: valueCurrentGroup
+          });
+          break;
+        case 'orderBy':
+          let [array_id, col_to_order, orientation] = (param ?? '').split(',');
+
+          //#region VALIDATION
+          if (!array_id || !col_to_order) {
+            console.error('[observer] O parâmetro da função orderBy não é válido', { param });
+            continue;
+          }
+
+          if(!orientation) orientation = 'asc'
+          if(!['asc','desc'].includes(orientation)){
+            console.error('[observer] Orientação de orderBy inválida', { orientation, param })
+            continue;
+          }
+          
+          const array_to_order = getRecursiveValue(array_id, { data })
+          
+          if (!Array.isArray(array_to_order)) {
+            console.error('[observer] O valor a ser ordenado não é um array');
+            continue;
+          }
+          //#endregion VALIDATION
+
+          const isDesc = orientation === 'desc'
+
+          returnValue = array_to_order.sort((a, b) => {
+            const colA = getRecursiveValue(col_to_order, { data: a })
+            const colB = getRecursiveValue(col_to_order, { data: b })
+
+            const isNumberOrdenation = !isNaN(Number(colA)) && !isNaN(Number(colB))
+
+            if(isNumberOrdenation) return isDesc ? colB - colA : colA - colB
+            
+            if (colA < colB) return isDesc ? 1 : -1;
+            if (colA > colB) return isDesc ? -1 : 1;
+            return 0;
+          });
+          break;
+        default: throw new Error(
+          'Valor de replace no observer inválido'
+        );
+      }
+    }
+  }
+
+  return returnValue;
+}
+/** O data não é a raiz do flow-data */
+export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any => {
+  if(typeof value !== 'string') return value;
+
+  let returnValue : any = value;
+
+  const errorRequiredParam = (code: string) => `O parametro é obrigatório no codehelper ${code}`
+  const extractedContents = getCodeHelpers(value);
+
+  if (extractedContents && extractedContents.length > 0) {
+    for (const [code, param] of extractedContents) {
+      switch (code) {
+        case '@now': returnValue = handleCodeHelper__now(returnValue, code, param); break;
+        case 'sum':
+          if(!param) throw new Error(errorRequiredParam(code))
+
+          const valueCurrentSum = getRecursiveValue(param, { data });
+
+          returnValue = handleCodeHelpers({
+            codeHelper: code,
+            chParam: param,
+            parsedParams: valueCurrentSum
+          }); break;
+        case 'lenDistinct':
+          if(!param) throw new Error(errorRequiredParam(code))
+
+          const valueCurrentDistinct = getRecursiveValue(param, { data });
+
+          returnValue = handleCodeHelpers({
+            chParam: param,
+            codeHelper: 'distinct',
+            parsedParams: valueCurrentDistinct
+          })
+
+          if(Array.isArray(returnValue)) returnValue = handleCodeHelpers({
+            codeHelper: 'len',
+            chParam: param,
+            parsedParams: returnValue
+          });
+          else returnValue = undefined;
+          break;
+        case 'groupByAndSum':
+          if(!param) throw new Error(errorRequiredParam(code))
+          
+          const paramSplit = param.split(',');
+          const valueCurrentGroup = getRecursiveValue(paramSplit[0], { data });
+
+          returnValue = handleCodeHelpers({
+            codeHelper: code,
+            chParam: param,
+            parsedParams: valueCurrentGroup
+          });
+          break;
+        case 'orderBy':
+          let [array_id, col_to_order, orientation] = (param ?? '').split(',');
+
+          //#region VALIDATION
+          if (!array_id || !col_to_order) {
+            console.error('[observer] O parâmetro da função orderBy não é válido', { param });
+            continue;
+          }
+
+          if(!orientation) orientation = 'asc'
+          if(!['asc','desc'].includes(orientation)){
+            console.error('[observer] Orientação de orderBy inválida', { orientation, param })
+            continue;
+          }
+          
+          const array_to_order = getRecursiveValue(array_id, { data })
+          
+          if (!Array.isArray(array_to_order)) {
+            console.error('[observer] O valor a ser ordenado não é um array');
+            continue;
+          }
+          //#endregion VALIDATION
+
+          const isDesc = orientation === 'desc'
+
+          returnValue = array_to_order.sort((a, b) => {
+            const colA = getRecursiveValue(col_to_order, { data: a })
+            const colB = getRecursiveValue(col_to_order, { data: b })
+
+            const isNumberOrdenation = !isNaN(Number(colA)) && !isNaN(Number(colB))
+
+            if(isNumberOrdenation) return isDesc ? colB - colA : colA - colB
+            
+            if (colA < colB) return isDesc ? 1 : -1;
+            if (colA > colB) return isDesc ? -1 : 1;
+            return 0;
+          });
+          break;
+        default: console.error('invalid codehelper', { code, param });
+      }
+    }
+  }
+
+  return returnValue;
+}

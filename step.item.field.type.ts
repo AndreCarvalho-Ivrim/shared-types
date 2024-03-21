@@ -33,6 +33,7 @@ export interface StepItemType{
   label?: string,
   placeholder?: string,
   options?: ValueAndNameStringType[],
+  defaultValue?: any;
   required?: boolean,
   rules?: {
     min?: number,
