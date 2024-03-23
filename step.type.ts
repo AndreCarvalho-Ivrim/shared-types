@@ -204,7 +204,9 @@ export interface StepType{
         /** Apenas alguns itens, como o group collapse tem suporte ao container */
         container?: string
       }>
-    }
+    },
+    /** Se true, irá adicionar um asterísco em todos campos obrigatórios */
+    asterisk_when_required?: boolean
   }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
   sla?: StepSlaType
