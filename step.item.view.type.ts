@@ -100,6 +100,8 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
    * no meio do [content] usar o shortcode \@[id-do-variável]
    */
   content: string,
+  /** Utilize o id p/ lidar com repetição */
+  id?: string,
   replacers?: string[],
   /**
    * Para utilizar a mascara de progress-bar é necessário que no conteúdo tenha \
