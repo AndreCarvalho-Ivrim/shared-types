@@ -2,7 +2,7 @@ import { StepItemType } from "./step.item.field.type"
 import { StepViewType } from "./step.item.view.type"
 import { WorkflowConfigFilterType } from "./workflow.config.type"
 
-export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean'
+export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)'
 export interface ReportAnalyticsType{
   /**
    * Comportamento na agregação de valores quando existe mais de \
@@ -66,6 +66,9 @@ export interface ReportAnalyticsType{
      * Se for utilizado, fará a desestruturação do array referênciado e o \
      * columns agirá em função dos dados desestruturados que agora serão \
      * a raiz do objeto.
+     * 
+     * Caso seja request = flow_datas, há suporte para o shortcode \@history \
+     * para fazer o cumulative no histórico do flow_data.
      * 
      * ! Ainda não há suporte para mais de uma referência cumulativa !
      */
