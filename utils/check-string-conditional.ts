@@ -430,8 +430,19 @@ export const getCodeHelpers = (value: string, split_params = false): Array<[stri
     const regexContent = /([^()]+)\(([^()]+)\)/;
     const matchContent = regexContent.exec(code);
     if (matchContent) {
+      //#region HANDLE MASKED PARENTHESES
+      const availableParenthesesMasks = { '&#40;': '(','&#41;': ')' };
+
+      Object.entries(availableParenthesesMasks).forEach(([mask,  unmasked]) => {
+        if(!matchContent[2].includes(mask))  return;
+
+        matchContent[2] = replaceAll(matchContent[2], mask, unmasked)
+      });
+      //#endregion HANDLE MASKED PARENTHESES
+      
       if (split_params) {
         let toSplitParams = matchContent[2]
+        
         let shortcodes = getShortcodes(toSplitParams)
 
         let shortcodesToReplace: Array<[string, string]> = []
