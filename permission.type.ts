@@ -10,6 +10,7 @@ export enum PossiblePermissions {
   MANAGE_NOTIFICATION  = 'manage-notification',
   INTEGRATION_WHATSAPP = 'integration-whatsapp',
   REPORT               = 'report',
+  MANAGE_REPORT        = 'manage-report',
   // descontinuado ===============
   APPROVAL             = 'aprovacao',
   FINANCIAL_APPROVAL   = 'aprovacao-financeiro',

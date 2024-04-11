@@ -54,6 +54,7 @@ export interface Client{
   users?: User[],
 
   active?: boolean,
+  economic_group?: string,
 
   userCategories?: UserCategory[],
 

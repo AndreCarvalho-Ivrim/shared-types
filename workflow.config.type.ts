@@ -41,7 +41,7 @@ export interface WorkflowConfigNotificationType {
   type: 'email' | 'message',
   params: Record<string, string>,
   replacers: Record<string, string>,
-  /* ANEXO */
+  /** Anexo, com suporte a separado por virgula para referênciar mais de uma fonte de anexo */
   attachment?: string,
   /**
    * - [@data_creator]                Criador do flow data
@@ -346,7 +346,8 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
      * string: Referência do campo que armazena a imagem customizada do avatar 
      **/
     avatar?: "@creator" | "@owner" | string,
-    content: (ConfigViewModeColumnsType & { available_steps?: string[] })[]
+    content: (ConfigViewModeColumnsType & { available_steps?: string[] })[],
+    classNames?: { wrapper?: string }
   },
   flags?: KanbanFlagType[]
 }
