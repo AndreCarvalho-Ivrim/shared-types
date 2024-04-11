@@ -43,6 +43,8 @@ export interface WorkflowConfigNotificationType {
   replacers: Record<string, string>,
   /** Anexo, com suporte a separado por virgula para referênciar mais de uma fonte de anexo */
   attachment?: string,
+  /** Propriedade auxiliar a attachment. Com ela você faz o apontamento para o local onde terá os nomes dos anexos */
+  attachment_names?: string,
   /**
    * - [@data_creator]                Criador do flow data
    * - [@data_owners]                 Responsáveis pelo flow data
