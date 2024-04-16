@@ -141,7 +141,8 @@ export interface StepItemCustomDataEditableTable{
     title?: string,
     initial_value?: Record<string, any>[],
     readonly_if_fillable?: boolean,
-    addable?: boolean
+    addable?: boolean,
+    replicate?: boolean | Record<string, string>
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
