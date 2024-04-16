@@ -634,9 +634,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
   if (codeHelper === 'sum') {
     if (!chParam || (parsedParams ?? []).length === 0) return undefined;
 
-    let arr = [];
-    if (parsedParams.length === 1) arr = parsedParams[0];
-    else arr = parsedParams;
+    let arr = parsedParams;
 
     if (!Array.isArray(arr)) value = 0;
     else value = arr.reduce((acc, curr) => {
@@ -648,9 +646,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
   if (codeHelper === 'sumWithMultiplier') {
     if (!chParam || (parsedParams ?? []).length === 0) return;
 
-    let arr = [];
-    if (parsedParams.length === 1) arr = parsedParams[0];
-    else arr = parsedParams;
+    let arr = parsedParams;
 
     if (!Array.isArray(arr)) value = 0;
     else value = arr.reduce((acc, curr) => {
@@ -672,9 +668,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
   if (codeHelper === 'len') {
     if (!chParam || (parsedParams ?? []).length === 0) return;
 
-    let arr = [];
-    if (parsedParams.length === 1) arr = parsedParams[0];
-    else arr = parsedParams;
+    let arr = parsedParams;
 
     if (!Array.isArray(arr)) value = 0;
     else value = arr.length;
