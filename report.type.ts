@@ -117,7 +117,7 @@ export interface ShortReportType{
   description: string,
   /** URL de download de um report estático */
   url?: string,
-  analytics?: boolean,
+  analytics?: boolean | ReportAnalyticsType,
   params?: ReportAnalyticsType['params'],
   extension?: 'xlsx' | 'csv'
 }
