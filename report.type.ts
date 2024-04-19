@@ -3,6 +3,56 @@ import { StepViewType } from "./step.item.view.type"
 import { WorkflowConfigFilterType } from "./workflow.config.type"
 
 export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)'
+export interface ReportAnalyticsSearchType{
+  request: 'flow_datas' | 'flow_entities',
+  /**
+   * - Caso request = flow_datas, o target_ids = [wf_id],
+   * - Caso request = flow_entities, o target_ids = [wf_id, entity_key]
+   */
+  target_ids: string[],
+  /**
+   * Record<coluna-na-planilha,path-na-resposta>
+   * 
+   * Existe os seguintes shortcodes em path-na-resposta, para pegar dados da raiz do registro
+   * - \@id
+   * - \@user_id
+   * - \@created_at
+   * - \@updated_at
+   * - \@step_id
+   * */
+  columns: Record<string, string>,
+  queries?: Array<{
+    /** strc */
+    condition?: string,
+    /**
+     * Se a query for aplicada, caso break = true, ele para o \
+     * loop em queries
+     */
+    break?: boolean,
+    /**
+     * Use os shortcodes a seguir para referências dados não dinâmicos(fora do data do flowData, \
+     * ou dados gerados automaticamente no flowEntity) de um registro:
+     * 
+     *  - \@created_at : data de criação
+     *  - \@step_id : current_step_id
+     */
+    query: Record<string, string | {
+      type: WorkflowConfigFilterType['type'],
+      value: any
+    }>
+  }>
+  /**
+   * Se for utilizado, fará a desestruturação do array referênciado e o \
+   * columns agirá em função dos dados desestruturados que agora serão \
+   * a raiz do objeto.
+   * 
+   * Caso seja request = flow_datas, há suporte para o shortcode \@history \
+   * para fazer o cumulative no histórico do flow_data.
+   * 
+   * ! Ainda não há suporte para mais de uma referência cumulativa !
+   */
+  cumulative?: string[]
+}
 export interface ReportAnalyticsType{
   /**
    * Comportamento na agregação de valores quando existe mais de \
@@ -24,56 +74,7 @@ export interface ReportAnalyticsType{
   ignore_columns?: string[],
   order_by?: Record<string, 'asc' | 'desc'>,
   params?: (StepItemType | StepViewType)[],
-  searchs: Array<{
-    request: 'flow_datas' | 'flow_entities',
-    /**
-     * - Caso request = flow_datas, o target_ids = [wf_id],
-     * - Caso request = flow_entities, o target_ids = [wf_id, entity_key]
-     */
-    target_ids: string[],
-    /**
-     * Record<coluna-na-planilha,path-na-resposta>
-     * 
-     * Existe os seguintes shortcodes em path-na-resposta, para pegar dados da raiz do registro
-     * - \@id
-     * - \@user_id
-     * - \@created_at
-     * - \@updated_at
-     * - \@step_id
-     * */
-    columns: Record<string, string>,
-    queries?: Array<{
-      /** strc */
-      condition?: string,
-      /**
-       * Se a query for aplicada, caso break = true, ele para o \
-       * loop em queries
-       */
-      break?: boolean,
-      /**
-       * Use os shortcodes a seguir para referências dados não dinâmicos(fora do data do flowData, \
-       * ou dados gerados automaticamente no flowEntity) de um registro:
-       * 
-       *  - \@created_at : data de criação
-       *  - \@step_id : current_step_id
-       */
-      query: Record<string, string | {
-        type: WorkflowConfigFilterType['type'],
-        value: any
-      }>
-    }>
-    /**
-     * Se for utilizado, fará a desestruturação do array referênciado e o \
-     * columns agirá em função dos dados desestruturados que agora serão \
-     * a raiz do objeto.
-     * 
-     * Caso seja request = flow_datas, há suporte para o shortcode \@history \
-     * para fazer o cumulative no histórico do flow_data.
-     * 
-     * ! Ainda não há suporte para mais de uma referência cumulativa !
-     */
-    cumulative?: string[]
-  }>,
+  searchs: Array<ReportAnalyticsSearchType>,
   format?: Record<string, {
     type: ReportFormatTypes,
     translate?: Record<string, string>
