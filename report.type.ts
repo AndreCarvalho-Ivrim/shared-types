@@ -2,7 +2,7 @@ import { StepItemType } from "./step.item.field.type"
 import { StepViewType } from "./step.item.view.type"
 import { WorkflowConfigFilterType } from "./workflow.config.type"
 
-export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)'
+export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)' | '@step(title)'
 export interface ReportAnalyticsSearchType{
   request: 'flow_datas' | 'flow_entities',
   /**
@@ -16,6 +16,7 @@ export interface ReportAnalyticsSearchType{
    * Existe os seguintes shortcodes em path-na-resposta, para pegar dados da raiz do registro
    * - \@id
    * - \@user_id
+   * - \@owner_ids
    * - \@created_at
    * - \@updated_at
    * - \@step_id
