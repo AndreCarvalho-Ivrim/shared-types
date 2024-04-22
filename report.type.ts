@@ -2,7 +2,7 @@ import { StepItemType } from "./step.item.field.type"
 import { StepViewType } from "./step.item.view.type"
 import { WorkflowConfigFilterType } from "./workflow.config.type"
 
-export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)' | '@step(title)'
+export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)'
 export interface ReportAnalyticsSearchType{
   request: 'flow_datas' | 'flow_entities',
   /**
