@@ -144,6 +144,8 @@ export interface WorkflowConfigObserverFnType {
    * \@calendar-event: Evento válido apenas no FlowData, para gerar eventos no calendário da empresa
    * 
    * \@delete-from-calendar: Evento válido apenas no FlowData, para excluir eventosd do calendário
+   * 
+   * \@replicate: Evento válido apenas no FlowData, para replicar um registro em N
    */
   name: string,
   type: 'append' | 'backup' | 'event',
@@ -213,6 +215,9 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@delete-from-calendar: seguir a tipagem de [WFDeleteFromCalendarEventType]
    * 
+   * \@replicate: seguir a tipagem de [ReplicateFlowDataType]
+   * 
+   * \@consolidate: seguir a tipage de [ConsolidateFlowDataEventType]
    * APPEND -> required data on value = \@entity
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]

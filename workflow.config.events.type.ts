@@ -55,3 +55,28 @@ export interface WFDeleteFromCalendarEventType{
    */
   single_external_id?: string
 }
+export interface ConsolidateFlowDataEventType{
+  /** referência dos campos de associação */
+  match: string[],
+  /** tratamentos possíveis para lidar com o merge */
+  merge: Array<{
+    /** strc baseado no registro novo */
+    condition: string,
+    /**
+     * (default: left-join)
+     * 
+     * Qual será o registro usado como base.
+     * - Left: encontrado no banco através do match
+     * - Right: registro atual
+     */
+    mode?: 'left-join' | 'right-join'
+    /**
+     * Campos que serão mesclados. Se refere ao registro oposto \
+     * ao que está sendo utilizado como base no [mode]
+     * - overwrite = sobrescreve o campo
+     * - merge:array = força a união gerar um array
+     * - merge:unique = faz a união de dois arrays e garante que os valores sejam unicos
+     **/
+    join: Record<string, 'overwrite' | 'merge:array' | 'merge:unique'>
+  }>
+}
