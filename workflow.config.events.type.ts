@@ -1,6 +1,7 @@
 import { CreateScheduleEvent } from "./schedule.type"
 import { WorkflowNotificationEffectType } from "./workflow.config.type"
 
+//#region CALENDAR EVENTS
 export interface WFCalendarMultipleType{
   /** Id da posição em que se encontra o array */
   id: string,
@@ -54,6 +55,37 @@ export interface WFDeleteFromCalendarEventType{
    * for formado pela concatenação(com #) do flow_data_id(padrão) + algum valor dinâmico
    */
   single_external_id?: string
+}
+//#endregion CALENDAR EVENTS
+export interface ReplicateFlowDataRelateType{
+  id: string,
+  /**
+   * Por padrão a referência trará o _id
+   */
+  resume?: Record<string, string>
+}
+export interface ReplicateFlowDataEffectType{
+  condition?: string,
+  breakExec?: boolean,
+  replace: Record<string, any>
+}
+export interface ReplicateFlowDataType{
+  /**
+   * Adicionar explicitamente a regra de replicação, Para usá-lo preencha a prop e \
+   * adicione ```_inner_data``` na ```ref```.
+   **/
+  inner_data?: Record<string, any>[],
+  /** Campo referência para replicação */
+  ref: string,
+  /** { 'campo-replicado': 'destino-do-campo' } */
+  replace: Record<string, string>
+  effects?: ReplicateFlowDataEffectType[],
+  /**
+   * Relacionar replicações. Essa funcionalidade irá colocar \
+   * ponteiros de referência em cada uma das replicações para \
+   * se referênciar as demais
+   */
+  relate?: ReplicateFlowDataRelateType
 }
 export interface ConsolidateFlowDataEventType{
   query?: any,
