@@ -111,5 +111,9 @@ export interface ConsolidateFlowDataEventType{
      * - merge:unique = faz a união de dois arrays e garante que os valores sejam unicos
      **/
     join: Record<string, 'overwrite' | 'merge:array' | 'merge:unique'>
+  }>,
+  effects?: Array<{
+    condition?: string,
+    append_values: Record<string, any>
   }>
 }
