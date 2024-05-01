@@ -88,12 +88,13 @@ export interface ReplicateFlowDataType{
   relate?: ReplicateFlowDataRelateType
 }
 export interface ConsolidateFlowDataEventType{
+  query?: any,
   /** referência dos campos de associação */
   match: string[],
   /** tratamentos possíveis para lidar com o merge */
   merge: Array<{
     /** strc baseado no registro novo */
-    condition: string,
+    condition?: string,
     /**
      * (default: left-join)
      * 
