@@ -117,3 +117,17 @@ export interface ConsolidateFlowDataEventType{
     append_values: Record<string, any>
   }>
 }
+export interface ToAffectFlowDataEventType{
+  query?: any,
+  effects: {
+    condition?: string,
+    append_values?: Record<string, any>,
+    /** Forçar o disparo de uma trigger */
+    trigger_event?: {
+      /** Primeiro parâmetro de match para localizar o evento */
+      name: string,
+      /** Fazer match por condição */
+      find_by_condition?: string
+    }
+  }[]
+}
