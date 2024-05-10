@@ -54,7 +54,7 @@ export interface StepTypeRuleRedirect{
   action_permission?: string,
   confirm?: StepActionConfirmType,
 }
-export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open', boolean | {
+export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open' | 'redirect-to-step-if-successful', boolean | {
   condition?: string,
   [key: string]: any
 }>>
@@ -100,6 +100,8 @@ export interface StepTypeRules{
    * - [redirect-and-autocomplete]: Usado junto com a regra de step find, definindo que após encontrar \ 
    * ou não um registro, vai redirecionar para a etapa de destino ou para etapa especificada em [redirec...]: { target: string }, e usar o conteúdo encontrado apenas \
    * para autocomplete
+   * 
+   * - [redirect-to-step-if-successful]: Redirecionar para uma determinada etapa se a requisição for bem sucedida.
    * */
   effects?: StepTypeRulesEffects,
   /**
