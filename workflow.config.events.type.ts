@@ -118,7 +118,13 @@ export interface ConsolidateFlowDataEventType{
   }>
 }
 export interface ToAffectFlowDataEventType{
-  query?: any,
+  query?: Record<string, {
+    type: 'list' | 'not' | 'text',
+    /** REF */
+    value: string,
+    /** Se for true, o value será um valor direto e não uma referência. */
+    static?: boolean
+  }>,
   effects: {
     condition?: string,
     append_values?: Record<string, any>,
