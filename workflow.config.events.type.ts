@@ -125,7 +125,7 @@ export interface ToAffectFlowDataEventType{
   query?: Record<string, {
     type: 'in' | 'nin' | 'not' | 'text',
     /** REF */
-    value: string,
+    value: any,
     /** Se for true, o value será um valor direto e não uma referência. */
     static?: boolean
   }>,
