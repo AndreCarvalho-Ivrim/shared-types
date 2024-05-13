@@ -123,7 +123,7 @@ export interface ConsolidateFlowDataEventType{
 }
 export interface ToAffectFlowDataEventType{
   query?: Record<string, {
-    type: 'list' | 'not' | 'text',
+    type: 'in' | 'nin' | 'not' | 'text',
     /** REF */
     value: string,
     /** Se for true, o value será um valor direto e não uma referência. */
