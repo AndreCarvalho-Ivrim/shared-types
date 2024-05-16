@@ -369,7 +369,35 @@ export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
 }
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban;
+export interface WorkflowViewModeDashboard extends WorkflowViewModeBase{
+  view_mode: 'dashboard',
+  modules: Array<{
+    mode: 'card' | 'chart',
+    /** Dados que irão gerar o gráfico ou renderizar os cards */
+    datas: {
+      values: any,
+      /** false (default) */
+      static?: boolean
+    },
+    /** <apontamento-de-elementos>: <classes-css> */
+    classNames: Record<string, string>,
+    header: Array<WorkflowViewModeDashboardModuleBlock>,
+    body: Array<WorkflowViewModeDashboardModuleBlock>,
+    footer: Array<WorkflowViewModeDashboardModuleBlock>
+  }>,
+}
+export interface WorkflowViewModeDashboardModuleBlock{
+  key: string,
+  mode: 'list' | 'box' | 'strong',
+  /** Valores com suporte a shortcodes */
+  values: string[],
+  fn?: {
+    name: '@count-data-by-step' | '@count',
+    data: { filter: any }
+  }
+}
+
+export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard;
 
 export interface WorkflowAuthTemplateType {
   id: string,
