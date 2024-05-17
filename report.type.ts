@@ -126,5 +126,6 @@ export interface ShortReportType{
   url?: string,
   analytics?: boolean | ReportAnalyticsType,
   params?: ReportAnalyticsType['params'],
-  extension?: 'xlsx' | 'csv'
+  extension?: 'xlsx' | 'csv',
+  permissions?: ReportType['permissions']
 }
