@@ -87,6 +87,7 @@ export interface ReportType{
   _id: string,
   title: string,
   description: string,
+  obs?: string,
   /** URL de download de um report estático */
   url?: string,
   analytics?: ReportAnalyticsType,
@@ -107,7 +108,10 @@ export interface ReportType{
     webhook?: any,
     [key: string]: any
   }
-
+  permissions?: {
+    mode: 'selected' | 'user-category',
+    allowed: string[]
+  }
   client_id: string;
   user_id: string;  
   created_at: Date;
@@ -117,6 +121,7 @@ export interface ShortReportType{
   _id: string,
   title: string,
   description: string,
+  obs?: string,
   /** URL de download de um report estático */
   url?: string,
   analytics?: boolean | ReportAnalyticsType,
