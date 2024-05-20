@@ -87,7 +87,7 @@ export interface ReportType{
   _id: string,
   title: string,
   description: string,
-  obs?: string,
+  obs?: string | null,
   /** URL de download de um report estático */
   url?: string,
   analytics?: ReportAnalyticsType,
