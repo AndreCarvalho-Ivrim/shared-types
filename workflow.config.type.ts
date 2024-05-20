@@ -371,20 +371,22 @@ export interface WorkflowViewModeTable extends WorkflowViewModeBase {
 }
 export interface WorkflowViewModeDashboard extends WorkflowViewModeBase{
   view_mode: 'dashboard',
-  modules: Array<{
-    mode: 'card' | 'chart',
-    /** Dados que irão gerar o gráfico ou renderizar os cards */
-    datas: {
-      values: any,
-      /** false (default) */
-      static?: boolean
-    },
-    /** <apontamento-de-elementos>: <classes-css> */
-    classNames: Record<string, string>,
-    header: Array<WorkflowViewModeDashboardModuleBlock>,
-    body: Array<WorkflowViewModeDashboardModuleBlock>,
-    footer: Array<WorkflowViewModeDashboardModuleBlock>
-  }>,
+  modules: Array<WorkflowViewModeDashboardModule>
+}
+export interface WorkflowViewModeDashboardModule{
+  key: string
+  mode: 'card' | 'chart',
+  /** Dados que irão gerar o gráfico ou renderizar os cards */
+  datas: {
+    values: any,
+    /** false (default) */
+    static?: boolean
+  },
+  /** <apontamento-de-elementos>: <classes-css> */
+  classNames: Record<string, string>,
+  header: Array<WorkflowViewModeDashboardModuleBlock>,
+  body: Array<WorkflowViewModeDashboardModuleBlock>,
+  footer: Array<WorkflowViewModeDashboardModuleBlock>
 }
 export interface WorkflowViewModeDashboardModuleBlock{
   key: string,
