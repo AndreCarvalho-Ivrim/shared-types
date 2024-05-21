@@ -393,10 +393,11 @@ export interface WorkflowViewModeDashboardModuleBlock{
   mode: 'list' | 'box' | 'strong',
   /** Valores com suporte a shortcodes */
   values: string[],
-  fn?: {
-    name: '@count-data-by-step' | '@count',
-    data: { filter: any }
-  }
+  fn?: WorkflowViewModeDashboardFn
+}
+export interface WorkflowViewModeDashboardFn{
+  name: '@count-data-by-step' | '@count',
+  data: { filter: any }
 }
 
 export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard;
