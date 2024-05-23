@@ -396,7 +396,7 @@ export interface WorkflowViewModeDashboardModuleBlock{
   fn?: WorkflowViewModeDashboardFn
 }
 export interface WorkflowViewModeDashboardFn{
-  name: '@count-data-by-step' | '@count',
+  name: '@count-data-by-step' | '@count' | '@flow-datas',
   data: { filter: any }
 }
 
