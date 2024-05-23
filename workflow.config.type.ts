@@ -383,7 +383,7 @@ export interface WorkflowViewModeDashboardModule{
     static?: boolean
   },
   /** <apontamento-de-elementos>: <classes-css> */
-  classNames: Record<string, string>,
+  classNames?: Record<string, string>,
   header: Array<WorkflowViewModeDashboardModuleBlock>,
   body: Array<WorkflowViewModeDashboardModuleBlock>,
   footer: Array<WorkflowViewModeDashboardModuleBlock>
