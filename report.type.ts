@@ -83,6 +83,7 @@ export interface ReportAnalyticsType{
   /** default: csv */
   convert_to?: 'csv' | 'xlsx'
 }
+export type ReportPermissionMode = 'selected' | 'user-category';
 export interface ReportType{
   _id: string,
   title: string,
@@ -109,7 +110,7 @@ export interface ReportType{
     [key: string]: any
   }
   permissions?: {
-    mode: 'selected' | 'user-category',
+    mode: ReportPermissionMode,
     allowed: string[]
   }
   client_id: string;
