@@ -411,6 +411,7 @@ export interface WorkflowViewModeDashboardModuleBlock{
    * - item: item percorrendo o módulo
    */
   values: string[],
+  formatting?: Record<number, 'money' | 'number'>,
   fn?: WorkflowViewModeDashboardFn
 }
 export interface WorkflowViewModeDashboardFn{
