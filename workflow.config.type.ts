@@ -404,7 +404,13 @@ export interface WorkflowViewModeDashboardStore{
 export interface WorkflowViewModeDashboardModuleBlock{
   key: string,
   mode: 'list' | 'box' | 'strong',
-  /** Valores com suporte a shortcodes */
+  /**
+   * Valores com suporte a shortcodes, e dentro dos seguintes escopos:
+   * 
+   * - global: variáveis globais do módulo
+   * - curr: valor atual retornado pela função
+   * - item: item percorrendo o módulo
+   */
   values: string[],
   fn?: WorkflowViewModeDashboardFn
 }
