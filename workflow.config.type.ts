@@ -384,19 +384,20 @@ export interface WorkflowViewModeDashboardModule{
   },
   /** <apontamento-de-elementos>: <classes-css> */
   classNames?: Record<string, string>,
-  global_fns?: Record<string, {
-    name: WorkflowViewModeDashboardFn['name'],
-    foreach: {
-      store: Array<WorkflowViewModeDashboardStore>
-    }       
-  }>
+  global_fns?: Record<string, WorkflowViewModeDashboardGlobalFn>
   header: Array<WorkflowViewModeDashboardModuleBlock>,
   body: Array<WorkflowViewModeDashboardModuleBlock>,
   footer: Array<WorkflowViewModeDashboardModuleBlock>
 }
+export interface WorkflowViewModeDashboardGlobalFn{
+  name: WorkflowViewModeDashboardFn['name'],
+  foreach: { store: Array<WorkflowViewModeDashboardStore> }       
+  data?: { filter: any }
+}
 export interface WorkflowViewModeDashboardStore{
   key: string,
   assing: 'counter' | 'cumulative' | 'overwrite' | 'merge',
+  origin?: 'flow-data',
   name?: string,
   condition?: string
 }
