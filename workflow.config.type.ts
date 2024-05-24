@@ -384,9 +384,21 @@ export interface WorkflowViewModeDashboardModule{
   },
   /** <apontamento-de-elementos>: <classes-css> */
   classNames?: Record<string, string>,
+  global_fns?: Record<string, {
+    name: WorkflowViewModeDashboardFn['name'],
+    foreach: {
+      store: Array<WorkflowViewModeDashboardStore>
+    }       
+  }>
   header: Array<WorkflowViewModeDashboardModuleBlock>,
   body: Array<WorkflowViewModeDashboardModuleBlock>,
   footer: Array<WorkflowViewModeDashboardModuleBlock>
+}
+export interface WorkflowViewModeDashboardStore{
+  key: string,
+  assing: 'counter' | 'cumulative' | 'overwrite' | 'merge',
+  name?: string,
+  condition?: string
 }
 export interface WorkflowViewModeDashboardModuleBlock{
   key: string,
@@ -396,8 +408,9 @@ export interface WorkflowViewModeDashboardModuleBlock{
   fn?: WorkflowViewModeDashboardFn
 }
 export interface WorkflowViewModeDashboardFn{
-  name: '@count-data-by-step' | '@count' | '@flow-datas',
-  data: { filter: any }
+  name: '@count-data-by-step' | '@count' | '@flow-datas' | '@static',
+  value?: any,
+  data?: { filter: any }
 }
 
 export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard;
