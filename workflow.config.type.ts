@@ -397,7 +397,6 @@ export interface WorkflowViewModeDashboardGlobalFn{
 export interface WorkflowViewModeDashboardStore{
   key: string,
   assing: 'counter' | 'cumulative' | 'overwrite' | 'merge',
-  origin?: 'flow-data',
   name?: string,
   condition?: string
 }
