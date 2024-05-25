@@ -402,7 +402,10 @@ export interface WorkflowViewModeDashboardStore{
 }
 export interface WorkflowViewModeDashboardModuleBlock{
   key: string,
-  mode: 'list' | 'box' | 'strong',
+  /**
+   * - list-progress: No list-progress o último item é utilizado para gerar o progresso
+   */
+  mode: 'list-progress' | 'list' | 'box' | 'strong',
   /**
    * Valores com suporte a shortcodes, e dentro dos seguintes escopos:
    * 
