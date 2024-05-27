@@ -21,7 +21,14 @@ export interface WorkflowConfigFilterType {
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
   /** somente autocomplete.mode = 'distinct' */
-  autocomplete?: string
+  autocomplete?: string,
+  /**
+   * Valor inicial de um filtro. Valores pré-definidos:
+   * 
+   * - \@last-few-months-until-today:{N}: Caso esteja usando o type=date você pode usar este \
+   * default value para pegar um range de data de {N}(substituir por um número) meses atrás até o dia atual.
+   */
+  defaultValue?: any
 }
 export interface WorkflowNotificationEffectType{
   /**
@@ -391,8 +398,8 @@ export interface WorkflowViewModeDashboardModule{
 }
 export interface WorkflowViewModeDashboardGlobalFn{
   name: WorkflowViewModeDashboardFn['name'],
-  foreach: { store: Array<WorkflowViewModeDashboardStore> }       
-  data?: { filter: any }
+  foreach: { store: Array<WorkflowViewModeDashboardStore> }
+  data?: { filter?: any, dynamic_filters?: boolean }
 }
 export interface WorkflowViewModeDashboardStore{
   key: string,
