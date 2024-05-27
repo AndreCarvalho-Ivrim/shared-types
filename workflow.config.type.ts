@@ -427,7 +427,7 @@ export interface WorkflowViewModeDashboardModuleBlock{
 export interface WorkflowViewModeDashboardFn{
   name: '@count-data-by-step' | '@count' | '@flow-datas' | '@static',
   value?: any,
-  data?: { filter: any }
+  data?: { filter?: any, dynamic_filters?: boolean }
 }
 
 export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard;
