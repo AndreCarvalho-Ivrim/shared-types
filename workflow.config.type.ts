@@ -389,7 +389,16 @@ export interface WorkflowViewModeDashboardModule{
     /** false (default) */
     static?: boolean
   },
-  /** <apontamento-de-elementos>: <classes-css> */
+  /**
+   * \<apontamento-de-elementos\>: \<classes-css\>
+   * 
+   * - container: se refere a primeira div do módulo
+   * - card: caso o tipo seja card, essa classe lida com a primeira div de cada card
+   * - header/body/footer: geralmente utilizado com o card para referênciar a primeira \
+   * div das separações
+   * - (header/body/footer).*: significa que todos os itens do primeiro nível dessa sessão \
+   * receberá a classe
+   */
   classNames?: Record<string, string>,
   global_fns?: Record<string, WorkflowViewModeDashboardGlobalFn>
   header: Array<WorkflowViewModeDashboardModuleBlock>,
@@ -405,14 +414,12 @@ export interface WorkflowViewModeDashboardStore{
   key: string,
   assing: 'counter' | 'cumulative' | 'overwrite' | 'merge',
   name?: string,
-  condition?: string
+  condition?: string,
+  breakExec?: boolean,
 }
-export interface WorkflowViewModeDashboardModuleBlock{
+export interface WorkflowViewModeDashboardModuleBase{
   key: string,
-  /**
-   * - list-progress: No list-progress o último item é utilizado para gerar o progresso
-   */
-  mode: 'list-progress' | 'list' | 'box' | 'strong',
+  
   /**
    * Valores com suporte a shortcodes, e dentro dos seguintes escopos:
    * 
@@ -424,6 +431,27 @@ export interface WorkflowViewModeDashboardModuleBlock{
   formatting?: Record<number, 'money' | 'number'>,
   fn?: WorkflowViewModeDashboardFn
 }
+export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDashboardModuleBase{
+  mode: 'pie-chart',
+  colors: string[],
+  chart_settings?: {
+    format?: { 
+      /** true (default) */
+      yaxis?: boolean,
+      /** true (default) */
+      xaxis?: boolean
+    }
+  },
+}
+export interface WorkflowViewModeDashboardModuleBasic extends WorkflowViewModeDashboardModuleBase{
+  /**
+   * - list-progress: No list-progress o último item é utilizado para gerar o progresso
+   */
+  mode: 'list-progress' | 'list' | 'box' | 'strong',
+}
+
+export type WorkflowViewModeDashboardModuleBlock = WorkflowViewModeDashboardModuleBasic | WorkflowViewModeDashboardModuleChart;
+
 export interface WorkflowViewModeDashboardFn{
   name: '@count-data-by-step' | '@count' | '@flow-datas' | '@static',
   value?: any,
