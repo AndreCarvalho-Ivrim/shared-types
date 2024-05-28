@@ -624,6 +624,7 @@ export const handleCodeHelper__diffInDays = ({ data, param, value }:{ value: str
 
   return replaceAll(value, searchValue, replacer);
 }
+const avHandleCodeHelpers = ['sum', 'sumWithMultiplier', 'len', 'linearArithmetic', 'distinct', 'groupByAndSum'];
 export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
   codeHelper: string,
   chParam: string,
@@ -949,7 +950,20 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
             return 0;
           });
           break;
-        default: console.error('invalid codehelper', { code, param });
+        default: 
+          if(avHandleCodeHelpers.includes(code)){
+            if(!param) throw new Error(errorRequiredParam(code))
+
+            const valueCurrentSum = getRecursiveValue(param, { data });
+  
+            returnValue = handleCodeHelpers({
+              codeHelper: code,
+              chParam: param,
+              parsedParams: valueCurrentSum
+            });
+            break;
+          }
+          console.error('invalid codehelper', { code, param });
       }
     }
   }

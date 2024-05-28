@@ -10,13 +10,15 @@ export interface WorkflowConfigFilterType {
   /**
    * - text: Pesquisa case incesitive por aproximação (includes)
    * - select: Pesquisa por palavra exata (===)
+   * - not: Não é a palavra exata (oposto de select [!==])
    * - date: Comparação por range de data (startDate, endDate)
    * - date-in: Oposto do anterior, é passado apenas 1 data, e deve ter duas refs \
    * onde a primeira é data inicial e a segunda afinal, e a verificação testa se a \
    * data passada está dentro do range do banco
    * - list: Lista de opções (in)
+   * - not-list: Não está na lista de opções (nin)
    */
-  type: 'text' | 'select' | 'date' | 'list' | 'strc' | 'date-in',
+  type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in',
   /** Veja a tipagem de WorkflowConfigFilterRefType para ver opções pré-definidas */
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
@@ -410,13 +412,20 @@ export interface WorkflowViewModeDashboardGlobalFn{
   foreach: { store: Array<WorkflowViewModeDashboardStore> }
   data?: { filter?: any, dynamic_filters?: boolean }
 }
-export interface WorkflowViewModeDashboardStore{
-  key: string,
-  assing: 'counter' | 'cumulative' | 'overwrite' | 'merge',
-  name?: string,
+export interface WorkflowViewModeDashboardStoreBase{
   condition?: string,
   breakExec?: boolean,
 }
+export interface WorkflowViewModeDashboardStoreSingle extends WorkflowViewModeDashboardStoreBase{
+  key: string,
+  assign: 'counter' | 'cumulative' | 'overwrite' | 'merge',
+  name?: string,
+}
+export interface WorkflowViewModeDashboardStoreGroup extends WorkflowViewModeDashboardStoreBase{
+  assign: 'group'
+  effects: (WorkflowViewModeDashboardStoreSingle | WorkflowViewModeDashboardStoreGroup)[]
+}
+export type WorkflowViewModeDashboardStore = WorkflowViewModeDashboardStoreSingle | WorkflowViewModeDashboardStoreGroup
 export interface WorkflowViewModeDashboardModuleBase{
   key: string,
   
@@ -428,7 +437,10 @@ export interface WorkflowViewModeDashboardModuleBase{
    * - item: item percorrendo o módulo
    */
   values: string[],
-  formatting?: Record<number, 'money' | 'number'>,
+  /**
+   * - point: Este formato é apenas para converter um valor RGB/Hexadecimal em uma bolinha(point)
+   */
+  formatting?: Record<number, 'money' | 'number' | 'point'>,
   fn?: WorkflowViewModeDashboardFn
 }
 export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDashboardModuleBase{
@@ -440,7 +452,11 @@ export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDa
       yaxis?: boolean,
       /** true (default) */
       xaxis?: boolean
-    }
+    },
+    /** true (default) */
+    legend?: boolean,
+    /** false (default) */
+    show_details: boolean
   },
 }
 export interface WorkflowViewModeDashboardModuleBasic extends WorkflowViewModeDashboardModuleBase{
