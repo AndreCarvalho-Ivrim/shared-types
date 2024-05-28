@@ -410,13 +410,20 @@ export interface WorkflowViewModeDashboardGlobalFn{
   foreach: { store: Array<WorkflowViewModeDashboardStore> }
   data?: { filter?: any, dynamic_filters?: boolean }
 }
-export interface WorkflowViewModeDashboardStore{
-  key: string,
-  assing: 'counter' | 'cumulative' | 'overwrite' | 'merge',
-  name?: string,
+export interface WorkflowViewModeDashboardStoreBase{
   condition?: string,
   breakExec?: boolean,
 }
+export interface WorkflowViewModeDashboardStoreSingle extends WorkflowViewModeDashboardStoreBase{
+  key: string,
+  assign: 'counter' | 'cumulative' | 'overwrite' | 'merge',
+  name?: string,
+}
+export interface WorkflowViewModeDashboardStoreGroup extends WorkflowViewModeDashboardStoreBase{
+  assign: 'group'
+  effects: (WorkflowViewModeDashboardStoreSingle | WorkflowViewModeDashboardStoreGroup)[]
+}
+export type WorkflowViewModeDashboardStore = WorkflowViewModeDashboardStoreSingle | WorkflowViewModeDashboardStoreGroup
 export interface WorkflowViewModeDashboardModuleBase{
   key: string,
   
