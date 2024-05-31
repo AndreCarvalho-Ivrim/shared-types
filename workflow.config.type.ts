@@ -329,6 +329,7 @@ export interface WorkflowViewModeBase {
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
   /** { 'ref-no-flow-data': 'título-visual' } */ 
   dynamic_order_by?: Record<string, string>,
+  /** Group permission separado por virgula */
   permission?: string,
   /** 
    * Existem alguns valores pré-definidos que geram pesquisas mais complexas como:
