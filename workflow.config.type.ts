@@ -323,11 +323,13 @@ export interface ViewModeOrderBy{
 }
 export interface WorkflowViewModeBase {
   title: string,
+  description?: string,
   icon?: AvailableIcons,
   slug: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
   /** { 'ref-no-flow-data': 'título-visual' } */ 
-  dynamic_order_by?: Record<string, string>
+  dynamic_order_by?: Record<string, string>,
+  permission?: string,
   /** 
    * Existem alguns valores pré-definidos que geram pesquisas mais complexas como:
    * - \@array-exists-and-gt-0: { "key": { $exists: true, $not: { $size: 0 } } }
