@@ -439,7 +439,10 @@ export interface WorkflowViewModeDashboardModuleBase{
    * - item: item percorrendo o módulo
    */
   values: string[],
-  formatting?: Record<number, 'money' | 'number'>,
+  /**
+   * - point: Este formato é apenas para converter um valor RGB/Hexadecimal em uma bolinha(point)
+   */
+  formatting?: Record<number, 'money' | 'number' | 'point'>,
   fn?: WorkflowViewModeDashboardFn
 }
 export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDashboardModuleBase{
@@ -451,7 +454,11 @@ export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDa
       yaxis?: boolean,
       /** true (default) */
       xaxis?: boolean
-    }
+    },
+    /** true (default) */
+    legend?: boolean,
+    /** false (default) */
+    show_details?: boolean
   },
 }
 export interface WorkflowViewModeDashboardModuleBasic extends WorkflowViewModeDashboardModuleBase{
