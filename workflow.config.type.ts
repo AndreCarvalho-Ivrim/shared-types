@@ -456,7 +456,7 @@ export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDa
     /** true (default) */
     legend?: boolean,
     /** false (default) */
-    show_details: boolean
+    show_details?: boolean
   },
 }
 export interface WorkflowViewModeDashboardModuleBasic extends WorkflowViewModeDashboardModuleBase{
