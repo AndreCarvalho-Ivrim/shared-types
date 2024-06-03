@@ -839,6 +839,7 @@ export interface WorkflowConfigIntegrationsType {
     emailFrom: string,
     host?: string,
     port?: number,
+    service?: string,
     auth?: { user: string, pass: string }
   },
   whatsapp?: { number: string, token: string },
