@@ -323,11 +323,14 @@ export interface ViewModeOrderBy{
 }
 export interface WorkflowViewModeBase {
   title: string,
+  description?: string,
   icon?: AvailableIcons,
   slug: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
   /** { 'ref-no-flow-data': 'título-visual' } */ 
-  dynamic_order_by?: Record<string, string>
+  dynamic_order_by?: Record<string, string>,
+  /** Group permission separado por virgula */
+  permission?: string,
   /** 
    * Existem alguns valores pré-definidos que geram pesquisas mais complexas como:
    * - \@array-exists-and-gt-0: { "key": { $exists: true, $not: { $size: 0 } } }
@@ -456,7 +459,7 @@ export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDa
     /** true (default) */
     legend?: boolean,
     /** false (default) */
-    show_details: boolean
+    show_details?: boolean
   },
 }
 export interface WorkflowViewModeDashboardModuleBasic extends WorkflowViewModeDashboardModuleBase{
@@ -836,6 +839,7 @@ export interface WorkflowConfigIntegrationsType {
     emailFrom: string,
     host?: string,
     port?: number,
+    service?: string,
     auth?: { user: string, pass: string }
   },
   whatsapp?: { number: string, token: string },

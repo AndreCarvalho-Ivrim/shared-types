@@ -142,6 +142,8 @@ export interface StepTypeRules{
 export interface StepSlaType{
   /** Tempo esperado de permanência em uma etapa */
   stay: number,
+  /** Unidade de medida. Default: **day** */
+  unit?: 'day' | 'hour',
   /**
    * Controlar indicadores de cor, baseado em quanto tempo falta para cumprimento do sla.
    * 
