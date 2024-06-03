@@ -54,6 +54,10 @@ export interface ReportAnalyticsSearchType{
    */
   cumulative?: string[]
 }
+export interface ReportAnalyticsFormatAndOrTranslate{
+  type: ReportFormatTypes,
+  translate?: Record<string, string>
+}
 export interface ReportAnalyticsType{
   /**
    * Comportamento na agregação de valores quando existe mais de \
@@ -76,10 +80,7 @@ export interface ReportAnalyticsType{
   order_by?: Record<string, 'asc' | 'desc'>,
   params?: (StepItemType | StepViewType)[],
   searchs: Array<ReportAnalyticsSearchType>,
-  format?: Record<string, {
-    type: ReportFormatTypes,
-    translate?: Record<string, string>
-  }>,
+  format?: Record<string, ReportAnalyticsFormatAndOrTranslate>,
   /** default: csv */
   convert_to?: 'csv' | 'xlsx'
 }
