@@ -76,6 +76,9 @@ export const hubRoutes = {
     create: () => '/notificacoes/criar'
   }
 }
+export const isacBackRoutes = {
+  public_route: (flow_id: string, variation: string) => `/flow-data/datas/${flow_id}/${variation}`
+}
 
 export type AvailableRegexUrls =
   '@isac:home' |
@@ -118,7 +121,8 @@ export type AvailableRegexUrls =
   '@hub:closing_folder.home' |
   '@hub:notification.all' |
   '@hub:notification.preference' |
-  '@hub:notification.create'
+  '@hub:notification.create' |
+  '@isac_back:public_route(flow_id,variation)'
 
 /**
  * *obs. Use handleRegexUrl('custom-url' as any) para ignorar o erro de tipagem.*
@@ -162,6 +166,7 @@ export const handleRegexUrl = (url: AvailableRegexUrls, token?: string): string 
   let handledUrl: string | undefined = undefined
   if (url.includes('@hub:')) handledUrl = `${getDomain('hub', true)}${getUrl(url, '@hub:', hubRoutes)}`
   if (url.includes('@isac:')) handledUrl = `${getDomain('isac', true)}${getUrl(url, '@isac:', isacRoutes)}`
+  if (url.includes('@isac_back:')) handledUrl = `${getDomain('isac_back', true)}${getUrl(url, '@isac_back:', isacBackRoutes)}`
   if (handledUrl) {
     if (token && handledUrl.substring(0, 4) === 'http' && !handledUrl.includes('?token=')) {
       if (handledUrl.includes('?')) return `${handledUrl}&token=${token}`
@@ -173,21 +178,25 @@ export const handleRegexUrl = (url: AvailableRegexUrls, token?: string): string 
 
   return url
 }
-export const getDomain = (application: 'hub' | 'isac', removeLastSlash = false) => {
-  let urls = { hub: '', isac: '' }
+export const getDomain = (application: 'hub' | 'isac' | 'isac_back', removeLastSlash = false) => {
+  let urls = { hub: '', isac: '', isac_back: '' }
   try {
     // @ts-ignore
     const WORKFLOW_MODULE = process.env.REACT_APP_WORKFLOW_MODULAR;
     urls.isac = WORKFLOW_MODULE!;
+    // @ts-ignore
+    urls.isac_back = process.env.REACT_APP_API_WF_URL
   } catch (e) { }
   try {
     // @ts-ignore
     const PORTAL = import.meta.env.VITE_PORTAL_URL;
     urls.hub = PORTAL!;
+    // @ts-ignore
+    urls.isac_back = import.meta.env.VITE_BASE_URL
   } catch (e) { }
 
   let url = urls[application] ?? '';
-  if (removeLastSlash && url.substr(-1) === '/') url = url.substr(0, url.length - 1)
+  if (removeLastSlash && application !== 'isac_back' && url.substr(-1) === '/') url = url.substr(0, url.length - 1)
 
   return url
 }
