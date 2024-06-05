@@ -741,8 +741,11 @@ export interface WorkflowConfigType {
          * 
          * O modo [me] só é valido caso auth seja preenchido com o tipo [\@network-flow-auth], \
          * e neste caso, retornará o usuario autenticado.
+         * 
+         * Existe o tipo [count-flow-datas], que ira retorna o total de registro com base no \
+         * filtro realizado. Este tipo não tem suporte a prop [body] e [order_by]
          */
-        request?: 'flow-datas' | 'steps' | 'me',
+        request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas',
         auth?: AuthPublicRouteType,
         /**
          * Query Params disponíveis para pesquisa.
@@ -839,6 +842,7 @@ export interface WorkflowConfigIntegrationsType {
     emailFrom: string,
     host?: string,
     port?: number,
+    service?: string,
     auth?: { user: string, pass: string }
   },
   whatsapp?: { number: string, token: string },
