@@ -297,6 +297,10 @@ export interface ConfigViewModeColumnsType {
    */
   translate?: Record<string, string>
 }
+type WorkflowFilterScopeFilter = Record<string, string> | Record<string, {
+  type: WorkflowConfigFilterType['type'],
+  value: any
+}>
 export interface WorkflowViewModeFilterScope {
   /**
    * String-conditional, com os hardcodes:
@@ -306,10 +310,7 @@ export interface WorkflowViewModeFilterScope {
    * \@me: Id do usuário logado
    */
   condition?: string,
-  filter?: Record<string, string> | Record<string, {
-    type: WorkflowConfigFilterType['type'],
-    value: any
-  }>,
+  filter?: Record<'$or', Array<WorkflowFilterScopeFilter>> | WorkflowFilterScopeFilter,
   /**
    * Se for true, e a condição for verdadeira, interrompera a validação dos próximos filtros
    */
