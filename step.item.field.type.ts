@@ -61,7 +61,8 @@ export interface StepItemType{
      * - [@select-multiple-and-prorating]: Irá lidar com select multiplo e com capacidade de rateio e agrageção de dados
      * - [@filter-options]: Irá lidar com configurações adicionais para o options.
      */
-    customRules?: string
+    customRules?: string,
+    step?: number
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
