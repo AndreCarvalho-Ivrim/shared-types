@@ -94,11 +94,10 @@ function calcHoursToExpireSla({ step, flowData, workflow }:CalcSlaParams) : (Cal
       availableHours,
       startDate
     })
-    
     const diffInHours = handleDiffInAvailableInterval({ startDate, endDate, availableHours });
     
     let timeToExpireSla = diffInHours - step.sla.stay;
-
+    
     let timeToExpireOutherFields : (number | undefined)[] | undefined = []
     try{
       if(workflow?.config?.slas?.outher_fields && workflow.config.slas.outher_fields.length > 0){
@@ -271,12 +270,13 @@ function handleDiffInAvailableInterval({ startDate, endDate, availableHours = {}
     endDate.getTime() - startDate.getTime()
   );
 
+  console.log({ diffInMilliseconds })
   if(diffInMilliseconds > 0 && startDate && endDate && startDate.toDateString() !== endDate.toDateString()){
     let accumulatedInvalidMilliseconds = 0;
 
     const hasAvailableHours = availableHours && Object.keys(availableHours).length > 0;
     if(hasAvailableHours){
-      const diffInDays = Math.ceil(diffInMilliseconds / (oneHourInMilliseconds * 24))
+      const diffInDays = Math.round(diffInMilliseconds / (oneHourInMilliseconds * 24))
       let startWeekday : keyof AvailableHoursType = startDate.getDay() as keyof AvailableHoursType;
   
       let dayInMilliseconds = 24 * 60 * 60 * 1000;
