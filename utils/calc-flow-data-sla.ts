@@ -3,10 +3,15 @@ import { AvailableHoursType } from "../workflow.config.type"
 import { WorkflowType } from "../workflow.type"
 import { getRecursiveValue } from "./recursive-datas"
 
+interface ExceptionDays{
+  /** yyyy-mm-dd */
+  date: string,
+}
 interface CalcSlaParams{
   step?: StepType,
   flowData: any,
-  workflow: WorkflowType
+  workflow: WorkflowType,
+  exceptionDays?: ExceptionDays[]
 }
 interface CalcSlaResponse{
   timeToExpireSla: number,
@@ -14,12 +19,12 @@ interface CalcSlaResponse{
   closestToExpiration: number,
   unit: 'day' | 'hour'
 }
-export function calcDaysToExpireSla({ step, flowData, workflow }:CalcSlaParams) : (CalcSlaResponse | undefined) {
+export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:CalcSlaParams) : (CalcSlaResponse | undefined) {
   try{
     if(step?.sla && step.sla.stay !== undefined && flowData.changed_step_at){
       const unit = step.sla.unit ?? 'day';
 
-      if(unit === 'hour') return calcHoursToExpireSla({ step, flowData, workflow });
+      if(unit === 'hour') return calcHoursToExpireSla({ step, flowData, workflow, exceptionDays });
       
       const startDate = new Date(flowData.changed_step_at)
       startDate.setHours(0, 0, 0, 0)
@@ -82,19 +87,21 @@ export function calcDaysToExpireSla({ step, flowData, workflow }:CalcSlaParams) 
     }) 
   }
 }
-function calcHoursToExpireSla({ step, flowData, workflow }:CalcSlaParams) : (CalcSlaResponse | undefined) {
+function calcHoursToExpireSla({ step, flowData, workflow, exceptionDays }:CalcSlaParams) : (CalcSlaResponse | undefined) {
   try{
     if(!(step?.sla && step.sla.stay !== undefined && flowData.changed_step_at)) return;
 
     let availableHours = workflow.config?.slas?.available_hours;
-    const startDate = handleAvailableDate({ date: flowData.changed_step_at, mode: 'start', availableHours })
+
+    const startDate = handleAvailableDate({ date: flowData.changed_step_at, mode: 'start', availableHours, exceptionDays })
     const endDate = !startDate ? undefined : handleAvailableDate({
       date: new Date(),
       mode: 'end',
       availableHours,
-      startDate
+      exceptionDays,
+      startDate,
     })
-    const diffInHours = handleDiffInAvailableInterval({ startDate, endDate, availableHours });
+    const diffInHours = handleDiffInAvailableInterval({ startDate, endDate, availableHours, exceptionDays });
     
     let timeToExpireSla = diffInHours - step.sla.stay;
     
@@ -106,17 +113,18 @@ function calcHoursToExpireSla({ step, flowData, workflow }:CalcSlaParams) : (Cal
           
           if(tempDate){
             try{
-              const outherDate = handleAvailableDate({ date: tempDate, mode: 'start', availableHours });
+              const outherDate = handleAvailableDate({ date: tempDate, mode: 'start', availableHours, exceptionDays });
               const endDate = !outherDate ? undefined : handleAvailableDate({
                 date: new Date(),
                 mode: 'end',
                 availableHours,
+                exceptionDays,
                 startDate: outherDate
               }) 
 
               if(!startDate || !endDate) timeToExpireOutherFields!.push(undefined);
               else{
-                const tempDiffInHours = handleDiffInAvailableInterval({ startDate: outherDate, endDate, availableHours });
+                const tempDiffInHours = handleDiffInAvailableInterval({ startDate: outherDate, endDate, availableHours, exceptionDays });
                 timeToExpireOutherFields!.push((tempDiffInHours) * -1);
               }
             }catch(e){ timeToExpireOutherFields!.push(undefined) }
@@ -156,22 +164,49 @@ const convertHourStringInMinutes = (hourStr: string) : number => {
   const [hours, minutes] = hourStr.split(':');
   return (Number(hours) * 60) + Number(minutes);
 }
+/** Converter objeto Date para string no formato YYYY-mm-dd */
+const dateToStrYmd = (date: Date): string => [
+  date.getFullYear(),
+  String(date.getMonth() + 1).padStart(2, '0'),
+  String(date.getDate()).padStart(2, '0'),
+].join('-');
 /** Envie o startDate, apenas quando o mode === 'end' */
-function handleAvailableDate({ date, startDate, mode, availableHours }:{
+function handleAvailableDate({ date, startDate, mode, availableHours, exceptionDays }:{
   date: Date,
   startDate?: Date,
   mode: 'start' | 'end',
-  availableHours?: AvailableHoursType
+  availableHours?: AvailableHoursType,
+  exceptionDays?: ExceptionDays[]
 }) : Date | undefined {
   const parsedDate = new Date(date);
 
-  const handleRercursiveAvailableDate = ({ parsedDate, mode, availableHours }:{
-    parsedDate: Date,
-    mode: 'start' | 'end',
-    availableHours?: AvailableHoursType
-  }) : Date | undefined => {
-    if(!parsedDate) return undefined;
-    const hasAvailableHours = availableHours && Object.keys(availableHours).length > 0;
+  const hasExceptionDays = exceptionDays && exceptionDays.length > 0;
+  const hasAvailableHours = availableHours && Object.keys(availableHours).length > 0;
+
+  const handleRercursiveAvailableDate = (parsedDate: Date) : Date | undefined => {
+    if(!parsedDate) return undefined;  
+
+    if(mode === 'end' && (
+      !startDate || startDate.getTime() > parsedDate.getTime()
+    )) return undefined;
+
+    if(hasExceptionDays){
+      let targetDate = dateToStrYmd(parsedDate);
+      if(exceptionDays.some(({ date }) => date === targetDate)){
+        if(mode === 'start'){
+          parsedDate.setHours(0,0,0,0);
+          parsedDate.setDate(parsedDate.getDate() + 1);
+          return handleRercursiveAvailableDate(parsedDate);
+        }
+        else if(mode === 'end'){
+          parsedDate.setHours(23,59,59,59);
+          parsedDate.setDate(parsedDate.getDate() - 1)
+
+          if(startDate!.getTime() > parsedDate.getTime()) return undefined;
+          return handleRercursiveAvailableDate(parsedDate);
+        }   
+      }
+    }
 
     if(!hasAvailableHours) return parsedDate;
     
@@ -192,7 +227,7 @@ function handleAvailableDate({ date, startDate, mode, availableHours }:{
         if(hourInMinutes > avEndInMinutes){
           parsedDate.setHours(0,0,0,0);
           parsedDate.setDate(parsedDate.getDate() + 1);
-          return handleRercursiveAvailableDate({ parsedDate, mode, availableHours });
+          return handleRercursiveAvailableDate(parsedDate);
         }
 
         return parsedDate;
@@ -211,11 +246,10 @@ function handleAvailableDate({ date, startDate, mode, availableHours }:{
         if(nextDays >= 7) return undefined;
         parsedDate.setHours(0,0,0,0);
         parsedDate.setDate(parsedDate.getDate() + nextDays);
-        return handleRercursiveAvailableDate({ parsedDate, mode, availableHours })
+        return handleRercursiveAvailableDate(parsedDate)
       } 
     }
     else if(mode === 'end'){
-      if(!startDate || startDate.getTime() > parsedDate.getTime()) return undefined;
       if(currAvailableHours){
         let hourInMinutes = (parsedDate.getHours() * 60) + parsedDate.getMinutes();
         let avStartInMinutes = convertHourStringInMinutes(currAvailableHours[0]);
@@ -225,14 +259,14 @@ function handleAvailableDate({ date, startDate, mode, availableHours }:{
           parsedDate.setHours(23,59,59,59);
           parsedDate.setDate(parsedDate.getDate() - 1)
 
-          if(startDate.getTime() > parsedDate.getTime()) return undefined;
-          return handleRercursiveAvailableDate({ parsedDate, mode, availableHours });
+          if(startDate!.getTime() > parsedDate.getTime()) return undefined;
+          return handleRercursiveAvailableDate(parsedDate);
         }
         if(hourInMinutes > avEndInMinutes){
           let diff = hourInMinutes - avEndInMinutes;
           parsedDate.setMinutes(parsedDate.getMinutes() - diff);
 
-          if(startDate.getTime() > parsedDate.getTime()) return undefined;
+          if(startDate!.getTime() > parsedDate.getTime()) return undefined;
           return parsedDate;
         }
 
@@ -253,27 +287,27 @@ function handleAvailableDate({ date, startDate, mode, availableHours }:{
         parsedDate.setHours(23,59,59,59);
         parsedDate.setDate(parsedDate.getDate() - prevDays);
 
-        if(startDate.getTime() > parsedDate.getTime()) return undefined;
-        return handleRercursiveAvailableDate({ parsedDate, mode, availableHours })
+        if(startDate!.getTime() > parsedDate.getTime()) return undefined;
+        return handleRercursiveAvailableDate(parsedDate)
       }
     }
   
     return undefined;
   }
 
-  return handleRercursiveAvailableDate({ parsedDate, mode, availableHours });
+  return handleRercursiveAvailableDate(parsedDate);
 }
-function handleDiffInAvailableInterval({ startDate, endDate, availableHours = {} }:{
+function handleDiffInAvailableInterval({ startDate, endDate, availableHours = {}, exceptionDays }:{
   startDate?: Date,
   endDate?: Date,
-  availableHours?: AvailableHoursType
+  availableHours?: AvailableHoursType,
+  exceptionDays?: ExceptionDays[]
 }) : number {
   const oneHourInMilliseconds = 60 * 60 * 1000;
   let diffInMilliseconds = (!startDate || !endDate) ? 0 : (
     endDate.getTime() - startDate.getTime()
   );
 
-  console.log({ diffInMilliseconds })
   if(diffInMilliseconds > 0 && startDate && endDate && startDate.toDateString() !== endDate.toDateString()){
     let accumulatedInvalidMilliseconds = 0;
 
@@ -288,22 +322,36 @@ function handleDiffInAvailableInterval({ startDate, endDate, availableHours = {}
         convertHourStringInMinutes(availableHours[startWeekday]![1]) * 60 * 1000
       );
       
-      Array.from({ length: diffInDays }).forEach((_,i) => {
-        startWeekday++;
-        if(startWeekday >= 7) startWeekday = 0;
-  
-        if(!availableHours[startWeekday as keyof AvailableHoursType]) accumulatedInvalidMilliseconds+= dayInMilliseconds;
-        else{
-          accumulatedInvalidMilliseconds+= (
-            convertHourStringInMinutes(availableHours[startWeekday as keyof AvailableHoursType]![0]) * 60 * 1000
-          );
-          if(i < (diffInDays - 1)) accumulatedInvalidMilliseconds+= dayInMilliseconds - (
-            convertHourStringInMinutes(
-              availableHours[startWeekday as keyof AvailableHoursType]![1]
-            ) * 60 * 1000
-          );
-        }
-      })
+      if(diffInDays >= 1){
+        let currentDate = new Date(startDate);
+        const hasExceptionDays = exceptionDays && exceptionDays.length > 0;
+
+        Array.from({ length: diffInDays }).forEach((_,i) => {
+          startWeekday++;
+          if(startWeekday >= 7) startWeekday = 0;
+    
+          if(hasExceptionDays){
+            currentDate.setDate(currentDate.getDate() + 1);
+            let targetDate = dateToStrYmd(currentDate);
+            if(exceptionDays.some(({ date }) => date === targetDate)){
+              accumulatedInvalidMilliseconds+= dayInMilliseconds
+              return;
+            }
+          }
+          
+          if(!availableHours[startWeekday as keyof AvailableHoursType]) accumulatedInvalidMilliseconds+= dayInMilliseconds;
+          else{
+            accumulatedInvalidMilliseconds+= (
+              convertHourStringInMinutes(availableHours[startWeekday as keyof AvailableHoursType]![0]) * 60 * 1000
+            );
+            if(i < (diffInDays - 1)) accumulatedInvalidMilliseconds+= dayInMilliseconds - (
+              convertHourStringInMinutes(
+                availableHours[startWeekday as keyof AvailableHoursType]![1]
+              ) * 60 * 1000
+            );
+          }
+        })
+      }
   
       diffInMilliseconds-= accumulatedInvalidMilliseconds;
     }
