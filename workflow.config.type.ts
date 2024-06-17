@@ -575,6 +575,7 @@ export interface WorkflowTriggerType {
 }
 type AvailableTimeToNotify = 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
 export const availableTimeToNotify: AvailableTimeToNotify[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+export type AvailableHoursType = Partial<Record<0 | 1 | 2 | 3 | 4 | 5 | 6, [string, string]>>
 export interface WorkflowConfigSlasType {
   title: string,
   icon?: AvailableIcons,
@@ -596,6 +597,13 @@ export interface WorkflowConfigSlasType {
    * Por padrão -1d
    */
   show_after_from?: number,
+  /**
+   * Horas válidas para o calculo de sla (válido apenas quando sla em horas)
+   * 
+   * - key: 0 - Domingo | ... | 6 - Sábado
+   * - value: Era de inicio e fim de expediente. Exemplo ['08:00', '18:00']
+   */
+  available_hours?: AvailableHoursType
 }
 export interface WFConfigSlaNotifyType {
   subject: string,
