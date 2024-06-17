@@ -114,8 +114,11 @@ function calcHoursToExpireSla({ step, flowData, workflow }:CalcSlaParams) : (Cal
                 startDate: outherDate
               }) 
 
-              const tempDiffInHours = handleDiffInAvailableInterval({ startDate: outherDate, endDate, availableHours });
-              timeToExpireOutherFields!.push((tempDiffInHours) * -1);
+              if(!startDate || !endDate) timeToExpireOutherFields!.push(undefined);
+              else{
+                const tempDiffInHours = handleDiffInAvailableInterval({ startDate: outherDate, endDate, availableHours });
+                timeToExpireOutherFields!.push((tempDiffInHours) * -1);
+              }
             }catch(e){ timeToExpireOutherFields!.push(undefined) }
           }else timeToExpireOutherFields!.push(undefined)
         })
