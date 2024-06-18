@@ -3,7 +3,8 @@ import { AvailableHoursType } from "../workflow.config.type"
 import { WorkflowType } from "../workflow.type"
 import { getRecursiveValue } from "./recursive-datas"
 
-interface ExceptionDays{
+export interface ExceptionDays{
+  _id?: string,
   /** yyyy-mm-dd */
   date: string,
 }
@@ -165,7 +166,7 @@ const convertHourStringInMinutes = (hourStr: string) : number => {
   return (Number(hours) * 60) + Number(minutes);
 }
 /** Converter objeto Date para string no formato YYYY-mm-dd */
-const dateToStrYmd = (date: Date): string => [
+export const dateToStrYmd = (date: Date): string => [
   date.getFullYear(),
   String(date.getMonth() + 1).padStart(2, '0'),
   String(date.getDate()).padStart(2, '0'),
