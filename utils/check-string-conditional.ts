@@ -481,7 +481,7 @@ export const getCodeHelpers = (value: string, split_params = false): Array<[stri
  * será no padrão yyyy-mm-dd
  * - Pode ser passado parametros de formatação usando as nomenclaturas abaixo junto com o separador de sua \
  * escolha: 
- * ``` ['Y', 'y', 'm', 'd', 'h', 'i', 's'] ```
+ * ``` ['isostring', 'Y', 'y', 'm', 'd', 'h', 'i', 's'] ```
  * - Pode ser passado ambos os parametros, desde que a soma/subtração venha antes, e depois o parametro de \
  * formatação, usando a separação de vírgula entre os parametros. Exemplo:
  * ```__@now(-3,d/m/Y)__```
@@ -492,10 +492,11 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
   var replacer = '';
 
   //#region HELPERS
-  const chars = ['Y', 'y', 'm', 'd', 'h', 'i', 's']
+  const chars = ['isostring', 'Y', 'y', 'm', 'd', 'h', 'i', 's']
   const replaceDateChar = (p: string, value: string, date: Date) => {
     let replacer = '';
-    if (p === 'Y') replacer = String(date.getFullYear());
+    if (p === 'isostring') replacer = String(date.toISOString());
+    else if (p === 'Y') replacer = String(date.getFullYear());
     else if (p === 'y') replacer = String(date.getFullYear() - 2000);
     else if (p === 'm') replacer = String(date.getMonth() + 1).padStart(2, '0');
     else if (p === 'd') replacer = String(date.getDate()).padStart(2, '0');
