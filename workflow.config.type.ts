@@ -603,7 +603,17 @@ export interface WorkflowConfigSlasType {
    * - key: 0 - Domingo | ... | 6 - Sábado
    * - value: Era de inicio e fim de expediente. Exemplo ['08:00', '18:00']
    */
-  available_hours?: AvailableHoursType
+  available_hours?: AvailableHoursType,
+  /** 
+   * Configurar tabela de exceção de dias(como feriados, ou dias especiais \
+   * com carga horária útil fora do padrão).
+   * 
+   * Para fazer essa configuração você deve ter uma entidade dinamica que \
+   * possua no mínimo um campo data.
+   */
+  days_exception_settings?: {
+    entity_key: string,
+  }
 }
 export interface WFConfigSlaNotifyType {
   subject: string,
