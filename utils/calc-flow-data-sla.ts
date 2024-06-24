@@ -172,7 +172,7 @@ export const dateToStrYmd = (date: Date): string => [
   String(date.getDate()).padStart(2, '0'),
 ].join('-');
 /** Envie o startDate, apenas quando o mode === 'end' */
-function handleAvailableDate({ date, startDate, mode, availableHours, exceptionDays }:{
+export function handleAvailableDate({ date, startDate, mode, availableHours, exceptionDays }:{
   date: Date,
   startDate?: Date,
   mode: 'start' | 'end',
