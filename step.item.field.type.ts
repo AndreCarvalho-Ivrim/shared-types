@@ -32,6 +32,7 @@ export interface StepItemType{
   mask?: StepItemAttrMaskType,
   label?: string,
   placeholder?: string,
+  subtitle?: string,
   options?: ValueAndNameStringType[],
   defaultValue?: any;
   required?: boolean,
@@ -62,7 +63,10 @@ export interface StepItemType{
      * - [@filter-options]: Irá lidar com configurações adicionais para o options.
      */
     customRules?: string,
-    step?: number
+    step?: number,
+    /** Se for type string é um strc(string conditional) */
+    disabled?: boolean | string,
+    dynamic_value?: string
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
