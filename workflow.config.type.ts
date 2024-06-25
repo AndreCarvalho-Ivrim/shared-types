@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, ThemeColorType } from "."
+import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 
@@ -376,9 +376,10 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
      **/
     avatar?: "@creator" | "@owner" | string,
     content: (ConfigViewModeColumnsType & { available_steps?: string[] })[],
-    classNames?: { wrapper?: string }
+    classNames?: Partial<{ wrapper: string, [key: string]: string }>
   },
-  flags?: KanbanFlagType[]
+  flags?: KanbanFlagType[],
+  tasks_indicator?: { id: string, status: StepViewTasksType['status'] }[]
 }
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
