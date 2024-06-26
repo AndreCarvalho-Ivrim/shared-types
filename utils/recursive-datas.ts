@@ -21,7 +21,7 @@ export const handleRegexId = (id: string, item: { data: any }) => {
 
     var max = 50;
     do{
-      value = value.replace(toReplace, temp ?? replacer.default)
+      value = value.replace(toReplace, temp ?? replacer.default ?? '')
       max--;
       if(max === 0){
         console.error('[findedAuthTemplate->loop] O replacer repetiu mais de 20x');

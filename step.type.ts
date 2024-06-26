@@ -196,6 +196,11 @@ export interface StepType{
   }[],
   /** Válido apenas quando step.type === 'page' */
   page?: {
+    step_links?: Array<{
+      to: string,
+      tooltip?: string,
+      is_current?: boolean
+    }>,
     classNames?: {
       /** SLIDEOVER quando a página é renderizada no Executer */
       slide?: {
