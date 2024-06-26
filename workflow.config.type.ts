@@ -56,13 +56,13 @@ export interface WorkflowConfigNotificationType {
   /** Propriedade auxiliar a attachment. Com ela você faz o apontamento para o local onde terá os nomes dos anexos */
   attachment_names?: string,
   /**
-   * - [@data_creator]                Criador do flow data
-   * - [@data_owners]                 Responsáveis pelo flow data
-   * - [@wf_owner]                    Responsável pelo workflow
-   * - [@group-permission:<N>]        Apontar para usuários com base na permissão no wf
-   * - [@to:<contact1>[,<contact2>]]  Contato(s) pré-definido(s)
-   * - 'path-to-contact'              Caminho para o registro dentro do flow_data.data 
-   *                                  que contenha o contato
+   * - [@data_creator]                  Criador do flow data
+   * - [@data_owners]                   Responsáveis pelo flow data
+   * - [@wf_owner]                      Responsável pelo workflow
+   * - [@group-permission:<N>[<N>,...]] Apontar para usuários com base na(s) permissão(ões) do wf
+   * - [@to:<contact1>[,<contact2>]]    Contato(s) pré-definido(s)
+   * - 'path-to-contact'                Caminho para o registro dentro do flow_data.data que contenha 
+   *                                    o contato
    */
   target: '@data_creator' | '@data_owner' | '@wf_owner' | '@group-permission:<N>' | string,
   default_target?: string[],
