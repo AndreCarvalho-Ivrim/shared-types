@@ -901,6 +901,19 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
           });
           else returnValue = undefined;
           break;
+        case 'filterLen':
+          if(!param || param.split(',').length !== 2) throw new Error(errorRequiredParam(code));
+          else{
+            const [id, condition] = param.split(',')
+
+            const valueToFilter = getRecursiveValue(id, { data })
+            if(!Array.isArray(valueToFilter)) returnValue = 0;
+            else{
+              const filtered = valueToFilter.filter((item) => checkStringConditional(condition, item));
+              returnValue = filtered.length;
+            }
+          }
+          break;
         case 'groupByAndSum':
           if(!param) throw new Error(errorRequiredParam(code))
           
