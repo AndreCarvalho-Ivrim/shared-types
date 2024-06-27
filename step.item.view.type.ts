@@ -46,7 +46,8 @@ export interface StepViewColumnType{
    * 'true': 'Ativo' \
    * 'false': 'Inativo'
    */
-  translate?: Record<string, string>
+  translate?: Record<string, string>,
+  condition?: string,
   required?: boolean
 }
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
