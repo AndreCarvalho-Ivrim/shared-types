@@ -65,6 +65,7 @@ export interface UserCategory{
   name: string,
   description: string,
   clientId: string,
+  depth?: number
   permitions: Permition[] 
 }
 export interface Sheet{
