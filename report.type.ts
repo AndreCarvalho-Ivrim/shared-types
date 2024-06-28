@@ -22,26 +22,7 @@ export interface ReportAnalyticsSearchType{
    * - \@step_id
    * */
   columns: Record<string, string>,
-  queries?: Array<{
-    /** strc */
-    condition?: string,
-    /**
-     * Se a query for aplicada, caso break = true, ele para o \
-     * loop em queries
-     */
-    break?: boolean,
-    /**
-     * Use os shortcodes a seguir para referências dados não dinâmicos(fora do data do flowData, \
-     * ou dados gerados automaticamente no flowEntity) de um registro:
-     * 
-     *  - \@created_at : data de criação
-     *  - \@step_id : current_step_id
-     */
-    query: Record<string, string | {
-      type: WorkflowConfigFilterType['type'],
-      value: any
-    }>
-  }>
+  queries?: ReportAnalyticsSearchQuery[]
   /**
    * Se for utilizado, fará a desestruturação do array referênciado e o \
    * columns agirá em função dos dados desestruturados que agora serão \
@@ -53,6 +34,26 @@ export interface ReportAnalyticsSearchType{
    * ! Ainda não há suporte para mais de uma referência cumulativa !
    */
   cumulative?: string[]
+}
+export interface ReportAnalyticsSearchQuery{
+  /** strc */
+  condition?: string,
+  /**
+   * Se a query for aplicada, caso break = true, ele para o \
+   * loop em queries
+   */
+  break?: boolean,
+  /**
+   * Use os shortcodes a seguir para referências dados não dinâmicos(fora do data do flowData, \
+   * ou dados gerados automaticamente no flowEntity) de um registro:
+   * 
+   *  - \@created_at : data de criação
+   *  - \@step_id : current_step_id
+   */
+  query: Record<string, string | {
+    type: WorkflowConfigFilterType['type'],
+    value: any
+  }>
 }
 export interface ReportAnalyticsFormatAndOrTranslate{
   type: ReportFormatTypes,
