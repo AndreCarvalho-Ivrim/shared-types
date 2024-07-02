@@ -50,7 +50,11 @@ export interface WorkflowConfigNotificationType {
   template_id: string,
   type: 'email' | 'message',
   params: Record<string, string>,
-  replacers: Record<string, string>,
+  replacers: Record<string, string | {
+    codition?: string,
+    value: string,
+    static?: boolean
+  }[]>,
   /** Anexo, com suporte a separado por virgula para referênciar mais de uma fonte de anexo */
   attachment?: string,
   /** Propriedade auxiliar a attachment. Com ela você faz o apontamento para o local onde terá os nomes dos anexos */
