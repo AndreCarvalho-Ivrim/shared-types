@@ -81,26 +81,19 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  * - >0, <2: quando usar o operador filled, podemos usar uma expressão parecida com essa \
  * para fazer verificações de length (length maior que 0, length menor que 2)
  */
-export const checkStringConditional = (strConditional: string, datas: Record<string, any>, conditionalName = 'anonymous', currentItem?: any): boolean => {
+export const checkStringConditional = (strConditional: string, datas: Record<string, any>, conditionalName = 'anonymous'): boolean => {
   let condition: {
     type: StringConditionalTypes,
     value: string
   }[] = strConditional.split(';').filter(c => c.length > 0).map((c) => {
     let identifier = c.substring(0, 1);
-    let returnValueThis: any = null;
-    if (identifier === '@') {
-      identifier = '*';
-    }
-    
-    if (identifier === '$' && c === '$this' && currentItem)
-      returnValueThis = String(currentItem) ?? '';
     return {
       type:
         identifier === '$' ? 'prop' :
           identifier === '#' ? 'operator' :
             identifier === '*' ? 'value' :
               identifier === '&' ? 'logic' : undefined,
-      value: returnValueThis ?? c.substr(1, c.length - 1)
+      value: c.substr(1, c.length - 1)
     } as {
       type: StringConditionalTypes | undefined,
       value: string
@@ -109,7 +102,6 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     type: StringConditionalTypes,
     value: string
   }[];
-  if (currentItem) console.log(condition);
   
   if (condition.length === 0) return false;
 
@@ -273,8 +265,6 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
           operators.push(c.value);
         }
       });
-      if (currentItem)
-        console.log('values', values);
         
       if (operators.length !== 0 && (operators.length * 2) !== values.length) throw new Error(
         `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de valores e operadores não está dentro do esperado. (${strConditional})`
