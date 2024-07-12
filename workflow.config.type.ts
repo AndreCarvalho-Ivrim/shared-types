@@ -939,6 +939,10 @@ export interface WFCActionFnUpdateSelected {
    */
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
+interface UpdateMainAndSelectedAppendValues{
+  origin: 'static' | 'main' | 'selecteds',
+  value: any
+}
 export interface WFCActionFnUpdateMainAndSelected {
   type: 'update-main-and-selecteds',
   /**
@@ -947,7 +951,11 @@ export interface WFCActionFnUpdateMainAndSelected {
    * - update-and-open: Atualiza e abre o principal
    */
   effect?: 'update' | 'update-and-open',
-  confirm?: StepActionConfirmType
+  confirm?: StepActionConfirmType,
+  append_values: {
+    main: Record<string, UpdateMainAndSelectedAppendValues>,
+    selecteds: Record<string, UpdateMainAndSelectedAppendValues>
+  }
 }
 export interface WFActionFnCallTrigger {
   type: 'call-trigger',
