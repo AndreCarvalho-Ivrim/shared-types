@@ -939,6 +939,17 @@ export interface WFCActionFnUpdateSelected {
    */
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
+export interface WFCActionFnUpdateMainAndSelected {
+  type: 'update-main-and-selecteds',
+  /**
+   * O que fazer quando atualizar:
+   * - update (default): Apenas atualizar
+   * - update-and-open: Atualiza e abre o principal
+   */
+  effect?: 'update' | 'update-and-open',
+  confirm?: StepActionConfirmType,
+  action_icons: { finish: AvailableIcons, cancel: AvailableIcons }
+}
 export interface WFActionFnCallTrigger {
   type: 'call-trigger',
   target: string,
@@ -1007,8 +1018,11 @@ export interface WorkflowConfigActionsType {
    * selecionado, e geralmente ficam no filter-bar)
    * 
    * As demais são funções globais, que são geralmente localizadas no topo.
+   * 
+   * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
+   * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
