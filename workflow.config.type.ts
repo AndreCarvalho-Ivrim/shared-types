@@ -947,8 +947,7 @@ export interface WFCActionFnUpdateMainAndSelected {
    * - update-and-open: Atualiza e abre o principal
    */
   effect?: 'update' | 'update-and-open',
-  confirm?: StepActionConfirmType,
-  action_icons: { finish: AvailableIcons, cancel: AvailableIcons }
+  confirm?: StepActionConfirmType
 }
 export interface WFActionFnCallTrigger {
   type: 'call-trigger',
