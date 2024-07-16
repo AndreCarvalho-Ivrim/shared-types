@@ -94,6 +94,17 @@ export interface StepViewListType extends StepViewBaseType{
   type: 'list',
   required?: boolean
 }
+export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar'
+export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
+  'none':          'Sem máscara',
+  'alert-danger':  'Alerta Perigo (Vermelho)',
+  'alert-warning': 'Alerta Atenção (Amarelo)',
+  'alert-info':    'Alerta Informação (Azul Claro)',
+  'alert-light':   'Alerta Leve (Cinza Claro)',
+  'alert-success': 'Alerta Sucesso (Verde)',
+  'progress-bar':  'Barra de Progresso'
+}
+
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   type: 'description' | 'html',
   /**
@@ -108,7 +119,7 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
    * Para utilizar a mascara de progress-bar é necessário que no conteúdo tenha \
    * dois números separados por virgula(,)
    */
-  mask?: 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar',
+  mask?: StepViewAttrMaskType,
   rules?: {
     /** 
      * STRING CONDITIONAL

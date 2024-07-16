@@ -16,6 +16,17 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
 };
 
 export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone';
+export const stepItemAttrMaskType : Record<StepItemAttrMaskType,string> = {
+  email: 'E-mail',
+  number: 'Número',
+  money: 'Valor Monetário',
+  cpf: 'CPF',
+  cnpj: 'CNPJ',
+  'cpf-cnpj': 'CPF/CNPJ',
+  cep: 'CEP',
+  phone: 'Telefone',
+};
+
 export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info';
 export type TargetModeType = 'single' | 'multiple' | 'trigger' | 'final';
 export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
