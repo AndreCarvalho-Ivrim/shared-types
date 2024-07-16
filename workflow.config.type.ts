@@ -940,7 +940,7 @@ export interface WFCActionFnUpdateSelected {
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
 interface UpdateMainAndSelectedAppendValues{
-  origin: 'static' | 'main' | 'selecteds',
+  origin: 'static' | 'main' | 'selecteds' | 'main_data',
   value: any
 }
 export interface WFCActionFnUpdateMainAndSelected {
