@@ -939,8 +939,8 @@ export interface WFCActionFnUpdateSelected {
    */
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
-interface UpdateMainAndSelectedAppendValues{
-  origin: 'static' | 'main' | 'selecteds' | 'main_data',
+export interface UpdateMainAndSelectedAppendValues{
+  origin: 'static' | 'main' | 'selecteds',
   value: any
 }
 export interface WFCActionFnUpdateMainAndSelected {
@@ -955,7 +955,9 @@ export interface WFCActionFnUpdateMainAndSelected {
   append_values: {
     main: Record<string, UpdateMainAndSelectedAppendValues>,
     selecteds: Record<string, UpdateMainAndSelectedAppendValues>
-  }
+  },
+  /** Condicionais para decidir quais itens podem ser selecionados */
+  selectables?: string[]
 }
 export interface WFActionFnCallTrigger {
   type: 'call-trigger',
