@@ -139,5 +139,11 @@ export interface ToAffectFlowDataEventType{
       /** Fazer match por condição */
       find_by_condition?: string
     }
+  }[],
+  effects_on_this?: {
+    condition?: string,
+    /** always (default) */
+    only?: 'always' | 'success' | 'fail',
+    append_values: Record<string, any>
   }[]
 }
