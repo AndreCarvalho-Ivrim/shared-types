@@ -534,8 +534,10 @@ export interface WorkflowTriggerType {
    * \@sync-flow-datas: Sincronizar integração de dois workflows
    * 
    * \@gamification-action-log: Lidar com logs de ação em gamificação
+   * 
+   * \@observer-event: Dispara N eventos do observer apontando a condition
    */
-  name: '@sync-flow-datas' | '@gamification-action-log',
+  name: '@sync-flow-datas' | '@gamification-action-log' | '@observer-events',
   title: string,
   /** Se o evento será feito em segundo plano ou se terá resposta imediata */
   is_async: boolean,
@@ -547,6 +549,14 @@ export interface WorkflowTriggerType {
    *  {
    *    target_flow_id: "id-do-wf-de-destino",
    *    match: { "id-from-current-wf": "id-from-target-flow" }
+   *  }
+   * ```
+   * 
+   * \@observer-events \
+   * Adicione as condicionais dos eventos do observer que quer disparar
+   * ```
+   *  {
+   *    match_conditions: string[]
    *  }
    * ```
    */
@@ -931,6 +941,7 @@ export interface WFCActionFnUpdateSelected {
    */
   effect?: 'update' | 'update-and-open' | 'update-and-remove',
   append_values: Record<string, any>,
+  trigger_observer_events?: string[],
   confirm?: StepActionConfirmType,
   /**
    * O que fazer em confirmação múltipla:
@@ -962,6 +973,10 @@ export interface WFCActionFnUpdateMainAndSelected {
 export interface WFActionFnCallTrigger {
   type: 'call-trigger',
   target: string,
+  /** false (default) */
+  id_is_required?: boolean,
+  /** Este confirm não tem suporte a inserção de dados */
+  confirm?: StepActionConfirmType
 }
 export interface WFActionFnCallSingleEntity {
   type: 'call-single-entity',
