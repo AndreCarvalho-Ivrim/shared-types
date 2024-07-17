@@ -556,7 +556,7 @@ export interface WorkflowTriggerType {
    * Adicione as condicionais dos eventos do observer que quer disparar
    * ```
    *  {
-   *    match_conditions: string[]
+   *    matchs: Array<{ condition: string, name: string }>
    *  }
    * ```
    */
