@@ -534,8 +534,10 @@ export interface WorkflowTriggerType {
    * \@sync-flow-datas: Sincronizar integração de dois workflows
    * 
    * \@gamification-action-log: Lidar com logs de ação em gamificação
+   * 
+   * \@observer-event: Dispara N eventos do observer apontando a condition
    */
-  name: '@sync-flow-datas' | '@gamification-action-log',
+  name: '@sync-flow-datas' | '@gamification-action-log' | '@observer-events',
   title: string,
   /** Se o evento será feito em segundo plano ou se terá resposta imediata */
   is_async: boolean,
@@ -547,6 +549,14 @@ export interface WorkflowTriggerType {
    *  {
    *    target_flow_id: "id-do-wf-de-destino",
    *    match: { "id-from-current-wf": "id-from-target-flow" }
+   *  }
+   * ```
+   * 
+   * \@observer-events \
+   * Adicione as condicionais dos eventos do observer que quer disparar
+   * ```
+   *  {
+   *    matchs: Array<{ condition: string, name: string }>
    *  }
    * ```
    */
@@ -931,6 +941,7 @@ export interface WFCActionFnUpdateSelected {
    */
   effect?: 'update' | 'update-and-open' | 'update-and-remove',
   append_values: Record<string, any>,
+  trigger_observer_events?: string[],
   confirm?: StepActionConfirmType,
   /**
    * O que fazer em confirmação múltipla:
@@ -939,9 +950,33 @@ export interface WFCActionFnUpdateSelected {
    */
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
+export interface UpdateMainAndSelectedAppendValues{
+  origin: 'static' | 'main' | 'selecteds',
+  value: any
+}
+export interface WFCActionFnUpdateMainAndSelected {
+  type: 'update-main-and-selecteds',
+  /**
+   * O que fazer quando atualizar:
+   * - update (default): Apenas atualizar
+   * - update-and-open: Atualiza e abre o principal
+   */
+  effect?: 'update' | 'update-and-open',
+  confirm?: StepActionConfirmType,
+  append_values: {
+    main: Record<string, UpdateMainAndSelectedAppendValues>,
+    selecteds: Record<string, UpdateMainAndSelectedAppendValues>
+  },
+  /** Condicionais para decidir quais itens podem ser selecionados */
+  selectables?: string[]
+}
 export interface WFActionFnCallTrigger {
   type: 'call-trigger',
   target: string,
+  /** false (default) */
+  id_is_required?: boolean,
+  /** Este confirm não tem suporte a inserção de dados */
+  confirm?: StepActionConfirmType
 }
 export interface WFActionFnCallSingleEntity {
   type: 'call-single-entity',
@@ -1007,8 +1042,11 @@ export interface WorkflowConfigActionsType {
    * selecionado, e geralmente ficam no filter-bar)
    * 
    * As demais são funções globais, que são geralmente localizadas no topo.
+   * 
+   * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
+   * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
