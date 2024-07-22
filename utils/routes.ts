@@ -34,6 +34,9 @@ export const hubRoutes = {
     showCodeToken: (email:string) => `/esqueci-senha/${email}`,
     logout: () => '/logout',
   },
+  session: {
+    home: () => '/session'
+  },
   profile: {
     home: () => '/perfil'
   },
