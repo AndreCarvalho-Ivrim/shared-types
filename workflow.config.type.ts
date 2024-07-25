@@ -437,6 +437,7 @@ export interface WorkflowViewModeDashboardStoreGroup extends WorkflowViewModeDas
   effects: (WorkflowViewModeDashboardStoreSingle | WorkflowViewModeDashboardStoreGroup)[]
 }
 export type WorkflowViewModeDashboardStore = WorkflowViewModeDashboardStoreSingle | WorkflowViewModeDashboardStoreGroup
+export type ViewModeDashboardModuleFormattingType = 'money' | 'number' | 'point' | '@user.name';
 export interface WorkflowViewModeDashboardModuleBase{
   key: string,
   
@@ -451,11 +452,12 @@ export interface WorkflowViewModeDashboardModuleBase{
   /**
    * - point: Este formato é apenas para converter um valor RGB/Hexadecimal em uma bolinha(point)
    */
-  formatting?: Record<number, 'money' | 'number' | 'point'>,
+  formatting?: Record<number, ViewModeDashboardModuleFormattingType>,
   fn?: WorkflowViewModeDashboardFn
 }
 export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDashboardModuleBase{
   mode: 'pie-chart',
+  /** Se não forem mencionadas cores suficientes, serão geradas automaticamente */
   colors: string[],
   chart_settings?: {
     format?: { 
@@ -470,14 +472,35 @@ export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDa
     show_details?: boolean
   },
 }
+export interface WorkflowViewModeDashboardModuleGaugeBarRange{
+  title?: string,
+  subtitles?: string[],
+  /** Index de inicio da barra de gauge dentro do values */
+  start: number,
+  /** Último index da barra de gauge dentro do values, se não mencionada fará até o item final */
+  end?: number,
+  /** Hexadecimal, se não for mencionado gerará as cores dinamicamente */
+  colors?: string[]
+}
+export interface WorkflowViewModeDashboardModuleGaugeBar extends WorkflowViewModeDashboardModuleBase{
+  mode: 'gauge-bar',
+  /**
+   * Range é utilizado para montar os itens que estarão formando uma barra de gauge, \
+   * os itens que não tiverem dentro do range se comportarão como itens normais. \
+   * E cada posição do array não pode ter index conflitantes para que os ranges não \
+   * se sobreponham.
+   */
+  ranges: WorkflowViewModeDashboardModuleGaugeBarRange[]
+}
 export interface WorkflowViewModeDashboardModuleBasic extends WorkflowViewModeDashboardModuleBase{
   /**
    * - list-progress: No list-progress o último item é utilizado para gerar o progresso
    */
   mode: 'list-progress' | 'list' | 'box' | 'strong',
+  
 }
 
-export type WorkflowViewModeDashboardModuleBlock = WorkflowViewModeDashboardModuleBasic | WorkflowViewModeDashboardModuleChart;
+export type WorkflowViewModeDashboardModuleBlock = WorkflowViewModeDashboardModuleBasic | WorkflowViewModeDashboardModuleChart | WorkflowViewModeDashboardModuleGaugeBar;
 
 export interface WorkflowViewModeDashboardFn{
   name: '@count-data-by-step' | '@count' | '@flow-datas' | '@static',
