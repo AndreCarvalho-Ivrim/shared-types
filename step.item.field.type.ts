@@ -147,7 +147,15 @@ export interface StepItemCustomDataEditableTable{
     initial_value?: Record<string, any>[],
     readonly_if_fillable?: boolean,
     addable?: boolean,
-    replicate?: boolean | Record<string, string>
+    replicate?: boolean | Record<string, string>,
+    /**
+     * Função que utiliza um item múltiplo como base para gerar multiplas \
+     * linhas do editable-table, replicado os demais valores.
+     **/
+    spread_it_all?: {
+      /** Elemento que será usado como base para o spread operator */
+      target: string
+    }
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
