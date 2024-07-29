@@ -974,7 +974,7 @@ export interface WFCActionFnUpdateSelected {
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
 }
 export interface UpdateMainAndSelectedAppendValues{
-  origin: 'static' | 'main' | 'selecteds',
+  origin: 'static' | 'main' | 'selecteds' | 'this',
   value: any
 }
 export interface WFCActionFnUpdateMainAndSelected {
@@ -987,7 +987,7 @@ export interface WFCActionFnUpdateMainAndSelected {
   effect?: 'update' | 'update-and-open',
   confirm?: StepActionConfirmType,
   append_values: {
-    main: Record<string, UpdateMainAndSelectedAppendValues>,
+    main?: Record<string, UpdateMainAndSelectedAppendValues>,
     selecteds: Record<string, UpdateMainAndSelectedAppendValues>
   },
   /** Condicionais para decidir quais itens podem ser selecionados */
