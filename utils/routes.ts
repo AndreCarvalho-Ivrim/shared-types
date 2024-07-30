@@ -34,6 +34,9 @@ export const hubRoutes = {
     showCodeToken: (email:string) => `/esqueci-senha/${email}`,
     logout: () => '/logout',
   },
+  session: {
+    home: () => '/session'
+  },
   profile: {
     home: () => '/perfil'
   },
@@ -122,6 +125,7 @@ export type AvailableRegexUrls =
   '@hub:notification.all' |
   '@hub:notification.preference' |
   '@hub:notification.create' |
+  '@hub:session.home' |
   '@isac_back:public_route(flow_id,variation)'
 
 /**
