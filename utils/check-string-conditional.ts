@@ -102,7 +102,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     type: StringConditionalTypes,
     value: string
   }[];
-
+  
   if (condition.length === 0) return false;
 
   const unionConditionals: string[] = [];
@@ -228,14 +228,27 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
             getRecursiveValue(c.value, { data: datas }) ?? undefined
           );
           else if (c.type === 'value') {
-            const helpers = getCodeHelpers(c.value);
+            const helpers = getCodeHelpers(c.value, true);
             if (!helpers) values.push(c.value)
             else {
               let value = c.value;
 
-              helpers.forEach(([code, param]) => {
+              helpers.forEach(([code, param, splitParam]) => {
                 switch (code) {
                   case '@now': value = handleCodeHelper__now(value, code, param); break;
+                  case 'linearArithmetic':
+                    if(!param) throw new Error(`Erro code: ${code}`)
+                    const parsedParams: number[] = [];
+                    (splitParam ?? []).forEach(shortcode => {
+                      const valueToReplace = getRecursiveValue(shortcode, { data: datas }) ?? Number(shortcode);              
+                      parsedParams.push(valueToReplace);
+                    });
+                    value = handleCodeHelpers({
+                      chParam: param,
+                      codeHelper: code,
+                      parsedParams: parsedParams
+                    });
+                    break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
               });
@@ -252,6 +265,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
           operators.push(c.value);
         }
       });
+        
       if (operators.length !== 0 && (operators.length * 2) !== values.length) throw new Error(
         `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de valores e operadores não está dentro do esperado. (${strConditional})`
       );
