@@ -47,6 +47,12 @@ export interface WorkflowNotificationEffectType{
 export interface WorkflowConfigNotificationType {
   name: string,
   condition: string,
+  /**
+   * Caso não tenha um template personalizado, você pode usar o \
+   * \@default-notification, criado o corpo pelo parametro description \
+   * e inserindo shortcodes dentro dele para pegar dados personalizado \
+   * dos replacers.
+   */
   template_id: string,
   type: 'email' | 'message',
   params: Record<string, string>,
@@ -1084,7 +1090,7 @@ export interface WorkflowRoutinesType {
   executors: AvailableRoutinesExecutorsType[],
 }
 export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow']
-export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications
 interface WorkflowRoutinesExecutorBase {
   name: string,
   description: string,
@@ -1174,4 +1180,36 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       append: Record<string, any>
     }[]
   }
+}
+export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecutorBase {
+  type: 'make-notifications',
+  data: Array<Omit<WorkflowConfigNotificationType, 'condition'> & {
+    /** 
+     * Query de consulta do flowData seguindo padrões do mongodb. Com suporte ao \
+     * codehelper ```__@now__```. O codehelper pode ser identificado caso esteja em \
+     * alguma dessas condições:
+     * - value : string
+     * ```
+     *  query: {
+     *    'field': '__@codehelper__'
+     *  }
+     * ```
+     * - value: object, contendo uma das chaves: $lt, $lte, $gt, $gte, $in
+     * ```
+     *  query: {
+     *    'field': {
+     *       $lt: '__@codehelper__'
+     *    }
+     *  }
+     * ```
+     */
+    query: any,
+    /**
+     * Defina o nome da variável que conterá todos os flow-datas \
+     * encontrados no query.
+     * 
+     * flow-datas (default)
+     */
+    data_id?: string
+  }>
 }
