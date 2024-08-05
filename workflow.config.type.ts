@@ -987,7 +987,7 @@ export interface WFCActionFnUpdateMainAndSelected {
   effect?: 'update' | 'update-and-open',
   confirm?: StepActionConfirmType,
   append_values: {
-    main: Record<string, UpdateMainAndSelectedAppendValues>,
+    main?: Record<string, UpdateMainAndSelectedAppendValues>,
     selecteds: Record<string, UpdateMainAndSelectedAppendValues>
   },
   /** Condicionais para decidir quais itens podem ser selecionados */
