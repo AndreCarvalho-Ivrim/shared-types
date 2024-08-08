@@ -42,9 +42,12 @@ export interface IntegrationExcelType {
      * não for preenchido. No caso contrário, ignorará a linha
      */
     restrict?: boolean
+    formatter?: {
+      separator?: string,
+    }
   },
   scope: string,
-  columns?: IntegrationExcelColumnType[]
+  columns?: IntegrationExcelColumnType[],
 }
 export interface IntegrationExcelColumnType {
   id: string,
@@ -59,11 +62,7 @@ export interface IntegrationOmieType {
   label?: string,
   placeholder?: string,
   required?: boolean,
-  rules?: {
-    formatter?: {
-      separator?: string,
-    }
-  },
+  rules?: {},
   scope: string
 }
 export type IntegrationsType = IntegrationExcelType | IntegrationOmieType;
