@@ -41,11 +41,7 @@ export interface IntegrationExcelType {
      * Se restrict === true, ele disparará erro caso uma coluna required \
      * não for preenchido. No caso contrário, ignorará a linha
      */
-<<<<<<< HEAD
-    restrict?: boolean
-=======
     restrict?: boolean,
->>>>>>> 96191d7d1197553be0e48f286104fb043201382d
     formatter?: {
       separator?: string,
     }
