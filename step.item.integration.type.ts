@@ -59,7 +59,11 @@ export interface IntegrationOmieType {
   label?: string,
   placeholder?: string,
   required?: boolean,
-  rules?: {},
+  rules?: {
+    formatter?: {
+      separator?: string,
+    }
+  },
   scope: string
 }
 export type IntegrationsType = IntegrationExcelType | IntegrationOmieType;
