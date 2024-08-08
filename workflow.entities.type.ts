@@ -1,7 +1,7 @@
 import { AvailableIcons } from "./icon.type";
 import { ConfigViewModeColumnsType, WorkflowConfigObserverFnType } from "./workflow.config.type";
 
-export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any";
+export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom";
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
 export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
 export interface FlowEntitySubSchema{
@@ -58,6 +58,10 @@ export interface FlowEntitySchemaInfo{
      * ```
      */ 
     conflit?: 'overwrite' | 'merge'
+  },
+  customData?: StepItemCustomListDraggable | {
+    mode: '@list-draggable',
+    settings?: any
   }
 }
 export interface FlowEntityAssociationColumns{
@@ -158,4 +162,13 @@ export interface FlowEntityInfo{
   restrictMode?: boolean,
   created_at?: Date,
   importSheet?: FlowEntityImportSheet,
+}
+
+export interface StepItemCustomListDraggable{
+  mode: '@list-draggable',
+  settings: {
+    /** Título que aparecerá no modal */
+    title?: string,
+    initial_value?: Record<string, any>[]
+  }
 }
