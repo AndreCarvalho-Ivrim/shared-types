@@ -41,7 +41,10 @@ export interface IntegrationExcelType {
      * Se restrict === true, ele disparará erro caso uma coluna required \
      * não for preenchido. No caso contrário, ignorará a linha
      */
-    restrict?: boolean
+    restrict?: boolean,
+    formatter?: {
+      separator?: string,
+    }
   },
   scope: string,
   columns?: IntegrationExcelColumnType[]
@@ -59,11 +62,7 @@ export interface IntegrationOmieType {
   label?: string,
   placeholder?: string,
   required?: boolean,
-  rules?: {
-    formatter?: {
-      separator?: string,
-    }
-  },
+  rules?: {},
   scope: string
 }
 export type IntegrationsType = IntegrationExcelType | IntegrationOmieType;
