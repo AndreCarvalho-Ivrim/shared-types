@@ -60,6 +60,11 @@ export const hubRoutes = {
     integrations: {
       whatsapp: () => '/painel-adm/integracao-whatsapp',
     },
+    licenses: {
+      manage: () => '/painel-adm/licencas/gerenciar',
+      transaction_history: () => '/painel-adm/licencas/historico-transacoes',
+      service_available: () => '/painel-adm/licencas/servcos-disponiveis'
+    }
   },
   icon: () => '/icones',
   dashboard: {
@@ -101,6 +106,9 @@ export type AvailableRegexUrls =
   '@isac:admin_hub.workflows' |
   '@isac:public.workflow(flow_id,variation,params?)' |
   '@hub:admin_panel.companies' |
+  '@hub:admin_panel.licenses.manage' |
+  '@hub:admin_panel.licenses.transaction_history' |
+  '@hub:admin_panel.licenses.service_available' |
   '@hub:auth.login' |
   '@hub:auth.logout' |
   '@hub:profile.home' |
