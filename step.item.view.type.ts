@@ -44,7 +44,8 @@ export interface StepViewColumnType{
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
    * 'true': 'Ativo' \
-   * 'false': 'Inativo'
+   * 'false': 'Inativo' \
+   * '_default': 'Tradução caso nenhuma opção anterior dê match'
    */
   translate?: Record<string, string>,
   condition?: string,

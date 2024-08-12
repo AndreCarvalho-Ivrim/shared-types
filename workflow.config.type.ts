@@ -28,7 +28,10 @@ export interface WorkflowConfigFilterType {
    * Valor inicial de um filtro. Valores pré-definidos:
    * 
    * - \@last-few-months-until-today:{N}: Caso esteja usando o type=date você pode usar este \
-   * default value para pegar um range de data de {N}(substituir por um número) meses atrás até o dia atual.
+   * default value para pegar um range de data de {N}(substituir por um número) meses atrás \
+   * até o dia atual.
+   * - \@now: Caso esteja usando o type=date você pode usar este default value para pegar a \
+   *  data atual.
    */
   defaultValue?: any
 }
