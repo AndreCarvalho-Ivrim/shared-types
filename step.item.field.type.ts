@@ -66,7 +66,8 @@ export interface StepItemType{
     step?: number,
     /** Se for type string é um strc(string conditional) */
     disabled?: boolean | string,
-    dynamic_value?: string
+    dynamic_value?: string,
+    restrictions?:{ condition: string, message: string }[]
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],

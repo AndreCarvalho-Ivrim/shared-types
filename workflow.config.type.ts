@@ -50,6 +50,12 @@ export interface WorkflowNotificationEffectType{
 export interface WorkflowConfigNotificationType {
   name: string,
   condition: string,
+  /**
+   * Caso não tenha um template personalizado, você pode usar o \
+   * \@default-notification, criado o corpo pelo parametro description \
+   * e inserindo shortcodes dentro dele para pegar dados personalizado \
+   * dos replacers.
+   */
   template_id: string,
   type: 'email' | 'message',
   params: Record<string, string>,
@@ -440,6 +446,7 @@ export interface WorkflowViewModeDashboardStoreGroup extends WorkflowViewModeDas
   effects: (WorkflowViewModeDashboardStoreSingle | WorkflowViewModeDashboardStoreGroup)[]
 }
 export type WorkflowViewModeDashboardStore = WorkflowViewModeDashboardStoreSingle | WorkflowViewModeDashboardStoreGroup
+export type ViewModeDashboardModuleFormattingType = 'money' | 'number' | 'point' | '@user.name';
 export interface WorkflowViewModeDashboardModuleBase{
   key: string,
   
@@ -454,11 +461,12 @@ export interface WorkflowViewModeDashboardModuleBase{
   /**
    * - point: Este formato é apenas para converter um valor RGB/Hexadecimal em uma bolinha(point)
    */
-  formatting?: Record<number, 'money' | 'number' | 'point'>,
+  formatting?: Record<number, ViewModeDashboardModuleFormattingType>,
   fn?: WorkflowViewModeDashboardFn
 }
 export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDashboardModuleBase{
   mode: 'pie-chart',
+  /** Se não forem mencionadas cores suficientes, serão geradas automaticamente */
   colors: string[],
   chart_settings?: {
     format?: { 
@@ -473,14 +481,35 @@ export interface WorkflowViewModeDashboardModuleChart extends WorkflowViewModeDa
     show_details?: boolean
   },
 }
+export interface WorkflowViewModeDashboardModuleGaugeBarRange{
+  title?: string,
+  subtitles?: string[],
+  /** Index de inicio da barra de gauge dentro do values */
+  start: number,
+  /** Último index da barra de gauge dentro do values, se não mencionada fará até o item final */
+  end?: number,
+  /** Hexadecimal, se não for mencionado gerará as cores dinamicamente */
+  colors?: string[]
+}
+export interface WorkflowViewModeDashboardModuleGaugeBar extends WorkflowViewModeDashboardModuleBase{
+  mode: 'gauge-bar',
+  /**
+   * Range é utilizado para montar os itens que estarão formando uma barra de gauge, \
+   * os itens que não tiverem dentro do range se comportarão como itens normais. \
+   * E cada posição do array não pode ter index conflitantes para que os ranges não \
+   * se sobreponham.
+   */
+  ranges: WorkflowViewModeDashboardModuleGaugeBarRange[]
+}
 export interface WorkflowViewModeDashboardModuleBasic extends WorkflowViewModeDashboardModuleBase{
   /**
    * - list-progress: No list-progress o último item é utilizado para gerar o progresso
    */
   mode: 'list-progress' | 'list' | 'box' | 'strong',
+  
 }
 
-export type WorkflowViewModeDashboardModuleBlock = WorkflowViewModeDashboardModuleBasic | WorkflowViewModeDashboardModuleChart;
+export type WorkflowViewModeDashboardModuleBlock = WorkflowViewModeDashboardModuleBasic | WorkflowViewModeDashboardModuleChart | WorkflowViewModeDashboardModuleGaugeBar;
 
 export interface WorkflowViewModeDashboardFn{
   name: '@count-data-by-step' | '@count' | '@flow-datas' | '@static',
@@ -967,7 +996,7 @@ export interface WFCActionFnUpdateMainAndSelected {
   effect?: 'update' | 'update-and-open',
   confirm?: StepActionConfirmType,
   append_values: {
-    main: Record<string, UpdateMainAndSelectedAppendValues>,
+    main?: Record<string, UpdateMainAndSelectedAppendValues>,
     selecteds: Record<string, UpdateMainAndSelectedAppendValues>
   },
   /** Condicionais para decidir quais itens podem ser selecionados */
@@ -1063,8 +1092,8 @@ export interface WorkflowRoutinesType {
   },
   executors: AvailableRoutinesExecutorsType[],
 }
-export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow']
-export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow
+export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications']
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications
 interface WorkflowRoutinesExecutorBase {
   name: string,
   description: string,
@@ -1154,4 +1183,36 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       append: Record<string, any>
     }[]
   }
+}
+export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecutorBase {
+  type: 'make-notifications',
+  data: Array<Omit<WorkflowConfigNotificationType, 'condition'> & {
+    /** 
+     * Query de consulta do flowData seguindo padrões do mongodb. Com suporte ao \
+     * codehelper ```__@now__```. O codehelper pode ser identificado caso esteja em \
+     * alguma dessas condições:
+     * - value : string
+     * ```
+     *  query: {
+     *    'field': '__@codehelper__'
+     *  }
+     * ```
+     * - value: object, contendo uma das chaves: $lt, $lte, $gt, $gte, $in
+     * ```
+     *  query: {
+     *    'field': {
+     *       $lt: '__@codehelper__'
+     *    }
+     *  }
+     * ```
+     */
+    query: any,
+    /**
+     * Defina o nome da variável que conterá todos os flow-datas \
+     * encontrados no query.
+     * 
+     * flow-datas (default)
+     */
+    data_id?: string
+  }>
 }
