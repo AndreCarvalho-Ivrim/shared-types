@@ -65,6 +65,9 @@ export interface StepViewGroupTableType extends StepViewBaseType{
 }
 export interface StepViewHorizontalTableType extends Omit<StepViewGroupTableType, "type" > {
   type: 'horizontal-table',
+  split_table?: number,
+  /** true (default) */
+  has_pagination?: boolean
 }
 export interface StepViewTasksType extends StepViewBaseType{
   /**
