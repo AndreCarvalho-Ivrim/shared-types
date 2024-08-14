@@ -43,6 +43,8 @@ export interface IntegrationExcelType {
      */
     restrict?: boolean,
     formatter?: {
+      /** Index da linha onde se encontra os títulos */
+      header_index?: number,
       separator?: string,
     }
   },

@@ -8,7 +8,10 @@ interface StepViewBaseType{
   /** Título que será renderizado na tabela */
   placeholder?: string,
   /** Só funciona se houver o placeholder(titulo) */
-  is_collapsed?: boolean 
+  is_collapsed?: boolean ,
+  rules?: {
+    render?: string,
+  }
 }
 export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
