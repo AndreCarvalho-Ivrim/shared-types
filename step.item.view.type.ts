@@ -44,7 +44,8 @@ export interface StepViewColumnType{
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
    * 'true': 'Ativo' \
-   * 'false': 'Inativo'
+   * 'false': 'Inativo' \
+   * '_default': 'Tradução caso nenhuma opção anterior dê match'
    */
   translate?: Record<string, string>,
   condition?: string,
@@ -64,6 +65,9 @@ export interface StepViewGroupTableType extends StepViewBaseType{
 }
 export interface StepViewHorizontalTableType extends Omit<StepViewGroupTableType, "type" > {
   type: 'horizontal-table',
+  split_table?: number,
+  /** true (default) */
+  has_pagination?: boolean
 }
 export interface StepViewTasksType extends StepViewBaseType{
   /**
