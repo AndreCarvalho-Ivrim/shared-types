@@ -17,6 +17,11 @@ export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnT
   'cpf-cnpj': 'CPF/CNPJ'
 };
 
+export interface IntegrationExcelRulesFormatterType{
+  /** Index da linha onde se encontra os títulos */
+  header_index?: number,
+  separator?: string,
+}
 export interface IntegrationExcelType {
   key: string,
   type: 'excel',
@@ -42,11 +47,7 @@ export interface IntegrationExcelType {
      * não for preenchido. No caso contrário, ignorará a linha
      */
     restrict?: boolean,
-    formatter?: {
-      /** Index da linha onde se encontra os títulos */
-      header_index?: number,
-      separator?: string,
-    }
+    formatter?: IntegrationExcelRulesFormatterType
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
