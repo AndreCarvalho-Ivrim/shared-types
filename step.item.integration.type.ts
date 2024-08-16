@@ -51,6 +51,7 @@ export interface IntegrationExcelType {
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
+  append_values?: Record<string, any>
 }
 export interface IntegrationExcelColumnType {
   id: string,
