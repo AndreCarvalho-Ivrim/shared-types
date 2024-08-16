@@ -26,11 +26,15 @@ export interface WidgetRoutineType extends StepWidgetBaseType{
   type: 'widget-routine',
   matchs: string[]
 }
-export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType;
+export interface WidgetWorkerThread extends StepWidgetBaseType{
+  type: 'widget-worker-thread'
+}
+export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
   'widget-email': 'Email',
   'widget-whatsapp': 'Whatsapp',
   'widget-sms': 'SMS',
   'widget-chatbot': 'Chatbot',
-  'widget-routine': 'Routine'
+  'widget-routine': 'Routine',
+  'widget-worker-thread': 'Worker Thread'
 };
