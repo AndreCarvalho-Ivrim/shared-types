@@ -137,7 +137,8 @@ export interface StepTypeRules{
    * queira referência o flowData atual é necessário passar o code \
    * [$flow_data:] antes do nome da prop.
    */
-  render?: string
+  render?: string,
+  update_if_match?: string[]
 }
 export interface StepSlaType{
   /** Tempo esperado de permanência em uma etapa */
