@@ -27,7 +27,8 @@ export interface WidgetRoutineType extends StepWidgetBaseType{
   matchs: string[]
 }
 export interface WidgetWorkerThread extends StepWidgetBaseType{
-  type: 'widget-worker-thread'
+  type: 'widget-worker-thread',
+  query: any
 }
 export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
