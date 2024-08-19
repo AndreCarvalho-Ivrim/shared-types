@@ -181,7 +181,6 @@ export interface StepType{
    * requisição irá sobrescrever a anterior
    */
   cumulative_form_data?: string[],
-  worker_thread_entity?: string,
   target?: string,
   triggers?: StepTriggerType[]
   rules?: StepTypeRules,
