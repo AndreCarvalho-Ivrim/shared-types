@@ -28,7 +28,13 @@ export interface WidgetRoutineType extends StepWidgetBaseType{
 }
 export interface WidgetWorkerThread extends StepWidgetBaseType{
   type: 'widget-worker-thread',
-  query: any
+  query?: Record<string, {
+    type: 'in' | 'nin' | 'not' | 'text',
+    /** REF */
+    value: any,
+    /** Se for true, o value será um valor direto e não uma referência. */
+    static?: boolean
+  }>
 }
 export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
