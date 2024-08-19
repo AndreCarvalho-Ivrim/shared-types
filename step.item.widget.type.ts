@@ -35,7 +35,10 @@ export interface WidgetWorkerThread extends StepWidgetBaseType{
     /** Se for true, o value será um valor direto e não uma referência. */
     static?: boolean
   }>,
-  control_entity: string
+  control_entity: {
+    name: string,
+    verification_parameter: string
+  }
 }
 export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
