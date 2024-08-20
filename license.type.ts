@@ -1,8 +1,8 @@
-export type LicenseServiceType = 'widget' | 'application' | 'module';
+export type LicenseServiceType = 'WIDGET' | 'APPLICATION' | 'MODULE';
 export const translateLicenseService : Record<LicenseServiceType, string> = {
-  widget: 'Widget',
-  application: 'Aplicativo',
-  module: 'Módulo'
+  WIDGET: 'Widget',
+  APPLICATION: 'Aplicativo',
+  MODULE: 'Módulo'
 }
 export interface AvailableLicenseServiceType{
   id:             string,             
