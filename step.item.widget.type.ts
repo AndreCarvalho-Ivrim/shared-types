@@ -38,7 +38,13 @@ export interface WidgetWorkerThread extends StepWidgetBaseType{
   control_entity: {
     name: string,
     verification_parameter: string
-  }
+  },
+  effects?: {
+    /** Nomear ações para serem chamadas na função */
+    action?: string,
+    condition?: string,
+    append_values: Record<string, any>
+  }[]
 }
 export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
