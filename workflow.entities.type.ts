@@ -133,6 +133,8 @@ export interface FlowEntityInfo{
     }>,
     single?: boolean
   },
+  /** Se tiver habilitado, os dados serão salvos separadamente na tabela flowEntityData */
+  has_extensive_data?: boolean,
   observers?: {
     /** 
      * O onMultiple serve para otimizar a performance dos outros observadores \
