@@ -29,11 +29,8 @@ export interface WidgetRoutineType extends StepWidgetBaseType{
 export interface WidgetWorkerThread extends StepWidgetBaseType{
   type: 'widget-worker-thread',
   query?: Record<string, {
-    type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte',
-    /** REF */
-    value: any,
-    /** Se for true, o value será um valor direto e não uma referência. */
-    static?: boolean
+    type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte' | 'exists',
+    value?: any
   }>,
   control_entity: {
     name: string,
