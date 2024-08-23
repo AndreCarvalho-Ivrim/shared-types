@@ -26,12 +26,13 @@ export interface WidgetRoutineType extends StepWidgetBaseType{
   type: 'widget-routine',
   matchs: string[]
 }
+export type WidgetWorkerThreadQuery = Record<string, {
+  type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte' | 'exists',
+  value?: any
+}>
 export interface WidgetWorkerThread extends StepWidgetBaseType{
   type: 'widget-worker-thread',
-  query?: Record<string, {
-    type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte' | 'exists',
-    value?: any
-  }>,
+  query?: WidgetWorkerThreadQuery | Record<'$or', Array<WidgetWorkerThreadQuery>>,
   control_entity: {
     name: string,
     verification_parameter: string,
