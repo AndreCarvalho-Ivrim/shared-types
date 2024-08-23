@@ -34,7 +34,20 @@ export interface WidgetWorkerThread extends StepWidgetBaseType{
   }>,
   control_entity: {
     name: string,
-    verification_parameter: string
+    verification_parameter: string,
+    /** 
+     * Tempo máximo que a rotina pode ficar ligada.
+     * 
+     * Você pode usar essa configuração para que caso a aplicação seja encerrada
+     * inesperadamente e não tenha atualizado o status para false, o status de ativo
+     * perderá validade após um timeout.
+     */
+    timeout?: {
+      /** Tempo em minutos em que a rotina pode ficar rodando */
+      time: number,
+      /** Campo que guardará a data de último inicio */
+      ref: string
+    }
   },
   effects?: {
     /** Nomear ações para serem chamadas na função */
