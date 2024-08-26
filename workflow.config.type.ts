@@ -1156,6 +1156,16 @@ export interface WorkflowRoutinesExecuterIOmie extends WorkflowRoutinesExecutorB
     }[]
   }
 }
+export interface WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls{
+  id: '@ifm-finalize-technician-calls',
+  data: {
+    entity_keys: {
+      technicians: string,
+      logs: string,
+    }
+  }
+}
+export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls;
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
   type: 'manage-flow',
   data: {
@@ -1184,6 +1194,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       condition?: string,
       /** Se for true, irá interromper a execução a primeira ocorrência verdadeira */
       breakExec?: boolean,
+      events?: WorkflowRoutinesManageFlowEvent[]
       append: Record<string, any>
     }[]
   }
