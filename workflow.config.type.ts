@@ -857,7 +857,8 @@ export interface WorkflowConfigType {
         rule?: {
           available_steps?: string[],
           append_value?: Record<string, any>
-        }
+        },
+        append_values?: Record<string, any>
       }>,
       /**
        * Visualizações públicas são páginas abertas,
