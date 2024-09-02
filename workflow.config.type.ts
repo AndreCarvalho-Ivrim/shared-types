@@ -720,7 +720,16 @@ export interface WorkflowWebhookInfoType {
    * - url (string | required)
    * - ref (string | opcional) A ref é um identificador de referência do registro
    */          
-  props?: any
+  props?: any,
+  effects?: {
+    /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+    only: 'success' | 'error' | 'always',
+    condition?: string,
+    /** Valores que serão atualizados no flowData */
+    append_values: Record<string, any>
+    /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+    breakExec?: boolean
+  }[]
 }
 export type WorkflowWebhookType = Record<string, WorkflowWebhookInfoType>
 export interface PublicViewFlowDataType {
