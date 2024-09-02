@@ -1092,7 +1092,7 @@ export interface WorkflowConfigActionsType {
    * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
    * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnWebhook
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
@@ -1240,4 +1240,9 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
      */
     data_id?: string
   }>
+}
+
+export interface WFActionFnWebhook {
+  type: 'call-webhook',
+  webhook: string
 }
