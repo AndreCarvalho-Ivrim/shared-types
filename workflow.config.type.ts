@@ -867,7 +867,15 @@ export interface WorkflowConfigType {
           available_steps?: string[],
           append_value?: Record<string, any>
         },
-        append_values?: Record<string, any>
+        effects?: {
+          /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+          only: 'success' | 'error' | 'always',
+          condition?: string,
+          /** Valores que serão atualizados no flowData */
+          append_values: Record<string, any>
+          /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+          breakExec?: boolean
+        }[]
       }>,
       /**
        * Visualizações públicas são páginas abertas,
