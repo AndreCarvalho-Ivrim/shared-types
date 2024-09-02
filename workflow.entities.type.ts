@@ -84,7 +84,7 @@ export interface FlowEntityImportSheet{
 }
 export interface FlowEntityExportDatas{
   title: string,
-  omit_columns: Array<string>
+  omit_columns?: Array<string>
 }
 export interface FlowEntityViewModeGrid{
   type: 'grid',
