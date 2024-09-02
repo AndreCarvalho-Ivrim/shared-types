@@ -865,7 +865,9 @@ export interface WorkflowConfigType {
         schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
         rule?: {
           available_steps?: string[],
-          append_value?: Record<string, any>
+          append_value?: Record<string, any>,
+          required_find?: string[],
+          is_unique?: boolean
         },
         effects?: {
           /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
