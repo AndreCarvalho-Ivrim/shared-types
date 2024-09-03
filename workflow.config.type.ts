@@ -1262,6 +1262,7 @@ export interface WFActionFnCallExternalRequest {
     url: string,
     method: 'GET'
   },
+  auth?: AuthPublicRouteType,
   mode: 'merge',
   schema: Record<string, ExternalRequestSchema>
 }
