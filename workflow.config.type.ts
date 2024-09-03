@@ -926,6 +926,9 @@ export interface WorkflowConfigType {
   },
   rules?: WorkflowConfigRulesType[]
 }
+
+type WFIntegrationKeys = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'outhers';
+
 export interface WorkflowConfigIntegrationsType {
   email?: {
     emailFrom: string,
@@ -955,7 +958,7 @@ export interface WorkflowConfigIntegrationsType {
     data: any
   }[]
 }
-export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth;
+export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
 export interface AuthPublicRouteSimpleToken {
   /** Token criptografado e armazenado no FlowEntity */
   mode: "@simple-token",
@@ -972,6 +975,16 @@ export interface AuthPublicRouteNetworkFlowAuth {
   props: {
     /** path do id do flowAuth, dentro do wf atual */
     external_id: string
+  }
+}
+
+export interface AuthIntegrationRoute {
+  mode: '@integration',
+  type: WFIntegrationKeys,
+  outher_key?: string,
+  auth_mode: 'token',
+  props: {
+    token: string
   }
 }
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
