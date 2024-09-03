@@ -721,6 +721,7 @@ export interface WorkflowWebhookInfoType {
    * - ref (string | opcional) A ref é um identificador de referência do registro
    */          
   props?: any,
+  auth?: AuthPublicRouteType,
   effects?: {
     /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
     only: 'success' | 'error' | 'always',
