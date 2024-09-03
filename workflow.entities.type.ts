@@ -82,6 +82,10 @@ export interface FlowEntityImportSheet{
    */
   insert_mode?: 'append' | 'prepend'
 }
+export interface FlowEntityExportDatas{
+  title: string,
+  omit_columns?: Array<string>
+}
 export interface FlowEntityViewModeGrid{
   type: 'grid',
   className?: string,
@@ -164,6 +168,7 @@ export interface FlowEntityInfo{
   restrictMode?: boolean,
   created_at?: Date,
   importSheet?: FlowEntityImportSheet,
+  exportDatas?: Array<FlowEntityExportDatas>,
 }
 
 export interface StepItemCustomListDraggable{
