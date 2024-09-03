@@ -879,7 +879,7 @@ export interface WorkflowConfigType {
           /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
           breakExec?: boolean
         }[],
-        use_observer: boolean
+        use_observer?: boolean
       }>,
       /**
        * Visualizações públicas são páginas abertas,
