@@ -179,3 +179,9 @@ export interface StepItemCustomListDraggable{
     initial_value?: Record<string, any>[]
   }
 }
+
+export interface ExternalRequestSchema{
+  name: string,
+  type: FlowEntitySchemaTypes,
+  required?: boolean
+}

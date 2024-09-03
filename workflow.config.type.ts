@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
+import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 
@@ -720,7 +720,17 @@ export interface WorkflowWebhookInfoType {
    * - url (string | required)
    * - ref (string | opcional) A ref é um identificador de referência do registro
    */          
-  props?: any
+  props?: any,
+  auth?: AuthPublicRouteType,
+  effects?: {
+    /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+    only: 'success' | 'error' | 'always',
+    condition?: string,
+    /** Valores que serão atualizados no flowData */
+    append_values: Record<string, any>
+    /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+    breakExec?: boolean
+  }[]
 }
 export type WorkflowWebhookType = Record<string, WorkflowWebhookInfoType>
 export interface PublicViewFlowDataType {
@@ -856,8 +866,19 @@ export interface WorkflowConfigType {
         schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
         rule?: {
           available_steps?: string[],
-          append_value?: Record<string, any>
-        }
+          append_value?: Record<string, any>,
+          required_find?: string[],
+          is_unique?: boolean
+        },
+        effects?: {
+          /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+          only: 'success' | 'error' | 'always',
+          condition?: string,
+          /** Valores que serão atualizados no flowData */
+          append_values: Record<string, any>
+          /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+          breakExec?: boolean
+        }[]
       }>,
       /**
        * Visualizações públicas são páginas abertas,
@@ -905,6 +926,9 @@ export interface WorkflowConfigType {
   },
   rules?: WorkflowConfigRulesType[]
 }
+
+type WFIntegrationKeys = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'outhers';
+
 export interface WorkflowConfigIntegrationsType {
   email?: {
     emailFrom: string,
@@ -934,7 +958,7 @@ export interface WorkflowConfigIntegrationsType {
     data: any
   }[]
 }
-export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth;
+export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
 export interface AuthPublicRouteSimpleToken {
   /** Token criptografado e armazenado no FlowEntity */
   mode: "@simple-token",
@@ -951,6 +975,16 @@ export interface AuthPublicRouteNetworkFlowAuth {
   props: {
     /** path do id do flowAuth, dentro do wf atual */
     external_id: string
+  }
+}
+
+export interface AuthIntegrationRoute {
+  mode: '@integration',
+  type: WFIntegrationKeys,
+  outher_key?: string,
+  auth_mode: 'token',
+  props: {
+    token: string
   }
 }
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
@@ -1082,7 +1116,7 @@ export interface WorkflowConfigActionsType {
    * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
    * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
@@ -1230,4 +1264,27 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
      */
     data_id?: string
   }>
+}
+export interface WFActionFnCallWebhook {
+  type: 'call-webhook',
+  webhook: string
+}
+export interface WFActionFnCallExternalRequest {
+  type: 'call-external-request',
+  props: {
+    url: string,
+    method: 'GET'
+  },
+  auth?: AuthPublicRouteType,
+  mode: 'merge',
+  schema: Record<string, ExternalRequestSchema>,
+  effects?: {
+    /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+    only: 'success' | 'error' | 'always',
+    condition?: string,
+    /** Valores que serão atualizados no flowData */
+    append_values: Record<string, any>
+    /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+    breakExec?: boolean
+  }[]
 }
