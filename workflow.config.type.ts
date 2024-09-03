@@ -1264,5 +1264,14 @@ export interface WFActionFnCallExternalRequest {
   },
   auth?: AuthPublicRouteType,
   mode: 'merge',
-  schema: Record<string, ExternalRequestSchema>
+  schema: Record<string, ExternalRequestSchema>,
+  effects?: {
+    /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+    only: 'success' | 'error' | 'always',
+    condition?: string,
+    /** Valores que serão atualizados no flowData */
+    append_values: Record<string, any>
+    /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+    breakExec?: boolean
+  }[]
 }
