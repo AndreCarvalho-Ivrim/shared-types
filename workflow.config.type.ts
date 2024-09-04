@@ -838,8 +838,20 @@ export interface WorkflowConfigType {
          * ```
          * { id: '~path.id' }
          * ```
-         * 
+         *
          * Desse jeito fará a pesquisa parcial case insensitive.
+         *  
+         * Também é possível fazer pesquisar por range, para utilizar basta \
+         * iniciar o valor com <>, e dessa forma, você precisará de dois query \
+         * params para representar esse campo, um contendo o prefixo *start_* e \
+         * outro *end_*. Ex:
+         * 
+         * ```
+         * { date: '<>path.date' }
+         * 
+         * <url>?start_date=...&end_date=...
+         * ```
+         
          */
         available_query_params?: Record<string, string>,
         order_by?: Record<string, 'desc' | 'asc'>,
