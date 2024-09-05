@@ -4,8 +4,8 @@ export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   omie: 'Integração c/ Omie'
 };
 
-export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
-export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj'];
+export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj' | 'time';
+export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj', 'time'];
 export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnTypeType, string> = {
   text: 'Texto',
   date: 'Data',
@@ -14,6 +14,7 @@ export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnT
   percent: 'Percentual',
   money: 'Moeda',
   number: 'Numérico',
+  time: 'Hora',
   'cpf-cnpj': 'CPF/CNPJ'
 };
 
