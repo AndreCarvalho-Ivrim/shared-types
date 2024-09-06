@@ -64,7 +64,8 @@ export interface FlowEntitySchemaInfo{
     settings?: any
   },
   rules?: {
-    render?: string
+    render?: string,
+    min?: number
   },
   observer?: boolean
 }
