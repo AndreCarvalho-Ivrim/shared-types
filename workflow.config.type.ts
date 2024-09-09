@@ -940,12 +940,18 @@ export interface WorkflowConfigType {
   flow_alerts?: WorkflowConfigFlowAlert[]
 }
 export interface WorkflowConfigFlowAlert{
+  key: string,
   title: string,
   subtitle?: string,
   /** Se o valor for string se refere a uma strc, caso o contrário será considerado valor default */
   status: Partial<Record<(
     'danger' | 'warning' | 'success' | 'info'  | 'light'
   ), string | true>>,
+  fn?: {
+    listening?: { condition?: string },
+    request: 'flow-entity',
+    data?: { entity_key: string }
+  },
   body: WorkflowConfigFlowAlertItem[]
 }
 export interface WorkflowConfigFlowAlertItem{
