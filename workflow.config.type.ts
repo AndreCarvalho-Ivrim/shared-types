@@ -936,7 +936,26 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   },
-  rules?: WorkflowConfigRulesType[]
+  rules?: WorkflowConfigRulesType[],
+  flow_alerts?: WorkflowConfigFlowAlert[]
+}
+export interface WorkflowConfigFlowAlert{
+  title: string,
+  subtitle?: string,
+  /** Se o valor for string se refere a uma strc, caso o contrário será considerado valor default */
+  status: Partial<Record<(
+    'danger' | 'warning' | 'success' | 'info'  | 'light'
+  ), string | true>>,
+  body: WorkflowConfigFlowAlertItem[]
+}
+export interface WorkflowConfigFlowAlertItem{
+  type: 'div' | 'strong' | 'span',
+  condition?: string,
+  className?: string,
+  value?: string,
+  static?: boolean,
+  /** Válido apenas, quando type = 'div' */
+  items?: WorkflowConfigFlowAlertItem[]
 }
 
 type WFIntegrationKeys = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'outhers';
