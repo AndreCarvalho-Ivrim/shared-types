@@ -1,7 +1,7 @@
 import { AvailableIcons } from "./icon.type";
 import { ConfigViewModeColumnsType, WorkflowConfigObserverFnType } from "./workflow.config.type";
 
-export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom";
+export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom" | 'time';
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
 export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
 export interface FlowEntitySubSchema{
@@ -62,7 +62,12 @@ export interface FlowEntitySchemaInfo{
   customData?: StepItemCustomListDraggable | {
     mode: '@list-draggable',
     settings?: any
-  }
+  },
+  rules?: {
+    render?: string,
+    min?: number
+  },
+  observer?: boolean
 }
 export interface FlowEntityAssociationColumns{
   name: string,

@@ -838,8 +838,20 @@ export interface WorkflowConfigType {
          * ```
          * { id: '~path.id' }
          * ```
-         * 
+         *
          * Desse jeito fará a pesquisa parcial case insensitive.
+         *  
+         * Também é possível fazer pesquisar por range, para utilizar basta \
+         * iniciar o valor com <>, e dessa forma, você precisará de dois query \
+         * params para representar esse campo, um contendo o prefixo *start_* e \
+         * outro *end_*. Ex:
+         * 
+         * ```
+         * { date: '<>path.date' }
+         * 
+         * <url>?start_date=...&end_date=...
+         * ```
+         
          */
         available_query_params?: Record<string, string>,
         order_by?: Record<string, 'desc' | 'asc'>,
@@ -924,7 +936,47 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   },
-  rules?: WorkflowConfigRulesType[]
+  rules?: WorkflowConfigRulesType[],
+  flow_alerts?: WorkflowConfigFlowAlert[]
+}
+export interface WorkflowConfigFlowAlert{
+  key: string,
+  title: string,
+  subtitle?: string,
+  /** Se o valor for string se refere a uma strc, caso o contrário será considerado valor default */
+  status: Partial<Record<(
+    'danger' | 'warning' | 'success' | 'info'  | 'light'
+  ), string | true>>,
+  fn?: WorkflowConfigFlowAlertFn,
+  tooltip?: {
+    condition?: string,
+    /** 
+     * Possui suporte a shortcodes e é possível usar máscara de formatação de data usando ':'. Exemplo:
+     * 
+     * `@[created_at:date]`
+     */
+    content: string
+  }[],
+  body: WorkflowConfigFlowAlertItem[]
+}
+export interface WorkflowConfigFlowAlertFn{
+  listening?: { condition: string },
+  request: 'flow-entity',
+  data: { entity_key: string }
+}
+export interface WorkflowConfigFlowAlertItem{
+  type: 'div' | 'strong' | 'span',
+  condition?: string,
+  className?: string,
+  /** 
+   * Quando valor não estático(static) é possível passar máscara de formatação de data usando ':'. Exemplo:
+   * 
+   * `updated_at:date`
+   */
+  value?: string,
+  static?: boolean,
+  /** Válido apenas, quando type = 'div' */
+  items?: WorkflowConfigFlowAlertItem[]
 }
 
 type WFIntegrationKeys = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'outhers';
