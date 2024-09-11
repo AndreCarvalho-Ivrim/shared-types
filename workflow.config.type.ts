@@ -957,7 +957,25 @@ export interface WorkflowConfigFlowAlert{
      */
     content: string
   }[],
-  body: WorkflowConfigFlowAlertItem[]
+  body: WorkflowConfigFlowAlertItem[],
+  transitions?: {
+    /**
+     * strc, com os valores antigos dentro da prop old, e os valores novos na prop new. Exemplo da \
+     * transição de status de true para false:
+     * 
+     * `$old.status;#eq;*true;&and;$new.status;#eq;*false`
+     */
+    condition: string,
+    toast?: {
+      type: 'success' | 'error' | 'warning' | 'info',
+      content: string
+    },
+    effects?: Partial<Record<AvailableTriggerEffects, boolean | {
+      /** Condition baseado apenas no novo registro */
+      condition: string,
+      [key: string]: any
+    }>>,
+  }[]
 }
 export interface WorkflowConfigFlowAlertFn{
   listening?: { condition: string },
