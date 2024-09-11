@@ -1094,7 +1094,11 @@ export interface WFActionFnCallTrigger {
   /** false (default) */
   id_is_required?: boolean,
   /** Este confirm não tem suporte a inserção de dados */
-  confirm?: StepActionConfirmType
+  confirm?: StepActionConfirmType,
+  effects?: Partial<Record<AvailableTriggerEffects, boolean | {
+    condition: string,
+    [key: string]: any
+  }>>,
 }
 export interface WFActionFnCallSingleEntity {
   type: 'call-single-entity',
