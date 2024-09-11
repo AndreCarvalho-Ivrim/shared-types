@@ -1185,6 +1185,8 @@ export interface WorkflowRoutinesType {
 export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications']
 export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications
 interface WorkflowRoutinesExecutorBase {
+  /** Utilizada para a rotina poder ser chamada por outros lugares */
+  key?: string,
   name: string,
   description: string,
   last_executed_in?: Date,
