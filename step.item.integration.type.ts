@@ -52,7 +52,9 @@ export interface IntegrationExcelType {
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
-  append_values?: Record<string, any>
+  append_values?: Record<string, any>,
+  /** URL do template de importação para download */
+  model_url?: string
 }
 export interface IntegrationExcelColumnType {
   id: string,

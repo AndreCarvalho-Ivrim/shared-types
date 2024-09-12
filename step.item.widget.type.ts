@@ -1,3 +1,5 @@
+import { ItemOrViewOrWidgetOrIntegration } from "."
+
 interface StepWidgetBaseType{
   key: string,
   mode: 'widget',  
@@ -55,7 +57,8 @@ export interface WidgetWorkerThread extends StepWidgetBaseType{
     action?: string,
     condition?: string,
     append_values: Record<string, any>
-  }[]
+  }[],
+  items?: ItemOrViewOrWidgetOrIntegration[]
 }
 export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
