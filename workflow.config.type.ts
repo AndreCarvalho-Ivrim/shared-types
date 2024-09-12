@@ -369,7 +369,18 @@ export interface KanbanFlagType{
   condition: string,
   type: ThemeColorType,
   availableSteps?: string[],
-  /** Um caracter que será mostrado na flag */
+  /**
+   * Um caracter que será mostrado na flag. Se usar o sufixo :number após uma variável, ao atingir \
+   * números maiores que 9 a flag mostrará o simbolo de +.
+   * 
+   * Exemplo:
+   * 
+   * subtitle: '@[counter]:number'
+   * 
+   * counter = 1, mostrará 1 \
+   * counter > 9, mostrará + 
+   *
+   */
   subtitle?: string,
   tooltip?: string
 }
@@ -957,7 +968,25 @@ export interface WorkflowConfigFlowAlert{
      */
     content: string
   }[],
-  body: WorkflowConfigFlowAlertItem[]
+  body: WorkflowConfigFlowAlertItem[],
+  transitions?: {
+    /**
+     * strc, com os valores antigos dentro da prop old, e os valores novos na prop new. Exemplo da \
+     * transição de status de true para false:
+     * 
+     * `$old.status;#eq;*true;&and;$new.status;#eq;*false`
+     */
+    condition: string,
+    toast?: {
+      type: 'success' | 'error' | 'warning' | 'info',
+      content: string
+    },
+    effects?: Partial<Record<AvailableTriggerEffects, boolean | {
+      /** Condition baseado apenas no novo registro */
+      condition: string,
+      [key: string]: any
+    }>>,
+  }[]
 }
 export interface WorkflowConfigFlowAlertFn{
   listening?: { condition: string },
@@ -1094,7 +1123,11 @@ export interface WFActionFnCallTrigger {
   /** false (default) */
   id_is_required?: boolean,
   /** Este confirm não tem suporte a inserção de dados */
-  confirm?: StepActionConfirmType
+  confirm?: StepActionConfirmType,
+  effects?: Partial<Record<AvailableTriggerEffects, boolean | {
+    condition: string,
+    [key: string]: any
+  }>>,
 }
 export interface WFActionFnCallSingleEntity {
   type: 'call-single-entity',
@@ -1168,7 +1201,13 @@ export interface WorkflowConfigActionsType {
    * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
    * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest,
+  group_buttons?: WorkflowConfigActionsGroupButtons
+}
+export interface WorkflowConfigActionsGroupButtons{
+  id: string,
+  alt: string,
+  icon?: AvailableIcons,
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
@@ -1185,6 +1224,8 @@ export interface WorkflowRoutinesType {
 export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications']
 export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications
 interface WorkflowRoutinesExecutorBase {
+  /** Utilizada para a rotina poder ser chamada por outros lugares */
+  key?: string,
   name: string,
   description: string,
   last_executed_in?: Date,
