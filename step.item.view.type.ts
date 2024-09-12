@@ -52,7 +52,8 @@ export interface StepViewColumnType{
    */
   translate?: Record<string, string>,
   condition?: string,
-  required?: boolean
+  required?: boolean,
+  permission_to_view?: string
 }
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
 export interface StepViewTableType extends StepViewBaseType{
