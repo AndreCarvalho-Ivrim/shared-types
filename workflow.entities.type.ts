@@ -174,6 +174,24 @@ export interface FlowEntityInfo{
   created_at?: Date,
   importSheet?: FlowEntityImportSheet,
   exportDatas?: Array<FlowEntityExportDatas>,
+  publicRoutes?: {
+    post?: Record<string, {
+      /** Escopo de alteração dentro do objeto flow_data.data */
+      scope?: string,
+      /** Se não for informado trará o flow_data.data completo */
+      body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
+      /** 
+       * É utilizado apenas quando a requisição inclui find.
+       * 
+       * - [merge] Mascla os dados com o do registro encontrado
+       * - [overwrite] Sobrescreve os dados do registro encontrado
+       */
+      mode?: 'merge' | 'overwrite',
+      /** Se for true, desabilita a funcionalidade find */
+      only_creation?: boolean,
+      schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>
+    }>
+  },
 }
 
 export interface StepItemCustomListDraggable{
