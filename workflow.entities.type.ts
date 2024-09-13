@@ -205,6 +205,7 @@ export interface FlowEntityInfo{
   created_at?: Date,
   importSheet?: FlowEntityImportSheet,
   exportDatas?: Array<FlowEntityExportDatas>,
+  is_public?: boolean
 }
 
 export interface StepItemCustomListDraggable{
