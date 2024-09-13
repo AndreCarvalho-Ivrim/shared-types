@@ -65,7 +65,8 @@ export interface FlowEntitySchemaInfo{
   },
   rules?: {
     render?: string,
-    min?: number
+    min?: number,
+    hidden?: 'visualization' | 'edition'
   },
   observer?: boolean
 }
@@ -167,7 +168,15 @@ export interface FlowEntityInfo{
     create?: string,
     delete?: string,
     update?: string,
-    select?: string
+    select?: string,
+    export?: {
+      /** 
+       * permission: Permissão
+       * allowed_columns: Colunas que somente essa permissão tera acesso
+      */
+      permission: string,
+      allowed_columns: string[]
+    }
   },
   /** default = true */
   restrictMode?: boolean,

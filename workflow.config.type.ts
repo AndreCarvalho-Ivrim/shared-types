@@ -369,7 +369,18 @@ export interface KanbanFlagType{
   condition: string,
   type: ThemeColorType,
   availableSteps?: string[],
-  /** Um caracter que será mostrado na flag */
+  /**
+   * Um caracter que será mostrado na flag. Se usar o sufixo :number após uma variável, ao atingir \
+   * números maiores que 9 a flag mostrará o simbolo de +.
+   * 
+   * Exemplo:
+   * 
+   * subtitle: '@[counter]:number'
+   * 
+   * counter = 1, mostrará 1 \
+   * counter > 9, mostrará + 
+   *
+   */
   subtitle?: string,
   tooltip?: string
 }
