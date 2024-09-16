@@ -63,7 +63,7 @@ export const hubRoutes = {
     licenses: {
       manage: () => '/painel-adm/licencas/gerenciar',
       transaction_history: () => '/painel-adm/licencas/historico-transacoes',
-      service_available: () => '/painel-adm/licencas/servcos-disponiveis'
+      service_available: () => '/painel-adm/licencas/servicos-disponiveis'
     }
   },
   icon: () => '/icones',
