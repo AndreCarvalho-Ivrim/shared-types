@@ -54,7 +54,7 @@ export interface StepTypeRuleRedirect{
   action_permission?: string,
   confirm?: StepActionConfirmType,
 }
-export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open' | 'redirect-to-step-if-successful', boolean | {
+export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open' | 'redirect-to-step-if-successful' | 'enable-flow-alert-listeners', boolean | {
   condition?: string,
   [key: string]: any
 }>>
@@ -102,6 +102,9 @@ export interface StepTypeRules{
    * para autocomplete
    * 
    * - [redirect-to-step-if-successful]: Redirecionar para uma determinada etapa se a requisição for bem sucedida.
+   * 
+   * - [enable-flow-alert-listeners]: Ativa o listener de um ou mais alertas do workflow. Para este efeito é 
+   * obrigatório informar a prop keys no objeto de configuração com a chave dos alerts que quer habilitar
    * */
   effects?: StepTypeRulesEffects,
   /**
@@ -137,7 +140,9 @@ export interface StepTypeRules{
    * queira referência o flowData atual é necessário passar o code \
    * [$flow_data:] antes do nome da prop.
    */
-  render?: string
+  render?: string,
+  /** Utilizado para ter o funcionamento de createOrUpdate baseado nos dados de cadastro. */
+  update_if_match?: { match: string[] }
 }
 export interface StepSlaType{
   /** Tempo esperado de permanência em uma etapa */

@@ -4,8 +4,8 @@ export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   omie: 'Integração c/ Omie'
 };
 
-export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
-export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj'];
+export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj' | 'time';
+export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj', 'time'];
 export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnTypeType, string> = {
   text: 'Texto',
   date: 'Data',
@@ -14,9 +14,15 @@ export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnT
   percent: 'Percentual',
   money: 'Moeda',
   number: 'Numérico',
+  time: 'Hora',
   'cpf-cnpj': 'CPF/CNPJ'
 };
 
+export interface IntegrationExcelRulesFormatterType{
+  /** Index da linha onde se encontra os títulos */
+  header_index?: number,
+  separator?: string,
+}
 export interface IntegrationExcelType {
   key: string,
   type: 'excel',
@@ -42,12 +48,13 @@ export interface IntegrationExcelType {
      * não for preenchido. No caso contrário, ignorará a linha
      */
     restrict?: boolean,
-    formatter?: {
-      separator?: string,
-    }
+    formatter?: IntegrationExcelRulesFormatterType
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
+  append_values?: Record<string, any>,
+  /** URL do template de importação para download */
+  model_url?: string
 }
 export interface IntegrationExcelColumnType {
   id: string,

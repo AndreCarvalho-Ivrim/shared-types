@@ -1,7 +1,7 @@
 import { AvailableIcons } from "./icon.type";
-import { ConfigViewModeColumnsType, WorkflowConfigObserverFnType } from "./workflow.config.type";
+import { WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
 
-export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any";
+export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom" | 'time';
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
 export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
 export interface FlowEntitySubSchema{
@@ -58,7 +58,17 @@ export interface FlowEntitySchemaInfo{
      * ```
      */ 
     conflit?: 'overwrite' | 'merge'
-  }
+  },
+  customData?: StepItemCustomListDraggable | {
+    mode: '@list-draggable',
+    settings?: any
+  },
+  rules?: {
+    render?: string,
+    min?: number,
+    hidden?: 'visualization' | 'edition'
+  },
+  observer?: boolean
 }
 export interface FlowEntityAssociationColumns{
   name: string,
@@ -78,13 +88,39 @@ export interface FlowEntityImportSheet{
    */
   insert_mode?: 'append' | 'prepend'
 }
+export interface FlowEntityExportDatas{
+  title: string,
+  omit_columns?: Array<string>
+}
 export interface FlowEntityViewModeGrid{
   type: 'grid',
-  className?: string,
+  classNames: {
+    /** Div que defini o grid */
+    main?: string,
+    wrapper?: string,
+    image?: string,
+    title?: string,
+    tbody?: string,
+    tr?: string,
+    /**
+     * Para cada item dinâmico poderá ser passado o id do item,
+     * e a classe respectiva.
+     */
+    dynamic_contents?: Record<string, string>
+  },
   resume: {
-    picture: string,
+    picture?: string,
     title: string,
-    content: ConfigViewModeColumnsType[]
+    /**
+     * O content utiliza as configurações do schema para renderizar \
+     * a sua coluna.
+     */
+    content?: string[],
+    /**
+     * O dynamic_content permite construir layouts personalizados para renderizar \
+     * seus dados.
+     */
+    dynamic_content: WorkflowViewModeDashboardModuleBlock[]
   }
 }
 export type AvailableFlowEntityViewModes = FlowEntityViewModeGrid
@@ -129,6 +165,8 @@ export interface FlowEntityInfo{
     }>,
     single?: boolean
   },
+  /** Se tiver habilitado, os dados serão salvos separadamente na tabela flowEntityData */
+  has_extensive_data?: boolean,
   observers?: {
     /** 
      * O onMultiple serve para otimizar a performance dos outros observadores \
@@ -152,10 +190,35 @@ export interface FlowEntityInfo{
     create?: string,
     delete?: string,
     update?: string,
-    select?: string
+    select?: string,
+    export?: {
+      /** 
+       * permission: Permissão
+       * allowed_columns: Colunas que somente essa permissão tera acesso
+      */
+      permission: string,
+      allowed_columns: string[]
+    }
   },
   /** default = true */
   restrictMode?: boolean,
   created_at?: Date,
   importSheet?: FlowEntityImportSheet,
+  exportDatas?: Array<FlowEntityExportDatas>,
+  is_public?: boolean
+}
+
+export interface StepItemCustomListDraggable{
+  mode: '@list-draggable',
+  settings: {
+    /** Título que aparecerá no modal */
+    title?: string,
+    initial_value?: Record<string, any>[]
+  }
+}
+
+export interface ExternalRequestSchema{
+  name: string,
+  type: FlowEntitySchemaTypes,
+  required?: boolean
 }

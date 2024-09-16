@@ -51,7 +51,10 @@ export interface StepItemType{
     render?: string,
     /**
      * AVAILABLE CUSTOM RULES\n
-     * - [ignore]: Irá ignorar o campo na hora de salvar(só existe para controle de layout[geralmente usado em renderização condicional]), ou pesquisar
+     * - [ignore]: Irá ignorar o campo na hora de salvar(só existe para controle de layout[geralmente usado em renderização \
+     * condicional]), ou pesquisar
+     * - [omit-if-empty]: Essa configuração é valida para campos select, geralmente quando utilizam conditional options ou \
+     * autocomplete, para que o campo seja omitido caso não haja nenhuma opção válida.
      * 
      * As regras abaixo só funcionam quando o Step.rule.customRule === '@find'
      * - [@find:select-unique (default)]: Irá usar este campo para pesquisa exata, e retornará apenas 1 resultado
@@ -148,7 +151,15 @@ export interface StepItemCustomDataEditableTable{
     initial_value?: Record<string, any>[],
     readonly_if_fillable?: boolean,
     addable?: boolean,
-    replicate?: boolean | Record<string, string>
+    replicate?: boolean | Record<string, string>,
+    /**
+     * Função que utiliza um item múltiplo como base para gerar multiplas \
+     * linhas do editable-table, replicado os demais valores.
+     **/
+    spread_it_all?: {
+      /** Elemento que será usado como base para o spread operator */
+      target: string
+    }
   }
 }
 export interface StepItemCustomDataCepAutocomplete{

@@ -8,7 +8,10 @@ interface StepViewBaseType{
   /** Título que será renderizado na tabela */
   placeholder?: string,
   /** Só funciona se houver o placeholder(titulo) */
-  is_collapsed?: boolean 
+  is_collapsed?: boolean ,
+  rules?: {
+    render?: string,
+  }
 }
 export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
@@ -26,16 +29,23 @@ export interface StepViewColumnType{
   /** 
    * ID com shortcodes para replace \
    * Exemplo: \
+   * ```
    * id_1 = 8 | id_2 = 10
    * 
-   * definição: \@[id_1]/@[id_2] \
+   * definição: \@[id_1]/@[id_2]
    * resultado: 8/10
    * 
-   * Também pode ser definido um valor padrão usando pipe(|) \
+   * Também pode ser definido um valor padrão usando pipe(|)
    * id_1 = undefined | id_2 = 10
    * 
-   * definição: \@[id_1|0]/@[id_2] \
+   * definição: \@[id_1|0]/@[id_2] 
    * resultado: 0/10
+   * ```
+   * 
+   * Também podem ser utilizados codehelpers, como:
+   * 
+   * - \@days-to-now:id: Aponta para uma data e faz o calculo de quantos dias se passaram dessa data
+   * 
    */
   id: string, 
   name: string,
@@ -44,11 +54,13 @@ export interface StepViewColumnType{
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
    * 'true': 'Ativo' \
-   * 'false': 'Inativo'
+   * 'false': 'Inativo' \
+   * '_default': 'Tradução caso nenhuma opção anterior dê match'
    */
   translate?: Record<string, string>,
   condition?: string,
-  required?: boolean
+  required?: boolean,
+  permission_to_view?: string
 }
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
 export interface StepViewTableType extends StepViewBaseType{
@@ -64,6 +76,9 @@ export interface StepViewGroupTableType extends StepViewBaseType{
 }
 export interface StepViewHorizontalTableType extends Omit<StepViewGroupTableType, "type" > {
   type: 'horizontal-table',
+  split_table?: number,
+  /** true (default) */
+  has_pagination?: boolean
 }
 export interface StepViewTasksType extends StepViewBaseType{
   /**

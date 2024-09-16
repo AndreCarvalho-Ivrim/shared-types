@@ -1,4 +1,4 @@
-import { FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
+import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 
@@ -28,7 +28,10 @@ export interface WorkflowConfigFilterType {
    * Valor inicial de um filtro. Valores pré-definidos:
    * 
    * - \@last-few-months-until-today:{N}: Caso esteja usando o type=date você pode usar este \
-   * default value para pegar um range de data de {N}(substituir por um número) meses atrás até o dia atual.
+   * default value para pegar um range de data de {N}(substituir por um número) meses atrás \
+   * até o dia atual.
+   * - \@now: Caso esteja usando o type=date você pode usar este default value para pegar a \
+   *  data atual.
    */
   defaultValue?: any
 }
@@ -366,7 +369,18 @@ export interface KanbanFlagType{
   condition: string,
   type: ThemeColorType,
   availableSteps?: string[],
-  /** Um caracter que será mostrado na flag */
+  /**
+   * Um caracter que será mostrado na flag. Se usar o sufixo :number após uma variável, ao atingir \
+   * números maiores que 9 a flag mostrará o simbolo de +.
+   * 
+   * Exemplo:
+   * 
+   * subtitle: '@[counter]:number'
+   * 
+   * counter = 1, mostrará 1 \
+   * counter > 9, mostrará + 
+   *
+   */
   subtitle?: string,
   tooltip?: string
 }
@@ -717,7 +731,17 @@ export interface WorkflowWebhookInfoType {
    * - url (string | required)
    * - ref (string | opcional) A ref é um identificador de referência do registro
    */          
-  props?: any
+  props?: any,
+  auth?: AuthPublicRouteType,
+  effects?: {
+    /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+    only: 'success' | 'error' | 'always',
+    condition?: string,
+    /** Valores que serão atualizados no flowData */
+    append_values: Record<string, any>
+    /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+    breakExec?: boolean
+  }[]
 }
 export type WorkflowWebhookType = Record<string, WorkflowWebhookInfoType>
 export interface PublicViewFlowDataType {
@@ -825,8 +849,20 @@ export interface WorkflowConfigType {
          * ```
          * { id: '~path.id' }
          * ```
-         * 
+         *
          * Desse jeito fará a pesquisa parcial case insensitive.
+         *  
+         * Também é possível fazer pesquisar por range, para utilizar basta \
+         * iniciar o valor com <>, e dessa forma, você precisará de dois query \
+         * params para representar esse campo, um contendo o prefixo *start_* e \
+         * outro *end_*. Ex:
+         * 
+         * ```
+         * { date: '<>path.date' }
+         * 
+         * <url>?start_date=...&end_date=...
+         * ```
+         
          */
         available_query_params?: Record<string, string>,
         order_by?: Record<string, 'desc' | 'asc'>,
@@ -853,8 +889,19 @@ export interface WorkflowConfigType {
         schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
         rule?: {
           available_steps?: string[],
-          append_value?: Record<string, any>
-        }
+          append_value?: Record<string, any>,
+          required_find?: string[],
+          is_unique?: boolean
+        },
+        effects?: {
+          /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+          only: 'success' | 'error' | 'always',
+          condition?: string,
+          /** Valores que serão atualizados no flowData */
+          append_values: Record<string, any>
+          /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+          breakExec?: boolean
+        }[]
       }>,
       /**
        * Visualizações públicas são páginas abertas,
@@ -900,8 +947,69 @@ export interface WorkflowConfigType {
     email: string,
     whatsapp: string
   },
-  rules?: WorkflowConfigRulesType[]
+  rules?: WorkflowConfigRulesType[],
+  flow_alerts?: WorkflowConfigFlowAlert[]
 }
+export interface WorkflowConfigFlowAlert{
+  key: string,
+  title: string,
+  subtitle?: string,
+  /** Se o valor for string se refere a uma strc, caso o contrário será considerado valor default */
+  status: Partial<Record<(
+    'danger' | 'warning' | 'success' | 'info'  | 'light'
+  ), string | true>>,
+  fn?: WorkflowConfigFlowAlertFn,
+  tooltip?: {
+    condition?: string,
+    /** 
+     * Possui suporte a shortcodes e é possível usar máscara de formatação de data usando ':'. Exemplo:
+     * 
+     * `@[created_at:date]`
+     */
+    content: string
+  }[],
+  body: WorkflowConfigFlowAlertItem[],
+  transitions?: {
+    /**
+     * strc, com os valores antigos dentro da prop old, e os valores novos na prop new. Exemplo da \
+     * transição de status de true para false:
+     * 
+     * `$old.status;#eq;*true;&and;$new.status;#eq;*false`
+     */
+    condition: string,
+    toast?: {
+      type: 'success' | 'error' | 'warning' | 'info',
+      content: string
+    },
+    effects?: Partial<Record<AvailableTriggerEffects, boolean | {
+      /** Condition baseado apenas no novo registro */
+      condition: string,
+      [key: string]: any
+    }>>,
+  }[]
+}
+export interface WorkflowConfigFlowAlertFn{
+  listening?: { condition: string },
+  request: 'flow-entity',
+  data: { entity_key: string }
+}
+export interface WorkflowConfigFlowAlertItem{
+  type: 'div' | 'strong' | 'span',
+  condition?: string,
+  className?: string,
+  /** 
+   * Quando valor não estático(static) é possível passar máscara de formatação de data usando ':'. Exemplo:
+   * 
+   * `updated_at:date`
+   */
+  value?: string,
+  static?: boolean,
+  /** Válido apenas, quando type = 'div' */
+  items?: WorkflowConfigFlowAlertItem[]
+}
+
+type WFIntegrationKeys = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'outhers';
+
 export interface WorkflowConfigIntegrationsType {
   email?: {
     emailFrom: string,
@@ -931,7 +1039,7 @@ export interface WorkflowConfigIntegrationsType {
     data: any
   }[]
 }
-export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth;
+export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
 export interface AuthPublicRouteSimpleToken {
   /** Token criptografado e armazenado no FlowEntity */
   mode: "@simple-token",
@@ -948,6 +1056,16 @@ export interface AuthPublicRouteNetworkFlowAuth {
   props: {
     /** path do id do flowAuth, dentro do wf atual */
     external_id: string
+  }
+}
+
+export interface AuthIntegrationRoute {
+  mode: '@integration',
+  type: WFIntegrationKeys,
+  outher_key?: string,
+  auth_mode: 'token',
+  props: {
+    token: string
   }
 }
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
@@ -1005,7 +1123,11 @@ export interface WFActionFnCallTrigger {
   /** false (default) */
   id_is_required?: boolean,
   /** Este confirm não tem suporte a inserção de dados */
-  confirm?: StepActionConfirmType
+  confirm?: StepActionConfirmType,
+  effects?: Partial<Record<AvailableTriggerEffects, boolean | {
+    condition: string,
+    [key: string]: any
+  }>>,
 }
 export interface WFActionFnCallSingleEntity {
   type: 'call-single-entity',
@@ -1036,6 +1158,10 @@ export interface WFActionFnDownloadFiles {
    * - one-confirm-all: Ao confirmar a primeira, infere que todas as demais serão confirmadas
    */
   confirm_mode?: 'individual-confirmation' | 'one-confirm-all',
+}
+export interface WFActionFnCallReport {
+  type: 'call-report',
+  target: string
 }
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
@@ -1075,7 +1201,13 @@ export interface WorkflowConfigActionsType {
    * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
    * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest,
+  group_buttons?: WorkflowConfigActionsGroupButtons
+}
+export interface WorkflowConfigActionsGroupButtons{
+  id: string,
+  alt: string,
+  icon?: AvailableIcons,
 }
 export interface ConfigPermissionType {
   groups: PermissionType[]
@@ -1092,6 +1224,8 @@ export interface WorkflowRoutinesType {
 export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications']
 export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications
 interface WorkflowRoutinesExecutorBase {
+  /** Utilizada para a rotina poder ser chamada por outros lugares */
+  key?: string,
   name: string,
   description: string,
   last_executed_in?: Date,
@@ -1149,6 +1283,16 @@ export interface WorkflowRoutinesExecuterIOmie extends WorkflowRoutinesExecutorB
     }[]
   }
 }
+export interface WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls{
+  id: '@ifm-finalize-technician-calls',
+  data: {
+    entity_keys: {
+      technicians: string,
+      logs: string,
+    }
+  }
+}
+export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls;
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
   type: 'manage-flow',
   data: {
@@ -1177,6 +1321,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       condition?: string,
       /** Se for true, irá interromper a execução a primeira ocorrência verdadeira */
       breakExec?: boolean,
+      events?: WorkflowRoutinesManageFlowEvent[]
       append: Record<string, any>
     }[]
   }
@@ -1212,4 +1357,27 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
      */
     data_id?: string
   }>
+}
+export interface WFActionFnCallWebhook {
+  type: 'call-webhook',
+  webhook: string
+}
+export interface WFActionFnCallExternalRequest {
+  type: 'call-external-request',
+  props: {
+    url: string,
+    method: 'GET'
+  },
+  auth?: AuthPublicRouteType,
+  mode: 'merge',
+  schema: Record<string, ExternalRequestSchema>,
+  effects?: {
+    /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+    only: 'success' | 'error' | 'always',
+    condition?: string,
+    /** Valores que serão atualizados no flowData */
+    append_values: Record<string, any>
+    /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+    breakExec?: boolean
+  }[]
 }

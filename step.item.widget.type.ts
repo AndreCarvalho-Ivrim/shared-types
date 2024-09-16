@@ -1,3 +1,5 @@
+import { ItemOrViewOrWidgetOrIntegration } from "."
+
 interface StepWidgetBaseType{
   key: string,
   mode: 'widget',  
@@ -26,11 +28,44 @@ export interface WidgetRoutineType extends StepWidgetBaseType{
   type: 'widget-routine',
   matchs: string[]
 }
-export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType;
+export interface WidgetWorkerThreadQuery{
+  type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte' | 'exists',
+  value?: any
+}
+export interface WidgetWorkerThread extends StepWidgetBaseType{
+  type: 'widget-worker-thread',
+  query?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
+  control_entity: {
+    name: string,
+    verification_parameter: string,
+    /** 
+     * Tempo máximo que a rotina pode ficar ligada.
+     * 
+     * Você pode usar essa configuração para que caso a aplicação seja encerrada
+     * inesperadamente e não tenha atualizado o status para false, o status de ativo
+     * perderá validade após um timeout.
+     */
+    timeout?: {
+      /** Tempo em minutos em que a rotina pode ficar rodando */
+      time: number,
+      /** Campo que guardará a data de último inicio */
+      ref: string
+    }
+  },
+  effects?: {
+    /** Nomear ações para serem chamadas na função */
+    action?: string,
+    condition?: string,
+    append_values: Record<string, any>
+  }[],
+  items?: ItemOrViewOrWidgetOrIntegration[]
+}
+export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
   'widget-email': 'Email',
   'widget-whatsapp': 'Whatsapp',
   'widget-sms': 'SMS',
   'widget-chatbot': 'Chatbot',
-  'widget-routine': 'Routine'
+  'widget-routine': 'Routine',
+  'widget-worker-thread': 'Worker Thread'
 };
