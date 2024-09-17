@@ -11,6 +11,11 @@ export interface FlowEntitySubSchema{
   schema: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
   required?: boolean
 }
+export interface FlowEntitySchemaInfoRule{
+  render?: string,
+  min?: number,
+  hidden?: 'visualization' | 'edition'
+}
 export interface FlowEntitySchemaInfo{
   type: FlowEntitySchemaTypes,
   label: string,
@@ -63,11 +68,7 @@ export interface FlowEntitySchemaInfo{
     mode: '@list-draggable',
     settings?: any
   },
-  rules?: {
-    render?: string,
-    min?: number,
-    hidden?: 'visualization' | 'edition'
-  },
+  rules?: FlowEntitySchemaInfoRule,
   observer?: boolean
 }
 export interface FlowEntityAssociationColumns{
