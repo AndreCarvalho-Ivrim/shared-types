@@ -34,6 +34,8 @@ export interface FlowMessageAskType extends FlowMessageBase{
   )[]
 }
 export interface FlowMessageRedirectType{
+  /** É para ser usada como referência de chamada por outras funções */
+  key: string,
   /** redirect: É a possibilidade de redirecionar para outra região do diálogo */
   mode: 'redirect',
   matchs?: string[],
