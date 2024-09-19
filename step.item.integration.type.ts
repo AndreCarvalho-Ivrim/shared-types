@@ -55,7 +55,8 @@ export interface IntegrationExcelType {
   append_values?: Record<string, any>,
   origins?: {
     condition: string,
-    origim: string
+    origin: string,
+    key: string
   }[]
   /** URL do template de importação para download */
   model_url?: string
