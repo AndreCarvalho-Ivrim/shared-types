@@ -27,7 +27,11 @@ export interface FlowMessageAskType extends FlowMessageBase{
   /** ask: É uma pergunta que necessita da resposta do cliente */
   mode: 'ask',
   /** respostas possíveis do usuário */
-  responses: (FlowMessageType | FlowMessageRedirectType)[]
+  responses: (
+    Omit<FlowMessageInfoType, 'interaction_mode' | '_id' | 'client_id'> | 
+    Omit<FlowMessageAskType, 'interaction_mode' | '_id' | 'client_id'> | 
+    FlowMessageRedirectType
+  )[]
 }
 export interface FlowMessageRedirectType{
   /** redirect: É a possibilidade de redirecionar para outra região do diálogo */
