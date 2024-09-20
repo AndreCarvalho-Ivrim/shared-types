@@ -29,7 +29,7 @@ export interface WidgetRoutineType extends StepWidgetBaseType{
   matchs: string[]
 }
 export interface WidgetWorkerThreadQuery{
-  type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte' | 'exists',
+  type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte' | 'exists' | 'date',
   value?: any
 }
 export interface WidgetWorkerThread extends StepWidgetBaseType{
