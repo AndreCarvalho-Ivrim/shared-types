@@ -23,15 +23,17 @@ export interface FlowMessageInfoType extends FlowMessageBase{
   /** info: Informação apenas envia uma mensagem sem esperar retorno */
   mode: 'info',
 }
+
+export type FlowMessageResponses = (
+  Omit<FlowMessageInfoType, 'interaction_mode' | '_id' | 'client_id'> | 
+  Omit<FlowMessageAskType, 'interaction_mode' | '_id' | 'client_id'> | 
+  FlowMessageRedirectType
+)[]
 export interface FlowMessageAskType extends FlowMessageBase{
   /** ask: É uma pergunta que necessita da resposta do cliente */
   mode: 'ask',
   /** respostas possíveis do usuário */
-  responses: (
-    Omit<FlowMessageInfoType, 'interaction_mode' | '_id' | 'client_id'> | 
-    Omit<FlowMessageAskType, 'interaction_mode' | '_id' | 'client_id'> | 
-    FlowMessageRedirectType
-  )[]
+  responses: FlowMessageResponses
 }
 export interface FlowMessageRedirectType{
   /** É para ser usada como referência de chamada por outras funções */
@@ -46,6 +48,57 @@ export interface FlowMessageRedirectType{
 }
 
 export type FlowMessageType = FlowMessageInfoType | FlowMessageAskType;
+
+export interface IReceiveFlowMessageWebhook {
+  idMessage: number,
+  createdAt: string,
+  updatedAt: string,
+  idContact: number,
+  status: string,
+  received: boolean,
+  errorCode: number,
+  audio: [
+    {
+      url: string
+    }
+  ],
+  campaigns: [
+    {
+      idCampaign: number
+    }
+  ],
+  document: [
+    {
+      url: string
+    }
+  ],
+  image: [
+    {
+      url: string
+    }
+  ],
+  sharedContact: [
+    {
+      name: string,
+      phone: string
+    }
+  ],
+  template: [
+    {
+      idTemplate: number
+    }
+  ],
+  text: [
+    {
+      text: string
+    }
+  ],
+  video: [
+    {
+      url: string
+    }
+  ]
+}
 
 export interface FlowMessageContact{
   _id: string,
