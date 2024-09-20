@@ -1221,8 +1221,8 @@ export interface WorkflowRoutinesType {
   },
   executors: AvailableRoutinesExecutorsType[],
 }
-export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications']
-export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications
+export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications', 'bot']
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications | WorkflowRoutinesBot
 interface WorkflowRoutinesExecutorBase {
   /** Utilizada para a rotina poder ser chamada por outros lugares */
   key?: string,
@@ -1357,6 +1357,11 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
      */
     data_id?: string
   }>
+}
+export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
+  type: 'bot',
+  exception?: 'ability-retorization' | 'ability-retorization-external',
+  data: any
 }
 export interface WFActionFnCallWebhook {
   type: 'call-webhook',
