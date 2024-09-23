@@ -88,14 +88,14 @@ export interface FlowMessageFnCallTrigger{
   }
 }
 
-interface FlowMessageFnSendMessage{
+export interface FlowMessageFnSendMessage{
   mode: 'send-message',
   /** strc com acesso a veriável $message, caso seja executado após receber uma mensagem */
   condition?: string,
   only?: 'always' | 'success' | 'fail';
 }
 
-type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage
+export type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage
 
 
 export interface IReceiveFlowMessageWebhook {
