@@ -22,6 +22,7 @@ interface FlowMessageBase{
 export interface FlowMessageInfoType extends FlowMessageBase{
   /** info: Informação apenas envia uma mensagem sem esperar retorno */
   mode: 'info',
+  redirect_to?: string[]
 }
 
 export type FlowMessageResponses = (
