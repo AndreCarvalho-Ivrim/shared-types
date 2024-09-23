@@ -1,6 +1,7 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
+import { WorkflowTriggerType, AvailableTriggerEffects } from "./workflow.config.triggers.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing';
 export type AvailableViewModeType = 'table' | 'dashboard';
@@ -566,70 +567,6 @@ export interface WorkflowAuthType {
       mode: 'merge' | 'overwrite'
     }>,
   }
-}
-export type AvailableTriggerEffects = 'onload-to-fill-the-page-if-necessary' | 'refresh-flow-datas' | 'success-message'
-export interface WorkflowTriggerType {
-  /** Referência interna */
-  id: string,
-  /** 
-   * Referência ao evento que será disparado:
-   * 
-   * \@sync-flow-datas: Sincronizar integração de dois workflows
-   * 
-   * \@gamification-action-log: Lidar com logs de ação em gamificação
-   * 
-   * \@observer-event: Dispara N eventos do observer apontando a condition
-   */
-  name: '@sync-flow-datas' | '@gamification-action-log' | '@observer-events',
-  title: string,
-  /** Se o evento será feito em segundo plano ou se terá resposta imediata */
-  is_async: boolean,
-  /**
-   * Dados adicionais
-   * 
-   * \@sync-flow-datas \
-   * ```
-   *  {
-   *    target_flow_id: "id-do-wf-de-destino",
-   *    match: { "id-from-current-wf": "id-from-target-flow" }
-   *  }
-   * ```
-   * 
-   * \@observer-events \
-   * Adicione as condicionais dos eventos do observer que quer disparar
-   * ```
-   *  {
-   *    matchs: Array<{ condition: string, name: string }>
-   *  }
-   * ```
-   */
-  data: any,
-  /**
-   * Effects só são válidos quando ``` is_async = false ```
-   * 
-   * ```{ "onload-to-fill-the-page-if-necessary": true }``` \
-   * Atualizar dados da visualização, se não tiver com a tabela preenchida
-   * 
-   * ```{ "refresh-flow-datas": { "condition": "--string-conditional--"} | true  } ```
-   * Recarregar dados da visualização
-   * 
-   * ```
-   *  {
-   *    // Todos valores visualizados nessa função estão dentro do resultAndResponse.data
-   *    "success-message": {
-   *      // -- opcional
-   *      "condition": "--string-conditional--",
-   *      // Tem suporte a valores dinâmicos da resposta com \@[]
-   *      "response": ["--se-verdadeiro--", "--se-falso--"],
-   *    }
-   *  }
-   * ```
-   * Formatar a mensagem de resposta
-   */
-  effects?: Partial<Record<AvailableTriggerEffects, boolean | {
-    condition: string,
-    [key: string]: any
-  }>>,
 }
 type AvailableTimeToNotify = 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
 export const availableTimeToNotify: AvailableTimeToNotify[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
