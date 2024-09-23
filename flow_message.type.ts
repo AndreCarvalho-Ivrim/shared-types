@@ -1,3 +1,5 @@
+import { data } from "autoprefixer";
+
 interface FlowMessageBase{
   /** Obrigatório na raiz do flowMessage */
   _id?: string,
@@ -56,12 +58,19 @@ export type FlowMessageType = FlowMessageInfoType | FlowMessageAskType;
 export interface FlowMessageFnCallTrigger{
   mode: 'call-trigger',
   /** strc com acesso a veriável $message, caso seja executado após receber uma mensagem */
-  condition: string,
+  condition?: string,
   /** Executado antes ou após enviar a mensagem do diálogo atual */
   execute: 'before' | 'after',
   data: {
     trigger_id: string,
-    /** Parametros que serão enviados para a função */
+    /**
+     * Parametros que serão enviados para a função.\
+     * Record<nome-passado-na-fn, valor-estatico | \@[shortcode] | \@code_helper>
+     * 
+     * Váriaveis disponíveis:
+     * - message: conteúdo da mensagem
+     * - curr: objeto contendo os parametros recebidos no flowMessage
+     */
     params?: Record<string, any>,
     /** Se a função será executada em segundo plano */
     is_async?: boolean,
@@ -69,6 +78,7 @@ export interface FlowMessageFnCallTrigger{
     effects?: Array<{
       condition?: string,
       redirect_to?: string[],
+      only?: 'always' | 'success' | 'fail';
       /** Retornar resposta dinâmica ao cliente com suporte a strc */
       response?: string,
       /** Para a verificação de efeitos */
@@ -82,8 +92,8 @@ export interface FlowMessageFnCallTrigger{
 interface FlowMessageFnSendMessage{
   mode: 'send-message',
   /** strc com acesso a veriável $message, caso seja executado após receber uma mensagem */
-  condition: string,
-
+  condition?: string,
+  only?: 'always' | 'success' | 'fail';
 }
 
 type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage
