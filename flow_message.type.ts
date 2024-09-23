@@ -1,5 +1,3 @@
-import { data } from "autoprefixer";
-
 interface FlowMessageBase{
   /** Obrigatório na raiz do flowMessage */
   _id?: string,
