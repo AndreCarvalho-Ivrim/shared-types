@@ -18,7 +18,10 @@ interface FlowMessageBase{
   matchs?: string[],
   /** Conteúdo da mensagem, podendo ser N mensagens. */
   contents: string[],
+  /** A função é considerada ao entrar no diálogo atual */
+  fn?: FlowMessageFn[]
 }
+
 export interface FlowMessageInfoType extends FlowMessageBase{
   /** info: Informação apenas envia uma mensagem sem esperar retorno */
   mode: 'info',
@@ -35,6 +38,7 @@ export interface FlowMessageAskType extends FlowMessageBase{
   /** respostas possíveis do usuário */
   responses: FlowMessageResponses
 }
+
 export interface FlowMessageRedirectType{
   /** É para ser usada como referência de chamada por outras funções */
   key: string,
@@ -48,6 +52,42 @@ export interface FlowMessageRedirectType{
 }
 
 export type FlowMessageType = FlowMessageInfoType | FlowMessageAskType;
+
+export interface FlowMessageFnCallTrigger{
+  mode: 'call-trigger',
+  /** strc com acesso a veriável $message, caso seja executado após receber uma mensagem */
+  condition: string,
+  /** Executado antes ou após enviar a mensagem do diálogo atual */
+  execute: 'before' | 'after',
+  data: {
+    trigger_id: string,
+    /** Parametros que serão enviados para a função */
+    params?: Record<string, any>,
+    /** Se a função será executada em segundo plano */
+    is_async?: boolean,
+    /** Só é válido se [is_async] não for true */
+    effects?: Array<{
+      condition?: string,
+      redirect_to?: string[],
+      /** Retornar resposta dinâmica ao cliente com suporte a strc */
+      response?: string,
+      /** Para a verificação de efeitos */
+      breakExec?: boolean,
+      /** Válido apenas para execute = before */
+      stop_sending?: boolean
+    }>
+  }
+}
+
+interface FlowMessageFnSendMessage{
+  mode: 'send-message',
+  /** strc com acesso a veriável $message, caso seja executado após receber uma mensagem */
+  condition: string,
+
+}
+
+type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage
+
 
 export interface IReceiveFlowMessageWebhook {
   idMessage: number,
