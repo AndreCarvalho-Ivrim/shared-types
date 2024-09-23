@@ -19,7 +19,7 @@ interface FlowMessageBase{
   /** Conteúdo da mensagem, podendo ser N mensagens. */
   contents: string[],
   /** A função é considerada ao entrar no diálogo atual */
-  fn?: FlowMessageFn[]
+  fns?: FlowMessageFn[]
 }
 
 export interface FlowMessageInfoType extends FlowMessageBase{
