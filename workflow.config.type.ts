@@ -957,7 +957,33 @@ export interface WorkflowConfigIntegrationsType {
   },
   whatsapp?: { number: string, token: string },
   sms?: any,
-  chatbot?: any,
+  chatbot?: {
+    /** Token do Mensagex, se não for informado utilizará o token do hub */
+    token?: string,
+    /**
+     * Templates para iniciar uma interação ativa com o usuário, que ainda não interagiu no período de 24h. \
+     * Caso não informe aqui, só poderá ser disparadas interações ativas caso o usuário já esteja com uma \
+     * interação em andamento, iniciada de forma passiva, ou se o flowMessage tiver um id de template vinculado
+     */
+    template_to_start_interaction?: Array<{
+      condition?: string,
+      template_id: string
+    }>
+    /**
+     * Como carrega os dados do contato, caso não exista. Geralmente é usado quando a interação é iniciada de \
+     * forma passiva, e o contactData é vazio.
+     */
+    loadContactData?: {
+      mode: 'flow-entity',
+      entity_key: string,
+      /** Possui acesso as variáveis contact_id e contact_number */
+      query: any,
+      /** ``` { 'key que receberá atribuição': 'key na resposta da pesquisa' } */
+      parse: Record<string, string>
+      /** Mensagem de erro caso os dados não possam ser carregados */
+      error_message: string
+    }
+  },
   omie?: {
     secret_key: string,
     public_key: string
