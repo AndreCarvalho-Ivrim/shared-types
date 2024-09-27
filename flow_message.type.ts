@@ -162,3 +162,8 @@ export interface FlowMessageContact{
     interaction_data?: any
   }
 }
+export interface FlowMessageContactPendingMessage{
+  flow_message_id: string;
+  step: string[];
+  interaction_data?: any;
+}
