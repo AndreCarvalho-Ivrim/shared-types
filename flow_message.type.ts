@@ -1,8 +1,9 @@
 interface FlowMessageBase{
-  /** Obrigatório na raiz do flowMessage */
-  _id?: string,
-  /** Obrigatório na raiz do flowMessage */
-  client_id?: string,
+  _id: string,
+  client_id: string,
+  flow_id?: string,
+  /** Id do template do whatsapp, caso seja uma mensagem cadastrada */
+  template_id?: string,
   /** É para ser usada como referência de chamada por outras funções */
   key: string,
   /**
@@ -21,25 +22,11 @@ interface FlowMessageBase{
   /** A função é considerada ao entrar no diálogo atual */
   fns?: FlowMessageFn[]
 }
-
 export interface FlowMessageInfoType extends FlowMessageBase{
   /** info: Informação apenas envia uma mensagem sem esperar retorno */
   mode: 'info',
   redirect_to?: string[]
 }
-
-export type FlowMessageResponses = (
-  Omit<FlowMessageInfoType, 'interaction_mode' | '_id' | 'client_id'> | 
-  Omit<FlowMessageAskType, 'interaction_mode' | '_id' | 'client_id'> | 
-  FlowMessageRedirectType
-)[]
-export interface FlowMessageAskType extends FlowMessageBase{
-  /** ask: É uma pergunta que necessita da resposta do cliente */
-  mode: 'ask',
-  /** respostas possíveis do usuário */
-  responses: FlowMessageResponses
-}
-
 export interface FlowMessageRedirectType{
   /** É para ser usada como referência de chamada por outras funções */
   key: string,
@@ -51,7 +38,17 @@ export interface FlowMessageRedirectType{
   /** Chave(ou caminho) do diálogo que quer chamar */
   redirect_to: string[]
 }
-
+export type FlowMessageResponse = (
+  Omit<FlowMessageInfoType, 'interaction_mode' | '_id' | 'client_id'> | 
+  Omit<FlowMessageAskType, 'interaction_mode' | '_id' | 'client_id'> | 
+  FlowMessageRedirectType
+)
+export interface FlowMessageAskType extends FlowMessageBase{
+  /** ask: É uma pergunta que necessita da resposta do cliente */
+  mode: 'ask',
+  /** respostas possíveis do usuário */
+  responses: FlowMessageResponse[]
+}
 export type FlowMessageType = FlowMessageInfoType | FlowMessageAskType;
 
 export interface FlowMessageFnCallTrigger{
@@ -87,14 +84,12 @@ export interface FlowMessageFnCallTrigger{
     }>
   }
 }
-
 export interface FlowMessageFnSendMessage{
   mode: 'send-message',
   /** strc com acesso a veriável $message, caso seja executado após receber uma mensagem */
   condition?: string,
   only?: 'always' | 'success' | 'fail';
 }
-
 export type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage
 
 
@@ -148,7 +143,6 @@ export interface IReceiveFlowMessageWebhook {
     }
   ]
 }
-
 export interface FlowMessageContact{
   _id: string,
   client_id: string,
@@ -158,11 +152,13 @@ export interface FlowMessageContact{
   last_name?: string,
   status?: string,
   phone: string
+  contact_data?: any,
   interaction?: {
     flow_message_id: string,
     /** Chave de onde o contato está no fluxo */
     step: string[],
     start_of_interection: Date,
-    last_update: Date
+    last_update: Date,
+    interaction_data?: any
   }
 }
