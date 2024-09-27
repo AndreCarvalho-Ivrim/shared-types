@@ -997,12 +997,18 @@ export interface WorkflowConfigIntegrationsChatbot{
     entity_key: string,
     /** Possui acesso as variáveis contact_id e contact_number */
     query: any,
-    /** ``` { 'key que receberá atribuição': 'key na resposta da pesquisa' } */
-    parse: Record<string, string>
+    /**
+     * ``` { 'key que receberá atribuição': 'key na resposta da pesquisa' } ```
+     * 
+     * É obrigatório adicionar a key fullname, ou firstName e lastName, para que possa
+     * ser criado o contato caso seja um contato novo.
+     */
+    parse: { firstName: string, lastName: string, [key: string]: string } | { fullname: string, [key: string]: string }
     /** Mensagem de erro caso os dados não possam ser carregados */
     error_message: string
   }
 }
+
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
 export interface AuthPublicRouteSimpleToken {
   /** Token criptografado e armazenado no FlowEntity */
