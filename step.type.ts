@@ -1,4 +1,5 @@
-import { AvailableTriggerEffects, AvailableWorkflowStatusType, ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
+import { AvailableWorkflowStatusType, ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
+import { AvailableTriggerEffects } from "./workflow.config.triggers.type";
 
 export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
 export type ToastTypes = "success" | "info" | "warning" | "error"

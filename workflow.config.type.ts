@@ -1,6 +1,7 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
+import { WorkflowTriggerType, AvailableTriggerEffects } from "./workflow.config.triggers.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing';
 export type AvailableViewModeType = 'table' | 'dashboard';
@@ -567,70 +568,6 @@ export interface WorkflowAuthType {
     }>,
   }
 }
-export type AvailableTriggerEffects = 'onload-to-fill-the-page-if-necessary' | 'refresh-flow-datas' | 'success-message'
-export interface WorkflowTriggerType {
-  /** Referência interna */
-  id: string,
-  /** 
-   * Referência ao evento que será disparado:
-   * 
-   * \@sync-flow-datas: Sincronizar integração de dois workflows
-   * 
-   * \@gamification-action-log: Lidar com logs de ação em gamificação
-   * 
-   * \@observer-event: Dispara N eventos do observer apontando a condition
-   */
-  name: '@sync-flow-datas' | '@gamification-action-log' | '@observer-events',
-  title: string,
-  /** Se o evento será feito em segundo plano ou se terá resposta imediata */
-  is_async: boolean,
-  /**
-   * Dados adicionais
-   * 
-   * \@sync-flow-datas \
-   * ```
-   *  {
-   *    target_flow_id: "id-do-wf-de-destino",
-   *    match: { "id-from-current-wf": "id-from-target-flow" }
-   *  }
-   * ```
-   * 
-   * \@observer-events \
-   * Adicione as condicionais dos eventos do observer que quer disparar
-   * ```
-   *  {
-   *    matchs: Array<{ condition: string, name: string }>
-   *  }
-   * ```
-   */
-  data: any,
-  /**
-   * Effects só são válidos quando ``` is_async = false ```
-   * 
-   * ```{ "onload-to-fill-the-page-if-necessary": true }``` \
-   * Atualizar dados da visualização, se não tiver com a tabela preenchida
-   * 
-   * ```{ "refresh-flow-datas": { "condition": "--string-conditional--"} | true  } ```
-   * Recarregar dados da visualização
-   * 
-   * ```
-   *  {
-   *    // Todos valores visualizados nessa função estão dentro do resultAndResponse.data
-   *    "success-message": {
-   *      // -- opcional
-   *      "condition": "--string-conditional--",
-   *      // Tem suporte a valores dinâmicos da resposta com \@[]
-   *      "response": ["--se-verdadeiro--", "--se-falso--"],
-   *    }
-   *  }
-   * ```
-   * Formatar a mensagem de resposta
-   */
-  effects?: Partial<Record<AvailableTriggerEffects, boolean | {
-    condition: string,
-    [key: string]: any
-  }>>,
-}
 type AvailableTimeToNotify = 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
 export const availableTimeToNotify: AvailableTimeToNotify[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 export type AvailableHoursType = Partial<Record<0 | 1 | 2 | 3 | 4 | 5 | 6, [string, string]>>
@@ -1020,7 +957,7 @@ export interface WorkflowConfigIntegrationsType {
   },
   whatsapp?: { number: string, token: string },
   sms?: any,
-  chatbot?: any,
+  chatbot?: WorkflowConfigIntegrationsChatbot,
   omie?: {
     secret_key: string,
     public_key: string
@@ -1039,6 +976,39 @@ export interface WorkflowConfigIntegrationsType {
     data: any
   }[]
 }
+export interface WorkflowConfigIntegrationsChatbot{
+  /** Token do Mensagex, se não for informado utilizará o token do hub */
+  token?: string,
+  /**
+   * Templates para iniciar uma interação ativa com o usuário, que ainda não interagiu no período de 24h. \
+   * Caso não informe aqui, só poderá ser disparadas interações ativas caso o usuário já esteja com uma \
+   * interação em andamento, iniciada de forma passiva, ou se o flowMessage tiver um id de template vinculado
+   */
+  template_to_start_interaction?: Array<{
+    condition?: string,
+    template_id: string
+  }>
+  /**
+   * Como carrega os dados do contato, caso não exista. Geralmente é usado quando a interação é iniciada de \
+   * forma passiva, e o contactData é vazio.
+   */
+  loadContactData?: {
+    mode: 'flow-entity',
+    entity_key: string,
+    /** Possui acesso as variáveis contact_id e contact_number */
+    query: any,
+    /**
+     * ``` { 'key que receberá atribuição': 'key na resposta da pesquisa' } ```
+     * 
+     * É obrigatório adicionar a key fullname, ou firstName e lastName, para que possa
+     * ser criado o contato caso seja um contato novo.
+     */
+    parse: { firstName: string, lastName: string, [key: string]: string } | { fullname: string, [key: string]: string }
+    /** Mensagem de erro caso os dados não possam ser carregados */
+    error_message: string
+  }
+}
+
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
 export interface AuthPublicRouteSimpleToken {
   /** Token criptografado e armazenado no FlowEntity */
@@ -1221,8 +1191,8 @@ export interface WorkflowRoutinesType {
   },
   executors: AvailableRoutinesExecutorsType[],
 }
-export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications']
-export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications
+export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications', 'bot']
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications | WorkflowRoutinesBot
 interface WorkflowRoutinesExecutorBase {
   /** Utilizada para a rotina poder ser chamada por outros lugares */
   key?: string,
@@ -1357,6 +1327,11 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
      */
     data_id?: string
   }>
+}
+export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
+  type: 'bot',
+  exception?: 'ability-retorization' | 'ability-retorization-external',
+  data: any
 }
 export interface WFActionFnCallWebhook {
   type: 'call-webhook',
