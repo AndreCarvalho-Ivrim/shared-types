@@ -54,7 +54,9 @@ export interface IntegrationExcelType {
   columns?: IntegrationExcelColumnType[],
   append_values?: Record<string, any>,
   /** URL do template de importação para download */
-  model_url?: string
+  model_url?: string,
+  /** Entitidade para salvar o registro de importação da planilha */
+  import_registration?: string
 }
 export interface IntegrationExcelColumnType {
   id: string,
