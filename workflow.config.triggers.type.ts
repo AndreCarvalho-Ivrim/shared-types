@@ -44,7 +44,8 @@ export interface WorkflowTriggerSyncFlowDatas extends WorkflowTriggerBase{
     /** id-do-wf-de-destino */
     target_flow_id: string,
     /** Record<"id-from-current-wf", "id-from-target-flow"> */
-    match: Record<string, string>
+    match: Record<string, string>,
+    replacers: Record<string, string>
   }
 }
 export interface WorkflowTriggerGamificationActionLog extends WorkflowTriggerBase{
