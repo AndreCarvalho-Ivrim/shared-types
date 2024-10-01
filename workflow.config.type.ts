@@ -1298,6 +1298,14 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
 export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
   type: 'bot',
   exception?: 'ability-retorization' | 'ability-retorization-external',
+  /**
+   * Qual horário a rotina será executada. Por padrão ela é executada imediatamente, \
+   * caso queira definir, o horário é de 00:30 até 23, pulando de meia em meia hora \
+   * (.5 = 30min)
+   */
+  maximum_execution_time?: 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5 | 5.5 | 6 | 6.5 | 7 | 7.5 | 8 | 8.5 | 9 | 9.5 | 10 | 10.5 | 11 | 11.5 | 12 | 12.5 | 13 | 13.5 | 14 | 14.5 | 15 | 15.5 | 16 | 16.5 | 17 | 17.5 | 18 | 18.5 | 19 | 19.5 | 20 | 20.5 | 21 | 21.5 | 22 | 22.5 | 23,
+  /** Tempo minimo e de 5 minutos  */
+  next_time: number,
   data: any
 }
 export interface WFActionFnCallWebhook {
