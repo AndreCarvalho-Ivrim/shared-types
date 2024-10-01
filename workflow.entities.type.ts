@@ -1,5 +1,5 @@
 import { AvailableIcons } from "./icon.type";
-import { ConfigViewModeColumnsType, WorkflowConfigObserverFnType } from "./workflow.config.type";
+import { WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
 
 export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom" | 'time';
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
@@ -10,6 +10,12 @@ export interface FlowEntitySubSchema{
   placeholder: string,
   schema: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
   required?: boolean
+}
+export interface FlowEntitySchemaInfoRule{
+  render?: string,
+  min?: number,
+  max?: number,
+  hidden?: 'visualization' | 'edition'
 }
 export interface FlowEntitySchemaInfo{
   type: FlowEntitySchemaTypes,
@@ -63,10 +69,7 @@ export interface FlowEntitySchemaInfo{
     mode: '@list-draggable',
     settings?: any
   },
-  rules?: {
-    render?: string,
-    min?: number
-  },
+  rules?: FlowEntitySchemaInfoRule,
   observer?: boolean
 }
 export interface FlowEntityAssociationColumns{
@@ -93,11 +96,33 @@ export interface FlowEntityExportDatas{
 }
 export interface FlowEntityViewModeGrid{
   type: 'grid',
-  className?: string,
+  classNames: {
+    /** Div que defini o grid */
+    main?: string,
+    wrapper?: string,
+    image?: string,
+    title?: string,
+    tbody?: string,
+    tr?: string,
+    /**
+     * Para cada item dinâmico poderá ser passado o id do item,
+     * e a classe respectiva.
+     */
+    dynamic_contents?: Record<string, string>
+  },
   resume: {
-    picture: string,
+    picture?: string,
     title: string,
-    content: ConfigViewModeColumnsType[]
+    /**
+     * O content utiliza as configurações do schema para renderizar \
+     * a sua coluna.
+     */
+    content?: string[],
+    /**
+     * O dynamic_content permite construir layouts personalizados para renderizar \
+     * seus dados.
+     */
+    dynamic_content: WorkflowViewModeDashboardModuleBlock[]
   }
 }
 export type AvailableFlowEntityViewModes = FlowEntityViewModeGrid
@@ -167,13 +192,22 @@ export interface FlowEntityInfo{
     create?: string,
     delete?: string,
     update?: string,
-    select?: string
+    select?: string,
+    export?: {
+      /** 
+       * permission: Permissão
+       * allowed_columns: Colunas que somente essa permissão tera acesso
+      */
+      permission: string,
+      allowed_columns: string[]
+    }
   },
   /** default = true */
   restrictMode?: boolean,
   created_at?: Date,
   importSheet?: FlowEntityImportSheet,
   exportDatas?: Array<FlowEntityExportDatas>,
+  is_public?: boolean
 }
 
 export interface StepItemCustomListDraggable{

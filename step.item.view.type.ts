@@ -29,16 +29,23 @@ export interface StepViewColumnType{
   /** 
    * ID com shortcodes para replace \
    * Exemplo: \
+   * ```
    * id_1 = 8 | id_2 = 10
    * 
-   * definição: \@[id_1]/@[id_2] \
+   * definição: \@[id_1]/@[id_2]
    * resultado: 8/10
    * 
-   * Também pode ser definido um valor padrão usando pipe(|) \
+   * Também pode ser definido um valor padrão usando pipe(|)
    * id_1 = undefined | id_2 = 10
    * 
-   * definição: \@[id_1|0]/@[id_2] \
+   * definição: \@[id_1|0]/@[id_2] 
    * resultado: 0/10
+   * ```
+   * 
+   * Também podem ser utilizados codehelpers, como:
+   * 
+   * - \@days-to-now:id: Aponta para uma data e faz o calculo de quantos dias se passaram dessa data
+   * 
    */
   id: string, 
   name: string,
@@ -52,7 +59,8 @@ export interface StepViewColumnType{
    */
   translate?: Record<string, string>,
   condition?: string,
-  required?: boolean
+  required?: boolean,
+  permission_to_view?: string
 }
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
 export interface StepViewTableType extends StepViewBaseType{
