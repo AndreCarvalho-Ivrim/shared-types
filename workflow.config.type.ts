@@ -979,6 +979,10 @@ export interface WorkflowConfigIntegrationsType {
 export interface WorkflowConfigIntegrationsChatbot{
   /** Token do Mensagex, se não for informado utilizará o token do hub */
   token?: string,
+  start_of_interactions?: Array<{
+    condition?: string,
+    template_id: string
+  }>
   /**
    * Templates para iniciar uma interação ativa com o usuário, que ainda não interagiu no período de 24h. \
    * Caso não informe aqui, só poderá ser disparadas interações ativas caso o usuário já esteja com uma \
