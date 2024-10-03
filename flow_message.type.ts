@@ -91,7 +91,13 @@ interface FlowMessageFnSendMessage{
   mode: 'send-message',
   /** strc com acesso a veriável $message, caso seja executado após receber uma mensagem */
   condition?: string,
-  only?: 'always' | 'success' | 'fail';
+  /** Campo que referencia o contato */
+  to: string,
+  to_type: 'contact_id' | 'phone',
+  /** Mensagem dentro do fluxo de mensagem */
+  step: string[],
+  contact_data?: { firstName: string, lastName: string, [key: string]: any } | { fullname: string, [key: string]: any },
+  interaction_data?: Record<string, any>,
 }
 
 type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage
