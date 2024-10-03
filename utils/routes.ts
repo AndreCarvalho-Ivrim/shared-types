@@ -53,7 +53,8 @@ export const hubRoutes = {
   },
   admin_panel: {
     client: () => '/painel-adm/empresa',
-    companies: () => '/painel-adm/companies',
+    companies: () => '/painel-adm/empresas',
+    users_by_client: () => '/painel-adm/usuarios-por-empresa',
     users: () => '/painel-adm',
     projects: () => '/painel-adm/projetos',
     dashboards: () => '/painel-adm/dashboards',
@@ -116,6 +117,7 @@ export type AvailableRegexUrls =
   '@hub:admin_panel.projects' |
   '@hub:admin_panel.dashboards' |
   '@hub:admin_panel.integrations.whatsapp' |
+  '@hub:admin_panel.users_by_client' |
   '@hub:dashboard.home' |
   '@hub:dashboard.show(slug)' |
   '@hub:icon' |
