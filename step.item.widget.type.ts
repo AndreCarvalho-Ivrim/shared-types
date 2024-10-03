@@ -59,11 +59,7 @@ export interface WidgetWorkerThread extends StepWidgetBaseType{
     append_values: Record<string, any>
   }[],
   items?: ItemOrViewOrWidgetOrIntegration[],
-<<<<<<< HEAD
-  exception?: 'ifm-roterization' | 'ifm-roterization-external',
-=======
   exception?: 'ifm-roterization' | 'ifm-roterization-external'
->>>>>>> 7537db04b74180fc22df2bf0c12ad78b9327a26b
 }
 export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
