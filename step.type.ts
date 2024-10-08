@@ -55,10 +55,10 @@ export interface StepTypeRuleRedirect{
   action_permission?: string,
   confirm?: StepActionConfirmType,
 }
-export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open' | 'redirect-to-step-if-successful' | 'enable-flow-alert-listeners', boolean | {
+export type StepTypeRulesEffects = Partial<Record<(AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open' | 'redirect-to-step-if-successful' | 'enable-flow-alert-listeners'), boolean | {
   condition?: string,
   [key: string]: any
-}>>
+} | Array<{ condition?: string, [key: string]: any }>> >
 export interface StepCustomRuleRedirectToStep{
   /** Use \@current-step no target para redirecionar para o step atual do flow-data */
   id: '@redirect-to-step'

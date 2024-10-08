@@ -7,6 +7,7 @@ export interface FlowDataNote{
     id: string,
     name: string
   }>,
+  notify_emails?: string[],
   content: string,
   author: string,
   answers?: FlowDataNote[],
