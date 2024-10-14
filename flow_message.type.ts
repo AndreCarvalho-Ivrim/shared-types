@@ -11,6 +11,7 @@ interface FlowMessageBase{
    * passive: Interação passiva, é quando o cliente entra em contato
    */
   interaction_mode: 'active' | 'passive',
+  message_of_invalid_answer?: string,
   /**
    * São palavras chaves para validar a chamada dessa mensagem. Muito utilizado \
    * quando há uma lista de opções(Exemplo: 1-10) e você quer que sua mensagem \
