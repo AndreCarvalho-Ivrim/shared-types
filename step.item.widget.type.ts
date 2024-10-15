@@ -29,12 +29,13 @@ export interface WidgetRoutineType extends StepWidgetBaseType{
   matchs: string[]
 }
 export interface WidgetWorkerThreadQuery{
-  type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte' | 'exists' | 'date',
+  type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte' | 'exists' | 'date' | 'date-start' | 'date-end',
   value?: any
 }
 export interface WidgetWorkerThread extends StepWidgetBaseType{
   type: 'widget-worker-thread',
   query?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
+  query_secondary?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
   control_entity: {
     name: string,
     verification_parameter: string,
