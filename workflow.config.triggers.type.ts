@@ -75,7 +75,7 @@ export interface WorkflowTriggerUpdateFlowEntityData extends  WorkflowTriggerBas
    *
    * \@update-flow-entity-data: Gera uma atualização no flowEntityData
    */
-  name: '@update-flow-entity-data',
+  name: '@update-flow-entity-data' | '@create-flow-entity-data',
   data: {
     /** Id da entidade. Caso seja uma entidade fora do workflow, usar a notação ```flow-id#entity-key``` */
     entity_key: string,
