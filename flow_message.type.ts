@@ -97,7 +97,11 @@ export interface FlowMessageFnSendMessage{
   contact_data?: { firstName: string, lastName: string, [key: string]: any } | { fullname: string, [key: string]: any },
   interaction_data?: Record<string, any>,
 }
-export type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage
+export interface FlowMessageFnStartBot {
+  mode: 'start-flow-bot',
+  execute: 'before' | 'after',
+}
+export type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage | FlowMessageFnStartBot
 
 
 export interface IReceiveFlowMessageWebhook {
