@@ -94,7 +94,7 @@ export interface FlowMessageFnSendMessage{
   to_type: 'contact_id' | 'phone',
   /** Mensagem dentro do fluxo de mensagem */
   step: string[],
-  contact_data?: { firstName: string, lastName: string, [key: string]: any } | { fullname: string, [key: string]: any },
+  contact_data: { firstName: string, lastName: string, [key: string]: any } | { fullname: string, [key: string]: any },
   interaction_data?: Record<string, any>,
 }
 export type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage
