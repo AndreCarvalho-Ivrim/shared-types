@@ -100,6 +100,7 @@ export interface FlowMessageFnSendMessage{
 export interface FlowMessageFnStartBot {
   mode: 'start-flow-bot',
   execute: 'before' | 'after',
+  condition?: string,
 }
 export type FlowMessageFn = FlowMessageFnCallTrigger | FlowMessageFnSendMessage | FlowMessageFnStartBot
 
