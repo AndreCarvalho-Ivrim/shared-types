@@ -49,7 +49,13 @@ export interface IntegrationExcelType {
      * não for preenchido. No caso contrário, ignorará a linha
      */
     restrict?: boolean,
-    formatter?: IntegrationExcelRulesFormatterType
+    formatter?: IntegrationExcelRulesFormatterType,
+    /** Filtra os dados de importação */
+    filters?: {
+      column: string,
+      type: 'eq' | 'in' | 'not',
+      value: string | number | boolean
+    }[]
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
@@ -58,12 +64,6 @@ export interface IntegrationExcelType {
   model_url?: string,
   /** Entitidade para salvar o registro de importação da planilha */
   import_registration?: string,
-  /** Filtra os dados de importação */
-  filters?: {
-    column: string,
-    type: 'eq' | 'in' | 'not',
-    value: string | number | boolean
-  }[]
 }
 export interface IntegrationExcelColumnType {
   id: string,
