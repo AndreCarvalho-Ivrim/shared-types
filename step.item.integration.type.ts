@@ -53,7 +53,7 @@ export interface IntegrationExcelType {
     /** Filtra os dados de importação */
     filters?: {
       column: string,
-      type: 'eq' | 'in' | 'not',
+      type: 'eq' | 'like' | 'not',
       value: string | number | boolean
     }[]
   },
