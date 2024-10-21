@@ -54,7 +54,7 @@ export interface IntegrationExcelType {
     filters?: {
       column: string,
       type: 'eq' | 'like' | 'not',
-      value: string | number | boolean
+      value: string
     }[]
   },
   scope: string,
