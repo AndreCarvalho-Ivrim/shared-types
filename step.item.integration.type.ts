@@ -57,7 +57,13 @@ export interface IntegrationExcelType {
   /** URL do template de importação para download */
   model_url?: string,
   /** Entitidade para salvar o registro de importação da planilha */
-  import_registration?: string
+  import_registration?: string,
+  /** Filtra os dados de importação */
+  filters?: {
+    column: string,
+    type: 'eq' | 'in' | 'not',
+    value: string | number | boolean
+  }[]
 }
 export interface IntegrationExcelColumnType {
   id: string,
