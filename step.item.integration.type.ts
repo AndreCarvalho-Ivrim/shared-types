@@ -4,17 +4,18 @@ export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   omie: 'Integração c/ Omie'
 };
 
-export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj' | 'time';
-export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj', 'time'];
+export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
+export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'time', 'datetime', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj'];
 export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnTypeType, string> = {
   text: 'Texto',
   date: 'Data',
+  time: 'Hora',
+  datetime: 'Data e Hora',
   email: 'Email',
   phone: 'Telefone',
   percent: 'Percentual',
   money: 'Moeda',
   number: 'Numérico',
-  time: 'Hora',
   'cpf-cnpj': 'CPF/CNPJ'
 };
 
@@ -48,13 +49,21 @@ export interface IntegrationExcelType {
      * não for preenchido. No caso contrário, ignorará a linha
      */
     restrict?: boolean,
-    formatter?: IntegrationExcelRulesFormatterType
+    formatter?: IntegrationExcelRulesFormatterType,
+    /** Filtra os dados de importação */
+    filters?: {
+      column: string,
+      type: 'eq' | 'like' | 'not' | 'in',
+      value: string
+    }[]
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
   append_values?: Record<string, any>,
   /** URL do template de importação para download */
-  model_url?: string
+  model_url?: string,
+  /** Entitidade para salvar o registro de importação da planilha */
+  import_registration?: string,
 }
 export interface IntegrationExcelColumnType {
   id: string,
