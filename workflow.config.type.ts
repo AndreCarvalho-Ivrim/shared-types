@@ -1295,6 +1295,9 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       /** Se for true, irá interromper a execução a primeira ocorrência verdadeira */
       breakExec?: boolean,
       events?: WorkflowRoutinesManageFlowEvent[]
+      /**
+       * Se adicionar deleted_at = true, ele irá excluir o registro
+       */
       append: Record<string, any>,
       descriptions?: {
         condition?: string,
