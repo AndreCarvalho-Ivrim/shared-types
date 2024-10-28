@@ -1295,8 +1295,12 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       /** Se for true, irá interromper a execução a primeira ocorrência verdadeira */
       breakExec?: boolean,
       events?: WorkflowRoutinesManageFlowEvent[]
-      append: Record<string, any>
-    }[]
+      append: Record<string, any>,
+      descriptions?: {
+        condition?: string,
+        description: string
+      }[]
+    }[],
   }
 }
 export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecutorBase {
