@@ -1297,6 +1297,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       events?: WorkflowRoutinesManageFlowEvent[]
       append: Record<string, any>,
       descriptions?: {
+        condition?: string,
         description: string
       }[]
     }[],
