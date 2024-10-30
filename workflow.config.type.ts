@@ -252,6 +252,8 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@to-affect: seguir a tipagem de [ToAffectFlowDataEventType]
    * 
+   * \@fill-location-lat-long: seguir a tipagem de [FillLocationLatLogEventType]
+   * 
    * APPEND -> required data on value = \@entity
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
