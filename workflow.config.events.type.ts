@@ -154,8 +154,11 @@ export interface FillLocationLatLogEventType{
   ref?: string,
   /** Referência dos campos que receberão a latitude e longitude */
   target: { lat: string, long: string },
-  /** Referência dos campos que tem as informações necessário para obter a lat-long */
-  info: { street: string, city: string },
+  /**
+   * Referência dos campos que tem as informações necessário para obter a lat-long e \
+   * do campo que registra endereços inválidos.
+   **/
+  info: { street: string, city: string, invalid: string },
   /**
    * Caso esteja rodando este evento de forma assincrona você pode configurar uma entidade dinâmica \
    * para armazenar o status do trabalho.
@@ -163,13 +166,14 @@ export interface FillLocationLatLogEventType{
    * É recomendado usar, pois além de ter o status da última execução essa entidade impede que rode \
    * este evento duas vezes ao mesmo tempo.
    **/
-  control_entity?: {
-    /** Nome da entidade dinâmica */
-    name: string,
-    /** 
-     *  Timeout para desconsiderar um status de ativo(importante para impedir que o status fique \
-     *  travado por falha de atualização)
-     **/
-    timeout: { time: 30 }
-  }
+  control_entity?: FillLocationLatLogControlEntity
+}
+export interface FillLocationLatLogControlEntity{
+  /** Nome da entidade dinâmica */
+  name: string,
+  /** 
+   *  Timeout para desconsiderar um status de ativo(importante para impedir que o status fique \
+   *  travado por falha de atualização)
+   **/
+  timeout: { time: 30 }
 }
