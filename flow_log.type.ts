@@ -24,26 +24,38 @@ export interface CardFlowLog {
   description: string
 }
 
+export const translateFlowLogTypes : Record<FlowLogTypes, string> = {
+  'webhook': 'Webhook',
+  'public-routes': 'Rotas Públicas',
+  'routine-event': 'Rotina de Eventos',
+  'widget-event': 'Worker Thread',
+  'observer-event': 'Observador de Eventos',
+}
+export const translateStatusFlowLogTypes : Record<FlowLogStatus, string> = {
+  'successfully': 'Sucesso',
+  'failed': 'Falha',
+  'warning': 'Alerta'
+}
 export const availableFlowLogTypes : CardFlowLog[] = [
   {
     type: 'webhook',
-    title: 'Webhook',
+    title: translateFlowLogTypes['webhook'],
     description: 'Logs de processos automatizados.'
   }, {
     type: 'public-routes',
-    title: 'Rotas Públicas',
+    title: translateFlowLogTypes['public-routes'],
     description: 'Logs de rotas públicas.'
   }, {
     type: 'routine-event',
-    title: 'Rotina de Eventos',
+    title: translateFlowLogTypes['routine-event'],
     description: 'Logs de rotinas de eventos.'
   }, {
     type: 'widget-event',
-    title: 'Worker Thread',
+    title: translateFlowLogTypes['widget-event'],
     description: 'Logs de tarefas em segundo plano.'
   }, {
     type: 'observer-event',
-    title: 'Observador de Eventos',
+    title: translateFlowLogTypes['observer-event'],
     description: 'Logs de observadores de eventos.'
   }
 ];
