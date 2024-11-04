@@ -1261,6 +1261,12 @@ export interface WorkflowRoutinesExecuterIOmie extends WorkflowRoutinesExecutorB
 export interface WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls{
   id: '@ifm-finalize-technician-calls',
   data: {
+    /**
+     * Por padrão(false) o evento necessita que informe o id do técnico para \
+     * finalizar técnico a técnico, mas se passar a flag [finalize_all] = true \
+     * irá resetar de todos os técnicos de uma vez.
+     */
+    finalize_all?: boolean,
     entity_keys: {
       technicians: string,
       logs: string,
@@ -1306,6 +1312,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
         description: string
       }[]
     }[],
+    event_after_all?: WorkflowRoutinesManageFlowEvent[]
   }
 }
 export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecutorBase {
