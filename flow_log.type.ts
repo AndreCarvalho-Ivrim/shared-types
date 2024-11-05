@@ -40,7 +40,7 @@ export const availableFlowLogTypes : CardFlowLog[] = [
   {
     type: 'webhook',
     title: translateFlowLogTypes['webhook'],
-    description: 'Logs de processos automatizados.'
+    description: 'Logs de webhooks de API.'
   }, {
     type: 'public-routes',
     title: translateFlowLogTypes['public-routes'],
@@ -48,7 +48,7 @@ export const availableFlowLogTypes : CardFlowLog[] = [
   }, {
     type: 'routine-event',
     title: translateFlowLogTypes['routine-event'],
-    description: 'Logs de rotinas de eventos.'
+    description: 'Logs de eventos de rotinas.'
   }, {
     type: 'widget-event',
     title: translateFlowLogTypes['widget-event'],
@@ -56,6 +56,6 @@ export const availableFlowLogTypes : CardFlowLog[] = [
   }, {
     type: 'observer-event',
     title: translateFlowLogTypes['observer-event'],
-    description: 'Logs de observadores de eventos.'
+    description: 'Logs de eventos de observadores.'
   }
 ];
