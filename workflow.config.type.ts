@@ -1347,9 +1347,10 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
     data_id?: string
   }>
 }
+export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external'; 
 export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
   type: 'bot',
-  exception?: 'ability-retorization' | 'ability-retorization-external',
+  exception?: WorkflowRoutinesBotExceptions,
   /**
    * Qual horário a rotina será executada. Por padrão ela é executada imediatamente, \
    * caso queira definir, o horário é de 00:30 até 23, pulando de meia em meia hora \
