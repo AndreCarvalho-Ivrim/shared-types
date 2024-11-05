@@ -29,7 +29,7 @@ export interface WidgetRoutineType extends StepWidgetBaseType{
   matchs: string[]
 }
 export interface WidgetWorkerThreadQuery{
-  type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'lte' | 'exists' | 'date',
+  type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'gte' | 'lte' | 'exists' | 'date',
   value?: any
 }
 export interface WidgetWorkerThread extends StepWidgetBaseType{
@@ -60,7 +60,8 @@ export interface WidgetWorkerThread extends StepWidgetBaseType{
     append_values: Record<string, any>
   }[],
   items?: ItemOrViewOrWidgetOrIntegration[],
-  exception?: 'ifm-roterization' | 'ifm-roterization-external'
+  exception?: 'ifm-roterization' | 'ifm-roterization-external',
+  variation?: string
 }
 export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
