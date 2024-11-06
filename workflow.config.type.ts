@@ -730,6 +730,11 @@ export interface WorkflowMenuShortcut{
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
+  exception_views?: {
+    slug: string,
+    title: string,
+    icon?: AvailableIcons 
+  }[]
   filters?: Record<string, WorkflowConfigFilterType[]>,
   permissions?: ConfigPermissionType,
   menu?: {
