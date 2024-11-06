@@ -734,7 +734,7 @@ export interface WorkflowConfigType {
     slug: string,
     title: string,
     icon?: AvailableIcons 
-  }[]
+  }[],
   filters?: Record<string, WorkflowConfigFilterType[]>,
   permissions?: ConfigPermissionType,
   menu?: {
