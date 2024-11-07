@@ -14,7 +14,8 @@ export const isacRoutes = {
     logs: {
       main: (module_name: string) => `/logs/${module_name}`,
       log_type: (module_name: string, log_type: string) => `/logs/${module_name}/${log_type}`,
-    }
+    },
+    exception: (module_name: string, exception: string) => `/exception/${module_name}/${exception}`,
   },
   report: {
     home: () => '/report'
