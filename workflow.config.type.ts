@@ -1261,6 +1261,12 @@ export interface WorkflowRoutinesExecuterIOmie extends WorkflowRoutinesExecutorB
 export interface WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls{
   id: '@ifm-finalize-technician-calls',
   data: {
+    /**
+     * Por padrão(false) o evento necessita que informe o id do técnico para \
+     * finalizar técnico a técnico, mas se passar a flag [finalize_all] = true \
+     * irá resetar de todos os técnicos de uma vez.
+     */
+    finalize_all?: boolean,
     entity_keys: {
       technicians: string,
       logs: string,
@@ -1306,6 +1312,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
         description: string
       }[]
     }[],
+    event_after_all?: WorkflowRoutinesManageFlowEvent[]
   }
 }
 export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecutorBase {
@@ -1340,9 +1347,10 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
     data_id?: string
   }>
 }
+export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external'; 
 export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
   type: 'bot',
-  exception?: 'ability-retorization' | 'ability-retorization-external',
+  exception?: WorkflowRoutinesBotExceptions,
   /**
    * Qual horário a rotina será executada. Por padrão ela é executada imediatamente, \
    * caso queira definir, o horário é de 00:30 até 23, pulando de meia em meia hora \

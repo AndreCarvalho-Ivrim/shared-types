@@ -86,4 +86,7 @@ export type AvailableIcons =
   'UnlikeIcon' | 
   'MobileIcon' |
   'CollapseIcon' |
-  'FilterIcon'
+  'FilterIcon' |
+  'WorldIcon' |
+  'BullseyeIcon' |
+  'BinocularsIcon'

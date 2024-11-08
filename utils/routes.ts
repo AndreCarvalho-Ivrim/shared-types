@@ -10,7 +10,11 @@ export const isacRoutes = {
     exec: (module_name: string, view_mode?: string) => `/modulo/${module_name}${view_mode ? `/${view_mode}` : ``}`,
     entity: (module_name: string, entity: string) => `/entidade/${module_name}/${entity}`,
     calendar: (module_name: string) => `/calendario-do-fluxo/${module_name}`,
-    sla_panel: (module_name: string) => `/painel-sla/${module_name}`
+    sla_panel: (module_name: string) => `/painel-sla/${module_name}`,
+    logs: {
+      main: (module_name: string) => `/logs/${module_name}`,
+      log_type: (module_name: string, log_type: string) => `/logs/${module_name}/${log_type}`,
+    }
   },
   report: {
     home: () => '/report'
