@@ -1,3 +1,5 @@
+import { AvailableIcons } from "./icon.type";
+
 export type FlowLogTypes = 'webhook' | 'observer-event' | 'routine-event' | 'widget-event' | 'public-routes';
 export type FlowLogStatus = 'successfully' | 'failed' | 'warning';
 
@@ -21,15 +23,16 @@ export interface FlowLogType{
 export interface CardFlowLog {
   type: FlowLogTypes,
   title: string,
-  description: string
+  description: string,
+  icon?: AvailableIcons
 }
 
 export const translateFlowLogTypes : Record<FlowLogTypes, string> = {
-  'webhook': 'Webhook',
+  'webhook': 'Webhooks',
   'public-routes': 'Rotas Públicas',
-  'routine-event': 'Rotina de Eventos',
-  'widget-event': 'Worker Thread',
-  'observer-event': 'Observador de Eventos',
+  'routine-event': 'Rotinas',
+  'widget-event': 'Worker Threads',
+  'observer-event': 'Observadores',
 }
 export const translateStatusFlowLogTypes : Record<FlowLogStatus, string> = {
   'successfully': 'Sucesso',
@@ -40,22 +43,27 @@ export const availableFlowLogTypes : CardFlowLog[] = [
   {
     type: 'webhook',
     title: translateFlowLogTypes['webhook'],
-    description: 'Logs de processos automatizados.'
+    description: 'Logs de webhooks de API.',
+    icon: 'GitCompareIcon'
   }, {
     type: 'public-routes',
     title: translateFlowLogTypes['public-routes'],
-    description: 'Logs de rotas públicas.'
+    description: 'Logs de rotas públicas.',
+    icon: 'WorldIcon'
   }, {
     type: 'routine-event',
     title: translateFlowLogTypes['routine-event'],
-    description: 'Logs de rotinas de eventos.'
+    description: 'Logs de eventos de rotinas.',
+    icon: 'StopWatchIcon'
   }, {
     type: 'widget-event',
     title: translateFlowLogTypes['widget-event'],
-    description: 'Logs de tarefas em segundo plano.'
+    description: 'Logs de tarefas em segundo plano.',
+    icon: 'CopyIcon'
   }, {
     type: 'observer-event',
     title: translateFlowLogTypes['observer-event'],
-    description: 'Logs de observadores de eventos.'
+    description: 'Logs de eventos de observadores.',
+    icon: 'BullseyeIcon'
   }
 ];
