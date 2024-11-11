@@ -159,7 +159,11 @@ export interface StepItemCustomDataEditableTable{
     spread_it_all?: {
       /** Elemento que será usado como base para o spread operator */
       target: string
-    }
+    },
+    /**
+     * Se tiver items do tipo select-multiple, essas opções será usada para não permitir selecionar a mesma opção caso já selecionada
+     **/
+    not_repeat_option?: boolean
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
