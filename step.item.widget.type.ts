@@ -36,6 +36,7 @@ export interface WidgetWorkerThread extends StepWidgetBaseType{
   type: 'widget-worker-thread',
   query?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
   query_secondary?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
+  query_tertiary?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
   control_entity: {
     name: string,
     verification_parameter: string,
