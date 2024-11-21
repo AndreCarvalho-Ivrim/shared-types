@@ -54,7 +54,7 @@ export interface IntegrationExcelType {
     filters?: {
       /** Nome da coluna a ser filtrada, deve ser o mesmo usado na planilha */
       column: string,
-      type: 'eq' | 'like' | 'not' | 'in' | 'not-like',
+      type: 'eq' | 'like' | 'in' | 'not' | 'not-like' | 'nin',
       value: string
     }[]
   },
