@@ -52,8 +52,9 @@ export interface IntegrationExcelType {
     formatter?: IntegrationExcelRulesFormatterType,
     /** Filtra os dados de importação */
     filters?: {
+      /** Nome da coluna a ser filtrada, deve ser o mesmo usado na planilha */
       column: string,
-      type: 'eq' | 'like' | 'not' | 'in',
+      type: 'eq' | 'like' | 'in' | 'not' | 'not-like' | 'nin',
       value: string
     }[]
   },
