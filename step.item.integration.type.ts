@@ -51,12 +51,7 @@ export interface IntegrationExcelType {
     restrict?: boolean,
     formatter?: IntegrationExcelRulesFormatterType,
     /** Filtra os dados de importação */
-    filters?: {
-      /** Nome da coluna a ser filtrada, deve ser o mesmo usado na planilha */
-      column: string,
-      type: 'eq' | 'like' | 'in' | 'not' | 'not-like' | 'nin',
-      value: string
-    }[]
+    filters?: IntegrationExcelFilterRule[]
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
@@ -65,6 +60,12 @@ export interface IntegrationExcelType {
   model_url?: string,
   /** Entitidade para salvar o registro de importação da planilha */
   import_registration?: string,
+}
+export interface IntegrationExcelFilterRule{
+  /** Nome da coluna a ser filtrada, deve ser o mesmo usado na planilha */
+  column: string,
+  type: 'eq' | 'like' | 'in' | 'not' | 'not-like' | 'nin',
+  value: any
 }
 export interface IntegrationExcelColumnType {
   id: string,
