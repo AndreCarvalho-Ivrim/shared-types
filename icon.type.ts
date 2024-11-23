@@ -89,4 +89,5 @@ export type AvailableIcons =
   'FilterIcon' |
   'WorldIcon' |
   'BullseyeIcon' |
-  'BinocularsIcon'
+  'BinocularsIcon' |
+  'SortIcon'
