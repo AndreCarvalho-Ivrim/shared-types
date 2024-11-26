@@ -317,7 +317,7 @@ export interface ConfigViewModeColumnsType {
    */
   translate?: Record<string, string>
 }
-type WorkflowFilterScopeFilter = Record<string, string> | Record<string, {
+type WorkflowFilterScopeFilter = Record<string, string | {
   type: WorkflowConfigFilterType['type'],
   value: any
 }>
