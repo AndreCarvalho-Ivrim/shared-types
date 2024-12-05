@@ -1274,6 +1274,7 @@ export interface WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls{
     finalize_all?: boolean,
     entity_keys: {
       technicians: string,
+      unavailability?: string,
       logs: string,
     }
   }
