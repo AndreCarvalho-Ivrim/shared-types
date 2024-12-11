@@ -22,6 +22,7 @@ interface FlowMessageBase{
   contents: string[],
   /** A função é considerada ao entrar no diálogo atual */
   fns?: FlowMessageFn[]
+  store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> }
 }
 export interface FlowMessageInfoType extends FlowMessageBase{
   /** info: Informação apenas envia uma mensagem sem esperar retorno */
