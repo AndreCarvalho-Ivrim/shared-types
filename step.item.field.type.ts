@@ -127,7 +127,8 @@ export interface StepItemType{
   customData?: StepÍtemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
-  }
+  },
+  is_expanded?: boolean
 }
 export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table';
 export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table'];
