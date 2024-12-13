@@ -90,4 +90,6 @@ export type AvailableIcons =
   'WorldIcon' |
   'BullseyeIcon' |
   'BinocularsIcon' |
-  'SortIcon'
+  'SortIcon' |
+  'WhatsappIcon' |
+  'PhoneOffIcon'
