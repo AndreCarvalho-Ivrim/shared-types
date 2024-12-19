@@ -124,15 +124,15 @@ export interface StepItemType{
      */
     filter_condition?: string,
   },
-  customData?: StepÍtemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | {
+  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
   },
   is_expanded?: boolean
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table'];
-export interface StepÍtemCustomDataSettings{
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy'];
+export interface StepItemCustomDataSettings{
   mode: '@list',
   settings: {
     mode: 'inline' | 'modal',
@@ -172,4 +172,11 @@ export interface StepItemCustomDataCepAutocomplete{
   /** NÃO UTILIZADO */
   settings?: any,
   id: string
+}
+type RecursiveRecordStrStr = Record<string, string | Record<string, string | Record<string, string | Record<string, string>>>>;
+export interface StepItemCustomDataCheckboxInHierarchy{
+  mode: '@checkbox-in-hierarchy',
+  settings: {
+    options: RecursiveRecordStrStr
+  }
 }
