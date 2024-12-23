@@ -173,7 +173,9 @@ export interface StepItemCustomDataCepAutocomplete{
   settings?: any,
   id: string
 }
-type RecursiveRecordStrStr = Record<string, string | Record<string, string | Record<string, string | Record<string, string>>>>;
+export type RecursiveRecordStrStr = {
+  [key: string]: string | RecursiveRecordStrStr;
+};
 export interface StepItemCustomDataCheckboxInHierarchy{
   mode: '@checkbox-in-hierarchy',
   settings: {
