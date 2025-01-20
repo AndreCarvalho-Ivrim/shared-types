@@ -810,7 +810,9 @@ export interface WorkflowConfigType {
          * ```
          
          */
-        available_query_params?: Record<string, string>,
+        available_query_params?: {
+          pagination_mode?: 'next_link'
+        } & Record<string, string>,
         order_by?: Record<string, 'desc' | 'asc'>,
         filter_scope?: WorkflowViewModeFilterScope[],
         /** Se não for informado trará o flow_data.data completo */
