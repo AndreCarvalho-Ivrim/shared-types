@@ -811,7 +811,7 @@ export interface WorkflowConfigType {
          
          */
         available_query_params?: {
-          pagination_mode?: 'next_link'
+          pagination_mode?: 'paginated_links'
         } & Record<string, string>,
         order_by?: Record<string, 'desc' | 'asc'>,
         filter_scope?: WorkflowViewModeFilterScope[],
