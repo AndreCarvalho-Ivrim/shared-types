@@ -86,5 +86,22 @@ export interface WorkflowTriggerUpdateFlowEntityData extends  WorkflowTriggerBas
     append_values: Record<string, any>
   }
 }
+export interface WorkflowTriggerUpdateFlowData extends  WorkflowTriggerBase{
+  /** 
+   * Referência ao evento que será disparado:
+   *
+   * \@update-flow-entity-data: Gera uma atualização no flowData
+   */
+  name: '@update-flow-data',
+  data: {
+    /** Id da entidade. Caso seja uma entidade fora do workflow, usar a notação ```flow-id#entity-key``` */
+    entity_key: string,
+    query?: any,
+    /** 
+     * Record<chave-na-entidade-dinamica, (valor-estatico | \@[shortcode] | \@code_helper)>
+     */
+    append_values: Record<string, any>
+  }
+}
 
-export type WorkflowTriggerType = WorkflowTriggerSyncFlowDatas | WorkflowTriggerGamificationActionLog | WorkflowTriggerObserverEvents | WorkflowTriggerUpdateFlowEntityData;
+export type WorkflowTriggerType = WorkflowTriggerSyncFlowDatas | WorkflowTriggerGamificationActionLog | WorkflowTriggerObserverEvents | WorkflowTriggerUpdateFlowEntityData | WorkflowTriggerUpdateFlowData;
