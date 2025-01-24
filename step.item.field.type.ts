@@ -49,6 +49,7 @@ export interface StepItemType{
     /** Segue a mesma regra do minDate */
     maxDate?: '@today' | '@now' | '@tomorrow' | string
     render?: string,
+    switch_render?: string[],
     /**
      * AVAILABLE CUSTOM RULES\n
      * - [ignore]: Irá ignorar o campo na hora de salvar(só existe para controle de layout[geralmente usado em renderização \
