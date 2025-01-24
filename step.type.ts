@@ -150,7 +150,13 @@ export interface StepTypeRules{
    */
   render?: string,
   /** Utilizado para ter o funcionamento de createOrUpdate baseado nos dados de cadastro. */
-  update_if_match?: { match: string[] }
+  update_if_match?: {
+    match: string[],
+    restrictions?: Array<{
+      condition: string,
+      mode: 'abort'
+    }>,
+  }
 }
 export interface StepSlaType{
   /** Tempo esperado de permanência em uma etapa */
