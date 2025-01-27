@@ -63,6 +63,13 @@ export interface StepCustomRuleRedirectToStep{
   /** Use \@current-step no target para redirecionar para o step atual do flow-data */
   id: '@redirect-to-step'
 }
+export interface StepCustomRuleFormWasModified{
+  id: '@form-was-modified',
+  /** Será usado caso o usuario tenha a opção de prosseguir mesmo sem modificações - não tem suporte para items */
+  confirm?: Omit<StepActionConfirmType, 'StepItemType'>,
+  /** Sera usado caso o usuario seja obrigado a fazer alguma modificação */
+  error_message?: string
+}
 export interface StepTypeRules{
   /**
    * Está propriedade serve para forçar o preenchimento \
@@ -134,7 +141,7 @@ export interface StepTypeRules{
    * em atualizações
    * - [@select-owner]: Utilizar o botão para chamar o modal de seleção de owners
    */
-  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | StepCustomRuleRedirectToStep,
+  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | StepCustomRuleRedirectToStep | StepCustomRuleFormWasModified,
   /**
    * STRC \
    * Os valores observados são os itens com observer: true e caso \
@@ -143,7 +150,10 @@ export interface StepTypeRules{
    */
   render?: string,
   /** Utilizado para ter o funcionamento de createOrUpdate baseado nos dados de cadastro. */
-  update_if_match?: { match: string[] }
+  update_if_match?: {
+    match: string[],
+    exception?: 'ability-check-dates'
+  }
 }
 export interface StepSlaType{
   /** Tempo esperado de permanência em uma etapa */
