@@ -42,10 +42,7 @@ export interface IntegrationExcelType {
       match: string[],
       replacers?: string[],
       mode: 'merge' | 'overwrite' | 'replacer' | 'error',
-      restrictions?: Array<{
-        condition: string,
-        mode: 'abort'
-      }>,
+      exception?: 'ability-check-dates',
       error_message?: string
     }
     /**
