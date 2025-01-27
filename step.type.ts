@@ -152,10 +152,7 @@ export interface StepTypeRules{
   /** Utilizado para ter o funcionamento de createOrUpdate baseado nos dados de cadastro. */
   update_if_match?: {
     match: string[],
-    restrictions?: Array<{
-      condition: string,
-      mode: 'abort'
-    }>,
+    exception?: 'ability-check-dates'
   }
 }
 export interface StepSlaType{
