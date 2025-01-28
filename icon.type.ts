@@ -92,4 +92,5 @@ export type AvailableIcons =
   'BinocularsIcon' |
   'SortIcon' |
   'WhatsappIcon' |
-  'PhoneOffIcon'
+  'PhoneOffIcon' |
+  'WarningIcon'
