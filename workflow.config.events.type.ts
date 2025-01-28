@@ -177,3 +177,48 @@ export interface FillLocationLatLogControlEntity{
    **/
   timeout: { time: 30 }
 }
+export interface RequestExternalApiEvent{
+  url: string,
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+  headers?: any,
+  body?: any,
+  restrictions?: {
+    condition: string,
+    mode: 'error' | 'abort',
+    /** Válido caso mode === 'error' */
+    error_message?: string,
+  }[], 
+  /**
+   * Objetivo: De-Para de como tratar a resposta.
+   * 
+   * ``` { 'path-no-flow-data': 'path-na-resposta' } ```
+   **/
+  effects: {
+    /** default: success */
+    only?: 'success' | 'fail' | 'always',
+    append_values: Record<string, {
+      value: any,
+      /**
+       * default: static = false
+       * 
+       * Quando static = true, quer dizer que estamos adicionando o valor \
+       * hardcode, quando não, é a referência do valor na resposta.
+       * 
+       * Exemplo static:
+       * append_values: { name: 'Hello World' }
+       * flow_data: { name: 'Hello World' }
+       *  
+       * Exemplo não static:
+       * resposta: { content: 'Hello World' }
+       * append_values: { name: 'content' }
+       * flow_data: { name: 'Hello World' }
+       */
+      static?: boolean
+    }>
+    /**
+     * Válido apenas se only === 'fail' ou 'always'
+     * ```{ 'condition': 'message' }```
+     **/
+    error_message?: Record<string, string>
+  }[]
+} 

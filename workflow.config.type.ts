@@ -254,6 +254,8 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@fill-location-lat-long: seguir a tipagem de [FillLocationLatLogEventType]
    * 
+   * \@request-external-api: seguir a tipagem de [RequestExternalApiEvent]
+   * 
    * APPEND -> required data on value = \@entity
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
