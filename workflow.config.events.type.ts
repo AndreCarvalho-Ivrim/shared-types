@@ -196,7 +196,7 @@ export interface RequestExternalApiEvent{
   effects: {
     /** default: success */
     only?: 'success' | 'fail' | 'always',
-    append_values: Record<string, {
+    append_values?: Record<string, {
       value: any,
       /**
        * default: static = false
@@ -219,6 +219,7 @@ export interface RequestExternalApiEvent{
      * Válido apenas se only === 'fail' ou 'always'
      * ```{ 'condition': 'message' }```
      **/
-    error_message?: Record<string, string>
+    error_message?: Record<string, string>,
+    breakExec?: boolean
   }[]
 } 
