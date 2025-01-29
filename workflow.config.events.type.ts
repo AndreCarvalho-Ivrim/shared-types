@@ -238,5 +238,6 @@ export interface RequestExternalDBEvent{
    * 
    * ``` { 'path-no-flow-data': { value: 'path-na-resposta' ou valor hardcode, static: bool para ativar o modo hardcode } } ```
    **/
-  effects: RequestExternalEffect[]
+  effects: RequestExternalEffect[],
+  params?: string[]
 }
