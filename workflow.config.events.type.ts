@@ -177,17 +177,18 @@ export interface FillLocationLatLogControlEntity{
    **/
   timeout: { time: 30 }
 }
+interface RequestExternalRestriction{
+  condition: string,
+  mode: 'error' | 'abort',
+  /** Válido caso mode === 'error' */
+  error_message?: string,
+}
 export interface RequestExternalApiEvent{
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   headers?: any,
   body?: any,
-  restrictions?: {
-    condition: string,
-    mode: 'error' | 'abort',
-    /** Válido caso mode === 'error' */
-    error_message?: string,
-  }[], 
+  restrictions?: RequestExternalRestriction[], 
   /**
    * Objetivo: De-Para de como tratar a resposta.
    * 
@@ -221,4 +222,13 @@ export interface RequestExternalApiEvent{
      **/
     error_message?: Record<string, string>
   }[]
-} 
+}
+export interface RequestExternalDBEvent{
+  db_host: string,
+  db_port: string,
+  db_user: string,
+  db_password: string,
+  db_name: string,
+  query: string,
+  restrictions?: RequestExternalRestriction[], 
+}
