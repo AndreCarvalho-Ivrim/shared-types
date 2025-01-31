@@ -15,7 +15,14 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   custom: 'Customizado'
 };
 
-export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone';
+export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone'
+export type StepItemAttrMaskDynamicType = {
+  type: 'number',
+  /**
+   * Separador Number: "-", "."
+   */
+  pattern: string
+}
 export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info';
 export type TargetModeType = 'single' | 'multiple' | 'trigger' | 'final';
 export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
@@ -30,6 +37,7 @@ export interface StepItemType{
   type: StepItemAttrTypeType,
   mode: 'field',
   mask?: StepItemAttrMaskType,
+  dynamic_mask?: StepItemAttrMaskDynamicType,
   label?: string,
   placeholder?: string,
   subtitle?: string,
