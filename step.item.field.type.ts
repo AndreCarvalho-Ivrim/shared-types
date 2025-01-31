@@ -56,7 +56,8 @@ export interface StepItemType{
      * condicional]), ou pesquisar
      * - [omit-if-empty]: Essa configuração é valida para campos select, geralmente quando utilizam conditional options ou \
      * autocomplete, para que o campo seja omitido caso não haja nenhuma opção válida.
-     * 
+     * - [omit-gallery]: Essa configuração é valida para file-multiple, para remover a funcionalidade de galeria
+     *  
      * As regras abaixo só funcionam quando o Step.rule.customRule === '@find'
      * - [@find:select-unique (default)]: Irá usar este campo para pesquisa exata, e retornará apenas 1 resultado
      * - [@find:select]: Irá usar este campo para pesquisa exata ('texto pesquisado' === 'texto no banco')
