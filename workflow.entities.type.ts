@@ -224,3 +224,9 @@ export interface ExternalRequestSchema{
   type: FlowEntitySchemaTypes,
   required?: boolean
 }
+
+export interface BotComputerEntity {
+  name: string; // Nome do computador
+  status: "active" | "inactive"; // Status do computador
+  envVariables: Record<string, string>; // Variáveis do .env controladas
+}
