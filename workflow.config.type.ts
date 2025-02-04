@@ -752,7 +752,8 @@ export interface WorkflowConfigType {
     shortcuts?: WorkflowMenuShortcut[]
     groups?: Partial<Record<'flow_entities' | 'exception_views' | 'shortcuts', {
       title: string,
-      icon?: AvailableIcons
+      icon?: AvailableIcons,
+      only?: string[]
     }>>
   },
   triggers?: WorkflowTriggerType[],
