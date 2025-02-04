@@ -749,7 +749,11 @@ export interface WorkflowConfigType {
      * - shortcut: shortcut--id
      */
     ordenation?: string[],
-    shortcuts: WorkflowMenuShortcut[]
+    shortcuts?: WorkflowMenuShortcut[]
+    groups?: Partial<Record<'flow_entities' | 'exception_views' | 'shortcuts', {
+      title: string,
+      icon?: AvailableIcons
+    }>>
   },
   triggers?: WorkflowTriggerType[],
   webhooks?: WorkflowWebhookType,
