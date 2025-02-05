@@ -225,8 +225,28 @@ export interface ExternalRequestSchema{
   required?: boolean
 }
 
-export interface BotComputerEntity {
-  name: string; // Nome do computador
-  status: "active" | "inactive"; // Status do computador
-  envVariables: Record<string, string>; // Variáveis do .env controladas
+export interface botExecutionControl{
+  name: string;
+  status: "active" | "inactive";
+  users_zeus: {
+    username: string;
+    password: string;
+    status: "valid" | "invalid";
+  }[];
+  users_elos: {
+    username: string;
+    password: string;
+    status: "valid" | "invalid";
+  }[];
+  users_vivo: {
+    username: string;
+    password: string;
+    status: "valid" | "invalid";
+  }[];
+  actions: {
+    comment_service?: boolean;
+    capture?: boolean;
+    allocation?: boolean;
+    update_status?: boolean;
+  };
 }
