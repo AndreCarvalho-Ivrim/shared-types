@@ -350,6 +350,7 @@ export interface WorkflowViewModeBase {
   icon?: AvailableIcons,
   slug: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
+  available_steps?: string[],
   /** { 'ref-no-flow-data': 'título-visual' } */ 
   dynamic_order_by?: Record<string, string>,
   /** Group permission separado por virgula */
