@@ -224,29 +224,3 @@ export interface ExternalRequestSchema{
   type: FlowEntitySchemaTypes,
   required?: boolean
 }
-
-export interface botExecutionControl{
-  name: string;
-  status: "active" | "inactive";
-  users_zeus: {
-    username: string;
-    password: string;
-    status: "valid" | "invalid";
-  }[];
-  users_elos: {
-    username: string;
-    password: string;
-    status: "valid" | "invalid";
-  }[];
-  users_vivo: {
-    username: string;
-    password: string;
-    status: "valid" | "invalid";
-  }[];
-  actions: {
-    comment_service?: boolean;
-    capture?: boolean;
-    allocation?: boolean;
-    update_status?: boolean;
-  };
-}
