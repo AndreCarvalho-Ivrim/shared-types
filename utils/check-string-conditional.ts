@@ -180,6 +180,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     if (operator === 'filled') {
       const len = arr.length;
       let isFilled = len > 0
+      if (val === '!') return !isFilled;
+      if (val === '!!') return isFilled;
       if (!isFilled) return Number(val) === 0;
 
       if (typeof val !== 'string' || (!(
