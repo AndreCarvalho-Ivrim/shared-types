@@ -739,6 +739,7 @@ export interface WorkflowConfigType {
     icon?: AvailableIcons 
   }[],
   filters?: Record<string, WorkflowConfigFilterType[]>,
+  open_dialog?: WorkflowConfigOpenDialogType,
   permissions?: ConfigPermissionType,
   menu?: {
     /**
@@ -1396,4 +1397,8 @@ export interface WFActionFnCallExternalRequest {
     /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
     breakExec?: boolean
   }[]
+}
+export interface WorkflowConfigOpenDialogType{
+  icon?: AvailableIcons,
+  title: string,
 }
