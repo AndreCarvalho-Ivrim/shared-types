@@ -18,6 +18,7 @@ interface FlowMessageBase{
    * seja enviada apenas se ele digitar uma opção X.
    */
   matchs?: string[],
+  condition?: string,
   /** Conteúdo da mensagem, podendo ser N mensagens. */
   contents: string[],
   /** A função é considerada ao entrar no diálogo atual */
