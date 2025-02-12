@@ -46,6 +46,7 @@ export interface FlowMessageRedirectType{
 export type FlowMessageResponse = (
   Omit<FlowMessageInfoType, 'interaction_mode' | '_id' | 'client_id'> | 
   Omit<FlowMessageAskType, 'interaction_mode' | '_id' | 'client_id'> | 
+  Omit<FlowMessageOpenDialogType, 'interaction_mode' | '_id' | 'client_id'> | 
   FlowMessageRedirectType
 )
 export interface FlowMessageAskType extends FlowMessageBase{
@@ -55,7 +56,11 @@ export interface FlowMessageAskType extends FlowMessageBase{
   /** respostas possíveis do usuário */
   responses: FlowMessageResponse[]
 }
-export type FlowMessageType = FlowMessageInfoType | FlowMessageAskType;
+export interface FlowMessageOpenDialogType extends FlowMessageBase{
+  /** open: O usuario e o cliente podem trocar mensagem livremente */
+  mode: 'open-dialog'
+}
+export type FlowMessageType = FlowMessageInfoType | FlowMessageAskType | FlowMessageOpenDialogType;
 
 export interface FlowMessageFnCallTrigger{
   mode: 'call-trigger',
