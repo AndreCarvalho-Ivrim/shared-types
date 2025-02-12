@@ -225,6 +225,15 @@ export interface RequestExternalApiEvent{
    **/
   effects: RequestExternalEffect[]
 }
+export interface SendWhatsappMessagesEvent{
+  restrictions?: RequestExternalRestriction[], 
+  /**
+   * Objetivo: De-Para de como tratar a resposta.
+   * 
+   * ``` { 'path-no-flow-data': { value: 'path-na-resposta' ou valor hardcode, static: bool para ativar o modo hardcode } } ```
+   **/
+  effects: RequestExternalEffect[]
+}
 export interface RequestExternalDBEvent{
   db_host: string,
   db_port: string,
