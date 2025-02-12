@@ -103,5 +103,20 @@ export interface WorkflowTriggerUpdateFlowData extends  WorkflowTriggerBase{
     append_values: Record<string, any>
   }
 }
+export interface WorkflowTriggerUpdateFlowDataStep extends  WorkflowTriggerBase{
+  /** 
+   * Referência ao evento que será disparado:
+   *
+   * \@update-flow-data-step: Gera uma atualização no flowData e altera o step do mesmo
+   */
+  name: '@update-flow-data-step',
+  data: {
+    query?: any,
+    /** 
+     * Record<chave-na-entidade-dinamica, (valor-estatico | \@[shortcode] | \@code_helper)>
+     */
+    append_values: Record<string, any>
+  }
+}
 
-export type WorkflowTriggerType = WorkflowTriggerSyncFlowDatas | WorkflowTriggerGamificationActionLog | WorkflowTriggerObserverEvents | WorkflowTriggerUpdateFlowEntityData | WorkflowTriggerUpdateFlowData;
+export type WorkflowTriggerType = WorkflowTriggerSyncFlowDatas | WorkflowTriggerGamificationActionLog | WorkflowTriggerObserverEvents | WorkflowTriggerUpdateFlowEntityData | WorkflowTriggerUpdateFlowData | WorkflowTriggerUpdateFlowDataStep;
