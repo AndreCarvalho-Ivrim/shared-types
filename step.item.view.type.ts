@@ -78,7 +78,17 @@ export interface StepViewHorizontalTableType extends Omit<StepViewGroupTableType
   type: 'horizontal-table',
   split_table?: number,
   /** true (default) */
-  has_pagination?: boolean
+  has_pagination?: boolean,
+  default_requirements?: {
+    /** Dados que espero na visualização */
+    data: any[],
+    /** Quais propriedades será realizado o match */
+    matchs: string[]
+  },
+  order_by?: {
+    field: string,
+    order: 'asc' | 'desc'
+  }
 }
 export interface StepViewTasksType extends StepViewBaseType{
   /**
