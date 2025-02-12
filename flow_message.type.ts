@@ -36,6 +36,7 @@ export interface FlowMessageRedirectType{
   /** redirect: É a possibilidade de redirecionar para outra região do diálogo */
   mode: 'redirect',
   matchs?: string[],
+  condition?: string,
   /** Mensagem de transição, antes de redirecionar */
   contents?: string[],
   /** Chave(ou caminho) do diálogo que quer chamar */
@@ -51,6 +52,7 @@ export type FlowMessageResponse = (
 export interface FlowMessageAskType extends FlowMessageBase{
   /** ask: É uma pergunta que necessita da resposta do cliente */
   mode: 'ask',
+  condition?: string,
   /** respostas possíveis do usuário */
   responses: FlowMessageResponse[]
 }
