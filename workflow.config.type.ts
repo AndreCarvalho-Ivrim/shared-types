@@ -1030,7 +1030,9 @@ export interface WorkflowConfigIntegrationsChatbot{
   /** Informações customizadas que devem ser sincronizadas com o contato do mensagex \
    * ``` { 'mensagex-field-id': 'flow-message-contact.contact_data-ref' } ```
   */
-  custom_contact_data?: Record<string, string>
+  custom_contact_data?: Record<string, string>,
+  /** Listas de contato */
+  lists: Array<{ id: number, name: string }>
 }
 
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
