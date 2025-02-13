@@ -93,4 +93,8 @@ export type AvailableIcons =
   'SortIcon' |
   'WhatsappIcon' |
   'PhoneOffIcon' |
-  'WarningIcon'
+  'WarningIcon' |
+  'CalendarCheckIcon' |
+  'FilterBarsIcon' |
+  'PhoneCallIcon' |
+  'GlobeIcon'
