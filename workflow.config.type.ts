@@ -376,6 +376,7 @@ export interface WorkflowViewModeBase {
 export interface KanbanFlagType{
   condition: string,
   type: ThemeColorType,
+  /** _id da etapa que é o id do mongo */
   availableSteps?: string[],
   /**
    * Um caracter que será mostrado na flag. Se usar o sufixo :number após uma variável, ao atingir \
@@ -1025,7 +1026,11 @@ export interface WorkflowConfigIntegrationsChatbot{
     parse: { firstName: string, lastName: string, [key: string]: string } | { fullname: string, [key: string]: string }
     /** Mensagem de erro caso os dados não possam ser carregados */
     error_message: string
-  }
+  },
+  /** Informações customizadas que devem ser sincronizadas com o contato do mensagex \
+   * ``` { 'mensagex-ref': 'flow-message-contact.contact_data-ref' } ```
+  */
+  custom_contact_data?: Record<string, string>
 }
 
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
