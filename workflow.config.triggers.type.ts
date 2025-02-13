@@ -94,8 +94,8 @@ export interface WorkflowTriggerUpdateFlowData extends  WorkflowTriggerBase{
    */
   name: '@update-flow-data',
   data: {
-    /** Id da entidade. Caso seja uma entidade fora do workflow, usar a notação ```flow-id#entity-key``` */
-    entity_key: string,
+    /** OPCIONAL - propriedade só é valida quando mode é igual a FlowEntityData: Id da entidade. Caso seja uma entidade fora do workflow, usar a notação ```flow-id#entity-key```. */
+    entity_key?: string,
     query?: any,
     /** 
      * Record<chave-na-entidade-dinamica, (valor-estatico | \@[shortcode] | \@code_helper)>
