@@ -1028,7 +1028,7 @@ export interface WorkflowConfigIntegrationsChatbot{
     error_message: string
   },
   /** Informações customizadas que devem ser sincronizadas com o contato do mensagex \
-   * ``` { 'mensagex-ref': 'flow-message-contact.contact_data-ref' } ```
+   * ``` { 'mensagex-field-id': 'flow-message-contact.contact_data-ref' } ```
   */
   custom_contact_data?: Record<string, string>
 }
