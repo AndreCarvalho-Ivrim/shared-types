@@ -1027,7 +1027,8 @@ export interface WorkflowConfigIntegrationsChatbot{
     /** Mensagem de erro caso os dados não possam ser carregados */
     error_message: string
   },
-  /** Informações customizadas que devem ser sincronizadas com o contato do mensagex \
+  /** 
+   * Informações customizadas que devem ser sincronizadas com o contato do mensagex \
    * ``` { 'mensagex-field-id': 'flow-message-contact.contact_data-ref' } ```
   */
   custom_contact_data?: Record<string, string>,
