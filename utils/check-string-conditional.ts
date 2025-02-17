@@ -883,10 +883,10 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
   let returnValue : any = value;
 
   const errorRequiredParam = (code: string) => `O parametro é obrigatório no codehelper ${code}`
-  const extractedContents = getCodeHelpers(value);
+  const extractedContents = getCodeHelpers(value, true);
 
   if (extractedContents && extractedContents.length > 0) {
-    for (const [code, param] of extractedContents) {
+    for (const [code, param, parsedParams] of extractedContents) {
       switch (code) {
         case '@now': returnValue = handleCodeHelper__now(returnValue, code, param); break;
         case 'sum':
@@ -981,16 +981,23 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
           });
           break;
         default: 
+          returnValue = 1;
           if(avHandleCodeHelpers.includes(code)){
             if(!param) throw new Error(errorRequiredParam(code))
+            
+            const valuesParseds = (parsedParams ? parsedParams : [param]).map((p) => {
+              const shortcodes = getShortcodes(p);
+              if(shortcodes.length !== 1) return p;
 
-            const valueCurrentSum = getRecursiveValue(param, { data });
+              return getRecursiveValue(shortcodes[0], { data })
+            })
   
             returnValue = handleCodeHelpers({
               codeHelper: code,
               chParam: param,
-              parsedParams: valueCurrentSum
+              parsedParams: valuesParseds
             });
+            
             break;
           }
           console.error('invalid codehelper', { code, param });
