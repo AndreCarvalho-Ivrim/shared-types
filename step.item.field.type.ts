@@ -30,7 +30,12 @@ export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
 export interface ValueAndNameStringType{
   value: string,
   name: string,
-  condition?: string
+  condition?: string,
+  /**
+   * Adicione outras chaves com o prefix outhers. para que a seleção \
+   * gere o preenchimento de um campo adjacente.
+   */
+  [key: string]: any
 }
 export interface StepItemType{
   key: string,
@@ -134,7 +139,7 @@ export interface StepItemType{
      */
     filter_condition?: string,
   },
-  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | {
+  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
   },
@@ -190,5 +195,23 @@ export interface StepItemCustomDataCheckboxInHierarchy{
   mode: '@checkbox-in-hierarchy',
   settings: {
     options: RecursiveRecordStrStr
+  }
+}
+export interface StepItemCustomDataNumberWithUnitOfMeasurement{
+  mode: '@number-with-unit-of-measurement',
+  settings: {
+    convertion: string,
+    /** Chave da propriedade em que ficará salvo o valor real do componente */
+    real_key: string,
+    select: {
+      key: string,
+      options: Array<{
+        name: string,
+        value: string,
+        scale: number
+      }>,
+      placeholder?: string
+    },
+    converted: { key: string }
   }
 }
