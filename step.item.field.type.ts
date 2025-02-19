@@ -49,6 +49,7 @@ export interface StepItemType{
   options?: ValueAndNameStringType[],
   defaultValue?: any;
   required?: boolean,
+  required_if?: string,
   rules?: {
     min?: number,
     max?: number,
