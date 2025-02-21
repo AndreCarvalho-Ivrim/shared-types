@@ -26,7 +26,13 @@ export const stepItemAttrMaskType : Record<StepItemAttrMaskType,string> = {
   cep: 'CEP',
   phone: 'Telefone',
 };
-
+export type StepItemAttrMaskDynamicType = {
+  type: 'number',
+  /**
+   * Separador Number: "-", "."
+   */
+  pattern: string
+}
 export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info';
 export type TargetModeType = 'single' | 'multiple' | 'trigger' | 'final';
 export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
@@ -34,19 +40,26 @@ export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
 export interface ValueAndNameStringType{
   value: string,
   name: string,
-  condition?: string
+  condition?: string,
+  /**
+   * Adicione outras chaves com o prefix outhers. para que a seleção \
+   * gere o preenchimento de um campo adjacente.
+   */
+  [key: string]: any
 }
 export interface StepItemType{
   key: string,
   type: StepItemAttrTypeType,
   mode: 'field',
   mask?: StepItemAttrMaskType,
+  dynamic_mask?: StepItemAttrMaskDynamicType,
   label?: string,
   placeholder?: string,
   subtitle?: string,
   options?: ValueAndNameStringType[],
   defaultValue?: any;
   required?: boolean,
+  required_if?: string,
   rules?: {
     min?: number,
     max?: number,
@@ -60,10 +73,15 @@ export interface StepItemType{
     /** Segue a mesma regra do minDate */
     maxDate?: '@today' | '@now' | '@tomorrow' | string
     render?: string,
+    switch_render?: string[],
     /**
      * AVAILABLE CUSTOM RULES\n
-     * - [ignore]: Irá ignorar o campo na hora de salvar(só existe para controle de layout[geralmente usado em renderização condicional]), ou pesquisar
-     * 
+     * - [ignore]: Irá ignorar o campo na hora de salvar(só existe para controle de layout[geralmente usado em renderização \
+     * condicional]), ou pesquisar
+     * - [omit-if-empty]: Essa configuração é valida para campos select, geralmente quando utilizam conditional options ou \
+     * autocomplete, para que o campo seja omitido caso não haja nenhuma opção válida.
+     * - [omit-gallery]: Essa configuração é valida para file-multiple, para remover a funcionalidade de galeria
+     *  
      * As regras abaixo só funcionam quando o Step.rule.customRule === '@find'
      * - [@find:select-unique (default)]: Irá usar este campo para pesquisa exata, e retornará apenas 1 resultado
      * - [@find:select]: Irá usar este campo para pesquisa exata ('texto pesquisado' === 'texto no banco')
@@ -77,7 +95,8 @@ export interface StepItemType{
     step?: number,
     /** Se for type string é um strc(string conditional) */
     disabled?: boolean | string,
-    dynamic_value?: string
+    dynamic_value?: string,
+    restrictions?:{ condition: string, message: string }[]
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
@@ -131,14 +150,15 @@ export interface StepItemType{
      */
     filter_condition?: string,
   },
-  customData?: StepÍtemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | {
+  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
-  }
+  },
+  is_expanded?: boolean
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table'];
-export interface StepÍtemCustomDataSettings{
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy'];
+export interface StepItemCustomDataSettings{
   mode: '@list',
   settings: {
     mode: 'inline' | 'modal',
@@ -158,7 +178,19 @@ export interface StepItemCustomDataEditableTable{
     initial_value?: Record<string, any>[],
     readonly_if_fillable?: boolean,
     addable?: boolean,
-    replicate?: boolean | Record<string, string>
+    replicate?: boolean | Record<string, string>,
+    /**
+     * Função que utiliza um item múltiplo como base para gerar multiplas \
+     * linhas do editable-table, replicado os demais valores.
+     **/
+    spread_it_all?: {
+      /** Elemento que será usado como base para o spread operator */
+      target: string
+    },
+    /**
+     * Se tiver items do tipo select-multiple, essas opções será usada para não permitir selecionar a mesma opção caso já selecionada
+     **/
+    not_repeat_option?: boolean
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
@@ -166,4 +198,31 @@ export interface StepItemCustomDataCepAutocomplete{
   /** NÃO UTILIZADO */
   settings?: any,
   id: string
+}
+export type RecursiveRecordStrStr = {
+  [key: string]: string | RecursiveRecordStrStr;
+};
+export interface StepItemCustomDataCheckboxInHierarchy{
+  mode: '@checkbox-in-hierarchy',
+  settings: {
+    options: RecursiveRecordStrStr
+  }
+}
+export interface StepItemCustomDataNumberWithUnitOfMeasurement{
+  mode: '@number-with-unit-of-measurement',
+  settings: {
+    convertion: string,
+    /** Chave da propriedade em que ficará salvo o valor real do componente */
+    real_key: string,
+    select: {
+      key: string,
+      options: Array<{
+        name: string,
+        value: string,
+        scale: number
+      }>,
+      placeholder?: string
+    },
+    converted: { key: string }
+  }
 }

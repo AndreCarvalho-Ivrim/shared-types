@@ -139,5 +139,114 @@ export interface ToAffectFlowDataEventType{
       /** Fazer match por condição */
       find_by_condition?: string
     }
+  }[],
+  effects_on_this?: {
+    condition?: string,
+    /** always (default) */
+    only?: 'always' | 'success' | 'fail',
+    append_values: Record<string, any>
   }[]
+}
+export interface FillLocationLatLogEventType{ 
+  /** Qual será a base atualizada */
+  base: 'flow-data' | 'flow-entity' | 'extensive-flow-entity',
+  /** Nome da entidade dinâmica caso [base] = 'flow-entity' | 'extensive-flow-entity' */
+  ref?: string,
+  /** Referência dos campos que receberão a latitude e longitude */
+  target: { lat: string, long: string },
+  /**
+   * Referência dos campos que tem as informações necessário para obter a lat-long e \
+   * do campo que registra endereços inválidos.
+   **/
+  info: { street: string, city: string, invalid: string },
+  /**
+   * Caso esteja rodando este evento de forma assincrona você pode configurar uma entidade dinâmica \
+   * para armazenar o status do trabalho.
+   * 
+   * É recomendado usar, pois além de ter o status da última execução essa entidade impede que rode \
+   * este evento duas vezes ao mesmo tempo.
+   **/
+  control_entity?: FillLocationLatLogControlEntity
+}
+export interface FillLocationLatLogControlEntity{
+  /** Nome da entidade dinâmica */
+  name: string,
+  /** 
+   *  Timeout para desconsiderar um status de ativo(importante para impedir que o status fique \
+   *  travado por falha de atualização)
+   **/
+  timeout: { time: 30 }
+}
+interface RequestExternalRestriction{
+  condition: string,
+  mode: 'error' | 'abort',
+  /** Válido caso mode === 'error' */
+  error_message?: string,
+}
+interface RequestExternalEffect{
+  /** default: success */
+  only?: 'success' | 'fail' | 'always',
+  append_values?: Record<string, {
+    value: any,
+    /**
+     * default: static = false
+     * 
+     * Quando static = true, quer dizer que estamos adicionando o valor \
+     * hardcode, quando não, é a referência do valor na resposta.
+     * 
+     * Exemplo static:
+     * append_values: { name: 'Hello World' }
+     * flow_data: { name: 'Hello World' }
+     *  
+     * Exemplo não static:
+     * resposta: { content: 'Hello World' }
+     * append_values: { name: 'content' }
+     * flow_data: { name: 'Hello World' }
+     */
+    static?: boolean
+  }>
+  /**
+   * Válido apenas se only === 'fail' ou 'always'
+   * ```{ 'condition': 'message' }```
+   **/
+  error_message?: Record<string, string>,
+  breakExec?: boolean
+}
+export interface RequestExternalApiEvent{
+  url: string,
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+  headers?: any,
+  body?: any,
+  restrictions?: RequestExternalRestriction[], 
+  /**
+   * Objetivo: De-Para de como tratar a resposta.
+   * 
+   * ``` { 'path-no-flow-data': { value: 'path-na-resposta' ou valor hardcode, static: bool para ativar o modo hardcode } } ```
+   **/
+  effects: RequestExternalEffect[]
+}
+export interface SendWhatsappMessagesEvent{
+  restrictions?: RequestExternalRestriction[], 
+  /**
+   * Objetivo: De-Para de como tratar a resposta.
+   * 
+   * ``` { 'path-no-flow-data': { value: 'path-na-resposta' ou valor hardcode, static: bool para ativar o modo hardcode } } ```
+   **/
+  effects: RequestExternalEffect[]
+}
+export interface RequestExternalDBEvent{
+  db_host: string,
+  db_port: string,
+  db_user: string,
+  db_password: string,
+  db_name: string,
+  query: string,
+  restrictions?: RequestExternalRestriction[],
+   /**
+   * Objetivo: De-Para de como tratar a resposta.
+   * 
+   * ``` { 'path-no-flow-data': { value: 'path-na-resposta' ou valor hardcode, static: bool para ativar o modo hardcode } } ```
+   **/
+  effects: RequestExternalEffect[],
+  params?: string[]
 }

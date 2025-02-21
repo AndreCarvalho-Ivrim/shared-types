@@ -1,8 +1,8 @@
-import { NotificationPreferenceByType, NotificationPreferenceType } from "./notification.type";
+import { NotificationPreferenceByType } from "./notification.type";
 import { WorkflowConfigType } from "./workflow.config.type";
 
-export type AvailableWorkflowThemeType = 'Cobrança' | 'Comercial' | 'Financeiro' | 'Gamificação' | 'Supply';
-export const availableWorkflowTypes : AvailableWorkflowThemeType[] = ['Cobrança','Comercial', 'Financeiro', 'Gamificação', 'Supply']; 
+export type AvailableWorkflowThemeType = 'Cobrança' | 'Comercial' | 'Financeiro' | 'Gamificação' | 'Supply' | 'Field Management' | 'Gestão' | 'Administrativo';
+export const availableWorkflowTypes : AvailableWorkflowThemeType[] = ['Cobrança','Comercial', 'Financeiro', 'Gamificação', 'Supply', 'Field Management', 'Gestão', 'Administrativo'];
 
 export type AvailableWorkflowStatusType = 'published' | 'edition';
 export const availableWorkflowStatus : AvailableWorkflowStatusType[] = ['published', 'edition'];
@@ -17,7 +17,8 @@ export interface WorkflowType{
   title: string,
   description: string,
   user_id: string,
-  hidden?: boolean;
+  hidden?: boolean,
+  restrict?: boolean,
   user_name: string,
   status: AvailableWorkflowStatusType,
   config?: WorkflowConfigType,

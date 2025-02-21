@@ -11,6 +11,7 @@ export enum PossiblePermissions {
   INTEGRATION_WHATSAPP = 'integration-whatsapp',
   REPORT               = 'report',
   MANAGE_REPORT        = 'manage-report',
+  FINANCIAL_CLOSINGS   = 'financial-closings',
   // descontinuado ===============
   APPROVAL             = 'aprovacao',
   FINANCIAL_APPROVAL   = 'aprovacao-financeiro',

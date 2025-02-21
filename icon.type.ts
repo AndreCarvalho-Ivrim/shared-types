@@ -86,4 +86,15 @@ export type AvailableIcons =
   'UnlikeIcon' | 
   'MobileIcon' |
   'CollapseIcon' |
-  'FilterIcon'
+  'FilterIcon' |
+  'WorldIcon' |
+  'BullseyeIcon' |
+  'BinocularsIcon' |
+  'SortIcon' |
+  'WhatsappIcon' |
+  'PhoneOffIcon' |
+  'WarningIcon' |
+  'CalendarCheckIcon' |
+  'FilterBarsIcon' |
+  'PhoneCallIcon' |
+  'GlobeIcon'

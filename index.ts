@@ -55,6 +55,7 @@ export interface Client{
 
   active?: boolean,
   economic_group?: string,
+  dedicated_server?: string,
 
   userCategories?: UserCategory[],
 

@@ -1,4 +1,5 @@
-import { AvailableTriggerEffects, AvailableWorkflowStatusType, ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
+import { AvailableWorkflowStatusType, ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
+import { AvailableTriggerEffects } from "./workflow.config.triggers.type";
 
 export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
 export type ToastTypes = "success" | "info" | "warning" | "error"
@@ -54,13 +55,20 @@ export interface StepTypeRuleRedirect{
   action_permission?: string,
   confirm?: StepActionConfirmType,
 }
-export type StepTypeRulesEffects = Partial<Record<AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open' | 'redirect-to-step-if-successful', boolean | {
+export type StepTypeRulesEffects = Partial<Record<(AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open' | 'redirect-to-step-if-successful' | 'enable-flow-alert-listeners'), boolean | {
   condition?: string,
   [key: string]: any
-}>>
+} | Array<{ condition?: string, [key: string]: any }>> >
 export interface StepCustomRuleRedirectToStep{
   /** Use \@current-step no target para redirecionar para o step atual do flow-data */
   id: '@redirect-to-step'
+}
+export interface StepCustomRuleFormWasModified{
+  id: '@form-was-modified',
+  /** Será usado caso o usuario tenha a opção de prosseguir mesmo sem modificações - não tem suporte para items */
+  confirm?: Omit<StepActionConfirmType, 'StepItemType'>,
+  /** Sera usado caso o usuario seja obrigado a fazer alguma modificação */
+  error_message?: string
 }
 export interface StepTypeRules{
   /**
@@ -102,6 +110,9 @@ export interface StepTypeRules{
    * para autocomplete
    * 
    * - [redirect-to-step-if-successful]: Redirecionar para uma determinada etapa se a requisição for bem sucedida.
+   * 
+   * - [enable-flow-alert-listeners]: Ativa o listener de um ou mais alertas do workflow. Para este efeito é 
+   * obrigatório informar a prop keys no objeto de configuração com a chave dos alerts que quer habilitar
    * */
   effects?: StepTypeRulesEffects,
   /**
@@ -117,6 +128,7 @@ export interface StepTypeRules{
   owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
   /** Seguindo as mesmas regras de owner */
   can_change_owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
+  sole_owner?: boolean,
   /** Configura permissões personalizadas de ações dentro desta etapa */
   actions?: Record<WorkflowConfigActionsType['id'], {
     group_permission?: ('@data_creator' | '@data_owner' | '@not-allowed' | string)[],
@@ -130,14 +142,19 @@ export interface StepTypeRules{
    * em atualizações
    * - [@select-owner]: Utilizar o botão para chamar o modal de seleção de owners
    */
-  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | StepCustomRuleRedirectToStep,
+  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | StepCustomRuleRedirectToStep | StepCustomRuleFormWasModified,
   /**
    * STRC \
    * Os valores observados são os itens com observer: true e caso \
    * queira referência o flowData atual é necessário passar o code \
    * [$flow_data:] antes do nome da prop.
    */
-  render?: string
+  render?: string,
+  /** Utilizado para ter o funcionamento de createOrUpdate baseado nos dados de cadastro. */
+  update_if_match?: {
+    match: string[],
+    exception?: 'ability-check-dates'
+  }
 }
 export interface StepSlaType{
   /** Tempo esperado de permanência em uma etapa */

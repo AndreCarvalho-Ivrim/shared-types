@@ -10,7 +10,13 @@ export const isacRoutes = {
     exec: (module_name: string, view_mode?: string) => `/modulo/${module_name}${view_mode ? `/${view_mode}` : ``}`,
     entity: (module_name: string, entity: string) => `/entidade/${module_name}/${entity}`,
     calendar: (module_name: string) => `/calendario-do-fluxo/${module_name}`,
-    sla_panel: (module_name: string) => `/painel-sla/${module_name}`
+    sla_panel: (module_name: string) => `/painel-sla/${module_name}`,
+    open_dialog: (module_name: string) => `/dialogo-aberto/${module_name}`,
+    logs: {
+      main: (module_name: string) => `/logs/${module_name}`,
+      log_type: (module_name: string, log_type: string) => `/logs/${module_name}/${log_type}`,
+    },
+    exception: (module_name: string, exception: string) => `/exception/${module_name}/${exception}`,
   },
   report: {
     home: () => '/report'
@@ -34,6 +40,9 @@ export const hubRoutes = {
     showCodeToken: (email:string) => `/esqueci-senha/${email}`,
     logout: () => '/logout',
   },
+  session: {
+    home: () => '/session'
+  },
   profile: {
     home: () => '/perfil'
   },
@@ -50,7 +59,8 @@ export const hubRoutes = {
   },
   admin_panel: {
     client: () => '/painel-adm/empresa',
-    companies: () => '/painel-adm/companies',
+    companies: () => '/painel-adm/empresas',
+    users_by_client: () => '/painel-adm/usuarios-por-empresa',
     users: () => '/painel-adm',
     projects: () => '/painel-adm/projetos',
     dashboards: () => '/painel-adm/dashboards',
@@ -90,6 +100,7 @@ export type AvailableRegexUrls =
   '@isac:workflow.entity(module_name,entity)' |
   '@isac:workflow.calendar(module_name)' |
   '@isac:workflow.sla_panel(module_name)' |
+  '@isac:workflow.open_dialog(module_name)' |
   '@isac:report.home' |
   '@isac:permission(module_name)' |
   '@isac:icon' |
@@ -113,6 +124,7 @@ export type AvailableRegexUrls =
   '@hub:admin_panel.projects' |
   '@hub:admin_panel.dashboards' |
   '@hub:admin_panel.integrations.whatsapp' |
+  '@hub:admin_panel.users_by_client' |
   '@hub:dashboard.home' |
   '@hub:dashboard.show(slug)' |
   '@hub:icon' |
@@ -122,6 +134,7 @@ export type AvailableRegexUrls =
   '@hub:notification.all' |
   '@hub:notification.preference' |
   '@hub:notification.create' |
+  '@hub:session.home' |
   '@isac_back:public_route(flow_id,variation)'
 
 /**

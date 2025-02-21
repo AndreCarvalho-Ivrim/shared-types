@@ -102,7 +102,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     type: StringConditionalTypes,
     value: string
   }[];
-
+  
   if (condition.length === 0) return false;
 
   const unionConditionals: string[] = [];
@@ -180,6 +180,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     if (operator === 'filled') {
       const len = arr.length;
       let isFilled = len > 0
+      if (val === '!') return !isFilled;
+      if (val === '!!') return isFilled;
       if (!isFilled) return Number(val) === 0;
 
       if (typeof val !== 'string' || (!(
@@ -228,14 +230,27 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
             getRecursiveValue(c.value, { data: datas }) ?? undefined
           );
           else if (c.type === 'value') {
-            const helpers = getCodeHelpers(c.value);
+            const helpers = getCodeHelpers(c.value, true);
             if (!helpers) values.push(c.value)
             else {
               let value = c.value;
 
-              helpers.forEach(([code, param]) => {
+              helpers.forEach(([code, param, splitParam]) => {
                 switch (code) {
                   case '@now': value = handleCodeHelper__now(value, code, param); break;
+                  case 'linearArithmetic':
+                    if(!param) throw new Error(`Erro code: ${code}`)
+                    const parsedParams: number[] = [];
+                    (splitParam ?? []).forEach(shortcode => {
+                      const valueToReplace = getRecursiveValue(shortcode, { data: datas }) ?? Number(shortcode);              
+                      parsedParams.push(valueToReplace);
+                    });
+                    value = handleCodeHelpers({
+                      chParam: param,
+                      codeHelper: code,
+                      parsedParams: parsedParams
+                    });
+                    break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
               });
@@ -252,6 +267,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
           operators.push(c.value);
         }
       });
+        
       if (operators.length !== 0 && (operators.length * 2) !== values.length) throw new Error(
         `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de valores e operadores não está dentro do esperado. (${strConditional})`
       );
@@ -867,10 +883,10 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
   let returnValue : any = value;
 
   const errorRequiredParam = (code: string) => `O parametro é obrigatório no codehelper ${code}`
-  const extractedContents = getCodeHelpers(value);
+  const extractedContents = getCodeHelpers(value, true);
 
   if (extractedContents && extractedContents.length > 0) {
-    for (const [code, param] of extractedContents) {
+    for (const [code, param, parsedParams] of extractedContents) {
       switch (code) {
         case '@now': returnValue = handleCodeHelper__now(returnValue, code, param); break;
         case 'sum':
@@ -965,16 +981,23 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
           });
           break;
         default: 
+          returnValue = 1;
           if(avHandleCodeHelpers.includes(code)){
             if(!param) throw new Error(errorRequiredParam(code))
+            
+            const valuesParseds = (parsedParams ? parsedParams : [param]).map((p) => {
+              const shortcodes = getShortcodes(p);
+              if(shortcodes.length !== 1) return p;
 
-            const valueCurrentSum = getRecursiveValue(param, { data });
+              return getRecursiveValue(shortcodes[0], { data })
+            })
   
             returnValue = handleCodeHelpers({
               codeHelper: code,
               chParam: param,
-              parsedParams: valueCurrentSum
+              parsedParams: valuesParseds
             });
+            
             break;
           }
           console.error('invalid codehelper', { code, param });

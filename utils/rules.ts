@@ -70,3 +70,9 @@ export function handleCustomActionsPermission({ actions, flowData, newFlowData }
     ];
   }, [] as string[])
 }
+export const convertFormattedWhatsappToClean = (whatsapp: string) => {
+  if(typeof whatsapp !== 'string') return '';
+  const lean = whatsapp.replace(/\D/g,'')
+  if(lean.length === 10 || lean.length === 11) return `55${lean}`;
+  return lean;
+}

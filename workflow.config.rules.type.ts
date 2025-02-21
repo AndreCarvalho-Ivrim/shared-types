@@ -44,6 +44,6 @@ export interface WorkflowConfigRuleFormatters extends WorkflowConfigRulesBase{
     condition?: string
     name: string,
     /** Com suporte a code-helpers e shortcodes */
-    value: string,
+    value: string | undefined,
   }>
 }
