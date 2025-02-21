@@ -1039,10 +1039,10 @@ export interface WorkflowConfigIntegrationsChatbot{
     /** 
      * Tipo de recebimento que deseja observar
      * - message: É uma mensagem recebida
-     * - receipt: Confirmação de recebimento
+     * - received: Confirmação de recebimento
      * - viewed:  Confirmação de visualização
      */
-    on: 'message' | 'receipt' | 'viewed',
+    on: 'message' | 'received' | 'viewed',
   } & Omit<FlowMessageFnCallTrigger, 'execute'>>
 }
 
