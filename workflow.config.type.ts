@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
@@ -391,7 +392,7 @@ export interface KanbanFlagType{
    * counter > 9, mostrará + 
    *
    */
-  subtitle?: string,
+  subtitle?: string | ReactNode,
   tooltip?: string
 }
 export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
