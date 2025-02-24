@@ -8,6 +8,7 @@ export type AvailableIcons =
   'TrashIcon' |
   'PlusIcon' |
   'CheckedIcon' |
+  'DoubleCheckedIcon' |
   'FileIcon' |
   'UploadIcon' |
   'ChatIcon' |
