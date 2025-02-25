@@ -1,4 +1,5 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
+import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 import { WorkflowTriggerType, AvailableTriggerEffects } from "./workflow.config.triggers.type";
@@ -1033,7 +1034,16 @@ export interface WorkflowConfigIntegrationsChatbot{
   */
   custom_contact_data?: Record<string, string>,
   /** Listas de contato */
-  lists: Array<{ id: number, name: string }>
+  lists: Array<{ id: number, name: string }>,
+  observers?: Array<{
+    /** 
+     * Tipo de recebimento que deseja observar
+     * - message: É uma mensagem recebida
+     * - received: Confirmação de recebimento
+     * - viewed:  Confirmação de visualização
+     */
+    on: 'message' | 'received' | 'viewed',
+  } & Omit<FlowMessageFnCallTrigger, 'execute'>>
 }
 
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
