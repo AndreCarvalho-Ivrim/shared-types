@@ -15,7 +15,17 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   custom: 'Customizado'
 };
 
-export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone'
+export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone';
+export const stepItemAttrMaskType : Record<StepItemAttrMaskType,string> = {
+  email: 'E-mail',
+  number: 'Número',
+  money: 'Valor Monetário',
+  cpf: 'CPF',
+  cnpj: 'CNPJ',
+  'cpf-cnpj': 'CPF/CNPJ',
+  cep: 'CEP',
+  phone: 'Telefone',
+};
 export type StepItemAttrMaskDynamicType = {
   type: 'number',
   /**
