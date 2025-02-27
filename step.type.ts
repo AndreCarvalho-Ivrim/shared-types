@@ -153,7 +153,8 @@ export interface StepTypeRules{
   /** Utilizado para ter o funcionamento de createOrUpdate baseado nos dados de cadastro. */
   update_if_match?: {
     match: string[],
-    exception?: 'ability-check-dates'
+    exception?: 'ability-check-dates',
+    data?: any
   }
 }
 export interface StepSlaType{
