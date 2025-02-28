@@ -1007,3 +1007,13 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
 
   return returnValue;
 }
+export const isMatchCaseInsensitiveWithoutAccentuation = (matchs: string[], value: string) => {
+  const normalizeText = (text: string) => (
+    text.toLowerCase()
+      .normalize("NFD") // Decompõe caracteres acentuados
+      .replace(/[\u0300-\u036f]/g, "") // Remove marcas diacríticas (acentos)
+  );
+  
+  const normalizedMessage = normalizeText(value);
+  return matchs.some(match => normalizeText(match) === normalizedMessage);
+}
