@@ -1012,6 +1012,7 @@ export const isMatchCaseInsensitiveWithoutAccentuation = (matchs: string[], valu
     text.toLowerCase()
       .normalize("NFD") // Decompõe caracteres acentuados
       .replace(/[\u0300-\u036f]/g, "") // Remove marcas diacríticas (acentos)
+      .trim()
   );
   
   const normalizedMessage = normalizeText(value);
