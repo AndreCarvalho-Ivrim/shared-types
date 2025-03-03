@@ -57,6 +57,10 @@ export interface StepItemType{
   placeholder?: string,
   subtitle?: string,
   options?: ValueAndNameStringType[],
+  /** a single_option deve existir em options,
+   * quando essa opção for selecionada as outras serão deselecionadas
+   * caso essa esteja selecionada e outra seja selecionada essa será deselecionada  */
+  single_option?: ValueAndNameStringType[],
   defaultValue?: any;
   required?: boolean,
   required_if?: string,
