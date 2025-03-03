@@ -72,7 +72,15 @@ export interface IntegrationExcelColumnType {
   id: string,
   name: string,
   type: IntegrationExcelColumnTypeType,
-  required?: boolean
+  required?: boolean,
+  rules?: {
+    /**
+     * Modificadores de string, é um array de substituições, onde \
+     * cada substituição é composta por duas strings, a str de pesquisa \
+     * e o valor a ser substituido.
+     */
+    str_replacers?: Array<[string, string]>
+  }
 }
 export interface IntegrationOmieType {
   key: string,
