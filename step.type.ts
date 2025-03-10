@@ -155,7 +155,8 @@ export interface StepTypeRules{
     match: string[],
     exception?: 'ability-check-dates',
     data?: any
-  }
+  },
+  badges?: BadgeType[]
 }
 export interface StepSlaType{
   /** Tempo esperado de permanência em uma etapa */
@@ -275,4 +276,11 @@ export interface OnConnectType{
   target: string | null,
   targetHandle: string | null,
   label?: string
+}
+
+export interface BadgeType{
+  title: string,
+  theme: ThemeColorType,
+  condition: string,
+  tooltip?: string
 }
