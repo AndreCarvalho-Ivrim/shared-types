@@ -1099,6 +1099,10 @@ export interface WFCActionFnUpdateSelected {
    * - update-and-remove: Atualiza e remove da tabela e do excludeIds 
    */
   effect?: 'update' | 'update-and-open' | 'update-and-remove',
+  restrictions?: {
+    condition: string,
+    title: string
+  }[],
   append_values: Record<string, any>,
   /**
    * Disparar eventos do observer.\
