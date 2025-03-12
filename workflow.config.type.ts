@@ -180,6 +180,10 @@ export interface WorkflowConfigObserverFnType {
    * \@consolidate: Evento válido apenas no FlowData, para unir registros
    */
   name: string,
+  /**
+   * O ref é utilizado em funções externas para referenciar este observer.
+   */
+  ref?: string,
   type: 'append' | 'backup' | 'event',
   execute: 'before' | 'after',
   condition?: string,
@@ -1095,8 +1099,19 @@ export interface WFCActionFnUpdateSelected {
    * - update-and-remove: Atualiza e remove da tabela e do excludeIds 
    */
   effect?: 'update' | 'update-and-open' | 'update-and-remove',
+  restrictions?: {
+    condition: string,
+    title: string
+  }[],
   append_values: Record<string, any>,
-  trigger_observer_events?: string[],
+  /**
+   * Disparar eventos do observer.\
+   * Para referenciar observador é necessário adicionar a ref no observer.
+   */
+  trigger_observers?: {
+    ref: string,
+    condition?: string,
+  }[],
   confirm?: StepActionConfirmType,
   /**
    * O que fazer em confirmação múltipla:
