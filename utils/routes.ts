@@ -3,6 +3,10 @@ import { getRecursiveValue } from "./recursive-datas"
 export const isacRoutes = {
   home: () => '/',
   template: () => '/modelos',
+  chatbot: {
+    home: () => '/chatbot',
+    manage: (module_name: string) => `/chatbot/${module_name}`,
+  },
   workflow: {
     home: () => '/fluxos',
     create: (module_name: string) => `/fluxo/${module_name}`,
@@ -135,7 +139,9 @@ export type AvailableRegexUrls =
   '@hub:notification.preference' |
   '@hub:notification.create' |
   '@hub:session.home' |
-  '@isac_back:public_route(flow_id,variation)'
+  '@isac_back:public_route(flow_id,variation)' |
+  '@isac:chatbot.home' | 
+  '@isac:chatbot.manage(module_name)'
 
 /**
  * *obs. Use handleRegexUrl('custom-url' as any) para ignorar o erro de tipagem.*
