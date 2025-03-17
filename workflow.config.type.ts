@@ -972,6 +972,25 @@ export interface WorkflowConfigFlowAlertItem{
 
 type WFIntegrationKeys = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'outhers';
 
+export type WFIntegrationProviderType = 'GPT' | 'Gemini';
+
+export type WFIntegrationModelGoogleType = 
+  'Gemini 2.0 Flash'    | 'Gemini 2.0 Flash-Lite' | 'Gemini 2.0 Pro Experimental' | 'Gemini 1.5 Flash' | 
+  'Gemini 1.5 Flash-8B' | 'Gemini 1.5 Pro'        | 'Gemini Embedding'            | 'Imagen 3';
+export interface WFIntegrationIAProvider {
+  /** Qual é o provedor da IA */
+  provider: WFIntegrationProviderType,
+  /**
+   * Modelo da IA.\
+   * \
+   * Exemplo: Gemini 1.5 Flash.\
+   * Conforme a lista que aparece no link: https://bit.ly/4ioEEbg
+   */
+  model: WFIntegrationModelGoogleType,
+  /** Token de acesso da IA */
+  token: string
+}
+
 export interface WorkflowConfigIntegrationsType {
   email?: {
     emailFrom: string,
@@ -999,7 +1018,11 @@ export interface WorkflowConfigIntegrationsType {
     name: string,
     status: boolean,
     data: any
-  }[]
+  }[],
+  /**
+   * Provedores de IA
+   */
+  ias?: WFIntegrationIAProvider[]
 }
 export interface WorkflowConfigIntegrationsChatbot{
   /** Token do Mensagex, se não for informado utilizará o token do hub */
