@@ -100,4 +100,5 @@ export type AvailableIcons =
   'FilterBarsIcon' |
   'PhoneCallIcon' |
   'GlobeIcon' |
-  'TrendingUpIcon'
+  'TrendingUpIcon' |
+  'BrainIcon'
