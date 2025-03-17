@@ -36,6 +36,7 @@ export interface FlowMessageRedirectType{
   key: string,
   /** redirect: É a possibilidade de redirecionar para outra região do diálogo */
   mode: 'redirect',
+  title?: string,
   matchs?: string[],
   condition?: string,
   /** Mensagem de transição, antes de redirecionar */
