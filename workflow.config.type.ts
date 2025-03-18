@@ -977,6 +977,7 @@ export type WFIntegrationProviderType = 'GPT' | 'Gemini';
 export type WFIntegrationModelGoogleType = 
   'Gemini 2.0 Flash'    | 'Gemini 2.0 Flash-Lite' | 'Gemini 2.0 Pro Experimental' | 'Gemini 1.5 Flash' | 
   'Gemini 1.5 Flash-8B' | 'Gemini 1.5 Pro'        | 'Gemini Embedding'            | 'Imagen 3';
+export type WFIntegrationModelGPTType = 'GPT-4o mini';
 export interface WFIntegrationIAProvider {
   /** Qual é o provedor da IA */
   provider: WFIntegrationProviderType,
@@ -986,7 +987,7 @@ export interface WFIntegrationIAProvider {
    * Exemplo: Gemini 1.5 Flash.\
    * Conforme a lista que aparece no link: https://bit.ly/4ioEEbg
    */
-  model: WFIntegrationModelGoogleType,
+  model: WFIntegrationModelGoogleType | WFIntegrationModelGPTType,
   /** Token de acesso da IA */
   token: string
 }
