@@ -32,6 +32,8 @@ export interface IntegrationExcelType {
   placeholder?: string,
   required?: boolean,
   rules?: {
+    /** strc */
+    render?: string,
     duplicity?: {
       id: string,
       match: string[],
