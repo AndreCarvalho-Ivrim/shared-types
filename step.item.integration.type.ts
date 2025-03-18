@@ -32,6 +32,9 @@ export interface IntegrationExcelType {
   placeholder?: string,
   required?: boolean,
   rules?: {
+    /** strc */
+    render?: string,
+    switch_render?: string[],
     duplicity?: {
       id: string,
       match: string[],
@@ -89,7 +92,10 @@ export interface IntegrationOmieType {
   label?: string,
   placeholder?: string,
   required?: boolean,
-  rules?: {},
+  rules?: {
+    render?: string,
+    switch_render?: string[]
+  },
   scope: string
 }
 export type IntegrationsType = IntegrationExcelType | IntegrationOmieType;
