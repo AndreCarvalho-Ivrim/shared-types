@@ -7,6 +7,7 @@ export type AvailableIcons =
   'CloseIcon' |
   'TrashIcon' |
   'PlusIcon' |
+  'MinusIcon' |
   'CheckedIcon' |
   'DoubleCheckedIcon' |
   'FileIcon' |
@@ -98,4 +99,6 @@ export type AvailableIcons =
   'CalendarCheckIcon' |
   'FilterBarsIcon' |
   'PhoneCallIcon' |
-  'GlobeIcon'
+  'GlobeIcon' |
+  'TrendingUpIcon' |
+  'BrainIcon'
