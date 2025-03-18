@@ -34,7 +34,7 @@ export interface IntegrationExcelType {
   rules?: {
     /** strc */
     render?: string,
-    switch_render?: string[]
+    switch_render?: string[],
     duplicity?: {
       id: string,
       match: string[],
