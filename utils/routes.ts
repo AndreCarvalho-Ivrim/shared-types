@@ -84,6 +84,10 @@ export const hubRoutes = {
     all: () => '/notificacoes',
     preference: () => '/notificacoes/preferencias',
     create: () => '/notificacoes/criar'
+  },
+  support: {
+    home: () => '/suporte',
+    details: (_id: string) => `/suport/${_id}`
   }
 }
 export const isacBackRoutes = {
@@ -134,6 +138,8 @@ export type AvailableRegexUrls =
   '@hub:notification.all' |
   '@hub:notification.preference' |
   '@hub:notification.create' |
+  '@hub:support.home' |
+  '@hub:support.details(_id)' |
   '@hub:session.home' |
   '@isac_back:public_route(flow_id,variation)'
 
