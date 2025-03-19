@@ -32,4 +32,5 @@ export interface ActivityPanelType{
   badge?: ActivityPanelBadge,
   active : boolean,
   fn : ActivityPanelFn,
+  mode?: 'active'
 }

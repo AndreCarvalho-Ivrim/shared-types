@@ -1468,5 +1468,6 @@ export interface WorkflowConfigActivePanel {
   description: {
     single: string,
     plural: string
-  }
+  },
+  view_mode?: string
 }
