@@ -736,6 +736,56 @@ export interface WorkflowMenuShortcut{
   title: string,
   action_permission?: string,
 }
+export interface PublicRouteGet{
+  /**
+   * Por padrão a rota publica sempre fará uma requisição em [flow-datas], \
+   * mas esse comportamento pode ser alterado definindo este campo como [steps] \
+   * ou [me], porém os demais modos as funções de pesquisa, filtro e formatação \
+   * do body são limitadas.
+   * 
+   * O modo [me] só é valido caso auth seja preenchido com o tipo [\@network-flow-auth], \
+   * e neste caso, retornará o usuario autenticado.
+   * 
+   * Existe o tipo [count-flow-datas], que ira retorna o total de registro com base no \
+   * filtro realizado. Este tipo não tem suporte a prop [body] e [order_by]
+   */
+  request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas',
+  auth?: AuthPublicRouteType,
+  /**
+   * Query Params disponíveis para pesquisa.
+   * 
+   * Record< [query-param] , [path-no-flow-data] >
+   * 
+   * Palavras reservadas: take, skip
+   * 
+   * Toda a pesquisa será feita por comparação absoluta, a menos \
+   * que o valor inicie com ~. Ex:
+   * 
+   * ```
+   * { id: '~path.id' }
+   * ```
+   *
+   * Desse jeito fará a pesquisa parcial case insensitive.
+   *  
+   * Também é possível fazer pesquisar por range, para utilizar basta \
+   * iniciar o valor com <>, e dessa forma, você precisará de dois query \
+   * params para representar esse campo, um contendo o prefixo *start_* e \
+   * outro *end_*. Ex:
+   * 
+   * ```
+   * { date: '<>path.date' }
+   * 
+   * <url>?start_date=...&end_date=...
+   * ```
+   
+   */
+  available_query_params?: Record<string, string>,
+  required_params?: string[],
+  order_by?: Record<string, 'desc' | 'asc'>,
+  filter_scope?: WorkflowViewModeFilterScope[],
+  /** Se não for informado trará o flow_data.data completo */
+  body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
@@ -782,55 +832,7 @@ export interface WorkflowConfigType {
       onDeleteTask?: WorkflowConfigObserverFnType[]
     },
     publicRoutes?: {
-      get?: Record<string, {
-        /**
-         * Por padrão a rota publica sempre fará uma requisição em [flow-datas], \
-         * mas esse comportamento pode ser alterado definindo este campo como [steps] \
-         * ou [me], porém os demais modos as funções de pesquisa, filtro e formatação \
-         * do body são limitadas.
-         * 
-         * O modo [me] só é valido caso auth seja preenchido com o tipo [\@network-flow-auth], \
-         * e neste caso, retornará o usuario autenticado.
-         * 
-         * Existe o tipo [count-flow-datas], que ira retorna o total de registro com base no \
-         * filtro realizado. Este tipo não tem suporte a prop [body] e [order_by]
-         */
-        request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas',
-        auth?: AuthPublicRouteType,
-        /**
-         * Query Params disponíveis para pesquisa.
-         * 
-         * Record< [query-param] , [path-no-flow-data] >
-         * 
-         * Palavras reservadas: take, skip
-         * 
-         * Toda a pesquisa será feita por comparação absoluta, a menos \
-         * que o valor inicie com ~. Ex:
-         * 
-         * ```
-         * { id: '~path.id' }
-         * ```
-         *
-         * Desse jeito fará a pesquisa parcial case insensitive.
-         *  
-         * Também é possível fazer pesquisar por range, para utilizar basta \
-         * iniciar o valor com <>, e dessa forma, você precisará de dois query \
-         * params para representar esse campo, um contendo o prefixo *start_* e \
-         * outro *end_*. Ex:
-         * 
-         * ```
-         * { date: '<>path.date' }
-         * 
-         * <url>?start_date=...&end_date=...
-         * ```
-         
-         */
-        available_query_params?: Record<string, string>,
-        order_by?: Record<string, 'desc' | 'asc'>,
-        filter_scope?: WorkflowViewModeFilterScope[],
-        /** Se não for informado trará o flow_data.data completo */
-        body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
-      }>,
+      get?: Record<string, PublicRouteGet>,
       post?: Record<string, {
         auth?: AuthPublicRouteType,
         /** Escopo de alteração dentro do objeto flow_data.data */
@@ -977,6 +979,7 @@ export type WFIntegrationProviderType = 'GPT' | 'Gemini';
 export type WFIntegrationModelGoogleType = 
   'Gemini 2.0 Flash'    | 'Gemini 2.0 Flash-Lite' | 'Gemini 2.0 Pro Experimental' | 'Gemini 1.5 Flash' | 
   'Gemini 1.5 Flash-8B' | 'Gemini 1.5 Pro'        | 'Gemini Embedding'            | 'Imagen 3';
+export type WFIntegrationModelGPTType = 'GPT-4o mini';
 export interface WFIntegrationIAProvider {
   /** Qual é o provedor da IA */
   provider: WFIntegrationProviderType,
@@ -986,7 +989,7 @@ export interface WFIntegrationIAProvider {
    * Exemplo: Gemini 1.5 Flash.\
    * Conforme a lista que aparece no link: https://bit.ly/4ioEEbg
    */
-  model: WFIntegrationModelGoogleType,
+  model: WFIntegrationModelGoogleType | WFIntegrationModelGPTType,
   /** Token de acesso da IA */
   token: string
 }

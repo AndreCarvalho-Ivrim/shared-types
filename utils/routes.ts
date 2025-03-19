@@ -84,6 +84,10 @@ export const hubRoutes = {
     all: () => '/notificacoes',
     preference: () => '/notificacoes/preferencias',
     create: () => '/notificacoes/criar'
+  },
+  support: {
+    home: () => '/suporte',
+    details: (_id: string) => `/suport/${_id}`
   }
 }
 export const isacBackRoutes = {
@@ -134,6 +138,8 @@ export type AvailableRegexUrls =
   '@hub:notification.all' |
   '@hub:notification.preference' |
   '@hub:notification.create' |
+  '@hub:support.home' |
+  '@hub:support.details(_id)' |
   '@hub:session.home' |
   '@isac_back:public_route(flow_id,variation)'
 
@@ -191,14 +197,16 @@ export const handleRegexUrl = (url: AvailableRegexUrls, token?: string): string 
 
   return url
 }
-export const getDomain = (application: 'hub' | 'isac' | 'isac_back', removeLastSlash = false) => {
-  let urls = { hub: '', isac: '', isac_back: '' }
+export const getDomain = (application: 'hub' | 'isac' | 'isac_back' |  'hub_back', removeLastSlash = false) => {
+  let urls = { hub: '', isac: '', isac_back: '', hub_back: '' }
   try {
     // @ts-ignore
     const WORKFLOW_MODULE = process.env.REACT_APP_WORKFLOW_MODULAR;
     urls.isac = WORKFLOW_MODULE!;
     // @ts-ignore
     urls.isac_back = process.env.REACT_APP_API_WF_URL
+    // @ts-ignore
+    urls.hub_back = process.env.REACT_APP_BASE_URL
   } catch (e) { }
   try {
     // @ts-ignore
@@ -206,10 +214,58 @@ export const getDomain = (application: 'hub' | 'isac' | 'isac_back', removeLastS
     urls.hub = PORTAL!;
     // @ts-ignore
     urls.isac_back = import.meta.env.VITE_BASE_URL
+    // @ts-ignore
+    urls.hub_back = import.meta.env.VITE_AUTH_URL
   } catch (e) { }
 
   let url = urls[application] ?? '';
   if (removeLastSlash && application !== 'isac_back' && url.substr(-1) === '/') url = url.substr(0, url.length - 1)
 
   return url
+}
+export const getSupportKeys = () => {
+  let support : { flow_id: string, steps: Record<(
+    "open-request-called" |
+    "internal-approval" |
+    "in-progress" |
+    "internal-test" |
+    "approval-test" |
+    "called-closed"
+  ), string> }= { flow_id: '', steps: {} as any };
+
+  try {
+    // @ts-ignore
+    support.flow_id = import.meta.env.VITE_SUPPORT_FLOW_ID;
+    // @ts-ignore
+    support.steps["open-request-called"] = import.meta.env.VITE_SUPPORT_OPEN_REQUEST_CALLED;
+    // @ts-ignore
+    support.steps["internal-approval"] = import.meta.env.VITE_SUPPORT_INTERNAL_APPROVAL;
+    // @ts-ignore
+    support.steps["in-progress"] = import.meta.env.VITE_SUPPORT_IN_PROGRESS;
+    // @ts-ignore
+    support.steps["internal-test"] = import.meta.env.VITE_SUPPORT_INTERNAL_TEST;
+    // @ts-ignore
+    support.steps["approval-test"] = import.meta.env.VITE_SUPPORT_APPROVAL_TEST;
+    // @ts-ignore
+    support.steps["called-closed"] = import.meta.env.VITE_SUPPORT_CALLED_CLOSED;
+  } catch (e) {
+    try {
+      // @ts-ignore
+      support.flow_id = process.env.REACT_APP_SUPPORT_FLOW_ID;
+      // @ts-ignore
+      support.steps["open-request-called"] = process.env.REACT_APP_SUPPORT_OPEN_REQUEST_CALLED;
+      // @ts-ignore
+      support.steps["internal-approval"] = process.env.REACT_APP_SUPPORT_INTERNAL_APPROVAL;
+      // @ts-ignore
+      support.steps["in-progress"] = process.env.REACT_APP_SUPPORT_IN_PROGRESS;
+      // @ts-ignore
+      support.steps["internal-test"] = process.env.REACT_APP_SUPPORT_INTERNAL_TEST;
+      // @ts-ignore
+      support.steps["approval-test"] = process.env.REACT_APP_SUPPORT_APPROVAL_TEST;
+      // @ts-ignore
+      support.steps["called-closed"] = process.env.REACT_APP_SUPPORT_CALLED_CLOSED;
+    } catch (e) { }
+  }
+  
+  return support
 }
