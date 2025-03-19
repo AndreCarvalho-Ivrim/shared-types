@@ -102,4 +102,5 @@ export type AvailableIcons =
   'GlobeIcon' |
   'TrendingUpIcon' |
   'BrainIcon' |
-  'QuestionIcon'
+  'QuestionIcon' |
+  'SupportIcon'
