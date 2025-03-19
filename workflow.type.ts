@@ -17,7 +17,7 @@ export interface WorkflowType{
   title: string,
   description: string,
   user_id: string,
-  payment_status: 'up-to-date' | 'expired',
+  payment_status?: 'up-to-date' | 'expired',
   hidden?: boolean,
   restrict?: boolean,
   user_name: string,
