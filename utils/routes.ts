@@ -217,3 +217,49 @@ export const getDomain = (application: 'hub' | 'isac' | 'isac_back' |  'hub_back
 
   return url
 }
+export const getSupportKeys = () => {
+  let support : { flow_id: string, steps: Record<(
+    "open-request-called" |
+    "internal-approval" |
+    "in-progress" |
+    "internal-test" |
+    "approval-test" |
+    "called-closed"
+  ), string> }= { flow_id: '', steps: {} as any };
+
+  try {
+    // @ts-ignore
+    support.flow_id = import.meta.env.VITE_SUPPORT_FLOW_ID;
+    // @ts-ignore
+    support.steps["open-request-called"] = import.meta.env.VITE_SUPPORT_OPEN_REQUEST_CALLED;
+    // @ts-ignore
+    support.steps["internal-approval"] = import.meta.env.VITE_SUPPORT_INTERNAL_APPROVAL;
+    // @ts-ignore
+    support.steps["in-progress"] = import.meta.env.VITE_SUPPORT_IN_PROGRESS;
+    // @ts-ignore
+    support.steps["internal-test"] = import.meta.env.VITE_SUPPORT_INTERNAL_TEST;
+    // @ts-ignore
+    support.steps["approval-test"] = import.meta.env.VITE_SUPPORT_APPROVAL_TEST;
+    // @ts-ignore
+    support.steps["called-closed"] = import.meta.env.VITE_SUPPORT_CALLED_CLOSED;
+  } catch (e) {
+    try {
+      // @ts-ignore
+      support.flow_id = process.env.REACT_APP_SUPPORT_FLOW_ID;
+      // @ts-ignore
+      support.steps["open-request-called"] = process.env.REACT_APP_SUPPORT_OPEN_REQUEST_CALLED;
+      // @ts-ignore
+      support.steps["internal-approval"] = process.env.REACT_APP_SUPPORT_INTERNAL_APPROVAL;
+      // @ts-ignore
+      support.steps["in-progress"] = process.env.REACT_APP_SUPPORT_IN_PROGRESS;
+      // @ts-ignore
+      support.steps["internal-test"] = process.env.REACT_APP_SUPPORT_INTERNAL_TEST;
+      // @ts-ignore
+      support.steps["approval-test"] = process.env.REACT_APP_SUPPORT_APPROVAL_TEST;
+      // @ts-ignore
+      support.steps["called-closed"] = process.env.REACT_APP_SUPPORT_CALLED_CLOSED;
+    } catch (e) { }
+  }
+  
+  return support
+}
