@@ -1170,6 +1170,7 @@ export interface WFActionFnCallTrigger {
   id_is_required?: boolean,
   /** Este confirm não tem suporte a inserção de dados */
   confirm?: StepActionConfirmType,
+  append_values?: Record<string, any>,
   effects?: Partial<Record<AvailableTriggerEffects, boolean | {
     condition: string,
     [key: string]: any
