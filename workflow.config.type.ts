@@ -1025,7 +1025,7 @@ export interface WorkflowConfigIntegrationsType {
   /**
    * Provedores de IA
    */
-  ias?: WFIntegrationIAProvider[]
+  ias?: WFIntegrationIAProvider
 }
 export interface WorkflowConfigIntegrationsChatbot{
   /** Token do Mensagex, se não for informado utilizará o token do hub */
