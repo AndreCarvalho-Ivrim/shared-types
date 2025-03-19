@@ -910,7 +910,8 @@ export interface WorkflowConfigType {
     whatsapp: string
   },
   rules?: WorkflowConfigRulesType[],
-  flow_alerts?: WorkflowConfigFlowAlert[]
+  flow_alerts?: WorkflowConfigFlowAlert[],
+  active_panel?: WorkflowConfigActivePanel[]
 }
 export interface WorkflowConfigFlowAlert{
   key: string,
@@ -1459,4 +1460,13 @@ export interface WFActionFnCallExternalRequest {
 export interface WorkflowConfigOpenDialogType{
   icon?: AvailableIcons,
   title: string,
+}
+
+export interface WorkflowConfigActivePanel {
+  action_permissions: string[],
+  query: any,
+  description: {
+    single: string,
+    plural: string
+  }
 }
