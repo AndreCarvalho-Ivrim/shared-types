@@ -191,14 +191,16 @@ export const handleRegexUrl = (url: AvailableRegexUrls, token?: string): string 
 
   return url
 }
-export const getDomain = (application: 'hub' | 'isac' | 'isac_back', removeLastSlash = false) => {
-  let urls = { hub: '', isac: '', isac_back: '' }
+export const getDomain = (application: 'hub' | 'isac' | 'isac_back' |  'hub_back', removeLastSlash = false) => {
+  let urls = { hub: '', isac: '', isac_back: '', hub_back: '' }
   try {
     // @ts-ignore
     const WORKFLOW_MODULE = process.env.REACT_APP_WORKFLOW_MODULAR;
     urls.isac = WORKFLOW_MODULE!;
     // @ts-ignore
     urls.isac_back = process.env.REACT_APP_API_WF_URL
+    // @ts-ignore
+    urls.hub_back = process.env.REACT_APP_BASE_URL
   } catch (e) { }
   try {
     // @ts-ignore
@@ -206,6 +208,8 @@ export const getDomain = (application: 'hub' | 'isac' | 'isac_back', removeLastS
     urls.hub = PORTAL!;
     // @ts-ignore
     urls.isac_back = import.meta.env.VITE_BASE_URL
+    // @ts-ignore
+    urls.hub_back = import.meta.env.VITE_AUTH_URL
   } catch (e) { }
 
   let url = urls[application] ?? '';
