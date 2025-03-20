@@ -3,6 +3,10 @@ import { getRecursiveValue } from "./recursive-datas"
 export const isacRoutes = {
   home: () => '/',
   template: () => '/modelos',
+  chatbot: {
+    home: () => '/chatbot',
+    manage: (module_name: string) => `/chatbot/${module_name}`,
+  },
   workflow: {
     home: () => '/fluxos',
     create: (module_name: string) => `/fluxo/${module_name}`,
@@ -112,6 +116,8 @@ export type AvailableRegexUrls =
   '@isac:menu' |
   '@isac:admin_hub.workflows' |
   '@isac:public.workflow(flow_id,variation,params?)' |
+  '@isac:chatbot.home' | 
+  '@isac:chatbot.manage(module_name)' |
   '@hub:admin_panel.companies' |
   '@hub:auth.login' |
   '@hub:auth.logout' |
