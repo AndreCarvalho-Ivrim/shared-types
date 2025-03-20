@@ -4,7 +4,7 @@ import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 import { WorkflowTriggerType, AvailableTriggerEffects } from "./workflow.config.triggers.type";
 
-export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'ias';
+export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing';
 export type AvailableViewModeType = 'table' | 'dashboard';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
