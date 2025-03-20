@@ -112,6 +112,8 @@ export type AvailableRegexUrls =
   '@isac:menu' |
   '@isac:admin_hub.workflows' |
   '@isac:public.workflow(flow_id,variation,params?)' |
+  '@isac:chatbot.home' | 
+  '@isac:chatbot.manage(module_name)' |
   '@hub:admin_panel.companies' |
   '@hub:auth.login' |
   '@hub:auth.logout' |
@@ -139,9 +141,7 @@ export type AvailableRegexUrls =
   '@hub:notification.preference' |
   '@hub:notification.create' |
   '@hub:session.home' |
-  '@isac_back:public_route(flow_id,variation)' |
-  '@isac:chatbot.home' | 
-  '@isac:chatbot.manage(module_name)'
+  '@isac_back:public_route(flow_id,variation)'
 
 /**
  * *obs. Use handleRegexUrl('custom-url' as any) para ignorar o erro de tipagem.*
