@@ -43,7 +43,8 @@ export interface FlowMessageRedirectType{
   contents?: string[],
   /** Chave(ou caminho) do diálogo que quer chamar */
   redirect_to: string[],
-  store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> }
+  store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> },
+  fns?: FlowMessageFn[]
 }
 export type FlowMessageResponse = (
   Omit<FlowMessageInfoType, 'interaction_mode' | '_id' | 'client_id'> | 
