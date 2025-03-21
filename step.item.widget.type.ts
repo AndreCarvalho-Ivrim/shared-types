@@ -21,7 +21,7 @@ export interface WidgetSmsType extends StepWidgetBaseType{
   type: 'widget-sms',
   template_id: string
 }
-export interface WidgetChatBotType extends StepWidgetBaseType{
+export interface WidgetChatbotType extends StepWidgetBaseType{
   type: 'widget-chatbot',  
 }
 export interface WidgetRoutineType extends StepWidgetBaseType{
@@ -67,7 +67,7 @@ export interface WidgetWorkerThread extends StepWidgetBaseType{
   exception?: 'ifm-roterization' | 'ifm-roterization-external' | 'ifm-anticipation',
   variation?: string
 }
-export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatBotType | WidgetRoutineType | WidgetWorkerThread;
+export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatbotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
   'widget-email': 'Email',
   'widget-whatsapp': 'Whatsapp',
