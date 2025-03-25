@@ -62,6 +62,8 @@ export interface IntegrationExcelType {
   append_values?: Record<string, any>,
   /** URL do template de importação para download */
   model_url?: string,
+  /** Gerar template de importação para download a partir das columns */
+  generated_model?: boolean,
   /** Entitidade para salvar o registro de importação da planilha */
   import_registration?: string,
 }
