@@ -4,7 +4,7 @@ import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 import { WorkflowTriggerType, AvailableTriggerEffects } from "./workflow.config.triggers.type";
 
-export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing';
+export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'ias';
 export type AvailableViewModeType = 'table' | 'dashboard';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
@@ -736,6 +736,56 @@ export interface WorkflowMenuShortcut{
   title: string,
   action_permission?: string,
 }
+export interface PublicRouteGet{
+  /**
+   * Por padrão a rota publica sempre fará uma requisição em [flow-datas], \
+   * mas esse comportamento pode ser alterado definindo este campo como [steps] \
+   * ou [me], porém os demais modos as funções de pesquisa, filtro e formatação \
+   * do body são limitadas.
+   * 
+   * O modo [me] só é valido caso auth seja preenchido com o tipo [\@network-flow-auth], \
+   * e neste caso, retornará o usuario autenticado.
+   * 
+   * Existe o tipo [count-flow-datas], que ira retorna o total de registro com base no \
+   * filtro realizado. Este tipo não tem suporte a prop [body] e [order_by]
+   */
+  request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas',
+  auth?: AuthPublicRouteType,
+  /**
+   * Query Params disponíveis para pesquisa.
+   * 
+   * Record< [query-param] , [path-no-flow-data] >
+   * 
+   * Palavras reservadas: take, skip
+   * 
+   * Toda a pesquisa será feita por comparação absoluta, a menos \
+   * que o valor inicie com ~. Ex:
+   * 
+   * ```
+   * { id: '~path.id' }
+   * ```
+   *
+   * Desse jeito fará a pesquisa parcial case insensitive.
+   *  
+   * Também é possível fazer pesquisar por range, para utilizar basta \
+   * iniciar o valor com <>, e dessa forma, você precisará de dois query \
+   * params para representar esse campo, um contendo o prefixo *start_* e \
+   * outro *end_*. Ex:
+   * 
+   * ```
+   * { date: '<>path.date' }
+   * 
+   * <url>?start_date=...&end_date=...
+   * ```
+   
+   */
+  available_query_params?: Record<string, string>,
+  required_params?: string[],
+  order_by?: Record<string, 'desc' | 'asc'>,
+  filter_scope?: WorkflowViewModeFilterScope[],
+  /** Se não for informado trará o flow_data.data completo */
+  body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
@@ -782,55 +832,7 @@ export interface WorkflowConfigType {
       onDeleteTask?: WorkflowConfigObserverFnType[]
     },
     publicRoutes?: {
-      get?: Record<string, {
-        /**
-         * Por padrão a rota publica sempre fará uma requisição em [flow-datas], \
-         * mas esse comportamento pode ser alterado definindo este campo como [steps] \
-         * ou [me], porém os demais modos as funções de pesquisa, filtro e formatação \
-         * do body são limitadas.
-         * 
-         * O modo [me] só é valido caso auth seja preenchido com o tipo [\@network-flow-auth], \
-         * e neste caso, retornará o usuario autenticado.
-         * 
-         * Existe o tipo [count-flow-datas], que ira retorna o total de registro com base no \
-         * filtro realizado. Este tipo não tem suporte a prop [body] e [order_by]
-         */
-        request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas',
-        auth?: AuthPublicRouteType,
-        /**
-         * Query Params disponíveis para pesquisa.
-         * 
-         * Record< [query-param] , [path-no-flow-data] >
-         * 
-         * Palavras reservadas: take, skip
-         * 
-         * Toda a pesquisa será feita por comparação absoluta, a menos \
-         * que o valor inicie com ~. Ex:
-         * 
-         * ```
-         * { id: '~path.id' }
-         * ```
-         *
-         * Desse jeito fará a pesquisa parcial case insensitive.
-         *  
-         * Também é possível fazer pesquisar por range, para utilizar basta \
-         * iniciar o valor com <>, e dessa forma, você precisará de dois query \
-         * params para representar esse campo, um contendo o prefixo *start_* e \
-         * outro *end_*. Ex:
-         * 
-         * ```
-         * { date: '<>path.date' }
-         * 
-         * <url>?start_date=...&end_date=...
-         * ```
-         
-         */
-        available_query_params?: Record<string, string>,
-        order_by?: Record<string, 'desc' | 'asc'>,
-        filter_scope?: WorkflowViewModeFilterScope[],
-        /** Se não for informado trará o flow_data.data completo */
-        body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
-      }>,
+      get?: Record<string, PublicRouteGet>,
       post?: Record<string, {
         auth?: AuthPublicRouteType,
         /** Escopo de alteração dentro do objeto flow_data.data */
@@ -1024,7 +1026,7 @@ export interface WorkflowConfigIntegrationsType {
   /**
    * Provedores de IA
    */
-  ias?: WFIntegrationIAProvider[]
+  ias?: WFIntegrationIAProvider
 }
 export interface WorkflowConfigIntegrationsChatbot{
   /** Token do Mensagex, se não for informado utilizará o token do hub */
@@ -1172,6 +1174,7 @@ export interface WFActionFnCallTrigger {
   id_is_required?: boolean,
   /** Este confirm não tem suporte a inserção de dados */
   confirm?: StepActionConfirmType,
+  append_values?: Record<string, any>,
   effects?: Partial<Record<AvailableTriggerEffects, boolean | {
     condition: string,
     [key: string]: any

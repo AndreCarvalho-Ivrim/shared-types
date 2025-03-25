@@ -11,6 +11,7 @@ interface FlowMessageBase{
    * passive: Interação passiva, é quando o cliente entra em contato
    */
   interaction_mode: 'active' | 'passive',
+  title?: string,
   message_of_invalid_answer?: string,
   /**
    * São palavras chaves para validar a chamada dessa mensagem. Muito utilizado \
@@ -35,13 +36,15 @@ export interface FlowMessageRedirectType{
   key: string,
   /** redirect: É a possibilidade de redirecionar para outra região do diálogo */
   mode: 'redirect',
+  title?: string,
   matchs?: string[],
   condition?: string,
   /** Mensagem de transição, antes de redirecionar */
   contents?: string[],
   /** Chave(ou caminho) do diálogo que quer chamar */
   redirect_to: string[],
-  store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> }
+  store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> },
+  fns?: FlowMessageFn[]
 }
 export type FlowMessageResponse = (
   Omit<FlowMessageInfoType, 'interaction_mode' | '_id' | 'client_id'> | 
