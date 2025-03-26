@@ -31,5 +31,6 @@ export interface ActivityPanelType{
   for_the_client_id?: string,
   badge?: ActivityPanelBadge,
   active : boolean,
-  fn : ActivityPanelFn,
+  fn? : ActivityPanelFn,
+  mode?: 'workflow-activity'
 }
