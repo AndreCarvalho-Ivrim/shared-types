@@ -913,7 +913,7 @@ export interface WorkflowConfigType {
   },
   rules?: WorkflowConfigRulesType[],
   flow_alerts?: WorkflowConfigFlowAlert[],
-  active_panel?: WorkflowConfigActivePanel[]
+  activity_panel?: WorkflowConfigActivePanel[]
 }
 export interface WorkflowConfigFlowAlert{
   key: string,
