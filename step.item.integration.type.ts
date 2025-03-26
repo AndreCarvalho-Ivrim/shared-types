@@ -60,7 +60,11 @@ export interface IntegrationExcelType {
   scope: string,
   columns?: IntegrationExcelColumnType[],
   append_values?: Record<string, any>,
-  /** URL do template de importação para download */
+  /**
+   * URL do template de importação para download. \
+   * Caso não seja informado, será gerado um template com base \
+   * na parametrização das colunas.
+   */
   model_url?: string,
   /** Entitidade para salvar o registro de importação da planilha */
   import_registration?: string,
