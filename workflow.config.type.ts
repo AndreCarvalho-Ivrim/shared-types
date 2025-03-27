@@ -326,6 +326,12 @@ export interface ConfigViewModeColumnsType {
 }
 type WorkflowFilterScopeFilter = Record<string, string | {
   type: WorkflowConfigFilterType['type'],
+  /**
+   * Além de valores hardcode, alguns notações que podem ser usadas são:
+   * - \@me: para obter o id do usuário logado
+   * - \@array-empty: para consultar se um array está vazio
+   * - \@not-exists: para verificar se uma propriedade não existe
+   */
   value: any
 }>
 export interface WorkflowViewModeFilterScope {
