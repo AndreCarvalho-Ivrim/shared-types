@@ -256,12 +256,12 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     break;
                   case '@findIndex':
                     if(!param) throw new Error(`Erro code: ${code}`)
-                    const [arrayPath, searchValue, mode] = splitParam;
+                    const [arrayPath, searchValue, mode] = splitParam ?? [];
                     if (!arrayPath || !searchValue) throw new Error(`Erro code: ${code}`)
 
                     let modeReturn: 'exist' | 'return' = 'exist';
 
-                    if (mode === 'return') modeReturn = 'return';
+                    if (mode && mode === 'return') modeReturn = 'return';
                     
                     const array = getRecursiveValue(arrayPath, { data: datas });
                     if (!Array.isArray(array)) {
@@ -283,6 +283,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     else value =  replaceAll(value, searchPattern, String(array[index][searchValue]));
                     break;
                   case '@every':
+                    if (!param) throw new Error(`Erro code: ${code}`)
                     const [pathArray, condition] = param.split(',');
                     if (!pathArray || !condition) throw new Error(`Erro code: ${code}`)
                     const getArray = getRecursiveValue(pathArray, { data: datas });
