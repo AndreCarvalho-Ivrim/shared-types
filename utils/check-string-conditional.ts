@@ -256,31 +256,21 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     break;
                   case '@findIndex':
                     if(!param) throw new Error(`Erro code: ${code}`)
-                    const [arrayPath, searchValue, mode] = splitParam ?? [];
-                    if (!arrayPath || !searchValue) throw new Error(`Erro code: ${code}`)
-
-                    let modeReturn: 'exist' | 'return' = 'exist';
-
-                    if (mode && mode === 'return') modeReturn = 'return';
+                    const [arrayPath, conditionFind, searchParam] = splitParam ?? [];
+                    if (!arrayPath || !conditionFind) throw new Error(`Erro code: ${code}`)
                     
                     const array = getRecursiveValue(arrayPath, { data: datas });
                     if (!Array.isArray(array)) {
                       throw new Error(`Erro code: ${code}`)
                     }
-
-                    const compareValues = (item: any, searchValue: string): boolean => {
-                      if (typeof item === 'object' && Array.isArray(item)) return false;
-                      if (typeof item === 'object' && item !== null) {
-                        return !!item[searchValue];
-                      }
-
-                      return String(item).toLowerCase() === searchValue.toLowerCase();
-                    };
                     
-                    const index = array.findIndex(item => compareValues(item, searchValue));
-                    const searchPattern = `__@findIndex(${arrayPath},${searchValue}${!!mode ? `,${mode}` : ''})__`;
-                    if (modeReturn === 'exist') value =  replaceAll(value, searchPattern, String(index !== -1));
-                    else value =  replaceAll(value, searchPattern, String(array[index][searchValue]));
+                    const index = array.findIndex((value) => checkStringConditional(condition, {
+                      this: value,
+                      ...datas
+                    }));
+                    const searchPattern = `__@findIndex(${arrayPath},${conditionFind}${!!searchParam ? `,${searchParam}` : ''})__`;
+                    if (!searchParam) value =  replaceAll(value, searchPattern, String(index));
+                    else value =  replaceAll(value, searchPattern, String(array[index][searchParam]));
                     break;
                   case '@every':
                     if (!param) throw new Error(`Erro code: ${code}`)
