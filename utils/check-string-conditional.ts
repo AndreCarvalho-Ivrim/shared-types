@@ -80,12 +80,16 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  * - !: quando usar este simbolo irá verificar se a variável é falsa
  * - >0, <2: quando usar o operador filled, podemos usar uma expressão parecida com essa \
  * para fazer verificações de length (length maior que 0, length menor que 2)
+ * 
+ * **Condições especiais**
+ * - Ao \\ utilizar anterior ao ; não será feito split.
+ *  exemplo: __@every(managers,$approved\\;#eq\\;*true)__;#eq;*true - A condição do codeHealper permanecerar
  */
 export const checkStringConditional = (strConditional: string, datas: Record<string, any>, conditionalName = 'anonymous'): boolean => {
   let condition: {
     type: StringConditionalTypes,
     value: string
-  }[] = strConditional.split(';').filter(c => c.length > 0).map((c) => {
+  }[] = strConditional.split(/(?<!\\);/).filter(c => c.length > 0).map((c) => {
     let identifier = c.substring(0, 1);
     return {
       type:
@@ -230,11 +234,10 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
             getRecursiveValue(c.value, { data: datas }) ?? undefined
           );
           else if (c.type === 'value') {
-            const helpers = getCodeHelpers(c.value, true);
-            if (!helpers) values.push(c.value)
+            let value = c.value.replace(/\\;/g, ';')
+            const helpers = getCodeHelpers(value, true);
+            if (!helpers) values.push(value)
             else {
-              let value = c.value;
-
               helpers.forEach(([code, param, splitParam]) => {
                 switch (code) {
                   case '@now': value = handleCodeHelper__now(value, code, param); break;
@@ -250,6 +253,52 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                       codeHelper: code,
                       parsedParams: parsedParams
                     });
+                    break;
+                  case '@findIndex':
+                    if(!param) throw new Error(`Erro code: ${code}`)
+                    const [arrayPath, searchValue, mode] = splitParam;
+                    if (!arrayPath || !searchValue) throw new Error(`Erro code: ${code}`)
+
+                    let modeReturn: 'exist' | 'return' = 'exist';
+
+                    if (mode === 'return') modeReturn = 'return';
+                    
+                    const array = getRecursiveValue(arrayPath, { data: datas });
+                    if (!Array.isArray(array)) {
+                      throw new Error(`Erro code: ${code}`)
+                    }
+
+                    const compareValues = (item: any, searchValue: string): boolean => {
+                      if (typeof item === 'object' && Array.isArray(item)) return false;
+                      if (typeof item === 'object' && item !== null) {
+                        return !!item[searchValue];
+                      }
+
+                      return String(item).toLowerCase() === searchValue.toLowerCase();
+                    };
+                    
+                    const index = array.findIndex(item => compareValues(item, searchValue));
+                    const searchPattern = `__@findIndex(${arrayPath},${searchValue}${!!mode ? `,${mode}` : ''})__`;
+                    if (modeReturn === 'exist') value =  replaceAll(value, searchPattern, String(index !== -1));
+                    else value =  replaceAll(value, searchPattern, String(array[index][searchValue]));
+                    break;
+                  case '@every':
+                    const [pathArray, condition] = param.split(',');
+                    if (!pathArray || !condition) throw new Error(`Erro code: ${code}`)
+                    const getArray = getRecursiveValue(pathArray, { data: datas });
+                    if (!Array.isArray(getArray)) {
+                      throw new Error(`Erro code: ${code}`)
+                    }
+                    const everyonePassed = getArray.every(arrData => {
+                      if (arrData === null || typeof arrData !== 'object' || Array.isArray(arrData)) {
+                        return false;
+                      }
+                    
+                      return checkStringConditional(condition, { ...datas, ...arrData });
+                    });
+
+                    const stringPattern = `__@every(${pathArray},${condition})__`;
+                    value =  replaceAll(value, stringPattern, String(everyonePassed));
                     break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
