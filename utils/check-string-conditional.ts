@@ -256,7 +256,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     break;
                   case '@findIndex':
                     if(!param) throw new Error(`Erro code: ${code}`)
-                    const [arrayPath, conditionFind, searchParam] = splitParam ?? [];
+                    const [arrayPath, conditionFind, searchParam] = param.split(',') ?? [];
                     if (!arrayPath || !conditionFind) throw new Error(`Erro code: ${code}`)
                     
                     const array = getRecursiveValue(arrayPath, { data: datas });
@@ -264,10 +264,12 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                       throw new Error(`Erro code: ${code}`)
                     }
                     
-                    const index = array.findIndex((value) => checkStringConditional(condition, {
-                      this: value,
-                      ...datas
-                    }));
+                    const index = array.findIndex((value) => {
+                      return checkStringConditional(conditionFind, {
+                        this: value,
+                        ...datas
+                      })
+                    });
                     const searchPattern = `__@findIndex(${arrayPath},${conditionFind}${!!searchParam ? `,${searchParam}` : ''})__`;
                     if (!searchParam) value =  replaceAll(value, searchPattern, String(index));
                     else value =  replaceAll(value, searchPattern, String(array[index][searchParam]));
