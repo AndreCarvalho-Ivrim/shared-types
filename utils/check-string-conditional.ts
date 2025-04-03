@@ -3,13 +3,32 @@ import { getRecursiveValue, replaceAll } from "./recursive-datas";
 
 export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, prefix: 'flow_data' | 'observer' = 'flow_data') => {
   const pattern = prefix === 'flow_data' ? /\$flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
-  const matches = conditional.split(';').reduce((acc, curr) => [
-    ...acc,
-    ...((curr.matchAll(pattern) as any) ?? []) as string[]
-  ], [] as string[]) as string[];
+  const matches = conditional.split(/(?<!\\);/).reduce((acc, curr) => {
+    if (curr.includes('@findIndex')) {
+      const helpers = getCodeHelpers(conditional);
+      const patternFind = prefix === 'flow_data' ? /flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
+      (helpers ?? []).forEach(([code, param]) => {
+        if (code === '@findIndex' && param) {
+          const [arrayPath, conditionFind] = param.split(',') ?? [];
+          console.log('CC', arrayPath.matchAll(patternFind));
+          const arrayPathMatches = arrayPath 
+            ? [...(arrayPath.matchAll(patternFind) ?? [])]
+            : [];
+          if (conditionFind) {
+            data = {
+              ...data,
+              ...handleStringConditionalExtendingFlowData(conditionFind, data, flow_data, prefix)
+            }
+          }
+              
+          acc.push(...arrayPathMatches as any as string[]);
+        }
+      });
+    } else acc.push(...((curr.matchAll(pattern) as any) ?? []) as string[]);
+    return acc;
+  }, [] as string[]) as string[];
 
   const contents = matches.map(match => match[1]);
-
   contents.map((key) => {
     const value = getRecursiveValue(key, {
       data: {
@@ -255,21 +274,24 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     });
                     break;
                   case '@findIndex':
-                    if(!param) throw new Error(`Erro code: ${code}`)
+                    if (!param) {
+                      value = '-1';
+                      break;
+                    }
                     const [arrayPath, conditionFind, searchParam] = param.split(',') ?? [];
-                    if (!arrayPath || !conditionFind) throw new Error(`Erro code: ${code}`)
-                    
+                    if (!arrayPath || !conditionFind) {
+                      value = '-1';
+                      break;
+                    }
                     const array = getRecursiveValue(arrayPath, { data: datas });
                     if (!Array.isArray(array)) {
-                      throw new Error(`Erro code: ${code}`)
+                      value = '-1';
+                      break;
                     }
-                    
-                    const index = array.findIndex((value) => {
-                      return checkStringConditional(conditionFind, {
-                        this: value,
-                        ...datas
-                      })
-                    });
+                    const index = array.findIndex((value) => checkStringConditional(conditionFind, {
+                      this: value,
+                      ...datas
+                    }));
                     const searchPattern = `__@findIndex(${arrayPath},${conditionFind}${!!searchParam ? `,${searchParam}` : ''})__`;
                     if (!searchParam) value =  replaceAll(value, searchPattern, String(index));
                     else value =  replaceAll(value, searchPattern, String(array[index][searchParam]));
