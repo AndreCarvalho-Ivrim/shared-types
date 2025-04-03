@@ -232,7 +232,7 @@ export interface SendWhatsappMessagesEvent{
    * 
    * ``` { 'path-no-flow-data': { value: 'path-na-resposta' ou valor hardcode, static: bool para ativar o modo hardcode } } ```
    **/
-  effects: RequestExternalEffect[],
+  effects?: RequestExternalEffect[],
   concluded_step_id: string
 }
 export interface RequestExternalDBEvent{
