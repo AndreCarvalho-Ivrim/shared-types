@@ -19,6 +19,7 @@ export interface WorkflowConfigFilterType {
    * data passada está dentro do range do banco
    * - list: Lista de opções (in)
    * - not-list: Não está na lista de opções (nin)
+   * - array-object: caso um valor dentro de um array de objetos atenda a uma condição específica
    */
   type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in' | 'array-object',
   /** Veja a tipagem de WorkflowConfigFilterRefType para ver opções pré-definidas */
