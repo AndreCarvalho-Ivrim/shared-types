@@ -19,7 +19,7 @@ export interface WorkflowConfigFilterType {
    * data passada está dentro do range do banco
    * - list: Lista de opções (in)
    * - not-list: Não está na lista de opções (nin)
-   * - array-object: caso um valor dentro de um array de objetos atenda a uma condição específica
+   * - array-object: Verifica se dentro de um array, se algum elemento dele da match com o value passado
    */
   type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in' | 'array-object',
   /** Veja a tipagem de WorkflowConfigFilterRefType para ver opções pré-definidas */
@@ -333,7 +333,11 @@ type WorkflowFilterScopeFilter = Record<string, string | {
    * - \@array-empty: para consultar se um array está vazio
    * - \@not-exists: para verificar se uma propriedade não existe
    */
-  value: any
+  value: any,
+  /**
+   * Utilizado no \@array-object para definir qual a propriedade do object será verificada
+   */
+  option?: string
 }>
 export interface WorkflowViewModeFilterScope {
   /**
