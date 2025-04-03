@@ -821,6 +821,29 @@ export interface WorkflowConfigType {
     }>>
   },
   triggers?: WorkflowTriggerType[],
+  ivrim_notes?: { mode: 'comments' } | {
+    mode: 'chat',
+    /**
+     * É a ref de uma propriedade do flow-data utilizada para montar \
+     * o título da página externa do ivrim notes
+     */
+    identifier: string,
+    permissions?: {
+      /** Permite ver os chats de outros usuários */
+      view_all_chats: 'all' | 'all-with-permissions' | string[],
+      /** Permite abrir novos chats com usuários da empresa */
+      open_chats: 'all' | 'all-with-permissions' | string[],
+      /**
+       * Permite navegar entre os chats em que está incluso, quando está \
+       * na página externa.
+       * 
+       * - all: todos podem ver a sidebar
+       * - all-with-permissions: apenas usuários com permissão no fluxo
+       * - string[]: apenas permissões selecionadas
+       */
+      sidebar_on_external_page: 'all' | 'all-with-permissions' | string[]
+    }
+  },
   webhooks?: WorkflowWebhookType,
   notifications?: WorkflowConfigNotificationType[],
   integrations?: WorkflowConfigIntegrationsType,
