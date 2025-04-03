@@ -1035,6 +1035,7 @@ export interface WorkflowConfigIntegrationsType {
   ias?: WFIntegrationIAProvider
 }
 export interface WorkflowConfigIntegrationsChatbot{
+  delay_after_contact_creation?: boolean,
   /** Token do Mensagex, se não for informado utilizará o token do hub */
   token?: string,
   /**
