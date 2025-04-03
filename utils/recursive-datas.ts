@@ -107,6 +107,25 @@ export const getRecursiveValue = (id: string, item: { data: any }) : any => {
   return value;
 }
 export const handleFillable = (id: string, flowData: any, value: any, i: number = 0, cumulative:  string[]) => {
+  if (id.includes('[')) {
+    const matches = id.match(/(.+?)\[(\d+)\](.*)/)
+    if (matches) {
+      const [_, beforePath, index, afterPath] = matches
+
+      const cleanRemainder = afterPath.startsWith('.') ? afterPath.slice(1) : afterPath;
+
+      const newPath = cleanRemainder ? `${beforePath}.${cleanRemainder}` : beforePath;
+
+      return handleFillable(
+        newPath,
+        flowData,
+        value,
+        Number(index),
+        [...cumulative, beforePath]
+      );
+    }
+  }
+
   if(id.includes('.')){
     let ids = id.split('.');
     if(ids.length === 0) return flowData;
@@ -135,7 +154,9 @@ const handleRecursiveValue = (ids: string[], data: any, value: any, i: number, c
       return data;
     }
     else{
-      data[id] = value;
+      if (Array.isArray(data) && data[i] && typeof data[i] === 'object' && !Array.isArray(data[i])) {
+        data[i][id] = value;
+      } else data[id] = value;
       return data;
     }
   }
