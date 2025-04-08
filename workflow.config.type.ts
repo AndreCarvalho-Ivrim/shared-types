@@ -168,6 +168,10 @@ export type HandlerMapType = {
   type: 'map';
   appends: HandlerAppendType[];
 }
+
+export interface HandlersType {
+  handlers: HandlerMapType[]
+}
 export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
    * 
@@ -279,7 +283,7 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
    */
-  data?: HandlerMapType | any
+  data?: HandlersType | any
 }
 export interface WFConfigObserverDataEntity {
   entity_key: string,
