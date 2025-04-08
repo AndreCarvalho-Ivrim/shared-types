@@ -297,19 +297,26 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     else value =  replaceAll(value, searchPattern, String(array[index][searchParam]));
                     break;
                   case '@every':
-                    if (!param) throw new Error(`Erro code: ${code}`)
+                    if (!param) {
+                      value = 'false';
+                      break;
+                    }
                     const [pathArray, condition] = param.split(',');
-                    if (!pathArray || !condition) throw new Error(`Erro code: ${code}`)
+                    if (!pathArray || !condition) {
+                      value = 'false';
+                      break;
+                    }
                     const getArray = getRecursiveValue(pathArray, { data: datas });
                     if (!Array.isArray(getArray)) {
-                      throw new Error(`Erro code: ${code}`)
+                      value = 'false';
+                      break;
                     }
                     const everyonePassed = getArray.every(arrData => {
                       if (arrData === null || typeof arrData !== 'object' || Array.isArray(arrData)) {
                         return false;
                       }
                     
-                      return checkStringConditional(condition, { ...datas, ...arrData });
+                      return checkStringConditional(condition, { ...datas, this: arrData });
                     });
 
                     const stringPattern = `__@every(${pathArray},${condition})__`;
