@@ -157,6 +157,17 @@ export interface FlowNetworkParams {
     }
   }
 }
+export type HandlerAppendType = {
+  condition?: string;
+  value: any;
+  mode: 'overwrite' | 'merge';
+  name: string;
+}
+
+export type HandlerMapType = {
+  type: 'map';
+  appends: HandlerAppendType[];
+}
 export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
    * 
@@ -197,8 +208,10 @@ export interface WorkflowConfigObserverFnType {
    * - Caso seja type === 'append' o value é o valor a ser adicionado
    * - Caso seja type === 'append' e value = \@entity é obrigatório informar o \
    * data com a configuração de como a entidade será integrada ao registro.
+   * - Caso seja type === 'append' e value = \@handlers é obrigatório informar o \
+   * data com a configuração de HandlerAppend.
    */
-  value?: any,
+  value?: '@handlers' | any,
   /** 
    * BACKUP(type)
    * Se a ideia for fazer um array de backups por flow-data, com o primeiro níve da entidade dinâmica \
@@ -266,7 +279,7 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
    */
-  data?: any
+  data?: HandlerMapType | any
 }
 export interface WFConfigObserverDataEntity {
   entity_key: string,
