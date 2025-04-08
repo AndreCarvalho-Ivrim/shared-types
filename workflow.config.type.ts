@@ -1,4 +1,5 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
+import { SendWhatsappMessages } from '../../application/events/SendWhatsappMessages';
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
@@ -1368,7 +1369,11 @@ export interface WfRoutinesManageFlowEventResetContactStep{
     append_values?: Record<string, any>
   }
 }
-export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep;
+export interface WfRoutinesManageFlowEventSendWhatsappMessages extends SendWhatsappMessages {
+  id?: '@send-whatsapp-messages',
+  data?: any
+}
+export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages;
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
   type: 'manage-flow',
   data: {
