@@ -114,6 +114,10 @@ export type WorkflowFlowChat = {
    * o título da página externa do ivrim notes
    */
   identifier: string,
+  /**
+   * Permite enviar mensagens a partir de uma página publica \
+   */
+  external_email?: boolean,
   permissions?: {
     /** Permite ver os chats de outros usuários */
     view_all_chats: 'all' | 'all-with-permissions' | string[],
