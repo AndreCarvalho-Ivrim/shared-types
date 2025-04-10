@@ -36,7 +36,8 @@ export const isacRoutes = {
   public: {
     workflow: (flow_id: string, variation: string, params?: Record<string, string>) => `/public/fluxo/${flow_id}/${variation}${
       params ? `?${Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&')}`:''
-    }`
+    }`,
+    flowchat: (flow_id: string, flow_data_id: string, owner_id: string, email_guest: string, message_id: string) => `/public/flowchat/${flow_id}/${flow_data_id}/${owner_id}/${email_guest}/${message_id}`,
   }
 }
 export const hubRoutes = {

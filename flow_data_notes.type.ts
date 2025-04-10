@@ -29,4 +29,6 @@ export interface FlowDataNotesType{
   notes: FlowDataNote[],
   owner?: string,
   guest?: string,
+  email_guest?: string,
+  email_hash?: string,
 }
