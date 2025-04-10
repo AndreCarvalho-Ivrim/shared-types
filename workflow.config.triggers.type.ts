@@ -119,6 +119,8 @@ export type WorkflowFlowChat = {
    */
   external_email?: boolean,
   permissions?: {
+    /** Rotas onde será possivel abrir chat e manda mensagem */
+    steps_open_chats: 'all' | string[],
     /** Permite ver os chats de outros usuários */
     view_all_chats: 'all' | 'all-with-permissions' | string[],
     /** Permite abrir novos chats com usuários da empresa */
