@@ -669,7 +669,12 @@ export interface WorkflowConfigSlasType {
    */
   days_exception_settings?: {
     entity_key: string,
-  }
+  },
+  /** 
+   * Configurar para exibir um outher field no lugar do stay caso o stay não esteja definido na etapa \
+   * passe a key do outher_fields
+   */
+  replacement_stay?: string
 }
 export interface WFConfigSlaNotifyType {
   subject: string,
