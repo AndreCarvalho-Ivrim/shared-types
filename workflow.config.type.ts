@@ -85,6 +85,7 @@ export interface WorkflowConfigNotificationType {
   conditional_targets?: { condition: string, target: string }[],
   default_target?: string[],
   separate_shipping?: true | {
+    condition?: string,
     handlers?: HandlersType[]
   },
   effects?: Array<WorkflowNotificationEffectType>
