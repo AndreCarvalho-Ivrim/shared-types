@@ -84,6 +84,9 @@ export interface WorkflowConfigNotificationType {
   /** Segue as mesmas regras do target */
   conditional_targets?: { condition: string, target: string }[],
   default_target?: string[],
+  separate_shipping?: true | {
+    handlers?: HandlersType[]
+  },
   effects?: Array<WorkflowNotificationEffectType>
 }
 export interface WorkflowConfigAutocomplete {
@@ -215,7 +218,7 @@ export interface WorkflowConfigObserverFnType {
    * - Caso seja type === 'append' e value = \@handlers é obrigatório informar o \
    * data com a configuração de HandlerAppend.
    */
-  value?: '@handlers' | any,
+  value?: any,
   /** 
    * BACKUP(type)
    * Se a ideia for fazer um array de backups por flow-data, com o primeiro níve da entidade dinâmica \
@@ -282,6 +285,8 @@ export interface WorkflowConfigObserverFnType {
    * APPEND -> required data on value = \@entity
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
+   * 
+   * \@handlers: seguir a tipagem de [HandlersType]
    */
   data?: HandlersType | any
 }
