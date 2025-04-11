@@ -85,6 +85,7 @@ export interface WorkflowConfigNotificationType {
   conditional_targets?: { condition: string, target: string }[],
   default_target?: string[],
   separate_shipping?: true | {
+    /** O $this e o target */
     condition?: string,
     handlers?: AllHandlersType
   },
@@ -173,7 +174,22 @@ export type HandlerMapType = {
   appends: HandlerAppendType[];
 }
 
-export type AllHandlersType = HandlerMapType[];
+export type HandlerFindType = {
+  type: 'find';
+  /** Local onde está o recurso */
+  path: string;
+  /** Local onde salvar o valor encontrado (recurso) */
+  path_to_save?: string;
+  /** 
+   * - Caso o recurso for um array, utilize a contidion para pegar um valor dentro dele \
+   * - Utilize o $current para se referir ao valor atual do array
+   * */
+  condition?: string;
+  /** Caso o recurso for um object e possível adicionar valores */
+  appends?: HandlerAppendType[];
+}
+
+export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
 
 export interface HandlersType {
   handlers: AllHandlersType
