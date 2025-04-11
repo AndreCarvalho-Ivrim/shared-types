@@ -86,7 +86,7 @@ export interface WorkflowConfigNotificationType {
   default_target?: string[],
   separate_shipping?: true | {
     condition?: string,
-    handlers?: HandlersType[]
+    handlers?: AllHandlersType
   },
   effects?: Array<WorkflowNotificationEffectType>
 }
@@ -173,8 +173,10 @@ export type HandlerMapType = {
   appends: HandlerAppendType[];
 }
 
+export type AllHandlersType = HandlerMapType[];
+
 export interface HandlersType {
-  handlers: HandlerMapType[]
+  handlers: AllHandlersType
 }
 export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
