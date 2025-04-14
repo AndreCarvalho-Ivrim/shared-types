@@ -1328,7 +1328,7 @@ export interface WorkflowRoutinesType {
 }
 export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications', 'bot']
 export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications | WorkflowRoutinesBot
-type WeekDays = 'SUNDAY' | // Domingo
+export type WeekDays = 'SUNDAY' | // Domingo
   'MONDAY'   | // Segunda-feira
   'TUESDAY'  | // Terça-feira
   'WEDNESDAY'| // Quarta-feira
