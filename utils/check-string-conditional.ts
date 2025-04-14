@@ -611,12 +611,26 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
     const splitedParam = param.split(',')
     const num = splitedParam[0].slice(1);
 
-    if(param.indexOf('+') === 0) date.setDate(
-      date.getDate() + Number(num)
-    );
-    else if(param.indexOf('-') === 0) date.setDate(
-      date.getDate() - Number(num)
-    );
+    if(param.indexOf('+') === 0) {
+      if (num.includes('m')) {
+        date.setMinutes(
+          date.getMinutes() + Number(num.slice(0, num.indexOf('m'))) 
+        )
+      }
+      else date.setDate(
+        date.getDate() + Number(num)
+      )
+    }
+    else if(param.indexOf('-') === 0) { 
+      if (num.includes('m')) {
+        date.setMinutes(
+          date.getMinutes() - Number(num.slice(0, num.indexOf('m'))) 
+        )
+      }
+      else date.setDate(
+        date.getDate() - Number(num)
+      )
+    }
     else dateIsChanged = false;
 
     if(dateIsChanged){

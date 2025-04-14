@@ -216,6 +216,8 @@ export interface WorkflowConfigObserverFnType {
    * \@to-affect: Evento válido apenas no FlowData, para disparar efeitos em outros registros
    * 
    * \@consolidate: Evento válido apenas no FlowData, para unir registros
+   * 
+   * \@send-whatsapp-messages: Evento para disparar mensagens de whatsapp usando o chatbot
    */
   name: string,
   /**
@@ -300,6 +302,8 @@ export interface WorkflowConfigObserverFnType {
    * \@fill-location-lat-long: seguir a tipagem de [FillLocationLatLogEventType]
    * 
    * \@request-external-api: seguir a tipagem de [RequestExternalApiEvent]
+   * 
+   * \@send-whatsapp-messages: seguir a tipagem de [SendWhatsappMessagesEvent]
    * 
    * APPEND -> required data on value = \@entity
    * 
@@ -1083,6 +1087,7 @@ export interface WorkflowConfigIntegrationsType {
   ias?: WFIntegrationIAProvider
 }
 export interface WorkflowConfigIntegrationsChatbot{
+  delay_after_contact_creation?: boolean,
   /** Token do Mensagex, se não for informado utilizará o token do hub */
   token?: string,
   /**
@@ -1434,7 +1439,19 @@ export interface WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls{
     }
   }
 }
-export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls;
+export interface WfRoutinesManageFlowEventResetContactStep{
+  id: '@reset-contact-step',
+  data: {
+    /** Referência que liga o flow-data ao flow-message-contact */
+    phone_ref: string,
+    append_values?: Record<string, any>
+  }
+}
+export interface WfRoutinesManageFlowEventSendWhatsappMessages {
+  id?: '@send-whatsapp-messages',
+  data?: any
+}
+export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages;
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
   type: 'manage-flow',
   data: {
@@ -1508,13 +1525,12 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
     data_id?: string
   }>
 }
-export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external'; 
+export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external' | 'ability-scheduling'; 
 export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
   type: 'bot',
   exception?: WorkflowRoutinesBotExceptions,
   /**
-   * Qual horário a rotina será executada. Por padrão ela é executada imediatamente, \
-   * caso queira definir, o horário é de 00:30 até 23, pulando de meia em meia hora \
+   * Qual horário a rotina deve ser encerrada. o horário é de 00:30 até 23, pulando de meia em meia hora \
    * (.5 = 30min)
    */
   maximum_execution_time?: 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5 | 5.5 | 6 | 6.5 | 7 | 7.5 | 8 | 8.5 | 9 | 9.5 | 10 | 10.5 | 11 | 11.5 | 12 | 12.5 | 13 | 13.5 | 14 | 14.5 | 15 | 15.5 | 16 | 16.5 | 17 | 17.5 | 18 | 18.5 | 19 | 19.5 | 20 | 20.5 | 21 | 21.5 | 22 | 22.5 | 23,
