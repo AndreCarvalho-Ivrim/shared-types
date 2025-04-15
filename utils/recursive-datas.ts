@@ -106,7 +106,7 @@ export const getRecursiveValue = (id: string, item: { data: any }) : any => {
 
   return value;
 }
-export const handleFillable = (id: string, flowData: any, value: any, i: number = 0, cumulative:  string[]) => {
+export const handleFillable = (id: string, flowData: any, value: any, i: number = 0, cumulative: string[] = []) : any => {
   if (id.includes('[')) {
     const matches = id.match(/(.+?)\[(\d+)\](.*)/)
     if (matches) {
