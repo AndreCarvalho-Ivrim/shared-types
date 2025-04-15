@@ -26,6 +26,10 @@ interface FlowMessageBase{
   fns?: FlowMessageFn[]
   store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> }
 }
+export interface FlowMessageIfError {
+  count: number,
+  default_response: string
+}
 export interface FlowMessageInfoType extends FlowMessageBase{
   /** info: Informação apenas envia uma mensagem sem esperar retorno */
   mode: 'info',
@@ -56,6 +60,7 @@ export interface FlowMessageAskType extends FlowMessageBase{
   /** ask: É uma pergunta que necessita da resposta do cliente */
   mode: 'ask',
   condition?: string,
+  if_error?: FlowMessageIfError,
   /** respostas possíveis do usuário */
   responses: FlowMessageResponse[]
 }
