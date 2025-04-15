@@ -3,13 +3,32 @@ import { getRecursiveValue, replaceAll } from "./recursive-datas";
 
 export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, prefix: 'flow_data' | 'observer' = 'flow_data') => {
   const pattern = prefix === 'flow_data' ? /\$flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
-  const matches = conditional.split(';').reduce((acc, curr) => [
-    ...acc,
-    ...((curr.matchAll(pattern) as any) ?? []) as string[]
-  ], [] as string[]) as string[];
+  const matches = conditional.split(/(?<!\\);/).reduce((acc, curr) => {
+    if (curr.includes('@findIndex')) {
+      const helpers = getCodeHelpers(conditional);
+      const patternFind = prefix === 'flow_data' ? /flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
+      (helpers ?? []).forEach(([code, param]) => {
+        if (code === '@findIndex' && param) {
+          const [arrayPath, conditionFind] = param.split(',') ?? [];
+          console.log('CC', arrayPath.matchAll(patternFind));
+          const arrayPathMatches = arrayPath 
+            ? [...(arrayPath.matchAll(patternFind) ?? [])]
+            : [];
+          if (conditionFind) {
+            data = {
+              ...data,
+              ...handleStringConditionalExtendingFlowData(conditionFind, data, flow_data, prefix)
+            }
+          }
+              
+          acc.push(...arrayPathMatches as any as string[]);
+        }
+      });
+    } else acc.push(...((curr.matchAll(pattern) as any) ?? []) as string[]);
+    return acc;
+  }, [] as string[]) as string[];
 
   const contents = matches.map(match => match[1]);
-
   contents.map((key) => {
     const value = getRecursiveValue(key, {
       data: {
@@ -80,12 +99,16 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  * - !: quando usar este simbolo irá verificar se a variável é falsa
  * - >0, <2: quando usar o operador filled, podemos usar uma expressão parecida com essa \
  * para fazer verificações de length (length maior que 0, length menor que 2)
+ * 
+ * **Condições especiais**
+ * - Ao \\ utilizar anterior ao ; não será feito split.
+ *  exemplo: __@every(managers,$approved\\;#eq\\;*true)__;#eq;*true - A condição do codeHealper permanecerar
  */
 export const checkStringConditional = (strConditional: string, datas: Record<string, any>, conditionalName = 'anonymous'): boolean => {
   let condition: {
     type: StringConditionalTypes,
     value: string
-  }[] = strConditional.split(';').filter(c => c.length > 0).map((c) => {
+  }[] = strConditional.split(/(?<!\\);/).filter(c => c.length > 0).map((c) => {
     let identifier = c.substring(0, 1);
     return {
       type:
@@ -230,11 +253,10 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
             getRecursiveValue(c.value, { data: datas }) ?? undefined
           );
           else if (c.type === 'value') {
-            const helpers = getCodeHelpers(c.value, true);
-            if (!helpers) values.push(c.value)
+            let value = c.value.replace(/\\;/g, ';')
+            const helpers = getCodeHelpers(value, true);
+            if (!helpers) values.push(value)
             else {
-              let value = c.value;
-
               helpers.forEach(([code, param, splitParam]) => {
                 switch (code) {
                   case '@now': value = handleCodeHelper__now(value, code, param); break;
@@ -250,6 +272,55 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                       codeHelper: code,
                       parsedParams: parsedParams
                     });
+                    break;
+                  case '@findIndex':
+                    if (!param) {
+                      value = '-1';
+                      break;
+                    }
+                    const [arrayPath, conditionFind, searchParam] = param.split(',') ?? [];
+                    if (!arrayPath || !conditionFind) {
+                      value = '-1';
+                      break;
+                    }
+                    const array = getRecursiveValue(arrayPath, { data: datas });
+                    if (!Array.isArray(array)) {
+                      value = '-1';
+                      break;
+                    }
+                    const index = array.findIndex((value) => checkStringConditional(conditionFind, {
+                      this: value,
+                      ...datas
+                    }));
+                    const searchPattern = `__@findIndex(${arrayPath},${conditionFind}${!!searchParam ? `,${searchParam}` : ''})__`;
+                    if (!searchParam) value =  replaceAll(value, searchPattern, String(index));
+                    else value =  replaceAll(value, searchPattern, String(array[index][searchParam]));
+                    break;
+                  case '@every':
+                    if (!param) {
+                      value = 'false';
+                      break;
+                    }
+                    const [pathArray, condition] = param.split(',');
+                    if (!pathArray || !condition) {
+                      value = 'false';
+                      break;
+                    }
+                    const getArray = getRecursiveValue(pathArray, { data: datas });
+                    if (!Array.isArray(getArray)) {
+                      value = 'false';
+                      break;
+                    }
+                    const everyonePassed = getArray.every(arrData => {
+                      if (arrData === null || typeof arrData !== 'object' || Array.isArray(arrData)) {
+                        return false;
+                      }
+                    
+                      return checkStringConditional(condition, { ...datas, this: arrData });
+                    });
+
+                    const stringPattern = `__@every(${pathArray},${condition})__`;
+                    value =  replaceAll(value, stringPattern, String(everyonePassed));
                     break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }

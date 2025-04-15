@@ -2,7 +2,7 @@ import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, Integ
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
-import { WorkflowTriggerType, AvailableTriggerEffects } from "./workflow.config.triggers.type";
+import { WorkflowTriggerType, AvailableTriggerEffects, WorkflowIvrimNotes } from "./workflow.config.triggers.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'ias';
 export type AvailableViewModeType = 'table' | 'dashboard';
@@ -19,6 +19,7 @@ export interface WorkflowConfigFilterType {
    * data passada está dentro do range do banco
    * - list: Lista de opções (in)
    * - not-list: Não está na lista de opções (nin)
+   * - array-object: Verifica se dentro de um array, se algum elemento dele da match com o value passado
    */
   type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in',
   /** Veja a tipagem de WorkflowConfigFilterRefType para ver opções pré-definidas */
@@ -83,6 +84,11 @@ export interface WorkflowConfigNotificationType {
   /** Segue as mesmas regras do target */
   conditional_targets?: { condition: string, target: string }[],
   default_target?: string[],
+  separate_shipping?: true | {
+    /** O $this e o target */
+    condition?: string,
+    handlers?: AllHandlersType
+  },
   effects?: Array<WorkflowNotificationEffectType>
 }
 export interface WorkflowConfigAutocomplete {
@@ -156,6 +162,38 @@ export interface FlowNetworkParams {
     }
   }
 }
+export type HandlerAppendType = {
+  condition?: string;
+  value: any;
+  mode: 'overwrite' | 'merge';
+  name: string;
+}
+
+export type HandlerMapType = {
+  type: 'map';
+  appends: HandlerAppendType[];
+}
+
+export type HandlerFindType = {
+  type: 'find';
+  /** Local onde está o recurso */
+  path: string;
+  /** Local onde salvar o valor encontrado (recurso) */
+  path_to_save?: string;
+  /** 
+   * - Caso o recurso for um array, utilize a contidion para pegar um valor dentro dele \
+   * - Utilize o $current para se referir ao valor atual do array
+   * */
+  condition?: string;
+  /** Caso o recurso for um object e possível adicionar valores */
+  appends?: HandlerAppendType[];
+}
+
+export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
+
+export interface HandlersType {
+  handlers: AllHandlersType
+}
 export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
    * 
@@ -198,6 +236,8 @@ export interface WorkflowConfigObserverFnType {
    * - Caso seja type === 'append' o value é o valor a ser adicionado
    * - Caso seja type === 'append' e value = \@entity é obrigatório informar o \
    * data com a configuração de como a entidade será integrada ao registro.
+   * - Caso seja type === 'append' e value = \@handlers é obrigatório informar o \
+   * data com a configuração de HandlerAppend.
    */
   value?: any,
   /** 
@@ -268,8 +308,10 @@ export interface WorkflowConfigObserverFnType {
    * APPEND -> required data on value = \@entity
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
+   * 
+   * \@handlers: seguir a tipagem de [HandlersType]
    */
-  data?: any
+  data?: HandlersType | any
 }
 export interface WFConfigObserverDataEntity {
   entity_key: string,
@@ -631,7 +673,12 @@ export interface WorkflowConfigSlasType {
    */
   days_exception_settings?: {
     entity_key: string,
-  }
+  },
+  /** 
+   * Configurar para exibir um outher field no lugar do stay caso o stay não esteja definido na etapa \
+   * passe a key do outher_fields
+   */
+  replacement_stay?: string
 }
 export interface WFConfigSlaNotifyType {
   subject: string,
@@ -825,6 +872,7 @@ export interface WorkflowConfigType {
     }>>
   },
   triggers?: WorkflowTriggerType[],
+  ivrim_notes?: WorkflowIvrimNotes,
   webhooks?: WorkflowWebhookType,
   notifications?: WorkflowConfigNotificationType[],
   integrations?: WorkflowConfigIntegrationsType,
@@ -1285,6 +1333,36 @@ export interface WorkflowRoutinesType {
 }
 export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications', 'bot']
 export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications | WorkflowRoutinesBot
+export type WeekDays = 'SUNDAY' | // Domingo
+  'MONDAY'   | // Segunda-feira
+  'TUESDAY'  | // Terça-feira
+  'WEDNESDAY'| // Quarta-feira
+  'THURSDAY' | // Quinta-feira
+  'FRIDAY'   | // Sexta-feira
+  'SATURDAY'   // Sábado
+  ;
+type WeekDayInterval = {
+  type: 'weekly';
+  /**
+   * - Informe os dias da semana em que a rotina será executada \
+   * - Opções: \
+   *  'SUNDAY' = Domingo \
+   *  'TUESDAY' = Terça \
+   *  'WEDNESDAY' = Quarta \
+   *  'THURSDAY' = Quinta \
+   *  'FRIDAY' = Sexta \
+   *  'SATURDAY' = Sábado
+   */
+  days: WeekDays[];
+}
+type MonthDayInterval = {
+  type: 'monthly';
+  /**
+   * - Informe os dias do mês em que a rotina será executada \
+   * - Do dia 1 ao 31 ou 'last-day', se o valor informado maior que 31 será last-day
+   */
+  days: (number | 'last-day')[]; // Array de números de 1 a 31
+}
 interface WorkflowRoutinesExecutorBase {
   /** Utilizada para a rotina poder ser chamada por outros lugares */
   key?: string,
@@ -1299,9 +1377,10 @@ interface WorkflowRoutinesExecutorBase {
   time_to_exec?: 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5 | 5.5 | 6 | 6.5 | 7 | 7.5 | 8 | 8.5 | 9 | 9.5 | 10 | 10.5 | 11 | 11.5 | 12 | 12.5 | 13 | 13.5 | 14 | 14.5 | 15 | 15.5 | 16 | 16.5 | 17 | 17.5 | 18 | 18.5 | 19 | 19.5 | 20 | 20.5 | 21 | 21.5 | 22 | 22.5 | 23,
   /**
    * Intervalo(em dias) em que a rotina repetirá. \
-   * Por padrão o valor é 1 (todo dia)
+   * Por padrão o valor é 1 (todo dia) \
+   * Abra um object para ter acesso a dias especificos: dias da semana ou dias do mês
    */
-  interval?: number,
+  interval?: number | WeekDayInterval | MonthDayInterval,
 }
 export interface WorkflowRoutinesExecutorIBD extends WorkflowRoutinesExecutorBase {
   type: 'sync-ivrim-big-data'

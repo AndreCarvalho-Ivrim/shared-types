@@ -26,5 +26,9 @@ export interface FlowDataNotesType{
   _id: string,
   flow_id: string,
   flow_data_id: string,
-  notes: FlowDataNote[]
+  notes: FlowDataNote[],
+  owner?: string,
+  guest?: string,
+  email_guest?: string,
+  email_hash?: string,
 }

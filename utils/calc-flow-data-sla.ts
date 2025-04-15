@@ -22,64 +22,65 @@ interface CalcSlaResponse{
 }
 export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:CalcSlaParams) : (CalcSlaResponse | undefined) {
   try{
+    let timeToExpireSla: number = 0;
+    let unit: 'day' | 'hour' = 'day';
+    const currentDate = new Date()
+    currentDate.setHours(0, 0, 0, 0)
+
     if(step?.sla && step.sla.stay !== undefined && flowData.changed_step_at){
-      const unit = step.sla.unit ?? 'day';
+      unit = step.sla.unit ?? 'day';
 
       if(unit === 'hour') return calcHoursToExpireSla({ step, flowData, workflow, exceptionDays });
       
       const startDate = new Date(flowData.changed_step_at)
       startDate.setHours(0, 0, 0, 0)
-      const currentDate = new Date()
-      currentDate.setHours(0, 0, 0, 0)
 
       const diffInMilliseconds = currentDate.getTime() - startDate.getTime()
       const oneHourInMilliseconds = 60 * 60 * 1000; // número de milissegundos em uma hora
-      let timeToExpireSla = 0;
       
       const diffInDays = Math.round(diffInMilliseconds / (oneHourInMilliseconds * 24));
       timeToExpireSla = diffInDays - step.sla.stay;
-
-      let timeToExpireOutherFields : (number | undefined)[] | undefined = []
-      try{
-        if(workflow?.config?.slas?.outher_fields && workflow.config.slas.outher_fields.length > 0){
-          workflow.config.slas.outher_fields.forEach((outher) => {
-            let tempDate = getRecursiveValue(outher.key, flowData)
-            
-            if(tempDate){
-              try{
-                const outherDate = new Date(tempDate);
-                outherDate.setHours(0, 0, 0, 0);
-
-                const tempDiffInMilliseconds = outherDate.getTime() - currentDate.getTime();
-                const tempOneHourInMilliseconds = 60 * 60 * 1000; // número de milissegundos em uma hora
-                
-                const tempDiffInDays = Math.round(tempDiffInMilliseconds / (tempOneHourInMilliseconds * 24));
-                timeToExpireOutherFields!.push((tempDiffInDays + 1) * -1)
-              }catch(e){ timeToExpireOutherFields!.push(undefined) }
-            }else timeToExpireOutherFields!.push(undefined)
-          })
-        }
-        else timeToExpireOutherFields = undefined
-      }catch(e: any){
-        console.error('[error-on-calc-outher-slas]', {
-          e, outher_slas: workflow?.config?.slas?.outher_fields,
-        })
-        timeToExpireOutherFields = undefined
-      }
-
-      const closestToExpiration = !timeToExpireOutherFields || timeToExpireOutherFields.length === 0 ? timeToExpireSla : (timeToExpireOutherFields.filter(
-        (d) => d !== undefined
-      ) as number[]).reduce((acc, curr) => {
-        return Math.max(acc, curr);
-      }, timeToExpireSla);
-
-      return {
-        timeToExpireSla,
-        timeToExpireOutherFields,
-        closestToExpiration,
-        unit
-      }
     }
+    let timeToExpireOutherFields : (number | undefined)[] | undefined = []
+    try{
+      if(workflow?.config?.slas?.outher_fields && workflow.config.slas.outher_fields.length > 0){
+        workflow.config.slas.outher_fields.forEach((outher) => {
+          let tempDate = getRecursiveValue(outher.key, flowData)
+          
+          if(tempDate){
+            try{
+              const outherDate = new Date(tempDate);
+              outherDate.setHours(0, 0, 0, 0);
+
+              const tempDiffInMilliseconds = outherDate.getTime() - currentDate.getTime();
+              const tempOneHourInMilliseconds = 60 * 60 * 1000; // número de milissegundos em uma hora
+              
+              const tempDiffInDays = Math.round(tempDiffInMilliseconds / (tempOneHourInMilliseconds * 24));
+              timeToExpireOutherFields!.push((tempDiffInDays + 1) * -1)
+            }catch(e){ timeToExpireOutherFields!.push(undefined) }
+          }else timeToExpireOutherFields!.push(undefined)
+        })
+      }
+      else timeToExpireOutherFields = undefined
+    }catch(e: any){
+      console.error('[error-on-calc-outher-slas]', {
+        e, outher_slas: workflow?.config?.slas?.outher_fields,
+      })
+      timeToExpireOutherFields = undefined
+    }
+
+    const closestToExpiration = !timeToExpireOutherFields || timeToExpireOutherFields.length === 0 ? timeToExpireSla : (timeToExpireOutherFields.filter(
+      (d) => d !== undefined
+    ) as number[]).reduce((acc, curr) => {
+      return Math.max(acc, curr);
+    }, timeToExpireSla);
+
+    return {
+      timeToExpireSla,
+      timeToExpireOutherFields,
+      closestToExpiration,
+      unit
+    };
   }catch(e: any){
     console.error('[error-on-calc-sla]', {
       flow_data_id: flowData._id,

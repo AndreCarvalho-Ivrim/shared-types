@@ -105,3 +105,36 @@ export interface WorkflowTriggerUpdateFlowData extends  WorkflowTriggerBase{
 }
 
 export type WorkflowTriggerType = WorkflowTriggerSyncFlowDatas | WorkflowTriggerGamificationActionLog | WorkflowTriggerObserverEvents | WorkflowTriggerUpdateFlowEntityData | WorkflowTriggerUpdateFlowData;
+
+export type WorkflowFlowComments = { mode: 'comments' };
+export type WorkflowFlowChat = {
+  mode: 'chat',
+  /**
+   * É a ref de uma propriedade do flow-data utilizada para montar \
+   * o título da página externa do ivrim notes
+   */
+  identifier: string,
+  /**
+   * Permite enviar mensagens a partir de uma página publica \
+   */
+  external_email?: boolean,
+  permissions?: {
+    /** Rotas onde será possivel abrir chat e manda mensagem */
+    steps_open_chats: 'all' | string[],
+    /** Permite ver os chats de outros usuários */
+    view_all_chats: 'all' | 'all-with-permissions' | string[],
+    /** Permite abrir novos chats com usuários da empresa */
+    open_chats: 'all' | 'all-with-permissions' | string[],
+    /**
+     * Permite navegar entre os chats em que está incluso, quando está \
+     * na página externa.
+     * 
+     * - all: todos podem ver a sidebar
+     * - all-with-permissions: apenas usuários com permissão no fluxo
+     * - string[]: apenas permissões selecionadas
+     */
+    sidebar_on_external_page: 'all' | 'all-with-permissions' | string[]
+  }
+};
+
+export type WorkflowIvrimNotes = WorkflowFlowComments | WorkflowFlowChat;
