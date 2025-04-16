@@ -190,14 +190,16 @@ export type HandlerFindType = {
 }
 
 export type HandlerReduceType = {
+  /** 
+   * path e path_to_save não são utilizados no observer
+   * */
   type: 'reduce';
   /** 
    * Local onde está o array que será reduzido
    * */
-  path: string;
+  path?: string;
   /**
-   * Local onde salvar o resultado final da redução \
-   * Caso o path_to_save for o mesmo que o path, será salvo no index do acumulador final
+   * Local onde salvar o resultado final da redução
    *  */
   path_to_save?: string;
   /** 
