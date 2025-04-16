@@ -189,7 +189,30 @@ export type HandlerFindType = {
   appends?: HandlerAppendType[];
 }
 
-export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
+export type HandlerReduceType = {
+  type: 'reduce';
+  /** 
+   * Local onde está o array que será reduzido
+   * */
+  path: string;
+  /**
+   * Local onde salvar o resultado final da redução \
+   * Caso o path_to_save for o mesmo que o path, será salvo no index do acumulador final
+   *  */
+  path_to_save?: string;
+  /** 
+   * - Minha condition para redução
+   * - Use $accumulator para se referir ao valor acumulado
+   * - Use $current para se referir ao valor atual do array
+   */
+  reducer: string;
+  /** Valor inicial do acumulador (opcional) */
+  initial_value?: any;
+  /** Caso necessário transformar o resultado final */
+  appends?: HandlerAppendType[];
+}
+
+export type AllHandlersType = (HandlerMapType | HandlerFindType | HandlerReduceType)[];
 
 export interface HandlersType {
   handlers: AllHandlersType
