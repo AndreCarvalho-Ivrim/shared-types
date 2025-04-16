@@ -171,6 +171,10 @@ export type HandlerAppendType = {
 
 export type HandlerMapType = {
   type: 'map';
+  /**
+   * Caso o recurso for um object e possível adicionar valores \
+   * Use $current para se referir ao valor atual do array
+   * */
   appends: HandlerAppendType[];
 }
 
@@ -185,7 +189,10 @@ export type HandlerFindType = {
    * - Utilize o $current para se referir ao valor atual do array
    * */
   condition?: string;
-  /** Caso o recurso for um object e possível adicionar valores */
+  /**
+   * Caso o recurso for um object e possível adicionar valores \
+   * Use $current para se referir ao valor atual do array
+   * */
   appends?: HandlerAppendType[];
 }
 
@@ -210,7 +217,10 @@ export type HandlerReduceType = {
   reducer: string;
   /** Valor inicial do acumulador (opcional) */
   initial_value?: any;
-  /** Caso necessário transformar o resultado final */
+  /**
+   * Caso o recurso for um object e possível adicionar valores \
+   * Use $current para se referir ao valor atual do array
+   * */
   appends?: HandlerAppendType[];
 }
 
