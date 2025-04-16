@@ -172,8 +172,13 @@ export type HandlerAppendType = {
 export type HandlerMapType = {
   type: 'map';
   /**
+   * Substitui o this pelo valor informado \
+   * Como o this pode está sendo usando dentro de outros contextos, para evitar conflitos utilize o reference_this
+   * */
+  reference_this?: string;
+  /**
    * Caso o recurso for um object e possível adicionar valores \
-   * Use $current para se referir ao valor atual do array
+   * Use this ou (reference_this) para se referir ao valor atual do array
    * */
   appends: HandlerAppendType[];
 }
@@ -196,35 +201,7 @@ export type HandlerFindType = {
   appends?: HandlerAppendType[];
 }
 
-export type HandlerReduceType = {
-  /** 
-   * path e path_to_save não são utilizados no observer
-   * */
-  type: 'reduce';
-  /** 
-   * Local onde está o array que será reduzido
-   * */
-  path?: string;
-  /**
-   * Local onde salvar o resultado final da redução
-   *  */
-  path_to_save?: string;
-  /** 
-   * - Minha condition para redução
-   * - Use $accumulator para se referir ao valor acumulado
-   * - Use $current para se referir ao valor atual do array
-   */
-  reducer: string;
-  /** Valor inicial do acumulador (opcional) */
-  initial_value?: any;
-  /**
-   * Caso o recurso for um object e possível adicionar valores \
-   * Use $current para se referir ao valor atual do array
-   * */
-  appends?: HandlerAppendType[];
-}
-
-export type AllHandlersType = (HandlerMapType | HandlerFindType | HandlerReduceType)[];
+export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
 
 export interface HandlersType {
   handlers: AllHandlersType
