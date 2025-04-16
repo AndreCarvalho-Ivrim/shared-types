@@ -5,8 +5,8 @@ export const isacRoutes = {
   template: () => '/modelos',
   chatbot: {
     home: () => '/chatbot',
+    manage_contact: (module_name: string) => `/chatbot/contatos/${module_name}`,
     manage: (module_name: string) => `/chatbot/${module_name}`,
-    manage_contact: (module_name: string) => `/chatbot/${module_name}`,
   },
   workflow: {
     home: () => '/fluxos',
@@ -121,7 +121,7 @@ export type AvailableRegexUrls =
   '@isac:public.workflow(flow_id,variation,params?)' |
   '@isac:chatbot.home' | 
   '@isac:chatbot.manage(module_name)' |
-  '@isac:chatbot.contact_list(module_name)' |
+  '@isac:chatbot.manage_contact(module_name)' |
   '@hub:admin_panel.companies' |
   '@hub:auth.login' |
   '@hub:auth.logout' |
