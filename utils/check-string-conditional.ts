@@ -10,7 +10,6 @@ export const handleStringConditionalExtendingFlowData = (conditional: string, da
       (helpers ?? []).forEach(([code, param]) => {
         if (code === '@findIndex' && param) {
           const [arrayPath, conditionFind] = param.split(',') ?? [];
-          console.log('CC', arrayPath.matchAll(patternFind));
           const arrayPathMatches = arrayPath 
             ? [...(arrayPath.matchAll(patternFind) ?? [])]
             : [];
@@ -289,8 +288,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                       break;
                     }
                     const index = array.findIndex((value) => checkStringConditional(conditionFind, {
-                      this: value,
-                      ...datas
+                      ...datas,
+                      this: value
                     }));
                     const searchPattern = `__@findIndex(${arrayPath},${conditionFind}${!!searchParam ? `,${searchParam}` : ''})__`;
                     if (!searchParam) value =  replaceAll(value, searchPattern, String(index));
@@ -321,6 +320,33 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
                     const stringPattern = `__@every(${pathArray},${condition})__`;
                     value =  replaceAll(value, stringPattern, String(everyonePassed));
+                    break;
+                  case '@findIndexLast':
+                    if (!param) {
+                      value = '-1';
+                      break;
+                    }
+                    const [arrayBasePath, conditionFindIndex, searchParamFind] = param.split(',') ?? [];
+                    if (!arrayBasePath || !conditionFindIndex) {
+                      value = '-1';
+                      break;
+                    }
+                    const arrayBase = getRecursiveValue(arrayBasePath, { data: datas });
+                    if (!Array.isArray(arrayBase)) {
+                      value = '-1';
+                      break;
+                    }
+                    const arrayBaseReverse = [...arrayBase].reverse();
+                    
+                    const indexReverse = arrayBaseReverse.findIndex(value => checkStringConditional(conditionFindIndex, {
+                      ...datas,
+                      this: value
+                    }));
+                    const indexReal = indexReverse === -1 ? -1 : arrayBase.length - 1 - indexReverse;
+                    const searchPatternReverse = `__@findIndexLast(${arrayBasePath},${conditionFindIndex}${!!searchParamFind ? `,${searchParamFind}` : ''})__`;
+
+                    if (!searchParamFind) value =  replaceAll(value, searchPatternReverse, String(indexReal));
+                    else value = replaceAll(value, searchPatternReverse, String(arrayBase[indexReal][searchParamFind]));
                     break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }

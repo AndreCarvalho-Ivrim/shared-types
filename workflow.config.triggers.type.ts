@@ -133,7 +133,14 @@ export type WorkflowFlowChat = {
      * - all-with-permissions: apenas usuários com permissão no fluxo
      * - string[]: apenas permissões selecionadas
      */
-    sidebar_on_external_page: 'all' | 'all-with-permissions' | string[]
+    sidebar_on_external_page: 'all' | 'all-with-permissions' | string[],
+    /**
+     * Opção complementar ao open_chats \
+     * 
+     * O usuario só terá permissão caso passe em algum condicional \
+     * disponível: $_user_id
+     */
+    switch_condition?: string[]
   }
 };
 
