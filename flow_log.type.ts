@@ -1,6 +1,6 @@
 import { AvailableIcons } from "./icon.type";
 
-export type FlowLogTypes = 'webhook' | 'observer-event' | 'routine-event' | 'widget-event' | 'public-routes';
+export type FlowLogTypes = 'webhook' | 'observer-event' | 'routine-event' | 'widget-event' | 'public-routes' | 'chatbot';
 export type FlowLogStatus = 'successfully' | 'failed' | 'warning';
 
 export interface FlowDataLog {
@@ -33,6 +33,7 @@ export const translateFlowLogTypes : Record<FlowLogTypes, string> = {
   'routine-event': 'Rotinas',
   'widget-event': 'Worker Threads',
   'observer-event': 'Observadores',
+  'chatbot': 'Chatbot',
 }
 export const translateStatusFlowLogTypes : Record<FlowLogStatus, string> = {
   'successfully': 'Sucesso',
