@@ -66,5 +66,10 @@ export const availableFlowLogTypes : CardFlowLog[] = [
     title: translateFlowLogTypes['observer-event'],
     description: 'Logs de eventos de observadores.',
     icon: 'BullseyeIcon'
-  }
+  }, {
+    type: 'chatbot',
+    title: translateFlowLogTypes['chatbot'],
+    description: 'Logs de mensagens do chatbot.',
+    icon: 'WhatsappIcon'
+  },
 ];
