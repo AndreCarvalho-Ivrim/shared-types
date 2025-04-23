@@ -116,7 +116,7 @@ export type SubhandlerType = {
   formatter?: IntegrationExcelColumnTypeType;
 }
 
-export type HandlerMergeType = {
+export type HandlerPDFType = {
   /** O merge pode criar N object em um array caso o padrão se repita */
   mode: 'merge';
   /**
@@ -141,8 +141,7 @@ export type HandlerMergeType = {
   key: string;
 }
 
-export type AllHandlersType = HandlerMergeType;
-export type HandlersType = AllHandlersType[];
+export type HandlersType = HandlerPDFType[];
 export interface IntegrationPDFType {
   key: string,
   type: 'pdf',
