@@ -102,4 +102,34 @@ export interface IntegrationOmieType {
   },
   scope: string
 }
-export type IntegrationsType = IntegrationExcelType | IntegrationOmieType;
+
+export type HandlerFindType = {
+  type: 'find';
+  /** verifica se na linha atual tem o search */
+  search: string;
+  /** Modo para pegar o valor */
+  mode: 'all' | 'includes' | 'after-includes' | 'before-includes';
+  /** Local onde será adicionado o valor */
+  path_to_save: string;
+  /** Adicionar uma formatação especial ao salvar o valor */
+  formatter?: IntegrationExcelColumnTypeType;
+}
+
+export type AllHandlersType = (HandlerFindType)[];
+export interface IntegrationPDFType {
+  key: string,
+  type: 'pdf',
+  mode: 'integration',
+  label?: string,
+  placeholder?: string,
+  required?: boolean,
+  scope: string,
+  handlers: AllHandlersType,
+  append_values?: Record<string, any>,
+  rules?: {
+    render?: string
+  },
+  /** Entitidade para salvar o registro de importação da planilha */
+  import_registration?: string,
+}
+export type IntegrationsType = IntegrationExcelType | IntegrationOmieType | IntegrationPDFType;
