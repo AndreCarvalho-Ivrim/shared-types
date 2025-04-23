@@ -180,20 +180,33 @@ export interface FlowMessageContact{
   user_id?: string,
   first_name?: string,
   last_name?: string,
-  status?: string,
+  status?: FlowMessageContactStatus,
   phone: string
   contact_data?: any,
-  interaction?: {
-    flow_message_id: string,
-    /** Chave de onde o contato está no fluxo */
-    step: string[],
-    start_of_interection: Date,
-    last_update: Date,
-    interaction_data?: any
-  }
+  flow_id?: string,
+  sent_default_template?: Array<{
+    template_id: string;
+    sent_at: Date;
+  }>,
+  interaction?: IFlowMessageContactInteraction
+  provider_id?: string,
+  pending_messages?: FlowMessageContactPendingMessage[]
+  created_at?: Date,
+  updated_at?: Date,
 }
+
 export interface FlowMessageContactPendingMessage{
   flow_message_id: string;
   step: string[];
+  interaction_data?: any;
+}
+
+export type FlowMessageContactStatus = "optin" | "optout" | "error";
+interface IFlowMessageContactInteraction {
+  flow_message_id: string;
+  /** Chave de onde o contato está no fluxo */
+  step: string[];
+  start_of_interaction: Date;
+  last_update: Date;
   interaction_data?: any;
 }
