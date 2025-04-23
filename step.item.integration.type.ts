@@ -111,7 +111,7 @@ export type SubhandlerType = {
   /** quantos caracteres devem ser capturados */
   range: number;
   /** Local onde será adicionado o valor */
-  path_to_save: string;
+  key: string;
   /** Adicionar uma formatação especial ao salvar o valor */
   formatter?: IntegrationExcelColumnTypeType;
 }
@@ -137,6 +137,8 @@ export type HandlerMergeType = {
   end_search: string;
   /** Defini quais propriedades serao buscadas */
   columns: SubhandlerType[];
+  /** Local onde será adicionado o valor */
+  key: string;
 }
 
 export type AllHandlersType = HandlerMergeType;
