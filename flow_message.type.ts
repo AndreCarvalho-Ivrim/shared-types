@@ -201,7 +201,7 @@ export interface FlowMessageContactPendingMessage{
   interaction_data?: any;
 }
 
-type FlowMessageContactStatus = "optin" | "optout" | "error";
+export type FlowMessageContactStatus = "optin" | "optout" | "error";
 interface IFlowMessageContactInteraction {
   flow_message_id: string;
   /** Chave de onde o contato está no fluxo */
