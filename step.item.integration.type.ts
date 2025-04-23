@@ -109,7 +109,7 @@ export type SubhandlerType = {
   /** Modo para pegar o valor */
   mode: 'all' | 'includes' | 'after-includes' | 'before-includes';
   /** quantos caracteres devem ser capturados */
-  range: number;
+  range?: number;
   /** Local onde será adicionado o valor */
   key: string;
   /** Adicionar uma formatação especial ao salvar o valor */
