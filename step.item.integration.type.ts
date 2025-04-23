@@ -108,8 +108,8 @@ export type SubhandlerType = {
   search: string;
   /** Modo para pegar o valor */
   mode: 'all' | 'includes' | 'after-includes' | 'before-includes';
-  /** quantos caracteres devem ser capturados */
-  range?: number;
+  /** quantos caracteres devem ser capturados ou até qual string */
+  range?: number | string;
   /** Local onde será adicionado o valor */
   key: string;
   /** Adicionar uma formatação especial ao salvar o valor */
