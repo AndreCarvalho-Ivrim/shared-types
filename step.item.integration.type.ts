@@ -117,8 +117,6 @@ export type SubhandlerType = {
 }
 
 export type HandlerPDFType = {
-  /** O merge pode criar N object em um array caso o padrão se repita */
-  mode: 'merge';
   /**
    * Inicio onde iniciara a busca pelas propriedades do object \
    * palavra - será iniciado quando a row for igual a palavra
