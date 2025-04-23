@@ -137,6 +137,8 @@ export type HandlerPDFType = {
   columns: SubhandlerType[];
   /** Local onde será adicionado o valor */
   key: string;
+  /** Cada handler deve ter um indetificador unico */
+  indetifier: string;
 }
 
 export type HandlersType = HandlerPDFType[];
