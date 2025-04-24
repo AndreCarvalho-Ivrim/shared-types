@@ -141,7 +141,6 @@ export type HandlerPDFType = {
   indetifier: string;
 }
 
-export type HandlersType = HandlerPDFType[];
 export interface IntegrationPDFType {
   key: string,
   type: 'pdf',
@@ -150,7 +149,7 @@ export interface IntegrationPDFType {
   placeholder?: string,
   required?: boolean,
   scope: string,
-  handlers: HandlersType,
+  handlers: HandlerPDFType[],
   append_values?: Record<string, any>,
   rules?: {
     render?: string
