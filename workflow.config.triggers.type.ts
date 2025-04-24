@@ -94,13 +94,34 @@ export interface WorkflowTriggerUpdateFlowData extends  WorkflowTriggerBase{
    */
   name: '@update-flow-data',
   data: {
-    /** OPCIONAL - propriedade só é valida quando mode é igual a FlowEntityData: Id da entidade. Caso seja uma entidade fora do workflow, usar a notação ```flow-id#entity-key```. */
+    /**
+     * OPCIONAL - propriedade só é valida quando mode é igual a FlowEntityData: Id da entidade. \
+     * Caso seja uma entidade fora do workflow, usar a notação ```flow-id#entity-key```.
+     **/
     entity_key?: string,
+    /**
+     * Todas propriedades tem o data. adicionado automaticamente, então use o \@id = _id e \@current_step = current_step_id,\
+     * caso queira acessar essas propriedades.
+     **/
     query?: any,
     /** 
      * Record<chave-na-entidade-dinamica, (valor-estatico | \@[shortcode] | \@code_helper)>
      */
-    append_values: Record<string, any>
+    append_values?: Record<string, any>,
+    conditional_append_values?: {
+      /**
+       * Para se referenciar os parametros passados, utilize o prefixo ```_params.```, \
+       * exemplo: ```_params.id```
+       */
+      condition?: string,
+      append_values: Record<string, any>,
+      /**
+       * Caso essa propriedade esteja marcada como true, quando uma condição der match, ela \
+       * interromperá o loop, caso contrário, continuará executando as próximas condições \
+       * e incrementando os valores 
+       **/
+      breakExec?: boolean
+    }[]
   }
 }
 
