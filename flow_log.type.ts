@@ -1,6 +1,6 @@
 import { AvailableIcons } from "./icon.type";
 
-export type FlowLogTypes = 'webhook' | 'observer-event' | 'routine-event' | 'widget-event' | 'public-routes' | 'chatbot' | 'email';
+export type FlowLogTypes = 'webhook' | 'observer-event' | 'routine-event' | 'widget-event' | 'public-routes' | 'chatbot' | 'notification';
 export type FlowLogStatus = 'successfully' | 'failed' | 'warning';
 
 export interface FlowDataLog {
@@ -34,7 +34,7 @@ export const translateFlowLogTypes : Record<FlowLogTypes, string> = {
   'widget-event': 'Worker Threads',
   'observer-event': 'Observadores',
   'chatbot': 'Chatbot',
-  'email': 'E-mail',
+  'notification': 'Notificações',
 }
 export const translateStatusFlowLogTypes : Record<FlowLogStatus, string> = {
   'successfully': 'Sucesso',
@@ -73,9 +73,9 @@ export const availableFlowLogTypes : CardFlowLog[] = [
     description: 'Logs de mensagens do chatbot.',
     icon: 'WhatsappIcon'
   }, {
-    type: 'email',
-    title: translateFlowLogTypes['email'],
-    description: 'Logs de envios de e-mails.',
-    icon: 'EnvelopeIcon'
+    type: 'notification',
+    title: translateFlowLogTypes['notification'],
+    description: 'Logs de envios de notificações.',
+    icon: 'NotificationIcon'
   },
 ];
