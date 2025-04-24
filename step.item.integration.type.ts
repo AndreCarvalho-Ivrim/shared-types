@@ -1,7 +1,8 @@
-export type IntegrationTypeType = 'excel' | 'omie';
+export type IntegrationTypeType = 'excel' | 'pdf' | 'omie';
 export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   excel: 'Excel (Importação)',
-  omie: 'Integração c/ Omie'
+  omie: 'Integração c/ Omie',
+  pdf: 'PDF'
 };
 
 export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
@@ -152,7 +153,8 @@ export interface IntegrationPDFType {
   handlers: HandlerPDFType[],
   append_values?: Record<string, any>,
   rules?: {
-    render?: string
+    render?: string,
+    switch_render?: string[]
   },
   /** Entitidade para salvar o registro de importação da planilha */
   import_registration?: string,
