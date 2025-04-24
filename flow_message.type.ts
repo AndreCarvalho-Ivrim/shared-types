@@ -182,7 +182,7 @@ export interface FlowMessageContact{
   last_name?: string,
   status?: FlowMessageContactStatus,
   phone: string
-  contact_data?: any,
+  contact_data?: Record<string, any>,
   flow_id?: string,
   sent_default_template?: Array<{
     template_id: string;
@@ -208,7 +208,7 @@ interface IFlowMessageContactInteraction {
   step: string[];
   start_of_interaction: Date;
   last_update: Date;
-  interaction_data?: any;
+  interaction_data?: Record<string, any>;
   historic?: FlowMessageContactInteractionHistoric[];
 }
 export interface FlowMessageContactInteractionHistoric{
