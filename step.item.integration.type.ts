@@ -113,7 +113,7 @@ export type SubhandlerType = {
   /** Local onde será adicionado o valor */
   key: string;
   /** Adicionar uma formatação especial ao salvar o valor */
-  formatter?: IntegrationExcelColumnTypeType;
+  formatter?: IntegrationExcelColumnTypeType | 'split-comma';
 }
 
 export type HandlerPDFType = {
