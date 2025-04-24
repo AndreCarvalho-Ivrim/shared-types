@@ -209,4 +209,12 @@ interface IFlowMessageContactInteraction {
   start_of_interaction: Date;
   last_update: Date;
   interaction_data?: any;
+  historic?: FlowMessageContactInteractionHistoric[];
+}
+export interface FlowMessageContactInteractionHistoric{
+  integration_response: any,
+  step: string[],
+  message_sent?: string,
+  message_received?: string,
+  created_at: Date
 }
