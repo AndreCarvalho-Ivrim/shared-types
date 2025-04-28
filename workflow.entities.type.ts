@@ -15,6 +15,7 @@ export interface FlowEntitySchemaInfoRule{
   render?: string,
   min?: number,
   max?: number,
+  step?: number,
   hidden?: 'visualization' | 'edition'
 }
 export interface FlowEntitySchemaInfo{
