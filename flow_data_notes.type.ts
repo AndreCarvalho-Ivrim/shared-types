@@ -20,7 +20,8 @@ export interface FlowDataNote{
   /** (formatação) Dados completos do autor */
   user?: User,
   /** (formatação) Data de atualização formatada */
-  smart_updated_at?: string
+  smart_updated_at?: string,
+  status?: 'viewed' | 'unviewed'
 }
 export interface FlowDataNotesType{
   _id: string,
