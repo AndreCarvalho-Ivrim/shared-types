@@ -141,6 +141,10 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   id?: string,
   replacers?: string[],
   /**
+  * Filter so é utilizado quando informado o id do array
+  */
+  filter?: string,
+  /**
    * Para utilizar a mascara de progress-bar é necessário que no conteúdo tenha \
    * dois números separados por virgula(,)
    */
