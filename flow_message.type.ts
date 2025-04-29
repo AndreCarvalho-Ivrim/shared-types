@@ -26,6 +26,10 @@ interface FlowMessageBase{
   fns?: FlowMessageFn[]
   store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> }
 }
+export interface FlowMessageIfError {
+  count: number,
+  default_response: string
+}
 export interface FlowMessageInfoType extends FlowMessageBase{
   /** info: Informação apenas envia uma mensagem sem esperar retorno */
   mode: 'info',
@@ -56,6 +60,7 @@ export interface FlowMessageAskType extends FlowMessageBase{
   /** ask: É uma pergunta que necessita da resposta do cliente */
   mode: 'ask',
   condition?: string,
+  if_error?: FlowMessageIfError,
   /** respostas possíveis do usuário */
   responses: FlowMessageResponse[]
 }
@@ -175,20 +180,41 @@ export interface FlowMessageContact{
   user_id?: string,
   first_name?: string,
   last_name?: string,
-  status?: string,
+  status?: FlowMessageContactStatus,
   phone: string
-  contact_data?: any,
-  interaction?: {
-    flow_message_id: string,
-    /** Chave de onde o contato está no fluxo */
-    step: string[],
-    start_of_interection: Date,
-    last_update: Date,
-    interaction_data?: any
-  }
+  contact_data?: Record<string, any>,
+  flow_id?: string,
+  sent_default_template?: Array<{
+    template_id: string;
+    sent_at: Date;
+  }>,
+  interaction?: IFlowMessageContactInteraction
+  provider_id?: string,
+  pending_messages?: FlowMessageContactPendingMessage[]
+  created_at?: Date,
+  updated_at?: Date,
 }
+
 export interface FlowMessageContactPendingMessage{
   flow_message_id: string;
   step: string[];
   interaction_data?: any;
+}
+
+export type FlowMessageContactStatus = "optin" | "optout" | "error";
+interface IFlowMessageContactInteraction {
+  flow_message_id: string;
+  /** Chave de onde o contato está no fluxo */
+  step: string[];
+  start_of_interaction: Date;
+  last_update: Date;
+  interaction_data?: Record<string, any>;
+  historic?: FlowMessageContactInteractionHistoric[];
+}
+export interface FlowMessageContactInteractionHistoric{
+  integration_response: any,
+  step: string[],
+  message_sent?: string,
+  message_received?: string,
+  created_at: Date
 }

@@ -1,7 +1,8 @@
-export type IntegrationTypeType = 'excel' | 'omie';
+export type IntegrationTypeType = 'excel' | 'pdf' | 'omie';
 export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   excel: 'Excel (Importação)',
-  omie: 'Integração c/ Omie'
+  omie: 'Integração c/ Omie',
+  pdf: 'PDF'
 };
 
 export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
@@ -102,4 +103,60 @@ export interface IntegrationOmieType {
   },
   scope: string
 }
-export type IntegrationsType = IntegrationExcelType | IntegrationOmieType;
+
+export type SubhandlerType = {
+  /** verifica se na linha atual tem o search */
+  search: string;
+  /** Modo para pegar o valor */
+  mode: 'all' | 'includes' | 'after-includes' | 'before-includes';
+  /** quantos caracteres devem ser capturados ou até qual string */
+  range?: number | string;
+  /** Local onde será adicionado o valor */
+  key: string;
+  /** Adicionar uma formatação especial ao salvar o valor */
+  formatter?: IntegrationExcelColumnTypeType | 'split-comma';
+}
+
+export type HandlerPDFType = {
+  /**
+   * Inicio onde iniciara a busca pelas propriedades do object \
+   * palavra - será iniciado quando a row for igual a palavra
+   * palavra% - será iniciado quando a row tiver o inicio igual a palavra
+   * %palavra - será iniciado quando a row tiver o fim igual a palavra
+   * %palavra% - será iniciado quando a row incluir palavra
+  */
+  start_search: string;
+  /**
+   * Fim onde finalizara a busca pelas propriedades do object \
+   * palavra - será iniciado quando a row for igual a palavra \
+   * palavra% - será iniciado quando a row tiver o inicio igual a palavra \
+   * %palavra - será iniciado quando a row tiver o fim igual a palavra \
+   * %palavra% - será iniciado quando a row incluir palavra \
+  */
+  end_search: string;
+  /** Defini quais propriedades serao buscadas */
+  columns: SubhandlerType[];
+  /** Local onde será adicionado o valor */
+  key: string;
+  /** Cada handler deve ter um indetificador unico */
+  indetifier: string;
+}
+
+export interface IntegrationPDFType {
+  key: string,
+  type: 'pdf',
+  mode: 'integration',
+  label?: string,
+  placeholder?: string,
+  required?: boolean,
+  scope: string,
+  handlers: HandlerPDFType[],
+  append_values?: Record<string, any>,
+  rules?: {
+    render?: string,
+    switch_render?: string[]
+  },
+  /** Entitidade para salvar o registro de importação da planilha */
+  import_registration?: string,
+}
+export type IntegrationsType = IntegrationExcelType | IntegrationOmieType | IntegrationPDFType;
