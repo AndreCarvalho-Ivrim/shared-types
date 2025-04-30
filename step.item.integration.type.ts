@@ -113,8 +113,12 @@ export type SubhandlerType = {
   range?: number | string;
   /** Local onde será adicionado o valor */
   key: string;
-  /** Adicionar uma formatação especial ao salvar o valor */
+  /** Adicionar uma formatação especial ao salvar o valor \
+   * split-comma - Separa os valores por vírgula \
+   * split-non-alphanumeric - Separa os valores por caracteres especiais exeto espaço \
+   */
   formatter?: IntegrationExcelColumnTypeType | 'split-comma' | 'split-non-alphanumeric';
+  writeOnce?: boolean;
 }
 
 export type HandlerPDFType = {
