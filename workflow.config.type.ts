@@ -861,7 +861,7 @@ export interface WorkflowConfigType {
   exception_views?: {
     slug: string,
     title: string,
-    icon?: AvailableIcons 
+    icon?: AvailableIcons
   }[],
   filters?: Record<string, WorkflowConfigFilterType[]>,
   open_dialog?: WorkflowConfigOpenDialogType,
