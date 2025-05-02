@@ -855,14 +855,19 @@ export interface PublicRouteGet{
   /** Se não for informado trará o flow_data.data completo */
   body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
 }
+export interface WorkflowConfigExceptionView{
+  slug: string,
+  title: string,
+  icon?: AvailableIcons,
+  subpage_of_flow_data?: {
+    identifier: string,
+    view_mode?: { condition?: string, slug: string }[]
+  }
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
-  exception_views?: {
-    slug: string,
-    title: string,
-    icon?: AvailableIcons 
-  }[],
+  exception_views?: WorkflowConfigExceptionView[],
   filters?: Record<string, WorkflowConfigFilterType[]>,
   open_dialog?: WorkflowConfigOpenDialogType,
   permissions?: ConfigPermissionType,
