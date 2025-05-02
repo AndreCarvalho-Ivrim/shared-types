@@ -223,7 +223,7 @@ export class CalculatorMatrix {
     const monthlyCostCancellationPenalty = 0;
     /** ICMS da Operadora Contratada. Buscar o ICMS referente a empresa na planilha */
     // [ ] Puxar o ICMS por região
-    const icms = icmsByUF[uf]; // conversar com o Rerison porque tem que pegar por operadora
+    const icms = icmsByUF[uf] ? icmsByUF[uf] / 100 : null; // conversar com o Rerison porque tem que pegar por operadora
     if (!icms) throw new Error(`A alíquota do estado ${uf} não está cadastrada`);
 
     /** Custos de contratação */
