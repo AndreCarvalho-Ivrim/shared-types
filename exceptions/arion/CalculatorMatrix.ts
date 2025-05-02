@@ -45,7 +45,7 @@ export type ContractDeadline = 12 | 24 | 36 | 48 | 60 | 72;
 type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
 export type CalculatorMatrixICMSByUF = Record<CalculatorMatrixUF, number>;
-export type CalculatorMatrixUFLinkQtdByUF = Record<CalculatorMatrixUF, number>;
+export type CalculatorMatrixUFLinkQtdByUF = Record<CalculatorMatrixUF, any>;
 export interface ICalculatorMatrixData {
   /** Perfil do cliente */
   customerProfile?: CustomerProfile;
@@ -82,13 +82,108 @@ export interface ICalculateTotalParams {
   marginEventualTotal: number;
   recurringSalesPriceGrossTotal: number;
 }
-export interface ICalculateTotalResponse {
+export interface ICalculateTotalResult {
   totalProposal: number;
   totalContract: number;
   marginRecurringPercentual: number;
   marginEventualTotalPercentual: number;
   marginContractTotal: number;
   marginContractTotalPercentual: number;
+}
+export interface ICalculateHiringCostsParams {
+  /** Quantidade de Links: links de circuito por município e velocidade */
+  linkQtd: number;
+  /** Custo unitário recorrente com impostos */
+  recurringUnitCostWithTax: number;
+  /** Custo unitário da instalação com impostos */
+  unitCostInstallationWithTax: number;
+  /** Custo mensal da multa por cancelamento */
+  monthlyCostCancellationPenalty: number;
+  /** ICMS por região  */
+  icms: number;
+  /** OH recorrente */
+  recurringOH: number; 
+  /** OH eventual */
+  eventualOH: number;
+}
+export interface ICalculateHiringCostsResult {
+  /** Recuperação Mensal de ICMS */
+  monthlyRecoveryICMS: number;
+  /** Mensal Bruto c/ Impostos */
+  monthlyGrossWithTax: number;
+  /** Custo Mensal c/ Overhead */
+  monthlyCostsWithOverhead: number;
+  /** Custo Eventual c/ Overhead */
+  possibleOverheadCosts: number;
+}
+export interface ICalculateRecurringSalesPriceFullAndPercentualParams {
+  /** Quantidade de Links: links de circuito por município e velocidade */
+  linkQtd: number;
+  /** Custo unitário recorrente com impostos */
+  recurringUnitCostWithTax: number;
+  /** Custo Mensal com Overhead */
+  monthlyCostsWithOverhead: number;
+  /** Margem Recorrente */
+  recurringMargin: number;
+  /** ICMS da filial da Arion */
+  icmsArion: number;
+}
+export interface ICalculateBaseResult {
+  /** Preço Líquido Unitário */
+  netPriceUnit: number;
+  /** Preço Líquido Total */
+  netPriceTotal: number;
+  /** Preço Bruto Unitário */
+  grossPriceUnit: number;
+  /** Preço Bruto Total */
+  grossPriceTotal: number;
+}
+export interface ICalculateRecurringSalesPriceWithPercentualResult extends ICalculateBaseResult {
+  /** Telecom 60% */
+  telecom: number;
+  /** Serviço 40% */
+  service: number;
+} 
+export interface ICalculateRecurringSalesPriceParams {
+  /** Perfil do Cliente */
+  customerProfile?: CustomerProfile;
+  /** Custos de Contratação > Recuperação Mensal de ICMS */
+  monthlyRecoveryICMS: number;
+  /** Preço de venda recorrente 100% */
+  recurringSalesPriceFull: ICalculateBaseResult;
+  /** Preço de venda recorrente 60%-40% */
+  recurringSalesPriceWithPercentual: ICalculateRecurringSalesPriceWithPercentualResult;
+  /** ICMS da filial da Arion */
+  icmsArion: number;
+}
+export interface ICalculateRecurringSalesPriceResul extends ICalculateBaseResult {
+  /** Bruto (ATO COTEPE) Unitário */
+  grossPriceUnitCotepe: number;
+  /** Bruto (ATO COTEPE) Total */
+  grossPriceTotalCotepe: number;
+}
+export interface ICalculateEventualSalePriceOrInstallationFeeParams {
+  /** Quantidade de Links */
+  linkQtd: number;
+  /** Recuperação Mensal de ICMS */
+  monthlyRecoveryICMS: number;
+  /** Custo Eventual com Overhead */
+  possibleOverheadCosts: number;
+  /** Margem Eventual */
+  eventualMargin: number;
+}
+export interface ICalculateMarginParams {
+  /** Quantidade de Links */
+  linkQtd: number;
+  hiringCosts: any;
+  recurringSalesPrice: ICalculateRecurringSalesPriceResul;
+  eventualSalePriceOrInstallationFee: ICalculateBaseResult;
+}
+export interface ICalculateMarginResult {
+  /** Margem Recorrente */
+  recurring: number;
+  /** Margem Eventual */
+  eventual: number;
 }
 //#endregion
 
@@ -187,7 +282,7 @@ export class CalculatorMatrix {
   }
 
   static getQuantityLinksByUFandSpeed(circuits: ICircuit[]) {
-    const links = {};
+    const links: Record<string, any> = {};
     for (const circuit of circuits) {
       let uf = circuit.uf_a;
       if(!uf) {
@@ -214,7 +309,7 @@ export class CalculatorMatrix {
     if (!uf) throw new Error('Circuito não contém UF no endereço');
     return uf;
   }
-  private static calculateHiringCosts({ linkQtd, recurringUnitCostWithTax, unitCostInstallationWithTax, monthlyCostCancellationPenalty, icms, recurringOH, eventualOH  }) {
+  private static calculateHiringCosts({ linkQtd, recurringUnitCostWithTax, unitCostInstallationWithTax, monthlyCostCancellationPenalty, icms, recurringOH, eventualOH  }: ICalculateHiringCostsParams): ICalculateHiringCostsResult {
     /** Recuperação mensal de ICMS */
     let monthlyRecoveryICMS = 0;
     /** Mensal bruto com impostos */
@@ -243,7 +338,7 @@ export class CalculatorMatrix {
     monthlyCostsWithOverhead,
     recurringMargin,
     icmsArion,
-  }) {
+  }: ICalculateRecurringSalesPriceFullAndPercentualParams): ICalculateBaseResult {
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -272,7 +367,7 @@ export class CalculatorMatrix {
     monthlyCostsWithOverhead,
     recurringMargin,
     icmsArion,
-  }) {
+  }: ICalculateRecurringSalesPriceFullAndPercentualParams): ICalculateRecurringSalesPriceWithPercentualResult {
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -301,7 +396,7 @@ export class CalculatorMatrix {
       service: this.convertDecimals(service),
       grossPriceUnit: this.convertDecimals(grossPriceUnit),
       grossPriceTotal: this.convertDecimals(grossPriceTotal),
-    } 
+    }
   }
   private static calculateRecurringSalesPrice({
     customerProfile,
@@ -309,7 +404,7 @@ export class CalculatorMatrix {
     recurringSalesPriceFull,
     recurringSalesPriceWithPercentual,
     icmsArion
-  }) {
+  }: ICalculateRecurringSalesPriceParams): ICalculateRecurringSalesPriceResul {
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -367,7 +462,7 @@ export class CalculatorMatrix {
     possibleOverheadCosts,
     eventualMargin,
     linkQtd
-  }) {
+  }: ICalculateEventualSalePriceOrInstallationFeeParams): ICalculateBaseResult {
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -396,7 +491,7 @@ export class CalculatorMatrix {
     recurringSalesPrice,
     eventualSalePriceOrInstallationFee,
     linkQtd,
-  }) {
+  }: ICalculateMarginParams): ICalculateMarginResult {
     let recurring = 0;
     let eventual = 0;
   
@@ -417,7 +512,7 @@ export class CalculatorMatrix {
     marginRecurringTotal,
     marginEventualTotal,
     recurringSalesPriceGrossTotal,
-  }: ICalculateTotalParams): ICalculateTotalResponse {
+  }: ICalculateTotalParams): ICalculateTotalResult {
     const totalProposal = this.roundDecimals(totalRecurring + totalEventual, 'floor');
     // [ ] Arrumar "totalRecurring", por ele estar com 1 centavo a menos, está dando uma diferença de 14 centavos no final
     /** Total do contrato */
