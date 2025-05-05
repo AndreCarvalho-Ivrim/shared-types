@@ -31,7 +31,8 @@ export type StepItemAttrMaskDynamicType = {
   /**
    * Separador Number: "-", "."
    */
-  pattern: string
+  pattern: string,
+  autocomplete?: { fill: string, direction: 'left' | 'right' }
 }
 export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info';
 export type TargetModeType = 'single' | 'multiple' | 'trigger' | 'final';
