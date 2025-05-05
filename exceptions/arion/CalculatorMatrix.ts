@@ -73,6 +73,8 @@ export interface ICalculatorMatrixData {
   installationFee: number;
   /** Quantidade de links por estado e velocidade */
   linkQtdByUF: CalculatorMatrixUFLinkQtdByUF;
+  /** Multa por cancelamento */
+  costCancellationPenalty?: number;
 }
 export interface ICalculateTotalParams {
   totalRecurring: number;
@@ -203,6 +205,7 @@ export class CalculatorMatrix {
       monthlyFee,
       installationFee,
       linkQtdByUF,
+      costCancellationPenalty
     } = data;
     const monthly_fee = monthlyFee;
     const installation_fee = installationFee;
@@ -220,7 +223,7 @@ export class CalculatorMatrix {
     /** Custo unitário da instalação com impostos */
     const unitCostInstallationWithTax = installation_fee;
     /** Custo mensal da multa por cancelamento */
-    const monthlyCostCancellationPenalty = 0;
+    const monthlyCostCancellationPenalty = costCancellationPenalty ?? 0;
     /** ICMS da Operadora Contratada. Buscar o ICMS referente a empresa na planilha */
     // [ ] Puxar o ICMS por região
     const icms = icmsByUF[uf] ? icmsByUF[uf] / 100 : null; // conversar com o Rerison porque tem que pegar por operadora
