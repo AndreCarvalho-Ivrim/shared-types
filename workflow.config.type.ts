@@ -477,7 +477,7 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
      * string: Referência do campo que armazena a imagem customizada do avatar 
      **/
     avatar?: "@creator" | "@owner" | string,
-    content: (ConfigViewModeColumnsType & { available_steps?: string[] })[],
+    content: (ConfigViewModeColumnsType & { available_steps?: string[], condition?: string })[],
     classNames?: Partial<{ wrapper: string, [key: string]: string }>
   },
   flags?: KanbanFlagType[],
