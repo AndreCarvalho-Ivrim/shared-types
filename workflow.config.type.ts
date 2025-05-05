@@ -469,6 +469,8 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
     /** Identificador no card */
     identifier?: string,
     identifier_mask?: 'date' | 'phone' | 'percent' | 'money' | 'cpf-cnpj',
+    /** Não exibi o identificador no footer do card */
+    not_view_identifier?: boolean,
     /** 
      * Se mostrará o avatar no card:
      * 
