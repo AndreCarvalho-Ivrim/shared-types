@@ -234,7 +234,7 @@ export class CalculatorMatrix {
       if (icmsByUF[uf]['operators'] && icmsByUF[uf]['operators'][operator]) icms = icmsByUF[uf]['operators'][operator] / 100;
       else icms = icmsByUF[uf];
     } 
-    if (!icms) throw new Error(`A alíquota do estado ${uf} não está cadastrada`);
+    if (!icms && icms !== 0) throw new Error(`A alíquota do estado ${uf} não está cadastrada`);
 
     /** Custos de contratação */
     const hiringCosts = this.calculateHiringCosts({ linkQtd, recurringUnitCostWithTax, unitCostInstallationWithTax, monthlyCostCancellationPenalty, icms, recurringOH, eventualOH });
