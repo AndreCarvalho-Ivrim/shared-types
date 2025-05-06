@@ -44,7 +44,7 @@ export interface ICircuit {
 export type ContractDeadline = 12 | 24 | 36 | 48 | 60 | 72;
 type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
-export type CalculatorMatrixICMSByUF = Record<CalculatorMatrixUF, number>;
+export type CalculatorMatrixICMSByUF = Record<CalculatorMatrixUF, any>;
 export type CalculatorMatrixUFLinkQtdByUF = Record<CalculatorMatrixUF, any>;
 export interface ICalculatorMatrixData {
   /** Perfil do cliente */
@@ -231,7 +231,7 @@ export class CalculatorMatrix {
     // [ ] Puxar o ICMS por região
     let icms = null;
     if (icmsByUF[uf]) {
-      if (icmsByUF[uf]['operators'] && icmsByUF[uf]['operators'][operator]) icms = icmsByUF[uf]['operators'][operator] / 100;
+      if (operator && icmsByUF[uf]['operators'] && icmsByUF[uf]['operators'][operator]) icms = icmsByUF[uf]['operators'][operator] / 100;
       else icms = icmsByUF[uf];
     } 
     if (!icms && icms !== 0) throw new Error(`A alíquota do estado ${uf} não está cadastrada`);
