@@ -42,7 +42,7 @@ export interface ICircuit {
   margin_eventual?: number;
 }
 export type ContractDeadline = 12 | 24 | 36 | 48 | 60 | 72;
-type CustomerProfile = 'Operadora' | 'Corporativo';
+export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
 export type CalculatorMatrixICMSByUF = Record<CalculatorMatrixUF, any>;
 export type CalculatorMatrixUFLinkQtdByUF = Record<CalculatorMatrixUF, any>;
