@@ -67,6 +67,8 @@ export interface ICalculatorMatrixData {
   uf: CalculatorMatrixUF;
   /** Velocidade da internet */
   speed: string;
+  /** Operadora Contratada */
+  operator?: string;
   /** Mensalidade */
   monthlyFee: number;
   /** Instalação */
@@ -192,6 +194,7 @@ export interface ICalculateMarginResult {
 export class CalculatorMatrix {
   static execute(data: ICalculatorMatrixData) {
     const {
+      operator,
       customerProfile,
       cotepeAct,
       recurringOH,
@@ -226,8 +229,12 @@ export class CalculatorMatrix {
     const monthlyCostCancellationPenalty = costCancellationPenalty ?? 0;
     /** ICMS da Operadora Contratada. Buscar o ICMS referente a empresa na planilha */
     // [ ] Puxar o ICMS por região
-    const icms = icmsByUF[uf] ? icmsByUF[uf] / 100 : null; // conversar com o Rerison porque tem que pegar por operadora
-    if (!icms) throw new Error(`A alíquota do estado ${uf} não está cadastrada`);
+    let icms = null;
+    if (icmsByUF[uf]) {
+      if (icmsByUF[uf]['operators'] && icmsByUF[uf]['operators'][operator]) icms = icmsByUF[uf]['operators'][operator] / 100;
+      else icms = icmsByUF[uf];
+    } 
+    if (!icms && icms !== 0) throw new Error(`A alíquota do estado ${uf} não está cadastrada`);
 
     /** Custos de contratação */
     const hiringCosts = this.calculateHiringCosts({ linkQtd, recurringUnitCostWithTax, unitCostInstallationWithTax, monthlyCostCancellationPenalty, icms, recurringOH, eventualOH });
