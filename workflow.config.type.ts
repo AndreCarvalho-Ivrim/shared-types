@@ -420,6 +420,10 @@ export interface WorkflowViewModeBase {
   slug: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
   available_steps?: string[],
+  horizontal_menu?: {
+    current_title?: string,
+    items: (AvailableViewModesType | ({ extends: string, view_mode: 'extends', slug: string } & Partial<Omit<AvailableViewModesType, 'view_mode' | 'slug'>>))[]
+  }
   /** { 'ref-no-flow-data': 'título-visual' } */ 
   dynamic_order_by?: Record<string, string>,
   /** Group permission separado por virgula */
