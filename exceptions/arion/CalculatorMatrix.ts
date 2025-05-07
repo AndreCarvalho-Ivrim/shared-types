@@ -286,6 +286,7 @@ export class CalculatorMatrix {
       margin,
       marginRecurring: margin.recurring,
       marginEventual: margin.eventual,
+      linkQtd,
     };
 
     return result;
