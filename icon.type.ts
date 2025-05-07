@@ -103,4 +103,5 @@ export type AvailableIcons =
   'TrendingUpIcon' |
   'BrainIcon' |
   'QuestionIcon' |
-  'SupportIcon'
+  'SupportIcon' |
+  'SaveAltIcon'
