@@ -65,7 +65,9 @@ export interface StepCustomRuleRedirectToStep{
 }
 export interface StepCustomRuleRedirectToLink{
   /** Adicione o link no target */
-  id: '@redirect-to-link'
+  id: '@redirect-to-link',
+  /** default: _blank */
+  target?: '_blank' | '_self'
 }
 export interface StepCustomRuleFormWasModified{
   id: '@form-was-modified',
