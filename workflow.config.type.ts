@@ -1158,6 +1158,8 @@ export interface WorkflowConfigIntegrationsChatbot{
      */
     on: 'message' | 'sent' | 'received' | 'viewed' | 'error',
   } & Omit<FlowMessageFnCallTrigger, 'execute'>>
+  /** Limite de Retentativa de Envio */
+  attempt_limit?: string;
 }
 
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
