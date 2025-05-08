@@ -104,4 +104,5 @@ export type AvailableIcons =
   'BrainIcon' |
   'QuestionIcon' |
   'SupportIcon' |
-  'SaveAltIcon'
+  'SaveAltIcon' |
+  'CogIcon'
