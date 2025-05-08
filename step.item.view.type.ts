@@ -63,9 +63,14 @@ export interface StepViewColumnType{
   permission_to_view?: string
 }
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
+export type AdditionalTablesType = {
+  label: string,
+  columns: StepViewColumnType[],
+}
 export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
-  columns: StepViewColumnType[]
+  columns: StepViewColumnType[],
+  additionalTables?: AdditionalTablesType[]
 }
 export interface StepViewGroupTableType extends StepViewBaseType{
   id: string,
