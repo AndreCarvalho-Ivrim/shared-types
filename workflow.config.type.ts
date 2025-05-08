@@ -666,6 +666,8 @@ export interface WorkflowConfigSlasType {
   notify?: WFConfigSlaNotifyType[],
   outher_fields?: WorkflowSlaOutherField[],
   permission?: string,
+  /** Caso essa função seja habilitada o SLA das Etapas é controlado por um painel e não pelo template */
+  editable_steps_sla?: boolean,
   filter_scope?: WorkflowViewModeFilterScope[],
   columns: ConfigViewModeColumnsType[],
   /**
