@@ -1117,6 +1117,8 @@ export interface WorkflowConfigIntegrationsChatbot{
   delay_after_contact_creation?: boolean,
   /** Token do Mensagex, se não for informado utilizará o token do hub */
   token?: string,
+  /** Token do Mensagex de Balanceamento de Contatos */
+  token_balancing?: string,
   /**
    * Templates para iniciar uma interação ativa com o usuário, que ainda não interagiu no período de 24h. \
    * Caso não informe aqui, só poderá ser disparadas interações ativas caso o usuário já esteja com uma \
