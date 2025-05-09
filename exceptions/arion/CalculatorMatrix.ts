@@ -315,7 +315,8 @@ export class CalculatorMatrix {
     return links;
   }
   private static getUFByAdress(value: string) {
-    const part = value.split('. ')[1];
+    const parts = value.split('. ');
+    const part = parts.length > 1 ? parts[1] : parts[0]
     const uf = part.split(' - ')[1];
     if (!uf) throw new Error('Circuito não contém UF no endereço');
     return uf;
