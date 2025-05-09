@@ -1112,6 +1112,8 @@ export interface WorkflowConfigIntegrationsType {
   ias?: WFIntegrationIAProvider
 }
 export interface WorkflowConfigIntegrationsChatbot{
+  /** Obrigatório caso utilize balanceamento */
+  key?: string,
   delay_after_contact_creation?: boolean,
   /** Token do Mensagex, se não for informado utilizará o token do hub */
   token?: string,
@@ -1162,6 +1164,23 @@ export interface WorkflowConfigIntegrationsChatbot{
   } & Omit<FlowMessageFnCallTrigger, 'execute'>>
   /** Limite de Retentativa de Envio */
   attempt_limit?: string;
+  /** Limite de contatos para balancear, por dia */
+  limit_of_contacts_by_day?: number,
+  balance?: (WorkflowConfigIntegrationsChatbot & {
+    /** Herdar propriedades do chatbot pai */
+    extends?: (
+      'delay_after_contact_creation' | 
+      'loadContactData' | 
+      'observers' | 
+      'attempt_limit' |
+      'limit_of_contacts_by_day'
+    )[],
+    /**
+     * Personalizar mensagem para quando um usuário entrar em contato com o chatbot incorreto(estando associado a outro). \
+     * Mensagem padrão: "Você já está conversando com outro número da nossa empresa, continue a conversa por aquele canal"
+     **/
+    balance_conflit_message?: string
+  })[]
 }
 
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
