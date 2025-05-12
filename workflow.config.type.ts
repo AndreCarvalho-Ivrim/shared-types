@@ -48,8 +48,7 @@ export interface WorkflowNotificationEffectType{
   only?: "always" | "success" | "error",
   condition?: string,
   /** { ['flow-data-key']: \<value-to-add> } */
-  append_values: Record<string, any>,
-  by_target?: boolean
+  append_values: Record<string, any>
 }
 export interface WorkflowConfigNotificationType {
   name: string,
