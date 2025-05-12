@@ -1159,9 +1159,24 @@ export interface WorkflowConfigIntegrationsChatbot{
      * - viewed:  Confirmação de visualização
      */
     on: 'message' | 'sent' | 'received' | 'viewed' | 'error',
-  } & Omit<FlowMessageFnCallTrigger, 'execute'>>
+  } & Omit<FlowMessageFnCallTrigger, 'execute'>>,
   /** Limite de Retentativa de Envio */
-  attempt_limit?: string;
+  attempt_limit?: number,
+  control_errors?: {
+    /**
+     * A entidade deve conter as seguintes propriedades:
+     * ```ts
+     * {
+     *    error: string
+     *    translate?: string
+     *    status: string
+     *    can_retry: boolean
+     *    is_default: boolean
+     * }
+     * ```
+     */
+    entity_id: string,
+  }
 }
 
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
