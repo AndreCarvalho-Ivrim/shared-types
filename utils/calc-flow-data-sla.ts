@@ -1,6 +1,7 @@
 import { StepType } from "../step.type"
 import { AvailableHoursType } from "../workflow.config.type"
 import { WorkflowType } from "../workflow.type"
+import { checkStringConditional } from './check-string-conditional'
 import { getRecursiveValue } from "./recursive-datas"
 
 export interface ExceptionDays{
@@ -45,6 +46,17 @@ export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:
     try{
       if(workflow?.config?.slas?.outher_fields && workflow.config.slas.outher_fields.length > 0){
         workflow.config.slas.outher_fields.forEach((outher) => {
+          if (outher.validity) {
+            if (
+              outher.validity.available_steps && 
+              outher.validity.available_steps.length > 0
+            ) {
+              if (!outher.validity.available_steps.includes(flowData.current_step_id)) return;
+              if (outher.validity.restriction && checkStringConditional(outher.validity.restriction, flowData)) return;
+              if (outher.validity.condition && !checkStringConditional(outher.validity.condition, flowData)) return;
+            }
+          }
+
           let tempDate = getRecursiveValue(outher.key, flowData)
           
           if(tempDate){
