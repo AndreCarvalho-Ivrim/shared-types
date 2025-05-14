@@ -1222,6 +1222,7 @@ export interface AuthIntegrationRoute {
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
   /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
   key: string,
+  /** Obrigatório colocar ele caso o mode seja "stay" */
   identifier?: string,
   title: string,
   /**
