@@ -1222,6 +1222,7 @@ export interface AuthIntegrationRoute {
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
   /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
   key: string,
+  identifier?: string,
   title: string,
   /**
    * Se não colocar nenhum valor, o "expiration" será usado como default.
