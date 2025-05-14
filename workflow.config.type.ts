@@ -1157,11 +1157,37 @@ export interface WorkflowConfigIntegrationsChatbot{
      * - sent: Confirmação de enviada
      * - received: Confirmação de recebimento
      * - viewed:  Confirmação de visualização
+     * - error: Erro de mensagem \
+     *   Quando está nesse modelo, alguns valores serão injetados nos parametros. Caso não haja entidade \
+     *   de controle de erros terá apenas 'default_message', mas se tiver a entidade de controle de erros \
+     *   terá os seguintes campos:
+     * ```
+     *  {
+     *    default_message: 'Mensagem de erro tratada(mascarada caso configurado)'
+     *    raw_default_message: 'Mensagem real'
+     *    error_status: 'Status correspondente'
+     *  }
+     * ```
      */
     on: 'message' | 'sent' | 'received' | 'viewed' | 'error',
-  } & Omit<FlowMessageFnCallTrigger, 'execute'>>
+  } & Omit<FlowMessageFnCallTrigger, 'execute'>>,
   /** Limite de Retentativa de Envio */
-  attempt_limit?: string;
+  attempt_limit?: number,
+  control_errors?: {
+    /**
+     * A entidade deve conter as seguintes propriedades:
+     * ```ts
+     * {
+     *    error: string
+     *    translate?: string
+     *    status: string
+     *    can_retry: boolean
+     *    is_default: boolean
+     * }
+     * ```
+     */
+    entity_id: string,
+  }
 }
 
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
