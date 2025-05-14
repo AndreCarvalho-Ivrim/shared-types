@@ -643,6 +643,11 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
           date.getMinutes() + Number(num.slice(0, num.indexOf('m'))) 
         )
       }
+      else if (num.includes('h')) {
+        date.setHours(
+          date.getHours() + Number(num.slice(0, num.indexOf('h'))) 
+        )
+      }
       else date.setDate(
         date.getDate() + Number(num)
       )
@@ -651,6 +656,11 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
       if (num.includes('m')) {
         date.setMinutes(
           date.getMinutes() - Number(num.slice(0, num.indexOf('m'))) 
+        )
+      }
+      else if (num.includes('h')) {
+        date.setHours(
+          date.getHours() - Number(num.slice(0, num.indexOf('h'))) 
         )
       }
       else date.setDate(
