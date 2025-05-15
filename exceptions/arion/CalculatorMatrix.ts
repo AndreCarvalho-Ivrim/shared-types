@@ -217,7 +217,7 @@ export class CalculatorMatrix {
 
     // Validação da célula F2 da planilha
     // [ ] COLOCAR UMA VALIDAÇÃO PARA ISSO NO FLOW DATA, PORQUE O GRUPO "PREÇO DE VENDA RECORRENTE" E "PREÇO DE VENDA EVENTUAL OU TAXA DE INSTALAÇÃO VALIDAM POR ESSE CAMPO"
-    if (customerProfile === 'Corporativo' && cotepeAct) throw new Error('Favor alterar ATO COTEPE para NÃO');
+    if (customerProfile === 'Corporativo' && !!cotepeAct && cotepeAct === true) throw new Error('Favor alterar ATO COTEPE para NÃO');
 
     /** Quantidade de Links */
     const linkQtd = linkQtdByUF[uf][speed.toLowerCase()] ?? 1;
