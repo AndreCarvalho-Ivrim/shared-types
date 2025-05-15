@@ -1237,7 +1237,7 @@ export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
     restriction?: string
   }
 }
-export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over'
+export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over' | 'footer-slide-over'
 export interface WFCActionFnCallStep {
   type: 'call-step',
   target: string
@@ -1337,7 +1337,9 @@ export interface WFActionFnDownloadFiles {
 }
 export interface WFActionFnCallReport {
   type: 'call-report',
-  target: string
+  target: string,
+  /** Parâmetros para realiar o auto download */
+  parameters?: Record<string, any>
 }
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
@@ -1365,7 +1367,9 @@ export interface WorkflowConfigActionsType {
   render?: {
     in: WFCActionRenderIn,
     /** Não implementado */
-    condition?: string
+    condition?: string,
+    /** Tipo do botão, quando in = 'footer-slide-over' */
+    theme?: 'warning' | 'info' | 'danger' | 'success' | 'primary' | 'light'
   },
   /**
    * As funções do tipo WFCActionFnUpdateSelected, WFActionFnDownloadFiles e \
