@@ -1344,7 +1344,7 @@ export interface WorkflowConfigActionsType {
     in: WFCActionRenderIn,
     /** Não implementado */
     condition?: string,
-    /** Tipo do botão */
+    /** Tipo do botão, quando in = 'footer-slide-over' */
     theme?: 'warning' | 'info' | 'danger' | 'success' | 'primary' | 'light'
   },
   /**
