@@ -76,10 +76,9 @@ export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:
           else tempDate = getRecursiveValue(outherKey, flowData);
           
           if(tempDate){
-            try{
+            try{ 
               let outherDate = new Date(tempDate);
-              if (outher.mode === 'stay' && outher.stay) 
-                outherDate = moment(outherDate).add(outher.stay, 'days').toDate();
+              if (outher.mode === 'stay' && outher.stay) outherDate = moment(outherDate).add(outher.stay, 'days').toDate();
               outherDate.setHours(0, 0, 0, 0);
               
               const tempDiffInMilliseconds = outherDate.getTime() - currentDate.getTime();
@@ -104,7 +103,6 @@ export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:
     ) as number[]).reduce((acc, curr) => {
       return Math.max(acc, curr);
     }, timeToExpireSla);
-    console.log('🚀 ~ calcDaysToExpireSla ~ closestToExpiration:', closestToExpiration, !timeToExpireOutherFields || timeToExpireOutherFields.length === 0)
 
     return {
       timeToExpireSla,
