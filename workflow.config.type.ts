@@ -1222,7 +1222,20 @@ export interface AuthIntegrationRoute {
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
   /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
   key: string,
+  /** Obrigatório colocar ele caso o mode seja "stay" */
+  identifier?: string,
   title: string,
+  /**
+   * Se não colocar nenhum valor, o "expiration" será usado como default.
+   */
+  mode?: 'expiration' | 'stay',
+  /** Tempo esperado de permanência em uma etapa. */
+  stay?: number,
+  validity?: {
+    available_steps?: string[],
+    condition?: string,
+    restriction?: string
+  }
 }
 export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over' | 'footer-slide-over'
 export interface WFCActionFnCallStep {

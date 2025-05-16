@@ -1,6 +1,8 @@
+import moment from 'moment'
 import { StepType } from "../step.type"
 import { AvailableHoursType } from "../workflow.config.type"
 import { WorkflowType } from "../workflow.type"
+import { checkStringConditional, getShortcodes } from './check-string-conditional'
 import { getRecursiveValue } from "./recursive-datas"
 
 export interface ExceptionDays{
@@ -20,6 +22,19 @@ interface CalcSlaResponse{
   closestToExpiration: number,
   unit: 'day' | 'hour'
 }
+
+export function getDataBySlaShortCode(key: string, data: Record<string, any>) {
+  const shortcodes: Record<string, any> = {
+    '@id': data._id,
+    '@user_id': data.user_id,
+    '@created_at': data.created_at,
+    '@updated_at': data.updated_at,
+    '@step_id': data.current_step_id,
+    '@owner_ids': data.owners?.user_ids ?? []
+  }
+  return shortcodes[key];
+}
+
 export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:CalcSlaParams) : (CalcSlaResponse | undefined) {
   try{
     let timeToExpireSla: number = 0;
@@ -45,13 +60,27 @@ export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:
     try{
       if(workflow?.config?.slas?.outher_fields && workflow.config.slas.outher_fields.length > 0){
         workflow.config.slas.outher_fields.forEach((outher) => {
-          let tempDate = getRecursiveValue(outher.key, flowData)
+          if (outher.validity) {
+            if (
+              outher.validity.available_steps && 
+              outher.validity.available_steps.length > 0 &&
+              !outher.validity.available_steps.includes(flowData.current_step_id)
+            ) return;
+            if (outher.validity.restriction && checkStringConditional(outher.validity.restriction, flowData)) return;
+            if (outher.validity.condition && !checkStringConditional(outher.validity.condition, flowData)) return;
+          }
+
+          let outherKey = outher.key;
+          let tempDate = null;
+          if (outherKey.includes('@')) tempDate = getDataBySlaShortCode(outherKey, flowData);
+          else tempDate = getRecursiveValue(outherKey, flowData);
           
           if(tempDate){
-            try{
-              const outherDate = new Date(tempDate);
+            try{ 
+              let outherDate = new Date(tempDate);
+              if (outher.mode === 'stay' && outher.stay) outherDate = moment(outherDate).add(outher.stay, 'days').toDate();
               outherDate.setHours(0, 0, 0, 0);
-
+              
               const tempDiffInMilliseconds = outherDate.getTime() - currentDate.getTime();
               const tempOneHourInMilliseconds = 60 * 60 * 1000; // número de milissegundos em uma hora
               
