@@ -550,13 +550,6 @@ export class CalculatorMatrix {
     return result;
   }
   //#region UTILS
-  private static validateData(data: ValidateDataParams) {
-    const error = [
-      [!data.circuits.length, 'Contato do cliente é obrigatório'],
-    ].find(([err, _]) => !!err)?.[1] as string | undefined;
-
-    if(error) throw new Error(error);
-  }
   private static convertDecimals(value: number) {
     return parseFloat(value.toFixed(2))
   }
