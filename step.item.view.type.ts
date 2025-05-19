@@ -70,7 +70,11 @@ export type AdditionalTablesType = {
 export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
   columns: StepViewColumnType[],
-  additionalTables?: AdditionalTablesType[]
+  additionalTables?: AdditionalTablesType[],
+  arrayTable?: {
+    /** Id do array de objects */
+    id: string,
+  }
 }
 export interface StepViewGroupTableType extends StepViewBaseType{
   id: string,
