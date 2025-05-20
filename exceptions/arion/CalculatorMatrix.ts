@@ -217,7 +217,7 @@ export class CalculatorMatrix {
 
     // Validação da célula F2 da planilha
     // [ ] COLOCAR UMA VALIDAÇÃO PARA ISSO NO FLOW DATA, PORQUE O GRUPO "PREÇO DE VENDA RECORRENTE" E "PREÇO DE VENDA EVENTUAL OU TAXA DE INSTALAÇÃO VALIDAM POR ESSE CAMPO"
-    if (customerProfile === 'Corporativo' && cotepeAct) throw new Error('Favor alterar ATO COTEPE para NÃO');
+    if (customerProfile === 'Corporativo' && !!cotepeAct && String(cotepeAct) === 'true') throw new Error('Favor alterar ATO COTEPE para NÃO');
 
     /** Quantidade de Links */
     const linkQtd = linkQtdByUF[uf][speed.toLowerCase()] ?? 1;
@@ -550,13 +550,6 @@ export class CalculatorMatrix {
     return result;
   }
   //#region UTILS
-  private static validateData(data: ValidateDataParams) {
-    const error = [
-      [!data.circuits.length, 'Contato do cliente é obrigatório'],
-    ].find(([err, _]) => !!err)?.[1] as string | undefined;
-
-    if(error) throw new Error(error);
-  }
   private static convertDecimals(value: number) {
     return parseFloat(value.toFixed(2))
   }
