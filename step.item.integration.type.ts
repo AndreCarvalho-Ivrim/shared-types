@@ -143,7 +143,7 @@ export type HandlerPDFType = {
   /** Local onde será adicionado o valor */
   key: string;
   /** Cada handler deve ter um indetificador unico */
-  indetifier: string;
+  identifier: string;
 }
 
 export interface IntegrationPDFType {

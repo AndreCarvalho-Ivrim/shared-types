@@ -106,6 +106,9 @@ export interface WorkflowTriggerUpdateFlowData extends  WorkflowTriggerBase{
     query?: any,
     /** 
      * Record<chave-na-entidade-dinamica, (valor-estatico | \@[shortcode] | \@code_helper)>
+     * 
+     * Se adicionar ? no final da 'chave-na-entidade-dinamica', o dado só será inserido caso seja \
+     * válido.
      */
     append_values?: Record<string, any>,
     conditional_append_values?: {

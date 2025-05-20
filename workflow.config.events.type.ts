@@ -233,7 +233,22 @@ export interface SendWhatsappMessagesEvent{
    * ``` { 'path-no-flow-data': { value: 'path-na-resposta' ou valor hardcode, static: bool para ativar o modo hardcode } } ```
    **/
   effects?: RequestExternalEffect[],
-  concluded_step_id: string
+  concluded_step_id: string,
+  control_errors?: {
+    /**
+     * A entidade deve conter as seguintes propriedades:
+     * ```ts
+     * {
+     *    error: string
+     *    translate?: string
+     *    status: string
+     *    can_retry: boolean
+     *    is_default: boolean
+     * }
+     * ```
+     */
+    entity_id: string
+  }
 }
 export interface RequestExternalDBEvent{
   db_host: string,

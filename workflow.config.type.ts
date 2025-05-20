@@ -1174,14 +1174,40 @@ export interface WorkflowConfigIntegrationsChatbot{
      * - sent: Confirmação de enviada
      * - received: Confirmação de recebimento
      * - viewed:  Confirmação de visualização
+     * - error: Erro de mensagem \
+     *   Quando está nesse modelo, alguns valores serão injetados nos parametros. Caso não haja entidade \
+     *   de controle de erros terá apenas 'default_message', mas se tiver a entidade de controle de erros \
+     *   terá os seguintes campos:
+     * ```
+     *  {
+     *    default_message: 'Mensagem de erro tratada(mascarada caso configurado)'
+     *    raw_default_message: 'Mensagem real'
+     *    error_status: 'Status correspondente'
+     *  }
+     * ```
      */
     on: 'message' | 'sent' | 'received' | 'viewed' | 'error',
-  } & Omit<FlowMessageFnCallTrigger, 'execute'>>
+  } & Omit<FlowMessageFnCallTrigger, 'execute'>>,
   /** Limite de Retentativa de Envio */
-  attempt_limit?: string;
   /** Limite de contatos para balancear, por dia */
   limit_of_contacts_by_day?: number,
-  balance?: WorkflowConfigIntegrationsChatbotBalanceType[]
+  balance?: WorkflowConfigIntegrationsChatbotBalanceType[],
+  attempt_limit?: number,
+  control_errors?: {
+    /**
+     * A entidade deve conter as seguintes propriedades:
+     * ```ts
+     * {
+     *    error: string
+     *    translate?: string
+     *    status: string
+     *    can_retry: boolean
+     *    is_default: boolean
+     * }
+     * ```
+     */
+    entity_id: string,
+  }
 }
 
 export type AuthPublicRouteType = AuthPublicRouteSimpleToken | AuthPublicRouteNetworkFlowAuth | AuthIntegrationRoute;
@@ -1216,9 +1242,22 @@ export interface AuthIntegrationRoute {
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
   /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
   key: string,
+  /** Obrigatório colocar ele caso o mode seja "stay" */
+  identifier?: string,
   title: string,
+  /**
+   * Se não colocar nenhum valor, o "expiration" será usado como default.
+   */
+  mode?: 'expiration' | 'stay',
+  /** Tempo esperado de permanência em uma etapa. */
+  stay?: number,
+  validity?: {
+    available_steps?: string[],
+    condition?: string,
+    restriction?: string
+  }
 }
-export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over'
+export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over' | 'footer-slide-over'
 export interface WFCActionFnCallStep {
   type: 'call-step',
   target: string
@@ -1318,7 +1357,9 @@ export interface WFActionFnDownloadFiles {
 }
 export interface WFActionFnCallReport {
   type: 'call-report',
-  target: string
+  target: string,
+  /** Parâmetros para realiar o auto download */
+  parameters?: Record<string, any>
 }
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
@@ -1346,7 +1387,9 @@ export interface WorkflowConfigActionsType {
   render?: {
     in: WFCActionRenderIn,
     /** Não implementado */
-    condition?: string
+    condition?: string,
+    /** Tipo do botão, quando in = 'footer-slide-over' */
+    theme?: 'warning' | 'info' | 'danger' | 'success' | 'primary' | 'light'
   },
   /**
    * As funções do tipo WFCActionFnUpdateSelected, WFActionFnDownloadFiles e \
