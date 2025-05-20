@@ -31,6 +31,8 @@ export interface ICircuit {
   activation_deadline?: string;
   twelve_months_net?: number;
   twelve_months_net_rate?: number;
+  twenty_four_months_net?: number;
+  twenty_four_months_net_rate?: number;
   thirty_six_months_net?: number;
   thirty_six_months_net_rate?: number;
   forty_eight_months_net?: number;
