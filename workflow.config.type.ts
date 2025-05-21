@@ -122,18 +122,21 @@ export interface WfConfigObserverBackupData{
 export interface FlowNetworkParams {
   flow_id: string,
   /**
-   * Ao usar esse parametro, ele criará vários flowDatas a partir de uma key que é uma array de objetos. \
-   * Disponível apenas no ```mode: inner-data```. \
-   * \
-   * No match: \
-   * - A notação ```[key]: [key-raiz].[key-desejada]``` representa a ```key-raiz``` que é a key de uma array de objetos e a ```key-desejada``` representa a key de cada item dessa array. \
-   * - A notação ```[key]: [key-desejada]``` representa a ```key-desejada``` que é a key que será replicada em todos os itens que se transformarão em flow-data.
+   * Ao usar esse parametro, ele criará vários flowDatas a partir de um array de objetos.
    */
-  one_to_many?: boolean,
+  one_to_many?: {
+    /** Referência do Array */
+    ref: string,
+    /** Usada para validar cada laço de interação do array */
+    condition?: string
+  },
   /** 
    * ``` { [data_id]: [target_id] } ``` 
    * Se usar a notação ``` { ".": "." } ```, ou qualquer variação disso, estará fazendo \
    * referência a raiz do objeto (no caso o flowData.data)
+   * 
+   * Caso esteja com a funcionalidade one_to_many, existirá o prefixo ```_parent.``` para \
+   * acessar dados que estão fora do array
    */
   match: Record<string, string>,
   /** Adicionar um valor no registro de destino */
