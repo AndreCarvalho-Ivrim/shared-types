@@ -266,3 +266,55 @@ export interface RequestExternalDBEvent{
   effects: RequestExternalEffect[],
   params?: string[]
 }
+export interface RelationshipWithFlowEntityEvent {
+  entity_id: string,
+  /**
+   * Com suporte a shortcodes.
+  */
+  query: any,
+  mode: 'find-one' | 'find-many' | 'count', 
+  /**
+   * A resposta da query virá no formato: \
+   * ```
+   * {
+   *   result: boolean,
+   *   response: string,
+   *   data: {
+   *     // O datas virá de acordo com o mode selecionado
+   *     datas: {} | [] | undefined,
+   *     total: number
+   *   }
+   * }
+   * ```
+   */
+  effects: {
+    /** default: success */
+    only?: 'success' | 'fail' | 'always',
+    append_values?: Record<string, {
+      value: any,
+      /**
+       * default: static = false
+       * 
+       * Quando static = true, quer dizer que estamos adicionando o valor \
+       * hardcode, quando não, é a referência do valor na resposta.
+       * 
+       * Exemplo static:
+       * append_values: { name: 'Hello World', static: true }
+       * flow_data: { name: 'Hello World' }
+       *  
+       * Exemplo não static:
+       * resposta: { content: 'Hello World' }
+       * append_values: { name: 'content' }
+       * flow_data: { name: 'Hello World' }
+       */
+      static?: boolean
+    }>
+    /**
+     * Válido apenas se only === 'fail' ou 'always'
+     * ```{ 'condition': 'message' }```
+     **/
+    error_message?: Record<string, string>,
+    breakExec?: boolean,
+    condition?: string,
+  }[],
+}

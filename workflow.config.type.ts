@@ -239,6 +239,8 @@ export interface WorkflowConfigObserverFnType {
    * \@consolidate: Evento válido apenas no FlowData, para unir registros
    * 
    * \@send-whatsapp-messages: Evento para disparar mensagens de whatsapp usando o chatbot
+   * 
+   * \@relationship-with-flow-entity: Evento para relacionar um flow-data com uma entidade dinâmica
    */
   name: string,
   /**
@@ -325,6 +327,8 @@ export interface WorkflowConfigObserverFnType {
    * \@request-external-api: seguir a tipagem de [RequestExternalApiEvent]
    * 
    * \@send-whatsapp-messages: seguir a tipagem de [SendWhatsappMessagesEvent]
+   * 
+   * \@relationship-with-flow-entity: seguir a tipagem de [RelationshipWithFlowEntityEvent]
    * 
    * APPEND -> required data on value = \@entity
    * 
