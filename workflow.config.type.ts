@@ -1118,7 +1118,8 @@ export type WorkflowConfigIntegrationsChatbotBalanceType = WorkflowConfigIntegra
     'loadContactData' | 
     'observers' | 
     'attempt_limit' |
-    'limit_of_contacts_by_day'
+    'limit_of_contacts_by_day' |
+    'control_errors'
   )[],
   /**
    * Personalizar mensagem para quando um usuário entrar em contato com o chatbot incorreto(estando associado a outro). \
