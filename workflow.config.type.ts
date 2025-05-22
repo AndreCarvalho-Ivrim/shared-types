@@ -121,10 +121,22 @@ export interface WfConfigObserverBackupData{
 }
 export interface FlowNetworkParams {
   flow_id: string,
+  /**
+   * Ao usar esse parametro, ele criará vários flowDatas a partir de um array de objetos.
+   */
+  one_to_many?: {
+    /** Referência do Array */
+    ref: string,
+    /** Usada para validar cada laço de interação do array */
+    condition?: string
+  },
   /** 
    * ``` { [data_id]: [target_id] } ``` 
    * Se usar a notação ``` { ".": "." } ```, ou qualquer variação disso, estará fazendo \
    * referência a raiz do objeto (no caso o flowData.data)
+   * 
+   * Caso esteja com a funcionalidade one_to_many, existirá o prefixo ```_parent.``` para \
+   * acessar dados que estão fora do array
    */
   match: Record<string, string>,
   /** Adicionar um valor no registro de destino */
