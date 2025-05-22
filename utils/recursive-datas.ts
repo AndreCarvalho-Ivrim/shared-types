@@ -2,32 +2,49 @@ export const handleRegexId = (id: string, item: { data: any }) => {
   const pattern = /@\[(.*?)\]/g;
   const matches = id.match(pattern);
   
+  if(id && id.includes('@isac')){
+    console.log({ id, item, matches });
+  }
   if(!matches) return undefined;
 
-  const replacers : { id: string, default?: string }[] = [];
+  const replacers : { shortcode: string, id: string, default?: string, translate?: Record<string, string> }[] = [];
   matches.forEach(match => {
-    const values = match.substring(2, match.length - 1).split('|');
+    let [leanId, defaultValue] = match.substring(2, match.length - 1).split('|');
+    let translate : Record<string, string> | undefined = undefined;
+    if(leanId && leanId.includes('#')){
+      const splitedHashs = leanId.split('#');
+      leanId = splitedHashs.shift()!;
+      
+      translate = {};
+      splitedHashs.forEach((hashToTranslate) => {
+        const [key, val] = hashToTranslate.split(':');
+        if(key == undefined || val == undefined) return;
+        translate![key] = val;
+      })
+      if(Object.keys(translate).length === 0) translate = undefined;
+    }
+
     replacers.push({
-      id: values[0],
-      default: values.length === 2 ? values[1] : undefined
+      shortcode: match,
+      id: leanId,
+      default: defaultValue ?? undefined,
+      translate
     })
   });
   
   let value = id
   replacers.forEach((replacer) => {
     let temp = getRecursiveValue(replacer.id, item)
-
-    const toReplace = `@[${replacer.id}${replacer.default ? `|${replacer.default}`:''}]`;
-
+    if(replacer.translate && replacer.translate[temp]) temp = replacer.translate[temp];
     var max = 50;
     do{
-      value = value.replace(toReplace, temp ?? replacer.default ?? '')
+      value = value.replace(replacer.shortcode, temp ?? replacer.default ?? '')
       max--;
       if(max === 0){
         console.error('[findedAuthTemplate->loop] O replacer repetiu mais de 20x');
         break;
       }
-    }while(value.includes(toReplace))
+    }while(value.includes(replacer.shortcode))
   })
   return value;
 }
