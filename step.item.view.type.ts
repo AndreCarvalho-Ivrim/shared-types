@@ -72,7 +72,7 @@ export interface StepViewColumnType{
    *    // default: _blank
    *    target?: '_blank' | '_self'
    *    // texto do botão, default: Acessar
-   *    title?: string
+   *    text?: string
    *  }
    * ```
    */
