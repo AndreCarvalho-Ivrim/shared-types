@@ -105,4 +105,5 @@ export type AvailableIcons =
   'QuestionIcon' |
   'SupportIcon' |
   'SaveAltIcon' |
-  'CogIcon'
+  'CogIcon' |
+  'StarIcon'
