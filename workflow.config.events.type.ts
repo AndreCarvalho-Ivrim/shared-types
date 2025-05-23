@@ -1,5 +1,5 @@
 import { CreateScheduleEvent } from "./schedule.type"
-import { WorkflowNotificationEffectType } from "./workflow.config.type"
+import { HandlerMapType, WorkflowNotificationEffectType } from "./workflow.config.type"
 
 //#region CALENDAR EVENTS
 export interface WFCalendarMultipleType{
@@ -307,7 +307,8 @@ export interface RelationshipWithFlowEntityEvent {
        * append_values: { name: 'content' }
        * flow_data: { name: 'Hello World' }
        */
-      static?: boolean
+      static?: boolean,
+      handlers?: HandlerMapType[]
     }>
     /**
      * Válido apenas se only === 'fail' ou 'always'

@@ -179,6 +179,7 @@ export type HandlerAppendType = {
   value: any;
   mode: 'overwrite' | 'merge';
   name: string;
+  static?: boolean
 }
 
 export type HandlerMapType = {
