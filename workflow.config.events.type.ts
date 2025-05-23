@@ -287,7 +287,9 @@ export interface RelationshipWithFlowEntityEvent {
    * }
    * ```
    */
-  effects: {
+  effects: RelationshipWithFlowEntityEventEffect[],
+}
+export interface RelationshipWithFlowEntityEventEffect{
     /** default: success */
     only?: 'success' | 'fail' | 'always',
     append_values?: Record<string, {
@@ -311,11 +313,13 @@ export interface RelationshipWithFlowEntityEvent {
       handlers?: HandlerMapType[]
     }>
     /**
-     * Válido apenas se only === 'fail' ou 'always'
+     * Válido apenas se only === 'fail'
      * ```{ 'condition': 'message' }```
+     * 
+     * Caso não queira usar as conditions para multiplas mensagens de erro \
+     * utiliza a chave 'true' para utilizar a mensagem como padrão
      **/
     error_message?: Record<string, string>,
     breakExec?: boolean,
     condition?: string,
-  }[],
-}
+  }
