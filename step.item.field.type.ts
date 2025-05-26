@@ -195,7 +195,14 @@ export interface StepItemCustomDataEditableTable{
     /**
      * Se tiver items do tipo select-multiple, essas opções será usada para não permitir selecionar a mesma opção caso já selecionada
      **/
-    not_repeat_option?: boolean
+    not_repeat_option?: boolean,
+    /**
+     * Campos que serão ocultados no editable-table /
+     * mas no back-end serão validados
+     * */
+    field_blacklist?: string[],
+    disable_row_deletion?: boolean,
+    disable_add_row?: boolean
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
