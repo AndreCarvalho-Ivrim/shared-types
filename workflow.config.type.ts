@@ -20,6 +20,7 @@ export interface WorkflowConfigFilterType {
    * - list: Lista de opções (in)
    * - not-list: Não está na lista de opções (nin)
    * - array-object: Verifica se dentro de um array, se algum elemento dele da match com o value passado
+   * - boolean: pesquisa por valor booleano
    */
   type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in' | 'boolean',
   /** Veja a tipagem de WorkflowConfigFilterRefType para ver opções pré-definidas */
