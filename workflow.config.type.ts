@@ -181,14 +181,7 @@ export type HandlerAppendType = {
   name: string | '@entity';
   static?: boolean,
   /** Caso utilize o name = '@entity', adicionar essa propriedade */
-  entity_data?: {
-    entity_key: string,
-    /** Utilize caso a entidade seja extensive_data */
-    query: Record<string, any>,
-    then: {
-      parse: Record<string, string>
-    }
-  }
+  entity_data?: WFConfigObserverDataEntity
 }
 
 export type HandlerMapType = {
