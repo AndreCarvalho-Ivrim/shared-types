@@ -887,7 +887,8 @@ export interface WorkflowConfigExceptionView{
   subpage_of_flow_data?: {
     identifier: string,
     view_mode?: { condition?: string, slug: string }[]
-  }
+  },
+  permission?: string
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
