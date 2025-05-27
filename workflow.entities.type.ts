@@ -66,7 +66,7 @@ export interface FlowEntitySchemaInfo{
      */ 
     conflit?: 'overwrite' | 'merge'
   },
-  customData?: StepItemCustomListDraggable | {
+  customData?: StepItemCustomListDraggable | StepItemCustomList | {
     mode: '@list-draggable',
     settings?: any
   },
@@ -214,6 +214,16 @@ export interface FlowEntityInfo{
 export interface StepItemCustomListDraggable{
   mode: '@list-draggable',
   settings: {
+    /** Título que aparecerá no modal */
+    title?: string,
+    initial_value?: Record<string, any>[]
+  }
+}
+
+export interface StepItemCustomList{
+  mode: '@list',
+  settings: {
+    mode: 'inline',
     /** Título que aparecerá no modal */
     title?: string,
     initial_value?: Record<string, any>[]
