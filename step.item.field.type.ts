@@ -155,7 +155,7 @@ export interface StepItemType{
      */
     filter_condition?: string,
   },
-  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | {
+  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
   },
@@ -203,6 +203,40 @@ export interface StepItemCustomDataEditableTable{
     field_blacklist?: string[],
     disable_row_deletion?: boolean,
     disable_add_row?: boolean
+  }
+}
+export interface EditableTableInlineInputs{
+  key: string,
+  type: 'text'
+}
+export interface StepItemCustomDataEditableTableInline{
+  /** o @editable-table-inline tem suporte apenas a input de texto  */
+  mode: '@editable-table-inline',
+  settings: {
+    /**
+     * Define quais colunas serão inputs
+     * */
+    input_columns: EditableTableInlineInputs[],
+    /** Título que aparecerá no modal */
+    title?: string,
+    initial_value?: Record<string, any>[],
+    readonly_if_fillable?: boolean,
+    replicate?: boolean | Record<string, string>,
+    /**
+     * Função que utiliza um item múltiplo como base para gerar multiplas \
+     * linhas do editable-table, replicado os demais valores.
+     **/
+    spread_it_all?: {
+      /** Elemento que será usado como base para o spread operator */
+      target: string
+    },
+    /**
+     * Campos que serão ocultados no editable-table /
+     * mas no back-end serão validados
+     * */
+    field_blacklist?: string[],
+    disable_row_deletion?: boolean,
+    disable_add_row?: boolean,
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
