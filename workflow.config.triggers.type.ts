@@ -66,7 +66,8 @@ export interface WorkflowTriggerObserverEvents extends WorkflowTriggerBase{
   name: '@observer-events',
   /** Adicione as condicionais dos eventos do observer que quer disparar */
   data: {
-    matchs: Array<{ condition: string, name: string }>
+    matchs?: Array<{ condition: string, name: string }>,
+    ref?: string,
   } 
 }
 export interface WorkflowTriggerUpdateFlowEntityData extends  WorkflowTriggerBase{

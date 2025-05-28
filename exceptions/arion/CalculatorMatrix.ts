@@ -31,6 +31,8 @@ export interface ICircuit {
   activation_deadline?: string;
   twelve_months_net?: number;
   twelve_months_net_rate?: number;
+  twenty_four_months_net?: number;
+  twenty_four_months_net_rate?: number;
   thirty_six_months_net?: number;
   thirty_six_months_net_rate?: number;
   forty_eight_months_net?: number;
@@ -231,7 +233,10 @@ export class CalculatorMatrix {
     // [ ] Puxar o ICMS por região
     let icms = null;
     if (icmsByUF[uf]) {
-      if (operator && icmsByUF[uf]['operators'] && icmsByUF[uf]['operators'][operator]) icms = icmsByUF[uf]['operators'][operator] / 100;
+      if (
+        operator && icmsByUF[uf]['operators'] &&
+        icmsByUF[uf]['operators'][operator] >= 0
+      ) icms = icmsByUF[uf]['operators'][operator] / 100;
       else icms = icmsByUF[uf];
     } 
     if (!icms && icms !== 0) throw new Error(`A alíquota do estado ${uf} não está cadastrada`);
@@ -429,36 +434,35 @@ export class CalculatorMatrix {
     let grossPriceTotalCotepe = 0;
     /** Bruto unitário ATO COTEPE */
     let grossPriceUnitCotepe = 0;
-    if (monthlyRecoveryICMS) {
-      grossPriceTotal = customerProfile === 'Operadora' ?
-        recurringSalesPriceFull.grossPriceTotal:
-        customerProfile === 'Corporativo' ?
-          recurringSalesPriceWithPercentual.grossPriceTotal :
-          0;
-      grossPriceUnit = customerProfile === 'Operadora' ?
-        recurringSalesPriceFull.grossPriceUnit:
-        customerProfile === 'Corporativo' ?
-          recurringSalesPriceWithPercentual.grossPriceUnit :
-          0;
-      
-      netPriceTotal = customerProfile === 'Operadora' ?
-        recurringSalesPriceFull.netPriceTotal:
-        customerProfile === 'Corporativo' ?
-          recurringSalesPriceWithPercentual.netPriceTotal :
-          0;
-      netPriceUnit = customerProfile === 'Operadora' ?
-        recurringSalesPriceFull.netPriceUnit:
-        customerProfile === 'Corporativo' ?
-          recurringSalesPriceWithPercentual.netPriceUnit :
-          0;
-  
-      grossPriceTotalCotepe = customerProfile === 'Operadora' ? 
-        grossPriceTotal * (1 - icmsArion) : 
+    
+    grossPriceTotal = customerProfile === 'Operadora' ?
+      recurringSalesPriceFull.grossPriceTotal:
+      customerProfile === 'Corporativo' ?
+        recurringSalesPriceWithPercentual.grossPriceTotal :
         0;
-      grossPriceUnitCotepe = customerProfile === 'Operadora' ? 
-        grossPriceUnit * (1 - icmsArion) : 
+    grossPriceUnit = customerProfile === 'Operadora' ?
+      recurringSalesPriceFull.grossPriceUnit:
+      customerProfile === 'Corporativo' ?
+        recurringSalesPriceWithPercentual.grossPriceUnit :
         0;
-    }
+    
+    netPriceTotal = customerProfile === 'Operadora' ?
+      recurringSalesPriceFull.netPriceTotal:
+      customerProfile === 'Corporativo' ?
+        recurringSalesPriceWithPercentual.netPriceTotal :
+        0;
+    netPriceUnit = customerProfile === 'Operadora' ?
+      recurringSalesPriceFull.netPriceUnit:
+      customerProfile === 'Corporativo' ?
+        recurringSalesPriceWithPercentual.netPriceUnit :
+        0;
+
+    grossPriceTotalCotepe = customerProfile === 'Operadora' ? 
+      grossPriceTotal * (1 - icmsArion) : 
+      0;
+    grossPriceUnitCotepe = customerProfile === 'Operadora' ? 
+      grossPriceUnit * (1 - icmsArion) : 
+      0;
   
     return {
       netPriceUnit: this.convertDecimals(netPriceUnit),
@@ -484,12 +488,10 @@ export class CalculatorMatrix {
     /** Líquido total */
     let netPriceTotal = 0;
   
-    if (monthlyRecoveryICMS) {
-      grossPriceUnit = possibleOverheadCosts / ( 1 - (eventualMargin + 0.05 + 0.076 + 0.0165));
-      grossPriceTotal = grossPriceUnit * linkQtd;
-      netPriceUnit = grossPriceUnit * (1 - (0.05 + 0.076 + 0.0165));
-      netPriceTotal = netPriceUnit * linkQtd;
-    }
+    grossPriceUnit = possibleOverheadCosts / ( 1 - (eventualMargin + 0.05 + 0.076 + 0.0165));
+    grossPriceTotal = grossPriceUnit * linkQtd;
+    netPriceUnit = grossPriceUnit * (1 - (0.05 + 0.076 + 0.0165));
+    netPriceTotal = netPriceUnit * linkQtd;
   
     return {
       netPriceUnit: this.convertDecimals(netPriceUnit),
@@ -507,10 +509,8 @@ export class CalculatorMatrix {
     let recurring = 0;
     let eventual = 0;
   
-    if (hiringCosts.monthlyRecoveryICMS) {
-      recurring = recurringSalesPrice.netPriceTotal - hiringCosts.monthlyCostsWithOverhead;
-      eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
-    }
+    recurring = recurringSalesPrice.netPriceTotal - hiringCosts.monthlyCostsWithOverhead;
+    eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
   
     return {
       recurring: this.convertDecimals(recurring),

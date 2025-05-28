@@ -121,10 +121,22 @@ export interface WfConfigObserverBackupData{
 }
 export interface FlowNetworkParams {
   flow_id: string,
+  /**
+   * Ao usar esse parametro, ele criará vários flowDatas a partir de um array de objetos.
+   */
+  one_to_many?: {
+    /** Referência do Array */
+    ref: string,
+    /** Usada para validar cada laço de interação do array */
+    condition?: string
+  },
   /** 
    * ``` { [data_id]: [target_id] } ``` 
    * Se usar a notação ``` { ".": "." } ```, ou qualquer variação disso, estará fazendo \
    * referência a raiz do objeto (no caso o flowData.data)
+   * 
+   * Caso esteja com a funcionalidade one_to_many, existirá o prefixo ```_parent.``` para \
+   * acessar dados que estão fora do array
    */
   match: Record<string, string>,
   /** Adicionar um valor no registro de destino */
@@ -166,7 +178,10 @@ export type HandlerAppendType = {
   condition?: string;
   value: any;
   mode: 'overwrite' | 'merge';
-  name: string;
+  name: string | '@entity';
+  static?: boolean,
+  /** Caso utilize o name = '@entity', adicionar essa propriedade */
+  entity_data?: WFConfigObserverDataEntity
 }
 
 export type HandlerMapType = {
@@ -230,6 +245,8 @@ export interface WorkflowConfigObserverFnType {
    * \@consolidate: Evento válido apenas no FlowData, para unir registros
    * 
    * \@send-whatsapp-messages: Evento para disparar mensagens de whatsapp usando o chatbot
+   * 
+   * \@relationship-with-flow-entity: Evento para relacionar um flow-data com uma entidade dinâmica
    */
   name: string,
   /**
@@ -316,6 +333,8 @@ export interface WorkflowConfigObserverFnType {
    * \@request-external-api: seguir a tipagem de [RequestExternalApiEvent]
    * 
    * \@send-whatsapp-messages: seguir a tipagem de [SendWhatsappMessagesEvent]
+   * 
+   * \@relationship-with-flow-entity: seguir a tipagem de [RelationshipWithFlowEntityEvent]
    * 
    * APPEND -> required data on value = \@entity
    * 
@@ -870,7 +889,8 @@ export interface WorkflowConfigExceptionView{
   subpage_of_flow_data?: {
     identifier: string,
     view_mode?: { condition?: string, slug: string }[]
-  }
+  },
+  permission?: string
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
@@ -1111,7 +1131,25 @@ export interface WorkflowConfigIntegrationsType {
    */
   ias?: WFIntegrationIAProvider
 }
+export type WorkflowConfigIntegrationsChatbotBalanceType = WorkflowConfigIntegrationsChatbot & {
+  /** Herdar propriedades do chatbot pai */
+  extends?: (
+    'delay_after_contact_creation' | 
+    'loadContactData' | 
+    'observers' | 
+    'attempt_limit' |
+    'limit_of_contacts_by_day' |
+    'control_errors'
+  )[],
+  /**
+   * Personalizar mensagem para quando um usuário entrar em contato com o chatbot incorreto(estando associado a outro). \
+   * Mensagem padrão: "Você já está conversando com outro número da nossa empresa, continue a conversa por aquele canal"
+   **/
+  balance_conflit_message?: string
+}
 export interface WorkflowConfigIntegrationsChatbot{
+  /** Obrigatório caso utilize balanceamento */
+  key?: string,
   delay_after_contact_creation?: boolean,
   /** Token do Mensagex, se não for informado utilizará o token do hub */
   token?: string,
@@ -1172,6 +1210,9 @@ export interface WorkflowConfigIntegrationsChatbot{
     on: 'message' | 'sent' | 'received' | 'viewed' | 'error',
   } & Omit<FlowMessageFnCallTrigger, 'execute'>>,
   /** Limite de Retentativa de Envio */
+  /** Limite de contatos para balancear, por dia */
+  limit_of_contacts_by_day?: number,
+  balance?: WorkflowConfigIntegrationsChatbotBalanceType[],
   attempt_limit?: number,
   control_errors?: {
     /**

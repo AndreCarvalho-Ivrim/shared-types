@@ -49,6 +49,10 @@ export interface StepViewColumnType{
    */
   id: string, 
   name: string,
+  /**
+   * Caso use o \@link, o id será o link de redirecionamento, e caso precise de configurações a mais \
+   * utilize a propriedade data.
+   */
   type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file' |  AvailableCustomItemModeType,
   /**
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
@@ -60,7 +64,19 @@ export interface StepViewColumnType{
   translate?: Record<string, string>,
   condition?: string,
   required?: boolean,
-  permission_to_view?: string
+  permission_to_view?: string,
+  /**
+   * Caso type \@link, você pode preencher as configurações a seguir:
+   * ```
+   *  {
+   *    // default: _blank
+   *    target?: '_blank' | '_self'
+   *    // texto do botão, default: Acessar
+   *    text?: string
+   *  }
+   * ```
+   */
+  data?: any
 }
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
 export type AdditionalTablesType = {
