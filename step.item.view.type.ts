@@ -53,7 +53,7 @@ export interface StepViewColumnType{
    * Caso use o \@link, o id será o link de redirecionamento, e caso precise de configurações a mais \
    * utilize a propriedade data.
    */
-  type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file' |  AvailableCustomItemModeType,
+  type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file' |  AvailableCustomItemModeType | 'group',
   /**
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
@@ -85,14 +85,18 @@ export type AdditionalTablesType = {
 }
 export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
-  columns: StepViewColumnType[],
+  columns: (StepViewColumnType | StepViewColumnGroupType)[],
   additionalTables?: AdditionalTablesType[]
+}
+export interface StepViewColumnGroupType extends Omit<StepViewColumnType, 'type'>{
+  type: 'group',
+  columns: StepViewColumnType[]
 }
 export interface StepViewGroupTableType extends StepViewBaseType{
   id: string,
   type: 'group-table',
   resume: StepViewColumnType[],
-  columns: StepViewColumnType[],
+  columns: (StepViewColumnType | StepViewColumnGroupType)[],
   required?: boolean
 }
 export interface StepViewHorizontalTableType extends Omit<StepViewGroupTableType, "type" > {
