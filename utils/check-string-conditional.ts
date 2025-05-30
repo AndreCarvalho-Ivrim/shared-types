@@ -667,6 +667,8 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
         date.getDate() - Number(num)
       )
     }
+    else if(param.indexOf('startOfDay') === 0) date.setHours(0,0,0,0);
+    else if(param.indexOf('endOfDay') === 0) date.setHours(23, 59, 59, 999);
     else dateIsChanged = false;
 
     if(dateIsChanged){
