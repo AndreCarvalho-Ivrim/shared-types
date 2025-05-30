@@ -87,6 +87,10 @@ export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
   columns: (StepViewColumnType | StepViewColumnGroupType)[],
   additionalTables?: AdditionalTablesType[]
+  arrayTable?: {
+    /** Id do array de objects */
+    id: string,
+  }
 }
 export interface StepViewColumnGroupType extends Omit<StepViewColumnType, 'type'>{
   type: 'group',
