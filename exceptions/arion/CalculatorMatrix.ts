@@ -31,19 +31,14 @@ export interface ICircuit {
   connector_type: string;
   type_of_protection: string;
   activation_deadline?: string;
-  twelve_months_net?: number;
-  twelve_months_net_rate?: number;
-  twenty_four_months_net?: number;
-  twenty_four_months_net_rate?: number;
-  thirty_six_months_net?: number;
-  thirty_six_months_net_rate?: number;
-  forty_eight_months_net?: number;
-  forty_eight_months_net_rate?: number;
-  sixty_months_net?: number;
-  sixty_months_net_rate?: number;
   observations?: string;
   margin_recurring?: number;
   margin_eventual?: number;
+  contract_term_values: {
+    term: number,
+    months_net: number,
+    months_net_rate: number
+  }[]
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
