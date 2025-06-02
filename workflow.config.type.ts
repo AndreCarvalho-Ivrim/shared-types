@@ -178,8 +178,10 @@ export type HandlerAppendType = {
   condition?: string;
   value: any;
   mode: 'overwrite' | 'merge';
-  name: string;
-  static?: boolean
+  name: string | '@entity';
+  static?: boolean,
+  /** Caso utilize o name = '@entity', adicionar essa propriedade */
+  entity_data?: WFConfigObserverDataEntity
 }
 
 export type HandlerMapType = {
