@@ -885,12 +885,13 @@ export interface PublicRouteGet{
 export interface WorkflowConfigExceptionView{
   slug: string,
   title: string,
+  permission?: string,
   icon?: AvailableIcons,
   subpage_of_flow_data?: {
     identifier: string,
-    view_mode?: { condition?: string, slug: string }[]
-  },
-  permission?: string
+    view_mode?: { condition?: string, slug: string }[],
+    is_public?: boolean
+  }
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
