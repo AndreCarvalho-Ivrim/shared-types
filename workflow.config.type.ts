@@ -1408,7 +1408,7 @@ export interface WorkflowConfigActionsType {
   available_view_modes?: string[],
   render?: {
     in: WFCActionRenderIn,
-    /** Não implementado */
+    /** Quando renderizado no footer-slide-over, tem acesso a prop is_stateless */
     condition?: string,
     /** Tipo do botão, quando in = 'footer-slide-over' */
     theme?: 'warning' | 'info' | 'danger' | 'success' | 'primary' | 'light'
