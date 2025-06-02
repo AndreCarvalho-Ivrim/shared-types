@@ -34,6 +34,13 @@ export type StepItemAttrMaskDynamicType = {
   pattern: string,
   autocomplete?: { fill: string, direction: 'left' | 'right' }
 }
+export type StepItemAttrMaskStringType = {
+  type: 'string',
+  /**
+   * Palavras que devem permanecer 100% em minúsculas
+   */
+  lowercaseWords: string[]
+}
 export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info';
 export type TargetModeType = 'single' | 'multiple' | 'trigger' | 'final';
 export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
@@ -53,7 +60,7 @@ export interface StepItemType{
   type: StepItemAttrTypeType,
   mode: 'field',
   mask?: StepItemAttrMaskType,
-  dynamic_mask?: StepItemAttrMaskDynamicType,
+  dynamic_mask?: StepItemAttrMaskDynamicType | StepItemAttrMaskStringType,
   label?: string,
   placeholder?: string,
   subtitle?: string,
