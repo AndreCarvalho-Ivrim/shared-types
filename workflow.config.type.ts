@@ -717,7 +717,11 @@ export interface WorkflowConfigSlasType {
    * Configurar para exibir um outher field no lugar do stay caso o stay não esteja definido na etapa \
    * passe a key do outher_fields
    */
-  replacement_stay?: string
+  replacement_stay?: string,
+  variation_step_sla?: {
+    condition: string,
+    modifier: { value: number, mode: 'percent' }
+  }[]
 }
 export interface WFConfigSlaNotifyType {
   subject: string,
