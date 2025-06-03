@@ -11,8 +11,12 @@ export interface ICircuit {
   cnl: string;
   latitude_a: string;
   longitude_a: string;
+  
   monthly_cancellation_fee: number;
   installation_fee: number;
+  gross_unit_price: number;
+  gross_installation_unit: number;
+
   contracted_operator?: string;
   monthly_fee: number;
   own_network: string;
