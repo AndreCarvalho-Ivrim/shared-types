@@ -673,6 +673,10 @@ export interface WorkflowAuthType {
 type AvailableTimeToNotify = 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
 export const availableTimeToNotify: AvailableTimeToNotify[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 export type AvailableHoursType = Partial<Record<0 | 1 | 2 | 3 | 4 | 5 | 6, [string, string]>>
+export type WFConfigSlaVariationType = {
+  condition: string,
+  modifier: { value: number, mode: 'percent', label: string }
+}
 export interface WorkflowConfigSlasType {
   title: string,
   icon?: AvailableIcons,
@@ -718,10 +722,7 @@ export interface WorkflowConfigSlasType {
    * passe a key do outher_fields
    */
   replacement_stay?: string,
-  variation_step_sla?: {
-    condition: string,
-    modifier: { value: number, mode: 'percent' }
-  }[]
+  variation_step_sla?: WFConfigSlaVariationType[]
 }
 export interface WFConfigSlaNotifyType {
   subject: string,
