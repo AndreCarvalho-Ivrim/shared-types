@@ -178,6 +178,10 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
    * dois números separados por virgula(,)
    */
   mask?: StepViewAttrMaskType,
+  condition_mask?: {
+    type: StepViewAttrMaskType,
+    condition: string
+  }[],
   rules?: {
     /** 
      * STRING CONDITIONAL
