@@ -3,6 +3,18 @@ import { StepViewType } from "./step.item.view.type"
 import { WorkflowConfigFilterType } from "./workflow.config.type"
 
 export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)'
+export type ReportAnalyticsSearchDynamicColumnType = {
+  /** Desestruturação de array */
+  mode: 'array-destructuring',
+  /** ID do array p/ desestruturação */
+  id: 'circuits.contract_term_values',
+  generate_columns_with: 'register-with-more-positions' | 'first-register',
+  condition?: string, 
+  columns: {
+    'Mensalidade @[term] Meses líquido': '@find(circuits.contract_term_values,$term;#eq;*@[term],months_net)',
+    'Taxa de instalação líquida @[term] meses': '@find(circuits.contract_term_values,$term;#eq;*@[term],months_net_rate)',
+  }
+}
 export interface ReportAnalyticsSearchType{
   request: 'flow_datas' | 'flow_entities',
   /**
@@ -33,7 +45,8 @@ export interface ReportAnalyticsSearchType{
    * 
    * ! Ainda não há suporte para mais de uma referência cumulativa !
    */
-  cumulative?: string[]
+  cumulative?: string[],
+  dynamicColumns?: ReportAnalyticsSearchDynamicColumnType[]
 }
 export interface ReportAnalyticsSearchQuery{
   /** strc */
