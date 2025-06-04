@@ -37,7 +37,11 @@ export interface ICircuit {
   contract_term_values: {
     term: number,
     months_net: number,
-    months_net_rate: number
+    months_net_rate: number,
+    months_gross?: number,
+    months_gross_rate?: number,
+    months_gross_cotepe?: number,
+    months_gross_cotepe_rate?: number,
   }[],
   activation_period?: number;
 }
