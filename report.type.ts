@@ -10,10 +10,7 @@ export type ReportAnalyticsSearchDynamicColumnType = {
   id: 'circuits.contract_term_values',
   generate_columns_with: 'register-with-more-positions' | 'first-register',
   condition?: string, 
-  columns: {
-    'Mensalidade @[term] Meses líquido': '@find(circuits.contract_term_values,$term;#eq;*@[term],months_net)',
-    'Taxa de instalação líquida @[term] meses': '@find(circuits.contract_term_values,$term;#eq;*@[term],months_net_rate)',
-  }
+  columns: Record<string, string>
 }
 export interface ReportAnalyticsSearchType{
   request: 'flow_datas' | 'flow_entities',
