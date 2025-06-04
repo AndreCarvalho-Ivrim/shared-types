@@ -187,6 +187,11 @@ export type HandlerAppendType = {
 export type HandlerMapType = {
   type: 'map';
   /**
+  * Utilizado para informar que será um novo item dentro do array \
+  * Caso já tenha valores dentro do array não serão afetados por esse handler
+  * */
+  new_item?: boolean;
+  /**
    * Substitui o this pelo valor informado \
    * Como o this pode está sendo usando dentro de outros contextos, para evitar conflitos utilize o reference_this
    * */
