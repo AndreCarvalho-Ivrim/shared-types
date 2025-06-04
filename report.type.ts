@@ -4,12 +4,25 @@ import { WorkflowConfigFilterType } from "./workflow.config.type"
 
 export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)'
 export type ReportAnalyticsSearchDynamicColumnType = {
-  /** Desestruturação de array */
+  /**
+   * - array-destructuring: Desestruturação de array, irá gerar as colunas dinamicamente, \
+   * utilizando a referência de um array, com cada posição do array gerando um conjunto \
+   * de colunas.
+   **/
   mode: 'array-destructuring',
   /** ID do array p/ desestruturação */
-  id: 'circuits.contract_term_values',
+  id: string,
+  /**
+   * Ambos os parametros são baseados no mode [array-destructuring].
+   * 
+   * - register-with-more-positions: Irá encontrar o registro onde o array tem o maior \
+   * número de posições, e esse registro será utilizado para gerar as colunas.
+   * 
+   * - first-register: Irá pegar o primeiro registro, e ele será utilizado para gerar as \
+   * colunas.
+   * 
+   */
   generate_columns_with: 'register-with-more-positions' | 'first-register',
-  condition?: string, 
   columns: Record<string, string>
 }
 export interface ReportAnalyticsSearchType{
