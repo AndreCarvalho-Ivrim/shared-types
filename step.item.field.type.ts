@@ -42,7 +42,11 @@ export type StepItemAttrMaskStringType = {
    * Palavras que devem permanecer 100% em minúsculas
    */
   lowercaseWords: string[],
-  /** Quando esse campo está habilitado é possível desativar a formatação da máscara */
+  /**
+   * Quando esse campo está habilitado é possível desativar a formatação da máscara
+   * 
+   * Obs. Só funciona se o item possuir label
+   **/
   optional?: boolean
 }
 export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info';
