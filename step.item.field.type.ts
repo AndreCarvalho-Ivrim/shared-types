@@ -252,6 +252,11 @@ export interface StepItemCustomDataEditableTableInline{
     field_blacklist?: string[],
     disable_row_deletion?: boolean,
     disable_add_row?: boolean,
+    /** Configurações da planilha de exportação ou importação */
+    sheets?: {
+      export_sheet?: { name: string },
+      import_sheet?: { name: string },
+    }
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
