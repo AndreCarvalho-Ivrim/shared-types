@@ -106,4 +106,5 @@ export type AvailableIcons =
   'SupportIcon' |
   'SaveAltIcon' |
   'CogIcon' |
-  'StarIcon'
+  'StarIcon' |
+  'SendIcon'

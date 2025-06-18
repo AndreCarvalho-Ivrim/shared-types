@@ -90,6 +90,13 @@ export interface StepViewTableType extends StepViewBaseType{
   arrayTable?: {
     /** Id do array de objects */
     id: string,
+    /**
+     * Condicional para validar se uma posição do array será renderizado ou não. Observações:
+     * - Use [$flow_data:] para mencionar dados que estão no flow-data
+     * - Use [$] para acessar dados que estão sendo observados no formulário
+     * - Use [$this.] para acessar dados do laço atual
+     **/
+    condition?: string
   }
 }
 export interface StepViewColumnGroupType extends Omit<StepViewColumnType, 'type'>{
@@ -178,6 +185,10 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
    * dois números separados por virgula(,)
    */
   mask?: StepViewAttrMaskType,
+  condition_mask?: {
+    type: StepViewAttrMaskType,
+    condition: string
+  }[],
   rules?: {
     /** 
      * STRING CONDITIONAL

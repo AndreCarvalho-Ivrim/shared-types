@@ -187,6 +187,11 @@ export type HandlerAppendType = {
 export type HandlerMapType = {
   type: 'map';
   /**
+  * Utilizado para informar que será um novo item dentro do array \
+  * Caso já tenha valores dentro do array não serão afetados por esse handler
+  * */
+  new_item?: boolean;
+  /**
    * Substitui o this pelo valor informado \
    * Como o this pode está sendo usando dentro de outros contextos, para evitar conflitos utilize o reference_this
    * */
@@ -673,6 +678,10 @@ export interface WorkflowAuthType {
 type AvailableTimeToNotify = 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
 export const availableTimeToNotify: AvailableTimeToNotify[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 export type AvailableHoursType = Partial<Record<0 | 1 | 2 | 3 | 4 | 5 | 6, [string, string]>>
+export type WFConfigSlaVariationType = {
+  condition: string,
+  modifier: { value: number, mode: 'percent', label: string }
+}
 export interface WorkflowConfigSlasType {
   title: string,
   icon?: AvailableIcons,
@@ -717,7 +726,8 @@ export interface WorkflowConfigSlasType {
    * Configurar para exibir um outher field no lugar do stay caso o stay não esteja definido na etapa \
    * passe a key do outher_fields
    */
-  replacement_stay?: string
+  replacement_stay?: string,
+  variation_step_sla?: WFConfigSlaVariationType[]
 }
 export interface WFConfigSlaNotifyType {
   subject: string,

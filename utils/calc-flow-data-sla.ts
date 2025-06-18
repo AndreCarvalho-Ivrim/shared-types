@@ -169,6 +169,26 @@ function calcHoursToExpireSla({ step, flowData, workflow, exceptionDays }:CalcSl
       })
       timeToExpireOutherFields = undefined
     }
+
+    if(workflow.config?.slas?.variation_step_sla) {
+      for(const variationSla of workflow.config.slas.variation_step_sla){
+        if(!checkStringConditional(variationSla.condition, flowData.data)) continue;
+        const { mode, value } = variationSla.modifier;
+        if(mode === 'percent'){
+          const originalSla = step.sla.stay;
+          const timeRemovedSla = originalSla - (originalSla * value);
+          let percentageOfDelay = timeToExpireSla < 0 ? (Math.abs(timeToExpireSla) * value) : timeToExpireSla;
+
+          if (timeToExpireSla < 0) {
+            percentageOfDelay = -percentageOfDelay;
+          } else {
+            percentageOfDelay = percentageOfDelay + timeRemovedSla;
+          }
+
+          timeToExpireSla = percentageOfDelay;          
+        }
+      }
+    }
     
     const closestToExpiration = !timeToExpireOutherFields || timeToExpireOutherFields.length === 0 ? timeToExpireSla : (timeToExpireOutherFields.filter(
       (d) => d !== undefined

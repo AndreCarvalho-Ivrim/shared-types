@@ -3,6 +3,7 @@ interface ValidateDataParams {
   circuits: Record<string, any>[];
 }
 export interface ICircuit {
+  link_group_key?: string,
   code: string;
   speed: string;
   address_a: string;
@@ -34,15 +35,22 @@ export interface ICircuit {
   interface: string;
   connector_type: string;
   type_of_protection: string;
-  activation_deadline?: string;
   observations?: string;
   margin_recurring?: number;
   margin_eventual?: number;
   contract_term_values: {
     term: number,
     months_net: number,
-    months_net_rate: number
-  }[]
+    months_net_rate: number,
+    months_gross?: number,
+    months_gross_rate?: number,
+    months_gross_cotepe?: number,
+    months_gross_cotepe_rate?: number,
+  }[],
+  activation_deadline?: number;
+  third_party_provider?: string;
+  contracted_monthly?: number;
+  contracted_installation?: number;
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
@@ -76,7 +84,7 @@ export interface ICalculatorMatrixData {
   /** Instalação */
   installationFee: number;
   /** Quantidade de links por estado e velocidade */
-  linkQtdByUF: CalculatorMatrixUFLinkQtdByUF;
+  linkQtd: number;
   /** Multa por cancelamento */
   costCancellationPenalty?: number;
 }
@@ -209,7 +217,7 @@ export class CalculatorMatrix {
       speed,
       monthlyFee,
       installationFee,
-      linkQtdByUF,
+      linkQtd,
       costCancellationPenalty
     } = data;
     const monthly_fee = monthlyFee;
@@ -220,9 +228,7 @@ export class CalculatorMatrix {
     // Validação da célula F2 da planilha
     // [ ] COLOCAR UMA VALIDAÇÃO PARA ISSO NO FLOW DATA, PORQUE O GRUPO "PREÇO DE VENDA RECORRENTE" E "PREÇO DE VENDA EVENTUAL OU TAXA DE INSTALAÇÃO VALIDAM POR ESSE CAMPO"
     if (customerProfile === 'Corporativo' && !!cotepeAct && String(cotepeAct) === 'true') throw new Error('Favor alterar ATO COTEPE para NÃO');
-
-    /** Quantidade de Links */
-    const linkQtd = linkQtdByUF[uf][speed.toLowerCase()] ?? 1;
+ 
     /** Custo unitário recorrente com impostos */
     const recurringUnitCostWithTax = monthly_fee;
     /** Custo unitário da instalação com impostos */
@@ -298,7 +304,7 @@ export class CalculatorMatrix {
   }
 
   static getQuantityLinksByUFandSpeed(circuits: ICircuit[]) {
-    const links: Record<string, any> = {};
+    const links: Record<string, number> = {};
     for (const circuit of circuits) {
       let uf = circuit.uf_a;
       if(!uf) {
@@ -306,18 +312,26 @@ export class CalculatorMatrix {
         circuit.uf_a = uf;
       };
 
-      const monthly_fee = circuit.monthly_fee;
-      const installation_fee = circuit.installation_fee;
-      const speed = String(circuit.speed).toLowerCase();
-      if (!monthly_fee || !installation_fee || !speed) continue;
-  
-      if (!links[uf]) links[uf] = { [speed]: 1 };
-      else {
-        if (!links[uf][speed]) links[uf][speed] = 1
-        else links[uf][speed] += 1
-      };
+      const linkGroupKey = CalculatorMatrix.makeLinkGroupKey(circuit);
+      if(!linkGroupKey) continue;
+
+      if (!links[linkGroupKey]) links[linkGroupKey] = 1;
+      else links[linkGroupKey] += 1;
     }
     return links;
+  }
+  static makeLinkGroupKey(circuit: ICircuit){
+    const uf = circuit.uf_a;
+    const monthly_fee = circuit.monthly_fee;
+    const installation_fee = circuit.installation_fee;
+    const speed = circuit.speed ? String(circuit.speed).toLowerCase() : undefined;
+    const product = circuit.product ? String(circuit.product).toLowerCase() : undefined;
+
+    if (!product || !uf || !monthly_fee || !installation_fee || !speed) return;
+
+    const linkGroupKey = [uf,product,speed].join('|');
+    circuit.link_group_key = linkGroupKey;
+    return linkGroupKey;
   }
   private static getUFByAdress(value: string) {
     const parts = value.split('. ');

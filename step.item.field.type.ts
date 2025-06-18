@@ -32,7 +32,22 @@ export type StepItemAttrMaskDynamicType = {
    * Separador Number: "-", "."
    */
   pattern: string,
-  autocomplete?: { fill: string, direction: 'left' | 'right' }
+  autocomplete?: { fill: string, direction: 'left' | 'right' },
+  /** Quando esse campo está habilitado é possível desativar a formatação da máscara */
+  optional?: boolean
+}
+export type StepItemAttrMaskStringType = {
+  type: 'string',
+  /**
+   * Palavras que devem permanecer 100% em minúsculas
+   */
+  lowercaseWords: string[],
+  /**
+   * Quando esse campo está habilitado é possível desativar a formatação da máscara
+   * 
+   * Obs. Só funciona se o item possuir label
+   **/
+  optional?: boolean
 }
 export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info';
 export type TargetModeType = 'single' | 'multiple' | 'trigger' | 'final';
@@ -53,7 +68,7 @@ export interface StepItemType{
   type: StepItemAttrTypeType,
   mode: 'field',
   mask?: StepItemAttrMaskType,
-  dynamic_mask?: StepItemAttrMaskDynamicType,
+  dynamic_mask?: StepItemAttrMaskDynamicType | StepItemAttrMaskStringType,
   label?: string,
   placeholder?: string,
   subtitle?: string,
@@ -237,6 +252,11 @@ export interface StepItemCustomDataEditableTableInline{
     field_blacklist?: string[],
     disable_row_deletion?: boolean,
     disable_add_row?: boolean,
+    /** Configurações da planilha de exportação ou importação */
+    sheets?: {
+      export_sheet?: { name: string },
+      import_sheet?: { name: string },
+    }
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
