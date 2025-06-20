@@ -178,7 +178,7 @@ export interface FlowNetworkParams {
     ref: string,
     condition?: string
   },
-  where?: Record<string, any>,
+  where?: Record<string, string>,
 }
 export type HandlerAppendType = {
   condition?: string;
