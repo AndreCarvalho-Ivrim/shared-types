@@ -163,16 +163,22 @@ export interface FlowNetworkParams {
      * ```{ [target_successfuly_id]: [origin_data_id] } ``` \
      * Especifica quais dados serão copiados para o registro de origem e onde. 
      */
-    success?: Record<string, string>
+    success?: Record<string, any>
     /** 
      * Caso gere erro, onde quer armazenar a resposta de erro no registro de origem, \
      * e se quer colocar uma mensagem padrão, ou se não preenchido, usar a retorna no destino 
      */
     error?: {
       key: string,
-      default?: string
+      default?: string,
+      append?: Record<string, any>
     }
-  }
+  },
+  scope?: {
+    ref: string,
+    condition?: string
+  },
+  where?: Record<string, any>,
 }
 export type HandlerAppendType = {
   condition?: string;
