@@ -161,7 +161,9 @@ export interface FlowNetworkParams {
   effect?: {
     /** 
      * ```{ [target_successfuly_id]: [origin_data_id] } ``` \
-     * Especifica quais dados serão copiados para o registro de origem e onde. 
+     * Especifica quais dados serão copiados para o registro de origem e onde. \
+     * Utilize '*' para inverter a key e o value: [origin_data_id](key): [target_successfuly_id](value) \
+     * Utilizer '**' para defirnir o [target_successfuly_id](value) como um valor estatico
      */
     success?: Record<string, any>
     /** 
@@ -174,11 +176,19 @@ export interface FlowNetworkParams {
       append?: Record<string, any>
     }
   },
+  /**
+  * Utilizado para montar a query quer irá buscar um flowData para atualizar \
+  * Não diponivel no one_to_many
+  */
+  where?: Record<string, string>
+  /**
+  * Utilizado para buscar uma lista(array) e atualizar o laço com o valor de match \
+  * Diponivel apenas com o where
+  */
   scope?: {
     ref: string,
     condition?: string
   },
-  where?: Record<string, string>,
 }
 export type HandlerAppendType = {
   condition?: string;
