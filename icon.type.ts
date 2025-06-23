@@ -3,6 +3,7 @@ export type AvailableIcons =
   'ChevronUpDownIcon' |
   'ChevronsRightIcon' |
   'ArrowRightIcon' |
+  'ArrowDownRightIcon' |
   'ArrowDownCircleIcon' |
   'CloseIcon' |
   'TrashIcon' |
