@@ -121,6 +121,7 @@ export interface WfConfigObserverBackupData{
 }
 export interface FlowNetworkParams {
   flow_id: string,
+  restrictions?: { where: any }[],
   /**
    * Ao usar esse parametro, ele criará vários flowDatas a partir de um array de objetos.
    */
