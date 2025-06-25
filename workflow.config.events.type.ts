@@ -331,4 +331,10 @@ export interface RelationshipWithFlowEntityEventEffect{
     error_message?: Record<string, string>,
     breakExec?: boolean,
     condition?: string,
+    trigger_event?: {
+      /** Primeiro parâmetro de match para localizar o evento */
+      name: string,
+      /** Fazer match por condição */
+      find_by_condition?: string
+    }
   }

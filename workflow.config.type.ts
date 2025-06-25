@@ -121,6 +121,7 @@ export interface WfConfigObserverBackupData{
 }
 export interface FlowNetworkParams {
   flow_id: string,
+  restrictions?: { where: any }[],
   /**
    * Ao usar esse parametro, ele criará vários flowDatas a partir de um array de objetos.
    */
@@ -161,18 +162,34 @@ export interface FlowNetworkParams {
   effect?: {
     /** 
      * ```{ [target_successfuly_id]: [origin_data_id] } ``` \
-     * Especifica quais dados serão copiados para o registro de origem e onde. 
+     * Especifica quais dados serão copiados para o registro de origem e onde. \
+     * Utilize '*' para inverter a key e o value: [origin_data_id](key): [target_successfuly_id](value) \
+     * Utilizer '**' para defirnir o [target_successfuly_id](value) como um valor estatico
      */
-    success?: Record<string, string>
+    success?: Record<string, any>
     /** 
      * Caso gere erro, onde quer armazenar a resposta de erro no registro de origem, \
      * e se quer colocar uma mensagem padrão, ou se não preenchido, usar a retorna no destino 
      */
     error?: {
       key: string,
-      default?: string
+      default?: string,
+      append?: Record<string, any>
     }
-  }
+  },
+  /**
+  * Utilizado para montar a query quer irá buscar um flowData para atualizar \
+  * Não diponivel no one_to_many
+  */
+  where?: Record<string, string>
+  /**
+  * Utilizado para buscar uma lista(array) e atualizar o laço com o valor de match \
+  * Diponivel apenas com o where
+  */
+  scope?: {
+    ref: string,
+    condition?: string
+  },
 }
 export type HandlerAppendType = {
   condition?: string;

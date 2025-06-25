@@ -225,7 +225,9 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
         arr = arr.map(v => Number(v));
       } else {
         val = String(val);
-        arr = arr.map(v => String(v));
+        if(val === '!!') arr = arr.map(v => !!v ? '!!':'');
+        else if(val === '!') arr = arr.map(v => !v || String(v) === 'false' ? '!':'')
+        else arr = arr.map(v => String(v));
       }
 
       return arr.includes(val);
