@@ -85,7 +85,16 @@ export interface ReplicateFlowDataType{
    * ponteiros de referência em cada uma das replicações para \
    * se referênciar as demais
    */
-  relate?: ReplicateFlowDataRelateType
+  relate?: ReplicateFlowDataRelateType,
+  /**
+   * Esse laço do array(ref) será redirecionado para o registro de origem (principal) \
+   * condition: utilizado para validar se o laço deverá redirecionado para o registro de origem, utilize _index para validar com index do laço \
+   * breakExec: utilizado para interromper a execução do laço e não gerar um novo registro a partir dele
+   */
+  enriched_main?: {
+    condition?: string,
+    breakExec?: boolean
+  }
 }
 export interface ConsolidateFlowDataEventType{
   query?: any,

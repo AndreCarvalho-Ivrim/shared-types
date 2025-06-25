@@ -184,7 +184,12 @@ export interface StepItemCustomDataSettings{
     mode: 'inline' | 'modal',
     /** Título que aparecerá no modal */
     title?: string,
-    resume: ConfigViewModeColumnsType[]
+    resume: ConfigViewModeColumnsType[],
+    /** Utilizado para gerar novos valores a partir do split de um campo */
+    split_field?: {
+      key: string,
+      separator: string
+    }
   }
 }
 export interface StepItemCDETTableType extends ConfigViewModeColumnsType{
