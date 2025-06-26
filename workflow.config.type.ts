@@ -1419,6 +1419,8 @@ export interface WFActionExportInDynamicSchema{
   entity_data_ref: string,
   /** key da entidade que armazena os modelos */
   entity_key: string,
+  /** Propriedades utilizadas para gerar as linhas do excel*/
+  cumulative: string[],
   /**
    * Caso o flow-data não tenha modelo selecionado ele utilizará o \
    * formato do report abaixo para gerar a exportação
