@@ -1410,6 +1410,24 @@ export interface WFActionFnCallReport {
   /** Parâmetros para realiar o auto download */
   parameters?: Record<string, any>
 }
+export interface WFActionExportInDynamicSchema{
+  type: 'call-export-in-dynamic-schema',
+  /**
+   * Referência do campo dentro do flow-data que contém o id \
+   * do schema selecionado
+   */
+  entity_data_ref: string,
+  /** key da entidade que armazena os modelos */
+  entity_key: string,
+  /** Propriedades utilizadas para gerar as linhas do excel*/
+  cumulative: string[],
+  /**
+   * Caso o flow-data não tenha modelo selecionado ele utilizará o \
+   * formato do report abaixo para gerar a exportação
+   */
+  default_report_id: string,
+  title: string
+}
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -1450,7 +1468,7 @@ export interface WorkflowConfigActionsType {
    * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
    * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest,
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema,
   group_buttons?: WorkflowConfigActionsGroupButtons
 }
 export interface WorkflowConfigActionsGroupButtons{

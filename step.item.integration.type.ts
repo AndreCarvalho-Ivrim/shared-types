@@ -61,6 +61,24 @@ export interface IntegrationExcelType {
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
+  /**
+   * Permite a configuração dos campos dinamicamente, com os campos de columns sendo a base para contrução \
+   * podendo personalizar os nomes de match, e também podem adicionar campos a mais, dependendo da configuração \
+   * adicionada.
+   **/
+  dynamic_schema?: {
+    /** Entidade que armazenará os modelos criados */
+    entity_id: string,
+    /** Propriedade do flow-data que armazenará o modelo selecionado */
+    store_selected_template: string,
+    /** Opção que define se permitirá campos adicionais ou não */
+    allows_additional_fields?: boolean,
+    /**
+     * Caso a opção [allows_additional_fields] estiver verdadeira, essa opção permitir \
+     * configurar o nome da propriedade que ira armazenar os campos adicionais
+     **/
+    store_outher_fields?: string,
+  },
   append_values?: Record<string, any>,
   /**
    * URL do template de importação para download. \
