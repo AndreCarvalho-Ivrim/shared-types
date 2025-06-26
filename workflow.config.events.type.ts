@@ -77,7 +77,10 @@ export interface ReplicateFlowDataType{
   inner_data?: Record<string, any>[],
   /** Campo referência para replicação */
   ref: string,
-  /** { 'campo-replicado': 'destino-do-campo' } */
+  /** 
+   * { 'campo-replicado': 'destino-do-campo' }
+   * Utilize _parent na 'campo-replicado' para referenciar o flowData principal
+   * */
   replace: Record<string, string>
   effects?: ReplicateFlowDataEffectType[],
   /**
