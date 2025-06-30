@@ -436,6 +436,8 @@ export class CalculatorMatrix {
     recurringSalesPriceWithPercentual,
     icmsArion
   }: ICalculateRecurringSalesPriceParams): ICalculateRecurringSalesPriceResul {
+    /** Divisor quando for Ato Cotepe */
+    const divisorCotepeAct = 76.35;
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -472,10 +474,10 @@ export class CalculatorMatrix {
         0;
 
     grossPriceTotalCotepe = customerProfile === 'Operadora' ? 
-      grossPriceTotal * (1 - icmsArion) : 
+      grossPriceTotal * (divisorCotepeAct / 100) : 
       0;
     grossPriceUnitCotepe = customerProfile === 'Operadora' ? 
-      grossPriceUnit * (1 - icmsArion) : 
+      grossPriceUnit * (divisorCotepeAct / 100) : 
       0;
   
     return {
