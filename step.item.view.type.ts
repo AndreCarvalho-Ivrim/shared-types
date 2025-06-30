@@ -52,6 +52,8 @@ export interface StepViewColumnType{
   /**
    * Caso use o \@link, o id será o link de redirecionamento, e caso precise de configurações a mais \
    * utilize a propriedade data.
+   * 
+   * Caso a url esteja no conteúdo da referência, deve utilizar o \@redirect-to
    */
   type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file' |  AvailableCustomItemModeType | 'group',
   /**
