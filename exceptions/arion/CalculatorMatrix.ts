@@ -223,7 +223,7 @@ export class CalculatorMatrix {
     const monthly_fee = monthlyFee;
     const installation_fee = installationFee;
 
-    if (!monthly_fee || !installation_fee) throw new Error('Existem circuitos sem mensalidade ou taxa de instalação');
+    if (operator !== 'claro' && (!monthly_fee || !installation_fee)) throw new Error('Existem circuitos sem mensalidade ou taxa de instalação');
 
     // Validação da célula F2 da planilha
     // [ ] COLOCAR UMA VALIDAÇÃO PARA ISSO NO FLOW DATA, PORQUE O GRUPO "PREÇO DE VENDA RECORRENTE" E "PREÇO DE VENDA EVENTUAL OU TAXA DE INSTALAÇÃO VALIDAM POR ESSE CAMPO"
