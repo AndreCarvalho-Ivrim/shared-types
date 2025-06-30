@@ -142,7 +142,8 @@ export interface FlowNetworkParams {
   match: Record<string, string>,
   /** Adicionar um valor no registro de destino */
   append_values?: Record<string, {
-    value: any
+    value: any,
+    condition?: string
   }>,
   /** 
    * [by-step]: irá usar a validação de um step(do target-wf) para receber os dados \
