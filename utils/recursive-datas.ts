@@ -2,9 +2,6 @@ export const handleRegexId = (id: string, item: { data: any }) => {
   const pattern = /@\[(.*?)\]/g;
   const matches = id.match(pattern);
   
-  if(id && id.includes('@isac')){
-    console.log({ id, item, matches });
-  }
   if(!matches) return undefined;
 
   const replacers : { shortcode: string, id: string, default?: string, translate?: Record<string, string> }[] = [];
