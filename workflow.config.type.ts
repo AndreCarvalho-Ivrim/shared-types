@@ -1337,10 +1337,10 @@ export interface WFCActionFnUpdateSelected {
     title: string
   }[],
   append_values: Record<string, any>,
-  trigger_action?: {
+  trigger_actions?: {
     step_id: string,
     action_key: string
-  }
+  }[]
   /**
    * Disparar eventos do observer.\
    * Para referenciar observador é necessário adicionar a ref no observer.
