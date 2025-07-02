@@ -1336,7 +1336,7 @@ export interface WFCActionFnUpdateSelected {
     condition: string,
     title: string
   }[],
-  append_values: Record<string, any>,
+  append_values?: Record<string, any>,
   trigger_actions?: {
     step_id: string,
     action_key: string
