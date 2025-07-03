@@ -136,7 +136,9 @@ export interface ICalculateRecurringSalesPriceFullAndPercentualParams {
   /** Custo unitário recorrente com impostos */
   recurringUnitCostWithTax: number;
   /** Custo Mensal com Overhead */
-  monthlyCostsWithOverhead: number;
+  monthlyCostsWithOverhead?: number;
+  /** Custo Eventual c/ Overhead */
+  possibleOverheadCosts?: number;
   /** Margem Recorrente */
   recurringMargin: number;
   /** ICMS da filial da Arion */
@@ -253,7 +255,7 @@ export class CalculatorMatrix {
     const recurringSalesPriceFull = this.calculateRecurringSalesPriceFull({
       recurringUnitCostWithTax,
       linkQtd,
-      monthlyCostsWithOverhead: hiringCosts.monthlyCostsWithOverhead,
+      possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
       recurringMargin,
       icmsArion,
     });
@@ -271,7 +273,10 @@ export class CalculatorMatrix {
       monthlyRecoveryICMS: hiringCosts.monthlyRecoveryICMS,
       recurringSalesPriceFull,
       recurringSalesPriceWithPercentual,
-      icmsArion
+      icmsArion,
+      recurringMargin,
+      possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
+      linkQtd
     });
     /** Preço de Venda Eventual ou Taxa de Instalação */
     const eventualSalePriceOrInstallationFee = this.calculateEventualSalePriceOrInstallationFee({
@@ -366,7 +371,7 @@ export class CalculatorMatrix {
   private static calculateRecurringSalesPriceFull({
     recurringUnitCostWithTax,
     linkQtd,
-    monthlyCostsWithOverhead,
+    possibleOverheadCosts,
     recurringMargin,
     icmsArion,
   }: ICalculateRecurringSalesPriceFullAndPercentualParams): ICalculateBaseResult {
@@ -378,8 +383,10 @@ export class CalculatorMatrix {
     let netPriceUnit = 0;
     /** Líquido total */
     let netPriceTotal = 0;
+    /** PIS e COFINS sem ATO COTEPE */
+    const pisCofins = 0.02993;
     if (recurringUnitCostWithTax) {
-      grossPriceTotal = monthlyCostsWithOverhead / (1 - (recurringMargin + icmsArion + 0.02993 + 0.011851))
+      grossPriceTotal = possibleOverheadCosts! / (1 - (recurringMargin + icmsArion + pisCofins))
       grossPriceUnit = grossPriceTotal / linkQtd;
       netPriceUnit = ((grossPriceUnit * (1 - icmsArion)) * (1 - (0.0365))) * (1 - 0.015);
       netPriceTotal = netPriceUnit * linkQtd;
@@ -412,7 +419,7 @@ export class CalculatorMatrix {
     /** SERVICE */
     let service = 0;
     if (recurringUnitCostWithTax) {
-      grossPriceTotal = this.roundDecimals(monthlyCostsWithOverhead / (1 - (recurringMargin + icmsArion + 0.01007)));
+      grossPriceTotal = this.roundDecimals(monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + 0.01007)));
       grossPriceUnit = grossPriceTotal / linkQtd;
       netPriceTotal = (((grossPriceTotal * 0.60) * (1 - icmsArion)) * (1 - (0.0365))) * (1 - 0.015) + (grossPriceTotal * 0.40 * (1 - (0.05 + 0.076 + 0.0165)));
       netPriceUnit = netPriceTotal / linkQtd;
@@ -431,11 +438,12 @@ export class CalculatorMatrix {
   }
   private static calculateRecurringSalesPrice({
     customerProfile,
-    monthlyRecoveryICMS,
     recurringSalesPriceFull,
     recurringSalesPriceWithPercentual,
-    icmsArion
-  }: ICalculateRecurringSalesPriceParams): ICalculateRecurringSalesPriceResul {
+    recurringMargin,
+    possibleOverheadCosts,
+    linkQtd
+  }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'possibleOverheadCosts' | 'linkQtd'>): ICalculateRecurringSalesPriceResul {
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -471,11 +479,13 @@ export class CalculatorMatrix {
         recurringSalesPriceWithPercentual.netPriceUnit :
         0;
 
+    /** PIS e COFINS do ATO COTEPE */
+    const pisCofins = 0.0365;
     grossPriceTotalCotepe = customerProfile === 'Operadora' ? 
-      grossPriceTotal * (1 - icmsArion) : 
+      (grossPriceTotal * (possibleOverheadCosts! / grossPriceTotal)) / (1 - (recurringMargin + pisCofins)) : 
       0;
     grossPriceUnitCotepe = customerProfile === 'Operadora' ? 
-      grossPriceUnit * (1 - icmsArion) : 
+      grossPriceTotalCotepe / linkQtd : 
       0;
   
     return {
