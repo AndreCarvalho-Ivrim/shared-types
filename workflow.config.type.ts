@@ -460,6 +460,17 @@ export interface ViewModeOrderBy{
   /** Utilizado apenas quando ViewMode é do tipo kanban e deseja ter um tipo de ordenação diferente por coluna */
   available_steps?: string[]
 }
+export interface WorkflowViewModeBaseSubOptions {
+  autocomplete: {
+    name: string,
+    condition?: string,
+    toFill: {
+      slug: string,
+      title: string,
+    },
+    filter_scope: WorkflowViewModeFilterScope[],
+  }
+}
 export interface WorkflowViewModeBase {
   title: string,
   description?: string,
@@ -485,7 +496,8 @@ export interface WorkflowViewModeBase {
    * Escopo de visualização do usuário. \
    * Está funcionalidade delimita os dados que este usuário pode interagir
    */
-  filter_scope?: WorkflowViewModeFilterScope[]
+  filter_scope?: WorkflowViewModeFilterScope[],
+  sub_options?: WorkflowViewModeBaseSubOptions,
   /** Caso essa opção seja configurada, ele redefinirá o comportamento padrão de redirecionamento
    *  de steps. Ou seja, quando clicar em um flowData na tabela, em vez de abrir o step atual, ele abrirá
    *  para o definido abaixo, e o mesmo se aplica após o envio do submit, que ele sempre redirecionará o
@@ -1330,7 +1342,11 @@ export interface WFCActionFnUpdateSelected {
     condition: string,
     title: string
   }[],
-  append_values: Record<string, any>,
+  append_values?: Record<string, any>,
+  trigger_actions?: {
+    step_id: string,
+    action_key: string
+  }[]
   /**
    * Disparar eventos do observer.\
    * Para referenciar observador é necessário adicionar a ref no observer.
