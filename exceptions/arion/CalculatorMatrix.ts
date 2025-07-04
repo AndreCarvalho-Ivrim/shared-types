@@ -256,6 +256,7 @@ export class CalculatorMatrix {
       recurringUnitCostWithTax,
       linkQtd,
       possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
+      monthlyCostsWithOverhead: hiringCosts.monthlyCostsWithOverhead,
       recurringMargin,
       icmsArion,
     });
@@ -276,6 +277,7 @@ export class CalculatorMatrix {
       icmsArion,
       recurringMargin,
       possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
+      monthlyCostsWithOverhead: hiringCosts.monthlyCostsWithOverhead,
       linkQtd
     });
     /** Preço de Venda Eventual ou Taxa de Instalação */
@@ -372,6 +374,7 @@ export class CalculatorMatrix {
     recurringUnitCostWithTax,
     linkQtd,
     possibleOverheadCosts,
+    monthlyCostsWithOverhead,
     recurringMargin,
     icmsArion,
   }: ICalculateRecurringSalesPriceFullAndPercentualParams): ICalculateBaseResult {
@@ -386,7 +389,7 @@ export class CalculatorMatrix {
     /** PIS e COFINS sem ATO COTEPE */
     const pisCofins = 0.02993;
     if (recurringUnitCostWithTax) {
-      grossPriceTotal = possibleOverheadCosts! / (1 - (recurringMargin + icmsArion + pisCofins))
+      grossPriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + pisCofins))
       grossPriceUnit = grossPriceTotal / linkQtd;
       netPriceUnit = ((grossPriceUnit * (1 - icmsArion)) * (1 - (0.0365))) * (1 - 0.015);
       netPriceTotal = netPriceUnit * linkQtd;
@@ -442,8 +445,9 @@ export class CalculatorMatrix {
     recurringSalesPriceWithPercentual,
     recurringMargin,
     possibleOverheadCosts,
+    monthlyCostsWithOverhead,
     linkQtd
-  }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'possibleOverheadCosts' | 'linkQtd'>): ICalculateRecurringSalesPriceResul {
+  }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'possibleOverheadCosts' | 'linkQtd' | 'monthlyCostsWithOverhead'>): ICalculateRecurringSalesPriceResul {
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -482,7 +486,7 @@ export class CalculatorMatrix {
     /** PIS e COFINS do ATO COTEPE */
     const pisCofins = 0.0365;
     grossPriceTotalCotepe = customerProfile === 'Operadora' ? 
-      (grossPriceTotal * (possibleOverheadCosts! / grossPriceTotal)) / (1 - (recurringMargin + pisCofins)) : 
+      (grossPriceTotal * (monthlyCostsWithOverhead! / grossPriceTotal)) / (1 - (recurringMargin + pisCofins)) : 
       0;
     grossPriceUnitCotepe = customerProfile === 'Operadora' ? 
       grossPriceTotalCotepe / linkQtd : 
