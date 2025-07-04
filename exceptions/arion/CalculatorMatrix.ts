@@ -3,6 +3,7 @@ interface ValidateDataParams {
   circuits: Record<string, any>[];
 }
 export interface ICircuit {
+  status?: 'Reprovado',
   link_group_key?: string,
   code: string;
   speed: string;
@@ -312,12 +313,14 @@ export class CalculatorMatrix {
 
   static getQuantityLinksByUFandSpeed(circuits: ICircuit[]) {
     const links: Record<string, number> = {};
-    for (const circuit of circuits) {
+    for (const circuit of circuits) {      
       let uf = circuit.uf_a;
       if(!uf) {
         uf = this.getUFByAdress(circuit.address_a);
         circuit.uf_a = uf;
       };
+      
+      if(circuit.status === 'Reprovado') continue;
 
       const linkGroupKey = CalculatorMatrix.makeLinkGroupKey(circuit);
       if(!linkGroupKey) continue;
@@ -329,12 +332,10 @@ export class CalculatorMatrix {
   }
   static makeLinkGroupKey(circuit: ICircuit){
     const uf = circuit.uf_a;
-    const monthly_fee = circuit.monthly_fee;
-    const installation_fee = circuit.installation_fee;
     const speed = circuit.speed ? String(circuit.speed).toLowerCase() : undefined;
     const product = circuit.product ? String(circuit.product).toLowerCase() : undefined;
 
-    if (!product || !uf || !monthly_fee || !installation_fee || !speed) return;
+    if (!product || !uf || !speed) return;
 
     const linkGroupKey = [uf,product,speed].join('|');
     circuit.link_group_key = linkGroupKey;
