@@ -156,6 +156,7 @@ export interface StepTypeRules{
    * [$flow_data:] antes do nome da prop.
    */
   render?: string,
+  switch_render?: string[],
   /** Utilizado para ter o funcionamento de createOrUpdate baseado nos dados de cadastro. */
   update_if_match?: {
     match: string[],
