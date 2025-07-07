@@ -79,6 +79,16 @@ export interface IntegrationExcelType {
      **/
     store_outher_fields?: string,
   },
+  /**
+   * Faz o pré-processamento do excel no frontend, interpretando a planilha e lidando com os erros no lado do front antes \
+   * de enviar os dados
+   */
+  preprocess?: {
+    /** Caso queira salvar a ordem e nome das colunas, especifique o nome da prop que armazenará esses dados */
+    save_order_columns?: string,
+    /** Caso queira salvar dados não conhecidos, especifique o nome da prop que armazerá esses dados */
+    save_outher_fields?: 'circuits.additional',  
+  }
   append_values?: Record<string, any>,
   /**
    * URL do template de importação para download. \
