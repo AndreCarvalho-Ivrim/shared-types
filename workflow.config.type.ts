@@ -1439,6 +1439,10 @@ export interface WFActionExportInDynamicSchema{
    * do schema selecionado
    */
   entity_data_ref: string,
+  /**
+   * Referência do campo dentro do flow-data que contém o item na versão de quando foi criado \
+   */
+  version_data_ref?: string,
   /** key da entidade que armazena os modelos */
   entity_key: string,
   /** Propriedades utilizadas para gerar as linhas do excel*/
