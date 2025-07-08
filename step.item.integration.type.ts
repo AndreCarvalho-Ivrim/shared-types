@@ -84,6 +84,8 @@ export interface IntegrationExcelType {
   /**
    * Faz o pré-processamento do excel no frontend, interpretando a planilha e lidando com os erros no lado do front antes \
    * de enviar os dados
+   * 
+   * (Recomendado utilizar em conjunto com o dynamic_schema)
    */
   preprocess?: {
     /** Caso queira salvar a ordem e nome das colunas, especifique o nome da prop que armazenará esses dados */
