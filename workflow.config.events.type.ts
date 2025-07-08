@@ -139,11 +139,7 @@ export interface ToAffectFlowDataEventType{
     /** REF */
     value: any,
     /** Se for true, o value será um valor direto e não uma referência. */
-    static?: boolean,
-    /** Utilizado para fazer o split caso for uma string \
-     * disponivel para 'in'
-     */
-    separetor?: string
+    static?: boolean
   }>,
   effects: {
     condition?: string,
