@@ -78,6 +78,8 @@ export interface IntegrationExcelType {
      * configurar o nome da propriedade que ira armazenar os campos adicionais
      **/
     store_outher_fields?: string,
+    /** Caso queira armazenar a versão da dynamic_schema importada, especifique o nome do caminho */
+    imported_version?: string
   },
   /**
    * Faz o pré-processamento do excel no frontend, interpretando a planilha e lidando com os erros no lado do front antes \
