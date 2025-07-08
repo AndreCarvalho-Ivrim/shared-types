@@ -87,7 +87,7 @@ export interface IntegrationExcelType {
     /** Caso queira salvar a ordem e nome das colunas, especifique o nome da prop que armazenará esses dados */
     save_order_columns?: string,
     /** Caso queira salvar dados não conhecidos, especifique o nome da prop que armazerá esses dados */
-    save_outher_fields?: 'circuits.additional',  
+    save_outher_fields?: string,
   }
   append_values?: Record<string, any>,
   /**
