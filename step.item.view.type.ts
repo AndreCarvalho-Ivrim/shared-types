@@ -127,6 +127,7 @@ export interface StepViewHorizontalTableType extends Omit<StepViewGroupTableType
     field: string,
     order: 'asc' | 'desc'
   }
+  filter?: { condition: string }[]
 }
 export interface StepViewTasksType extends StepViewBaseType{
   /**
