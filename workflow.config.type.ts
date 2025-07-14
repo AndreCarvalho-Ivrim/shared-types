@@ -548,6 +548,49 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
   flags?: KanbanFlagType[],
   tasks_indicator?: { id: string, status: StepViewTasksType['status'] }[]
 }
+type AvailableThemes = 'light' | 'danger' | 'warning' | 'info' | 'primary' | 'success';
+interface StaticBase{
+  options: {
+    _id: string,
+    description: string,
+    name: string,
+    [key: string]: any
+  }[]
+}
+interface DynamicBase{
+  entity_id: string,
+  relations: {
+    _id: string,
+    description: string,
+    name: string,
+    [key: string]: any
+  }
+}
+export interface WorkflowViewModeGroup extends WorkflowViewModeBase {
+  view_mode: 'group',
+  /** Por qual campo será realizado o agrupamento */
+  base: StaticBase | DynamicBase,
+  /** Lógica de redirecionamento de rota */
+  redirect_to: string,
+  /** current_step_id dos steps para identificar a evolução do projeto como um todo */
+  semantics_of_datas: {
+    pending?: any,
+    in_progress: any,
+    blocked?: any,
+    cancelled?: any,
+    finished: any,
+  },
+  /** Controle de status do grupo */
+  control_status: {
+    ref: string,
+    theme_by_value: Record<string, AvailableThemes>,
+    /** Status disponíveis.\
+     * \
+     * Exemplo: { available: {'Ativo': ['in_progress'], 'Pausado': ['pending'], 'Concluído': ['finished']} }
+     */
+    available: Record<string, string[]>,
+  },
+}
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
@@ -671,7 +714,7 @@ export interface WorkflowViewModeDashboardFn{
   data?: { filter?: any, dynamic_filters?: boolean }
 }
 
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard;
+export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup;
 
 export interface WorkflowAuthTemplateType {
   id: string,
