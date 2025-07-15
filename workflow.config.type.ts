@@ -548,7 +548,6 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
   flags?: KanbanFlagType[],
   tasks_indicator?: { id: string, status: StepViewTasksType['status'] }[]
 }
-type AvailableThemes = 'light' | 'danger' | 'warning' | 'info' | 'primary' | 'success';
 interface StaticBase{
   options: {
     _id: string,
@@ -583,7 +582,7 @@ export interface WorkflowViewModeGroup extends WorkflowViewModeBase {
   /** Controle de status do grupo */
   control_status: {
     ref: string,
-    theme_by_value: Record<string, AvailableThemes>,
+    theme_by_value: Record<string, ThemeColorType>,
     /** Status disponíveis.\
      * \
      * Exemplo: { available: {'Ativo': ['in_progress'], 'Pausado': ['pending'], 'Concluído': ['finished']} }
