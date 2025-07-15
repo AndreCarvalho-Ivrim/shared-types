@@ -548,6 +548,53 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
   flags?: KanbanFlagType[],
   tasks_indicator?: { id: string, status: StepViewTasksType['status'] }[]
 }
+interface StaticBase{
+  options: {
+    _id: string,
+    description: string,
+    name: string,
+    [key: string]: any
+  }[]
+}
+interface DynamicBase{
+  entity_id: string,
+  relations: {
+    _id: string,
+    description: string,
+    name: string,
+    [key: string]: any
+  }
+}
+export interface SemanticsOfDatasItem{
+  filters: {
+    /** Ver valores pré-definidos na tipagem WorkflowConfigFilterRefType */
+    ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+    value: any,
+    type: WorkflowConfigFilterType['type']
+  }[],
+  description: string,
+  title: string,
+}
+export interface WorkflowViewModeGroup extends WorkflowViewModeBase {
+  view_mode: 'group',
+  /** Por qual campo será realizado o agrupamento */
+  base: StaticBase | DynamicBase,
+  /** Lógica de redirecionamento de rota */
+  redirect_to: string,
+  /** current_step_id dos steps para identificar a evolução do projeto como um todo */
+  semantics_of_datas: {
+    pending?: SemanticsOfDatasItem,
+    in_progress: SemanticsOfDatasItem,
+    blocked?: SemanticsOfDatasItem,
+    cancelled?: SemanticsOfDatasItem,
+    finished: SemanticsOfDatasItem,
+  },
+  /** Controle de status do grupo */
+  control_status: {
+    ref: string,
+    theme_by_value: Record<string, ThemeColorType>
+  },
+}
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
@@ -671,7 +718,7 @@ export interface WorkflowViewModeDashboardFn{
   data?: { filter?: any, dynamic_filters?: boolean }
 }
 
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard;
+export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup;
 
 export interface WorkflowAuthTemplateType {
   id: string,
