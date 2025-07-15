@@ -565,6 +565,16 @@ interface DynamicBase{
     [key: string]: any
   }
 }
+export interface SemanticsOfDatasItem{
+  filters: {
+    /** Ver valores pré-definidos na tipagem WorkflowConfigFilterRefType */
+    ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+    value: any,
+    type: WorkflowConfigFilterType['type']
+  }[],
+  description: string,
+  title: string,
+}
 export interface WorkflowViewModeGroup extends WorkflowViewModeBase {
   view_mode: 'group',
   /** Por qual campo será realizado o agrupamento */
@@ -573,21 +583,16 @@ export interface WorkflowViewModeGroup extends WorkflowViewModeBase {
   redirect_to: string,
   /** current_step_id dos steps para identificar a evolução do projeto como um todo */
   semantics_of_datas: {
-    pending?: any,
-    in_progress: any,
-    blocked?: any,
-    cancelled?: any,
-    finished: any,
+    pending?: SemanticsOfDatasItem,
+    in_progress: SemanticsOfDatasItem,
+    blocked?: SemanticsOfDatasItem,
+    cancelled?: SemanticsOfDatasItem,
+    finished: SemanticsOfDatasItem,
   },
   /** Controle de status do grupo */
   control_status: {
     ref: string,
-    theme_by_value: Record<string, ThemeColorType>,
-    /** Status disponíveis.\
-     * \
-     * Exemplo: { available: {'Ativo': ['in_progress'], 'Pausado': ['pending'], 'Concluído': ['finished']} }
-     */
-    available: Record<string, string[]>,
+    theme_by_value: Record<string, ThemeColorType>
   },
 }
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
