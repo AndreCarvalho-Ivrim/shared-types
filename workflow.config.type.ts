@@ -591,6 +591,47 @@ export interface WorkflowViewModeGroup extends WorkflowViewModeBase {
     available: Record<string, string[]>,
   },
 }
+interface BaseIndicators {
+  name: string,
+  description?: string, 
+  group_by?: string,
+  icon?: AvailableIcons,
+  /** Indica se é uma contagem de itens. */
+  count?: boolean,
+}
+interface BaseIndicatorsFlowData extends BaseIndicators {
+  ref: 'flow-data',
+  query?:   {
+    ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+    value: any,
+    type: WorkflowConfigFilterType['type']
+  }[],
+}
+interface BaseIndicatorsEntity extends BaseIndicators {
+  ref: 'entity',
+  entity_id: string,
+}
+type TotalCards = BaseIndicatorsFlowData | BaseIndicatorsEntity;
+export interface IWorkflowViewModeResumeSemanticOfDatas extends Required<Pick<BaseIndicatorsFlowData, 'query'>> {
+  /** Nome do agrupamento */
+  name: string,
+}
+export interface WorkflowViewModeResume extends WorkflowViewModeBase {
+  view_mode: 'resume',
+  /** Cards totais\
+   * \
+   * Aparecem na parte superior da página.
+   */
+  total_cards: TotalCards[],
+  charts: (Pick<TotalCards, 'ref'> & {
+    /** Título da seção */
+    name: string,
+    /** Caso a ref seja uma entidade, é o id da entidade */
+    entity_id?: string,
+    chart_type: 'bar' | 'donut',
+    semantics_of_datas: IWorkflowViewModeResumeSemanticOfDatas[]
+  })[],
+}
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
@@ -714,7 +755,7 @@ export interface WorkflowViewModeDashboardFn{
   data?: { filter?: any, dynamic_filters?: boolean }
 }
 
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup;
+export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup | WorkflowViewModeResume;
 
 export interface WorkflowAuthTemplateType {
   id: string,
@@ -1721,7 +1762,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
 }
 export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecutorBase {
   type: 'make-notifications',
-  data: Array<Omit<WorkflowConfigNotificationType, 'condition' | 'separate_shipping'> & {
+  data: Array<Omit<WorkflowConfigNotificationType, 'condition'> & {
     /** 
      * Query de consulta do flowData seguindo padrões do mongodb. Com suporte ao \
      * codehelper ```__@now__```. O codehelper pode ser identificado caso esteja em \
@@ -1748,12 +1789,7 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
      * 
      * flow-datas (default)
      */
-    data_id?: string,
-    /**
-     * A separação de disparo deve acontecer apenas no makeNotifications \
-     * Não ha suporte para essa funcionalidade combinada com a rotina
-     */
-    separate_shipping?: boolean
+    data_id?: string
   }>
 }
 export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external' | 'ability-scheduling'; 
