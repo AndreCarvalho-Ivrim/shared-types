@@ -603,23 +603,51 @@ interface BaseIndicators {
   /** Indica se é uma contagem de itens. */
   count?: boolean,
 }
-interface BaseIndicatorsFlowData extends BaseIndicators {
+export interface IBaseIndicatorsFlowDataIBaseQuery {
+  ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+  value: any,
+  /** Caso seja um gráfico e do tipo 'entity', só foi implementato  */
+  type: WorkflowConfigFilterType['type']
+}
+export interface BaseIndicatorsFlowData extends BaseIndicators {
   ref: 'flow-data',
-  query?:   {
-    ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
-    value: any,
-    type: WorkflowConfigFilterType['type']
-  }[],
+  query?: IBaseIndicatorsFlowDataIBaseQuery[],
 }
 interface BaseIndicatorsEntity extends BaseIndicators {
   ref: 'entity',
   entity_id: string,
 }
 type TotalCards = BaseIndicatorsFlowData | BaseIndicatorsEntity;
-export interface IWorkflowViewModeResumeSemanticOfDatas extends Required<Pick<BaseIndicatorsFlowData, 'query'>> {
+export interface IWorkflowViewModeResumeSemanticOfDatas {
   /** Nome do agrupamento */
   name: string,
+  query: IBaseIndicatorsFlowDataIBaseQuery[]
 }
+
+interface IChartsRefFlowData {
+  ref: 'flow-data',
+  /** Título da seção */
+  name: string,
+  chart_type: 'bar' | 'donut',
+  semantics_of_datas: IWorkflowViewModeResumeSemanticOfDatas[],
+}
+
+interface IChartsRefEntity {
+  ref: 'entity',
+  /** Título da seção */
+  name: string,
+  /** É o id da entidade */
+  entity_id: string,
+  chart_type: 'bar' | 'donut',
+  semantics_of_datas: (IWorkflowViewModeResumeSemanticOfDatas & {
+    query: (IBaseIndicatorsFlowDataIBaseQuery & {
+      /** Suporte apenas para o tipo 'text' */
+      type: 'text'
+    })[]
+  })[],
+}
+
+type Charts = IChartsRefFlowData | IChartsRefEntity;
 export interface WorkflowViewModeResume extends WorkflowViewModeBase {
   view_mode: 'resume',
   /** Cards totais\
@@ -627,14 +655,7 @@ export interface WorkflowViewModeResume extends WorkflowViewModeBase {
    * Aparecem na parte superior da página.
    */
   total_cards: TotalCards[],
-  charts: (Pick<TotalCards, 'ref'> & {
-    /** Título da seção */
-    name: string,
-    /** Caso a ref seja uma entidade, é o id da entidade */
-    entity_id?: string,
-    chart_type: 'bar' | 'donut',
-    semantics_of_datas: IWorkflowViewModeResumeSemanticOfDatas[]
-  })[],
+  charts: Charts[],
 }
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
