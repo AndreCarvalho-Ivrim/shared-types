@@ -606,7 +606,6 @@ interface BaseIndicators {
 export interface IBaseIndicatorsFlowDataIBaseQuery {
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   value: any,
-  /** Caso seja um gráfico e do tipo 'entity', só foi implementato  */
   type: WorkflowConfigFilterType['type']
 }
 export interface BaseIndicatorsFlowData extends BaseIndicators {
@@ -650,12 +649,35 @@ interface IChartsRefEntity {
 type Charts = IChartsRefFlowData | IChartsRefEntity;
 export interface WorkflowViewModeResume extends WorkflowViewModeBase {
   view_mode: 'resume',
-  /** Cards totais\
+  /** Seção de cards totais\
    * \
    * Aparecem na parte superior da página.
    */
   total_cards: TotalCards[],
+  /** Seção de cards com gráficos */
   charts: Charts[],
+  /** Seção de listagem */
+  list: Pick <WorkflowViewModeGroup, 'control_status'> & {
+    name: string,
+    redirect_to: string,
+    ref: 'entity',
+    entity_id: string,
+    /** De-Para das keys do objeto */
+    from_to_fields: {
+      id: string,
+      title: string
+      date: string
+      status: string
+    },
+    progress_helpers: {
+      /** Key usada como identificação nos regitros */
+      base_ref: string,
+      /** Key que armazena a identificação */
+      data_ref: string,
+      /** Step final das tasks usado como base para calcular o progresso do projeto */
+      finished_step: string,
+    }
+  }
 }
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
