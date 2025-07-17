@@ -1788,7 +1788,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
 }
 export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecutorBase {
   type: 'make-notifications',
-  data: Array<Omit<WorkflowConfigNotificationType, 'condition'> & {
+  data: Array<Omit<WorkflowConfigNotificationType, 'condition' | 'separate_shipping'> & {
     /** 
      * Query de consulta do flowData seguindo padrões do mongodb. Com suporte ao \
      * codehelper ```__@now__```. O codehelper pode ser identificado caso esteja em \
@@ -1815,7 +1815,12 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
      * 
      * flow-datas (default)
      */
-    data_id?: string
+    data_id?: string,
+    /**
+     * A separação de disparo deve acontecer apenas no makeNotifications \
+     * Não ha suporte para essa funcionalidade combinada com a rotina
+     */
+    separate_shipping?: boolean
   }>
 }
 export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external' | 'ability-scheduling'; 
