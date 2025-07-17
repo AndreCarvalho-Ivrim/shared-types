@@ -434,6 +434,7 @@ type WorkflowFilterScopeFilter = Record<string, string | {
   /**
    * Além de valores hardcode, alguns notações que podem ser usadas são:
    * - \@me: para obter o id do usuário logado
+   * - \@action_permissions: para obter as ações que o usuário pode realizar
    * - \@array-empty: para consultar se um array está vazio
    * - \@not-exists: para verificar se uma propriedade não existe
    */
