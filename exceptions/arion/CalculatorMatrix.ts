@@ -226,16 +226,14 @@ export class CalculatorMatrix {
     const monthly_fee = monthlyFee;
     const installation_fee = installationFee;
 
-    if (operator !== 'claro' && (!monthly_fee || !installation_fee)) throw new Error('Existem circuitos sem mensalidade ou taxa de instalação');
-
     // Validação da célula F2 da planilha
     // [ ] COLOCAR UMA VALIDAÇÃO PARA ISSO NO FLOW DATA, PORQUE O GRUPO "PREÇO DE VENDA RECORRENTE" E "PREÇO DE VENDA EVENTUAL OU TAXA DE INSTALAÇÃO VALIDAM POR ESSE CAMPO"
     if (customerProfile === 'Corporativo' && !!cotepeAct && String(cotepeAct) === 'true') throw new Error('Favor alterar ATO COTEPE para NÃO');
  
     /** Custo unitário recorrente com impostos */
-    const recurringUnitCostWithTax = monthly_fee;
+    const recurringUnitCostWithTax = monthly_fee ?? 0;
     /** Custo unitário da instalação com impostos */
-    const unitCostInstallationWithTax = installation_fee;
+    const unitCostInstallationWithTax = installation_fee ?? 0;
     /** Custo mensal da multa por cancelamento */
     const monthlyCostCancellationPenalty = costCancellationPenalty ?? 0;
     /** ICMS da Operadora Contratada. Buscar o ICMS referente a empresa na planilha */
@@ -580,7 +578,7 @@ export class CalculatorMatrix {
   }
   //#region UTILS
   private static convertDecimals(value: number) {
-    return parseFloat(value.toFixed(2))
+    return !isNaN(value) ? parseFloat(value.toFixed(2)) : 0;
   }
   private static roundDecimals(value: number, type: 'ceil' | 'floor' = 'ceil') {
     const decimals = 2;
