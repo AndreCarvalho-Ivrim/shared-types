@@ -434,6 +434,7 @@ type WorkflowFilterScopeFilter = Record<string, string | {
   /**
    * Além de valores hardcode, alguns notações que podem ser usadas são:
    * - \@me: para obter o id do usuário logado
+   * - \@action_permissions: para obter as ações que o usuário pode realizar
    * - \@array-empty: para consultar se um array está vazio
    * - \@not-exists: para verificar se uma propriedade não existe
    */
@@ -628,7 +629,7 @@ interface IChartsRefFlowData {
   /** Título da seção */
   name: string,
   chart_type: 'bar' | 'donut',
-  semantics_of_datas: IWorkflowViewModeResumeSemanticOfDatas[],
+  semantics_of_datas: (IWorkflowViewModeResumeSemanticOfDatas & { color: string })[],
 }
 
 interface IChartsRefEntity {
@@ -639,10 +640,11 @@ interface IChartsRefEntity {
   entity_id: string,
   chart_type: 'bar' | 'donut',
   semantics_of_datas: (IWorkflowViewModeResumeSemanticOfDatas & {
-    query: (IBaseIndicatorsFlowDataIBaseQuery & {
+    query: (IBaseIndicatorsFlowDataIBaseQuery & { 
       /** Suporte apenas para o tipo 'text' */
       type: 'text'
-    })[]
+    })[],
+    color: string
   })[],
 }
 
@@ -1809,7 +1811,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
 }
 export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecutorBase {
   type: 'make-notifications',
-  data: Array<Omit<WorkflowConfigNotificationType, 'condition'> & {
+  data: Array<Omit<WorkflowConfigNotificationType, 'condition' | 'separate_shipping'> & {
     /** 
      * Query de consulta do flowData seguindo padrões do mongodb. Com suporte ao \
      * codehelper ```__@now__```. O codehelper pode ser identificado caso esteja em \
@@ -1836,7 +1838,12 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
      * 
      * flow-datas (default)
      */
-    data_id?: string
+    data_id?: string,
+    /**
+     * A separação de disparo deve acontecer apenas no makeNotifications \
+     * Não ha suporte para essa funcionalidade combinada com a rotina
+     */
+    separate_shipping?: boolean
   }>
 }
 export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external' | 'ability-scheduling'; 
