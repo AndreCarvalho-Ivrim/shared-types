@@ -108,4 +108,6 @@ export type AvailableIcons =
   'SaveAltIcon' |
   'CogIcon' |
   'StarIcon' |
-  'SendIcon'
+  'SendIcon' |
+  'ClockIcon' | 
+  'ListBulletIcon' 
