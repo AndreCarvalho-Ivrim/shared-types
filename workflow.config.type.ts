@@ -630,7 +630,7 @@ interface IChartsRefFlowData {
   /** Título da seção */
   name: string,
   chart_type: 'bar' | 'donut',
-  semantics_of_datas: IWorkflowViewModeResumeSemanticOfDatas[],
+  semantics_of_datas: (IWorkflowViewModeResumeSemanticOfDatas & { color: string })[],
 }
 
 interface IChartsRefEntity {
@@ -641,10 +641,11 @@ interface IChartsRefEntity {
   entity_id: string,
   chart_type: 'bar' | 'donut',
   semantics_of_datas: (IWorkflowViewModeResumeSemanticOfDatas & {
-    query: (IBaseIndicatorsFlowDataIBaseQuery & {
+    query: (IBaseIndicatorsFlowDataIBaseQuery & { 
       /** Suporte apenas para o tipo 'text' */
       type: 'text'
-    })[]
+    })[],
+    color: string
   })[],
 }
 
