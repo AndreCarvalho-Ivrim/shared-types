@@ -141,7 +141,7 @@ export type SubhandlerType = {
   /** verifica se na linha atual tem o search */
   search: string;
   /** Modo para pegar o valor */
-  mode: 'all' | 'includes' | 'after-includes' | 'before-includes';
+  mode: 'all' | 'includes' | 'after-includes' | 'before-includes' | 'ignore';
   /** quantos caracteres devem ser capturados ou até qual string */
   range?: number | string;
   /** Local onde será adicionado o valor */
