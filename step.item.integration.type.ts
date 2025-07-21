@@ -151,7 +151,9 @@ export type SubhandlerType = {
    * split-non-alphanumeric - Separa os valores por caracteres especiais exeto espaço \
    */
   formatter?: IntegrationExcelColumnTypeType | 'split-comma' | 'split-non-alphanumeric';
+  /** Se for true, será salvo apenas uma vez */
   writeOnce?: boolean;
+  required?: boolean
 }
 
 export type HandlerPDFType = {
