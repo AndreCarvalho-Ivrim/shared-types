@@ -179,6 +179,8 @@ export type HandlerPDFType = {
   key: string;
   /** Cada handler deve ter um indetificador unico */
   identifier: string;
+  /** Nome de indentificação do handler */
+  name: string
 }
 
 export interface IntegrationPDFType {
