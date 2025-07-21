@@ -195,5 +195,6 @@ export interface IntegrationPDFType {
   },
   /** Entitidade para salvar o registro de importação da planilha */
   import_registration?: string,
+  preprocess?: boolean
 }
 export type IntegrationsType = IntegrationExcelType | IntegrationOmieType | IntegrationPDFType;
