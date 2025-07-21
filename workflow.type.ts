@@ -1,4 +1,4 @@
-import { NotificationPreferenceByType, NotificationPreferenceType } from "./notification.type";
+import { NotificationPreferenceByType } from "./notification.type";
 import { WorkflowConfigType } from "./workflow.config.type";
 
 export type AvailableWorkflowThemeType = 'Cobrança' | 'Comercial' | 'Financeiro' | 'Gamificação' | 'Supply' | 'Field Management' | 'Gestão' | 'Administrativo';
@@ -17,6 +17,8 @@ export interface WorkflowType{
   title: string,
   description: string,
   user_id: string,
+  payment_status?: 'up-to-date' | 'expired',
+  active: boolean,
   hidden?: boolean,
   restrict?: boolean,
   user_name: string,

@@ -3,6 +3,11 @@ import { getRecursiveValue } from "./recursive-datas"
 export const isacRoutes = {
   home: () => '/',
   template: () => '/modelos',
+  chatbot: {
+    home: () => '/chatbot',
+    manage_contact: (module_name: string) => `/chatbot/contatos/${module_name}`,
+    manage: (module_name: string) => `/chatbot/${module_name}`,
+  },
   workflow: {
     home: () => '/fluxos',
     create: (module_name: string) => `/fluxo/${module_name}`,
@@ -11,11 +16,13 @@ export const isacRoutes = {
     entity: (module_name: string, entity: string) => `/entidade/${module_name}/${entity}`,
     calendar: (module_name: string) => `/calendario-do-fluxo/${module_name}`,
     sla_panel: (module_name: string) => `/painel-sla/${module_name}`,
+    open_dialog: (module_name: string) => `/dialogo-aberto/${module_name}`,
     logs: {
       main: (module_name: string) => `/logs/${module_name}`,
       log_type: (module_name: string, log_type: string) => `/logs/${module_name}/${log_type}`,
     },
     exception: (module_name: string, exception: string) => `/exception/${module_name}/${exception}`,
+    flowchat: (module_name: string, flow_data_id: string, chat_id: string) => `/flowchat/${module_name}/${flow_data_id}/${chat_id}`,
   },
   report: {
     home: () => '/report'
@@ -30,7 +37,9 @@ export const isacRoutes = {
   public: {
     workflow: (flow_id: string, variation: string, params?: Record<string, string>) => `/public/fluxo/${flow_id}/${variation}${
       params ? `?${Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&')}`:''
-    }`
+    }`,
+    flowchat: (flow_id: string, flow_data_id: string, owner_id: string, email_guest: string, message_id: string) => `/public/flowchat/${flow_id}/${flow_data_id}/${owner_id}/${email_guest}/${message_id}`,
+    exception: (flow_id: string, exception: string) => `/public/exception/${flow_id}/${exception}`,
   }
 }
 export const hubRoutes = {
@@ -86,6 +95,10 @@ export const hubRoutes = {
     all: () => '/notificacoes',
     preference: () => '/notificacoes/preferencias',
     create: () => '/notificacoes/criar'
+  },
+  support: {
+    home: () => '/suporte',
+    details: (_id: string) => `/suport/${_id}`
   }
 }
 export const isacBackRoutes = {
@@ -102,6 +115,7 @@ export type AvailableRegexUrls =
   '@isac:workflow.entity(module_name,entity)' |
   '@isac:workflow.calendar(module_name)' |
   '@isac:workflow.sla_panel(module_name)' |
+  '@isac:workflow.open_dialog(module_name)' |
   '@isac:report.home' |
   '@isac:permission(module_name)' |
   '@isac:icon' |
@@ -109,6 +123,9 @@ export type AvailableRegexUrls =
   '@isac:menu' |
   '@isac:admin_hub.workflows' |
   '@isac:public.workflow(flow_id,variation,params?)' |
+  '@isac:chatbot.home' | 
+  '@isac:chatbot.manage(module_name)' |
+  '@isac:chatbot.manage_contact(module_name)' |
   '@hub:admin_panel.companies' |
   '@hub:auth.login' |
   '@hub:auth.logout' |
@@ -135,6 +152,8 @@ export type AvailableRegexUrls =
   '@hub:notification.all' |
   '@hub:notification.preference' |
   '@hub:notification.create' |
+  '@hub:support.home' |
+  '@hub:support.details(_id)' |
   '@hub:session.home' |
   '@isac_back:public_route(flow_id,variation)' |
   '@hub:training.home' 
@@ -193,14 +212,16 @@ export const handleRegexUrl = (url: AvailableRegexUrls, token?: string): string 
 
   return url
 }
-export const getDomain = (application: 'hub' | 'isac' | 'isac_back', removeLastSlash = false) => {
-  let urls = { hub: '', isac: '', isac_back: '' }
+export const getDomain = (application: 'hub' | 'isac' | 'isac_back' |  'hub_back', removeLastSlash = false) => {
+  let urls = { hub: '', isac: '', isac_back: '', hub_back: '' }
   try {
     // @ts-ignore
     const WORKFLOW_MODULE = process.env.REACT_APP_WORKFLOW_MODULAR;
     urls.isac = WORKFLOW_MODULE!;
     // @ts-ignore
     urls.isac_back = process.env.REACT_APP_API_WF_URL
+    // @ts-ignore
+    urls.hub_back = process.env.REACT_APP_BASE_URL
   } catch (e) { }
   try {
     // @ts-ignore
@@ -208,10 +229,58 @@ export const getDomain = (application: 'hub' | 'isac' | 'isac_back', removeLastS
     urls.hub = PORTAL!;
     // @ts-ignore
     urls.isac_back = import.meta.env.VITE_BASE_URL
+    // @ts-ignore
+    urls.hub_back = import.meta.env.VITE_AUTH_URL
   } catch (e) { }
 
   let url = urls[application] ?? '';
   if (removeLastSlash && application !== 'isac_back' && url.substr(-1) === '/') url = url.substr(0, url.length - 1)
 
   return url
+}
+export const getSupportKeys = () => {
+  let support : { flow_id: string, steps: Record<(
+    "open-request-called" |
+    "internal-approval" |
+    "in-progress" |
+    "internal-test" |
+    "approval-test" |
+    "called-closed"
+  ), string> }= { flow_id: '', steps: {} as any };
+
+  try {
+    // @ts-ignore
+    support.flow_id = import.meta.env.VITE_SUPPORT_FLOW_ID;
+    // @ts-ignore
+    support.steps["open-request-called"] = import.meta.env.VITE_SUPPORT_OPEN_REQUEST_CALLED;
+    // @ts-ignore
+    support.steps["internal-approval"] = import.meta.env.VITE_SUPPORT_INTERNAL_APPROVAL;
+    // @ts-ignore
+    support.steps["in-progress"] = import.meta.env.VITE_SUPPORT_IN_PROGRESS;
+    // @ts-ignore
+    support.steps["internal-test"] = import.meta.env.VITE_SUPPORT_INTERNAL_TEST;
+    // @ts-ignore
+    support.steps["approval-test"] = import.meta.env.VITE_SUPPORT_APPROVAL_TEST;
+    // @ts-ignore
+    support.steps["called-closed"] = import.meta.env.VITE_SUPPORT_CALLED_CLOSED;
+  } catch (e) {
+    try {
+      // @ts-ignore
+      support.flow_id = process.env.REACT_APP_SUPPORT_FLOW_ID;
+      // @ts-ignore
+      support.steps["open-request-called"] = process.env.REACT_APP_SUPPORT_OPEN_REQUEST_CALLED;
+      // @ts-ignore
+      support.steps["internal-approval"] = process.env.REACT_APP_SUPPORT_INTERNAL_APPROVAL;
+      // @ts-ignore
+      support.steps["in-progress"] = process.env.REACT_APP_SUPPORT_IN_PROGRESS;
+      // @ts-ignore
+      support.steps["internal-test"] = process.env.REACT_APP_SUPPORT_INTERNAL_TEST;
+      // @ts-ignore
+      support.steps["approval-test"] = process.env.REACT_APP_SUPPORT_APPROVAL_TEST;
+      // @ts-ignore
+      support.steps["called-closed"] = process.env.REACT_APP_SUPPORT_CALLED_CLOSED;
+    } catch (e) { }
+  }
+  
+  return support
 }

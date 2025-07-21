@@ -4,30 +4,44 @@ export const handleRegexId = (id: string, item: { data: any }) => {
   
   if(!matches) return undefined;
 
-  const replacers : { id: string, default?: string }[] = [];
+  const replacers : { shortcode: string, id: string, default?: string, translate?: Record<string, string> }[] = [];
   matches.forEach(match => {
-    const values = match.substring(2, match.length - 1).split('|');
+    let [leanId, defaultValue] = match.substring(2, match.length - 1).split('|');
+    let translate : Record<string, string> | undefined = undefined;
+    if(leanId && leanId.includes('#')){
+      const splitedHashs = leanId.split('#');
+      leanId = splitedHashs.shift()!;
+      
+      translate = {};
+      splitedHashs.forEach((hashToTranslate) => {
+        const [key, val] = hashToTranslate.split(':');
+        if(key == undefined || val == undefined) return;
+        translate![key] = val;
+      })
+      if(Object.keys(translate).length === 0) translate = undefined;
+    }
+
     replacers.push({
-      id: values[0],
-      default: values.length === 2 ? values[1] : undefined
+      shortcode: match,
+      id: leanId,
+      default: defaultValue ?? undefined,
+      translate
     })
   });
   
   let value = id
   replacers.forEach((replacer) => {
     let temp = getRecursiveValue(replacer.id, item)
-
-    const toReplace = `@[${replacer.id}${replacer.default ? `|${replacer.default}`:''}]`;
-
+    if(replacer.translate && replacer.translate[temp]) temp = replacer.translate[temp];
     var max = 50;
     do{
-      value = value.replace(toReplace, temp ?? replacer.default ?? '')
+      value = value.replace(replacer.shortcode, temp ?? replacer.default ?? '')
       max--;
       if(max === 0){
         console.error('[findedAuthTemplate->loop] O replacer repetiu mais de 20x');
         break;
       }
-    }while(value.includes(toReplace))
+    }while(value.includes(replacer.shortcode))
   })
   return value;
 }
@@ -106,7 +120,26 @@ export const getRecursiveValue = (id: string, item: { data: any }) : any => {
 
   return value;
 }
-export const handleFillable = (id: string, flowData: any, value: any, i: number = 0, cumulative:  string[]) => {
+export const handleFillable = (id: string, flowData: any, value: any, i: number = 0, cumulative: string[] = []) : any => {
+  if (id.includes('[')) {
+    const matches = id.match(/(.+?)\[(\d+)\](.*)/)
+    if (matches) {
+      const [_, beforePath, index, afterPath] = matches
+
+      const cleanRemainder = afterPath.startsWith('.') ? afterPath.slice(1) : afterPath;
+
+      const newPath = cleanRemainder ? `${beforePath}.${cleanRemainder}` : beforePath;
+
+      return handleFillable(
+        newPath,
+        flowData,
+        value,
+        Number(index),
+        [...cumulative, beforePath]
+      );
+    }
+  }
+
   if(id.includes('.')){
     let ids = id.split('.');
     if(ids.length === 0) return flowData;
@@ -135,7 +168,9 @@ const handleRecursiveValue = (ids: string[], data: any, value: any, i: number, c
       return data;
     }
     else{
-      data[id] = value;
+      if (Array.isArray(data) && data[i] && typeof data[i] === 'object' && !Array.isArray(data[i])) {
+        data[i][id] = value;
+      } else data[id] = value;
       return data;
     }
   }

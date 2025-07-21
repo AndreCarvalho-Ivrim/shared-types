@@ -1,7 +1,8 @@
-export type IntegrationTypeType = 'excel' | 'omie';
+export type IntegrationTypeType = 'excel' | 'pdf' | 'omie';
 export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   excel: 'Excel (Importação)',
-  omie: 'Integração c/ Omie'
+  omie: 'Integração c/ Omie',
+  pdf: 'PDF'
 };
 
 export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
@@ -32,6 +33,9 @@ export interface IntegrationExcelType {
   placeholder?: string,
   required?: boolean,
   rules?: {
+    /** strc */
+    render?: string,
+    switch_render?: string[],
     duplicity?: {
       id: string,
       match: string[],
@@ -52,12 +56,49 @@ export interface IntegrationExcelType {
     restrict?: boolean,
     formatter?: IntegrationExcelRulesFormatterType,
     /** Filtra os dados de importação */
-    filters?: IntegrationExcelFilterRule[]
+    filters?: IntegrationExcelFilterRule[],
+    is_update?: boolean
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
+  /**
+   * Permite a configuração dos campos dinamicamente, com os campos de columns sendo a base para contrução \
+   * podendo personalizar os nomes de match, e também podem adicionar campos a mais, dependendo da configuração \
+   * adicionada.
+   **/
+  dynamic_schema?: {
+    /** Entidade que armazenará os modelos criados */
+    entity_id: string,
+    /** Propriedade do flow-data que armazenará o modelo selecionado */
+    store_selected_template: string,
+    /** Opção que define se permitirá campos adicionais ou não */
+    allows_additional_fields?: boolean,
+    /**
+     * Caso a opção [allows_additional_fields] estiver verdadeira, essa opção permitir \
+     * configurar o nome da propriedade que ira armazenar os campos adicionais
+     **/
+    store_outher_fields?: string,
+    /** Caso queira armazenar a versão da dynamic_schema importada, especifique o nome do caminho */
+    imported_version?: string
+  },
+  /**
+   * Faz o pré-processamento do excel no frontend, interpretando a planilha e lidando com os erros no lado do front antes \
+   * de enviar os dados
+   * 
+   * (Recomendado utilizar em conjunto com o dynamic_schema)
+   */
+  preprocess?: {
+    /** Caso queira salvar a ordem e nome das colunas, especifique o nome da prop que armazenará esses dados */
+    save_order_columns?: string,
+    /** Caso queira salvar dados não conhecidos, especifique o nome da prop que armazerá esses dados */
+    save_outher_fields?: string,
+  }
   append_values?: Record<string, any>,
-  /** URL do template de importação para download */
+  /**
+   * URL do template de importação para download. \
+   * Caso não seja informado, será gerado um template com base \
+   * na parametrização das colunas.
+   */
   model_url?: string,
   /** Entitidade para salvar o registro de importação da planilha */
   import_registration?: string,
@@ -72,7 +113,15 @@ export interface IntegrationExcelColumnType {
   id: string,
   name: string,
   type: IntegrationExcelColumnTypeType,
-  required?: boolean
+  required?: boolean,
+  rules?: {
+    /**
+     * Modificadores de string, é um array de substituições, onde \
+     * cada substituição é composta por duas strings, a str de pesquisa \
+     * e o valor a ser substituido.
+     */
+    str_replacers?: Array<[string, string]>
+  }
 }
 export interface IntegrationOmieType {
   key: string,
@@ -81,7 +130,70 @@ export interface IntegrationOmieType {
   label?: string,
   placeholder?: string,
   required?: boolean,
-  rules?: {},
+  rules?: {
+    render?: string,
+    switch_render?: string[]
+  },
   scope: string
 }
-export type IntegrationsType = IntegrationExcelType | IntegrationOmieType;
+
+export type SubhandlerType = {
+  /** verifica se na linha atual tem o search */
+  search: string;
+  /** Modo para pegar o valor */
+  mode: 'all' | 'includes' | 'after-includes' | 'before-includes';
+  /** quantos caracteres devem ser capturados ou até qual string */
+  range?: number | string;
+  /** Local onde será adicionado o valor */
+  key: string;
+  /** Adicionar uma formatação especial ao salvar o valor \
+   * split-comma - Separa os valores por vírgula \
+   * split-non-alphanumeric - Separa os valores por caracteres especiais exeto espaço \
+   */
+  formatter?: IntegrationExcelColumnTypeType | 'split-comma' | 'split-non-alphanumeric';
+  writeOnce?: boolean;
+}
+
+export type HandlerPDFType = {
+  /**
+   * Inicio onde iniciara a busca pelas propriedades do object \
+   * palavra - será iniciado quando a row for igual a palavra
+   * palavra% - será iniciado quando a row tiver o inicio igual a palavra
+   * %palavra - será iniciado quando a row tiver o fim igual a palavra
+   * %palavra% - será iniciado quando a row incluir palavra
+  */
+  start_search: string;
+  /**
+   * Fim onde finalizara a busca pelas propriedades do object \
+   * palavra - será iniciado quando a row for igual a palavra \
+   * palavra% - será iniciado quando a row tiver o inicio igual a palavra \
+   * %palavra - será iniciado quando a row tiver o fim igual a palavra \
+   * %palavra% - será iniciado quando a row incluir palavra \
+  */
+  end_search: string;
+  /** Defini quais propriedades serao buscadas */
+  columns: SubhandlerType[];
+  /** Local onde será adicionado o valor */
+  key: string;
+  /** Cada handler deve ter um indetificador unico */
+  identifier: string;
+}
+
+export interface IntegrationPDFType {
+  key: string,
+  type: 'pdf',
+  mode: 'integration',
+  label?: string,
+  placeholder?: string,
+  required?: boolean,
+  scope: string,
+  handlers: HandlerPDFType[],
+  append_values?: Record<string, any>,
+  rules?: {
+    render?: string,
+    switch_render?: string[]
+  },
+  /** Entitidade para salvar o registro de importação da planilha */
+  import_registration?: string,
+}
+export type IntegrationsType = IntegrationExcelType | IntegrationOmieType | IntegrationPDFType;

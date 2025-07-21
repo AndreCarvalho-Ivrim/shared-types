@@ -1,6 +1,8 @@
+import moment from 'moment'
 import { StepType } from "../step.type"
 import { AvailableHoursType } from "../workflow.config.type"
 import { WorkflowType } from "../workflow.type"
+import { checkStringConditional, getShortcodes } from './check-string-conditional'
 import { getRecursiveValue } from "./recursive-datas"
 
 export interface ExceptionDays{
@@ -20,66 +22,94 @@ interface CalcSlaResponse{
   closestToExpiration: number,
   unit: 'day' | 'hour'
 }
+
+export function getDataBySlaShortCode(key: string, data: Record<string, any>) {
+  const shortcodes: Record<string, any> = {
+    '@id': data._id,
+    '@user_id': data.user_id,
+    '@created_at': data.created_at,
+    '@updated_at': data.updated_at,
+    '@step_id': data.current_step_id,
+    '@owner_ids': data.owners?.user_ids ?? []
+  }
+  return shortcodes[key];
+}
+
 export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:CalcSlaParams) : (CalcSlaResponse | undefined) {
   try{
+    let timeToExpireSla: number = 0;
+    let unit: 'day' | 'hour' = 'day';
+    const currentDate = new Date()
+    currentDate.setHours(0, 0, 0, 0)
+
     if(step?.sla && step.sla.stay !== undefined && flowData.changed_step_at){
-      const unit = step.sla.unit ?? 'day';
+      unit = step.sla.unit ?? 'day';
 
       if(unit === 'hour') return calcHoursToExpireSla({ step, flowData, workflow, exceptionDays });
       
       const startDate = new Date(flowData.changed_step_at)
       startDate.setHours(0, 0, 0, 0)
-      const currentDate = new Date()
-      currentDate.setHours(0, 0, 0, 0)
 
       const diffInMilliseconds = currentDate.getTime() - startDate.getTime()
       const oneHourInMilliseconds = 60 * 60 * 1000; // número de milissegundos em uma hora
-      let timeToExpireSla = 0;
       
       const diffInDays = Math.round(diffInMilliseconds / (oneHourInMilliseconds * 24));
       timeToExpireSla = diffInDays - step.sla.stay;
-
-      let timeToExpireOutherFields : (number | undefined)[] | undefined = []
-      try{
-        if(workflow?.config?.slas?.outher_fields && workflow.config.slas.outher_fields.length > 0){
-          workflow.config.slas.outher_fields.forEach((outher) => {
-            let tempDate = getRecursiveValue(outher.key, flowData)
-            
-            if(tempDate){
-              try{
-                const outherDate = new Date(tempDate);
-                outherDate.setHours(0, 0, 0, 0);
-
-                const tempDiffInMilliseconds = outherDate.getTime() - currentDate.getTime();
-                const tempOneHourInMilliseconds = 60 * 60 * 1000; // número de milissegundos em uma hora
-                
-                const tempDiffInDays = Math.round(tempDiffInMilliseconds / (tempOneHourInMilliseconds * 24));
-                timeToExpireOutherFields!.push((tempDiffInDays + 1) * -1)
-              }catch(e){ timeToExpireOutherFields!.push(undefined) }
-            }else timeToExpireOutherFields!.push(undefined)
-          })
-        }
-        else timeToExpireOutherFields = undefined
-      }catch(e: any){
-        console.error('[error-on-calc-outher-slas]', {
-          e, outher_slas: workflow?.config?.slas?.outher_fields,
-        })
-        timeToExpireOutherFields = undefined
-      }
-
-      const closestToExpiration = !timeToExpireOutherFields || timeToExpireOutherFields.length === 0 ? timeToExpireSla : (timeToExpireOutherFields.filter(
-        (d) => d !== undefined
-      ) as number[]).reduce((acc, curr) => {
-        return Math.max(acc, curr);
-      }, timeToExpireSla);
-
-      return {
-        timeToExpireSla,
-        timeToExpireOutherFields,
-        closestToExpiration,
-        unit
-      }
     }
+    let timeToExpireOutherFields : (number | undefined)[] | undefined = []
+    try{
+      if(workflow?.config?.slas?.outher_fields && workflow.config.slas.outher_fields.length > 0){
+        workflow.config.slas.outher_fields.forEach((outher) => {
+          if (outher.validity) {
+            if (
+              outher.validity.available_steps && 
+              outher.validity.available_steps.length > 0 &&
+              !outher.validity.available_steps.includes(flowData.current_step_id)
+            ) return;
+            if (outher.validity.restriction && checkStringConditional(outher.validity.restriction, flowData)) return;
+            if (outher.validity.condition && !checkStringConditional(outher.validity.condition, flowData)) return;
+          }
+
+          let outherKey = outher.key;
+          let tempDate = null;
+          if (outherKey.includes('@')) tempDate = getDataBySlaShortCode(outherKey, flowData);
+          else tempDate = getRecursiveValue(outherKey, flowData);
+          
+          if(tempDate){
+            try{ 
+              let outherDate = new Date(tempDate);
+              if (outher.mode === 'stay' && outher.stay) outherDate = moment(outherDate).add(outher.stay, 'days').toDate();
+              outherDate.setHours(0, 0, 0, 0);
+              
+              const tempDiffInMilliseconds = outherDate.getTime() - currentDate.getTime();
+              const tempOneHourInMilliseconds = 60 * 60 * 1000; // número de milissegundos em uma hora
+              
+              const tempDiffInDays = Math.round(tempDiffInMilliseconds / (tempOneHourInMilliseconds * 24));
+              timeToExpireOutherFields!.push((tempDiffInDays + 1) * -1)
+            }catch(e){ timeToExpireOutherFields!.push(undefined) }
+          }else timeToExpireOutherFields!.push(undefined)
+        })
+      }
+      else timeToExpireOutherFields = undefined
+    }catch(e: any){
+      console.error('[error-on-calc-outher-slas]', {
+        e, outher_slas: workflow?.config?.slas?.outher_fields,
+      })
+      timeToExpireOutherFields = undefined
+    }
+
+    const closestToExpiration = !timeToExpireOutherFields || timeToExpireOutherFields.length === 0 ? timeToExpireSla : (timeToExpireOutherFields.filter(
+      (d) => d !== undefined
+    ) as number[]).reduce((acc, curr) => {
+      return Math.max(acc, curr);
+    }, timeToExpireSla);
+
+    return {
+      timeToExpireSla,
+      timeToExpireOutherFields,
+      closestToExpiration,
+      unit
+    };
   }catch(e: any){
     console.error('[error-on-calc-sla]', {
       flow_data_id: flowData._id,
@@ -138,6 +168,26 @@ function calcHoursToExpireSla({ step, flowData, workflow, exceptionDays }:CalcSl
         e, outher_slas: workflow?.config?.slas?.outher_fields,
       })
       timeToExpireOutherFields = undefined
+    }
+
+    if(workflow.config?.slas?.variation_step_sla) {
+      for(const variationSla of workflow.config.slas.variation_step_sla){
+        if(!checkStringConditional(variationSla.condition, flowData.data)) continue;
+        const { mode, value } = variationSla.modifier;
+        if(mode === 'percent'){
+          const originalSla = step.sla.stay;
+          const timeRemovedSla = originalSla - (originalSla * value);
+          let percentageOfDelay = timeToExpireSla < 0 ? (Math.abs(timeToExpireSla) * value) : timeToExpireSla;
+
+          if (timeToExpireSla < 0) {
+            percentageOfDelay = -percentageOfDelay;
+          } else {
+            percentageOfDelay = percentageOfDelay + timeRemovedSla;
+          }
+
+          timeToExpireSla = percentageOfDelay;          
+        }
+      }
     }
     
     const closestToExpiration = !timeToExpireOutherFields || timeToExpireOutherFields.length === 0 ? timeToExpireSla : (timeToExpireOutherFields.filter(

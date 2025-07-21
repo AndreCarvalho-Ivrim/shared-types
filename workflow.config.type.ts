@@ -1,9 +1,10 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
+import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
-import { WorkflowTriggerType, AvailableTriggerEffects } from "./workflow.config.triggers.type";
+import { WorkflowTriggerType, AvailableTriggerEffects, WorkflowIvrimNotes } from "./workflow.config.triggers.type";
 
-export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing';
+export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'ias';
 export type AvailableViewModeType = 'table' | 'dashboard';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
@@ -18,6 +19,7 @@ export interface WorkflowConfigFilterType {
    * data passada está dentro do range do banco
    * - list: Lista de opções (in)
    * - not-list: Não está na lista de opções (nin)
+   * - array-object: Verifica se dentro de um array, se algum elemento dele da match com o value passado
    */
   type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in',
   /** Veja a tipagem de WorkflowConfigFilterRefType para ver opções pré-definidas */
@@ -82,6 +84,11 @@ export interface WorkflowConfigNotificationType {
   /** Segue as mesmas regras do target */
   conditional_targets?: { condition: string, target: string }[],
   default_target?: string[],
+  separate_shipping?: true | {
+    /** O $this e o target */
+    condition?: string,
+    handlers?: AllHandlersType
+  },
   effects?: Array<WorkflowNotificationEffectType>
 }
 export interface WorkflowConfigAutocomplete {
@@ -114,15 +121,34 @@ export interface WfConfigObserverBackupData{
 }
 export interface FlowNetworkParams {
   flow_id: string,
+  restrictions?: { where: any }[],
+  /**
+   * Ao usar esse parametro, ele criará vários flowDatas a partir de um array de objetos.
+   */
+  one_to_many?: {
+    /** Referência do Array */
+    ref: string,
+    /** Usada para validar cada laço de interação do array */
+    condition?: string
+  },
   /** 
    * ``` { [data_id]: [target_id] } ``` 
    * Se usar a notação ``` { ".": "." } ```, ou qualquer variação disso, estará fazendo \
    * referência a raiz do objeto (no caso o flowData.data)
+   * 
+   * Caso esteja com a funcionalidade one_to_many, existirá o prefixo ```_parent.``` para \
+   * acessar dados que estão fora do array
    */
   match: Record<string, string>,
   /** Adicionar um valor no registro de destino */
   append_values?: Record<string, {
-    value: any
+    value: any,
+    /** Utilize _target ou _origin \
+     *  _target: alvo (data do wf ao qual está se conectando) - disponivel apenas em updates \
+     *  _origin: origem (data do wf que fez a conexão) \
+     *  _side: utilize para saber em qual lado está fazendo o append, 'target' ou 'origin'
+     */
+    condition?: string
   }>,
   /** 
    * [by-step]: irá usar a validação de um step(do target-wf) para receber os dados \
@@ -142,18 +168,86 @@ export interface FlowNetworkParams {
   effect?: {
     /** 
      * ```{ [target_successfuly_id]: [origin_data_id] } ``` \
-     * Especifica quais dados serão copiados para o registro de origem e onde. 
+     * Especifica quais dados serão copiados para o registro de origem e onde. \
+     * Utilize '*' para inverter a key e o value: [origin_data_id](key): [target_successfuly_id](value) \
+     * Utilizer '**' para defirnir o [target_successfuly_id](value) como um valor estatico
      */
-    success?: Record<string, string>
+    success?: Record<string, any>
     /** 
      * Caso gere erro, onde quer armazenar a resposta de erro no registro de origem, \
      * e se quer colocar uma mensagem padrão, ou se não preenchido, usar a retorna no destino 
      */
     error?: {
       key: string,
-      default?: string
+      default?: string,
+      append?: Record<string, any>
     }
-  }
+  },
+  /**
+  * Utilizado para montar a query quer irá buscar um flowData para atualizar \
+  * Não diponivel no one_to_many
+  */
+  where?: Record<string, string>
+  /**
+  * Utilizado para buscar uma lista(array) e atualizar o laço com o valor de match \
+  * Diponivel apenas com o where
+  */
+  scope?: {
+    ref: string,
+    condition?: string
+  },
+}
+export type HandlerAppendType = {
+  condition?: string;
+  value: any;
+  mode: 'overwrite' | 'merge';
+  name: string | '@entity';
+  static?: boolean,
+  /** Caso utilize o name = '@entity', adicionar essa propriedade */
+  entity_data?: WFConfigObserverDataEntity
+}
+
+export type HandlerMapType = {
+  type: 'map';
+  /**
+  * Utilizado para informar que será um novo item dentro do array \
+  * Caso já tenha valores dentro do array não serão afetados por esse handler
+  * */
+  new_item?: boolean;
+  /**
+   * Substitui o this pelo valor informado \
+   * Como o this pode está sendo usando dentro de outros contextos, para evitar conflitos utilize o reference_this
+   * */
+  reference_this?: string;
+  /**
+   * Caso o recurso for um object e possível adicionar valores \
+   * Use this ou (reference_this) para se referir ao valor atual do array
+   * */
+  appends: HandlerAppendType[];
+}
+
+export type HandlerFindType = {
+  type: 'find';
+  /** Local onde está o recurso */
+  path: string;
+  /** Local onde salvar o valor encontrado (recurso) */
+  path_to_save?: string;
+  /** 
+   * - Caso o recurso for um array, utilize a contidion para pegar um valor dentro dele \
+   * - Utilize o $current para se referir ao valor atual do array
+   * */
+  condition?: string;
+  /**
+   * Caso o recurso for um object e possível adicionar valores \
+   * Use $current para se referir ao valor atual do array
+   * */
+  appends?: HandlerAppendType[];
+}
+
+export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
+
+export interface HandlersType {
+  handlers: AllHandlersType
 }
 export interface WorkflowConfigObserverFnType {
   /** EVENTS -> available names on type event
@@ -177,8 +271,16 @@ export interface WorkflowConfigObserverFnType {
    * \@to-affect: Evento válido apenas no FlowData, para disparar efeitos em outros registros
    * 
    * \@consolidate: Evento válido apenas no FlowData, para unir registros
+   * 
+   * \@send-whatsapp-messages: Evento para disparar mensagens de whatsapp usando o chatbot
+   * 
+   * \@relationship-with-flow-entity: Evento para relacionar um flow-data com uma entidade dinâmica
    */
   name: string,
+  /**
+   * O ref é utilizado em funções externas para referenciar este observer.
+   */
+  ref?: string,
   type: 'append' | 'backup' | 'event',
   execute: 'before' | 'after',
   condition?: string,
@@ -191,6 +293,8 @@ export interface WorkflowConfigObserverFnType {
    * - Caso seja type === 'append' o value é o valor a ser adicionado
    * - Caso seja type === 'append' e value = \@entity é obrigatório informar o \
    * data com a configuração de como a entidade será integrada ao registro.
+   * - Caso seja type === 'append' e value = \@handlers é obrigatório informar o \
+   * data com a configuração de HandlerAppend.
    */
   value?: any,
   /** 
@@ -256,11 +360,17 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@request-external-api: seguir a tipagem de [RequestExternalApiEvent]
    * 
+   * \@send-whatsapp-messages: seguir a tipagem de [SendWhatsappMessagesEvent]
+   * 
+   * \@relationship-with-flow-entity: seguir a tipagem de [RelationshipWithFlowEntityEvent]
+   * 
    * APPEND -> required data on value = \@entity
    * 
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
+   * 
+   * \@handlers: seguir a tipagem de [HandlersType]
    */
-  data?: any
+  data?: HandlersType | any
 }
 export interface WFConfigObserverDataEntity {
   entity_key: string,
@@ -321,6 +431,13 @@ export interface ConfigViewModeColumnsType {
 }
 type WorkflowFilterScopeFilter = Record<string, string | {
   type: WorkflowConfigFilterType['type'],
+  /**
+   * Além de valores hardcode, alguns notações que podem ser usadas são:
+   * - \@me: para obter o id do usuário logado
+   * - \@action_permissions: para obter as ações que o usuário pode realizar
+   * - \@array-empty: para consultar se um array está vazio
+   * - \@not-exists: para verificar se uma propriedade não existe
+   */
   value: any
 }>
 export interface WorkflowViewModeFilterScope {
@@ -344,12 +461,28 @@ export interface ViewModeOrderBy{
   /** Utilizado apenas quando ViewMode é do tipo kanban e deseja ter um tipo de ordenação diferente por coluna */
   available_steps?: string[]
 }
+export interface WorkflowViewModeBaseSubOptions {
+  autocomplete: {
+    name: string,
+    condition?: string,
+    toFill: {
+      slug: string,
+      title: string,
+    },
+    filter_scope: WorkflowViewModeFilterScope[],
+  }
+}
 export interface WorkflowViewModeBase {
   title: string,
   description?: string,
   icon?: AvailableIcons,
   slug: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
+  available_steps?: string[],
+  horizontal_menu?: {
+    current_title?: string,
+    items: (AvailableViewModesType | ({ extends: string, view_mode: 'extends', slug: string } & Partial<Omit<AvailableViewModesType, 'view_mode' | 'slug'>>))[]
+  }
   /** { 'ref-no-flow-data': 'título-visual' } */ 
   dynamic_order_by?: Record<string, string>,
   /** Group permission separado por virgula */
@@ -364,7 +497,8 @@ export interface WorkflowViewModeBase {
    * Escopo de visualização do usuário. \
    * Está funcionalidade delimita os dados que este usuário pode interagir
    */
-  filter_scope?: WorkflowViewModeFilterScope[]
+  filter_scope?: WorkflowViewModeFilterScope[],
+  sub_options?: WorkflowViewModeBaseSubOptions,
   /** Caso essa opção seja configurada, ele redefinirá o comportamento padrão de redirecionamento
    *  de steps. Ou seja, quando clicar em um flowData na tabela, em vez de abrir o step atual, ele abrirá
    *  para o definido abaixo, e o mesmo se aplica após o envio do submit, que ele sempre redirecionará o
@@ -375,6 +509,7 @@ export interface WorkflowViewModeBase {
 export interface KanbanFlagType{
   condition: string,
   type: ThemeColorType,
+  /** _id da etapa que é o id do mongo */
   availableSteps?: string[],
   /**
    * Um caracter que será mostrado na flag. Se usar o sufixo :number após uma variável, ao atingir \
@@ -398,6 +533,8 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
     /** Identificador no card */
     identifier?: string,
     identifier_mask?: 'date' | 'phone' | 'percent' | 'money' | 'cpf-cnpj',
+    /** Não exibi o identificador no footer do card */
+    not_view_identifier?: boolean,
     /** 
      * Se mostrará o avatar no card:
      * 
@@ -406,11 +543,143 @@ export interface WorkflowViewModeKanban extends WorkflowViewModeBase {
      * string: Referência do campo que armazena a imagem customizada do avatar 
      **/
     avatar?: "@creator" | "@owner" | string,
-    content: (ConfigViewModeColumnsType & { available_steps?: string[] })[],
+    content: (ConfigViewModeColumnsType & { available_steps?: string[], condition?: string })[],
     classNames?: Partial<{ wrapper: string, [key: string]: string }>
   },
   flags?: KanbanFlagType[],
   tasks_indicator?: { id: string, status: StepViewTasksType['status'] }[]
+}
+interface StaticBase{
+  options: {
+    _id: string,
+    description: string,
+    name: string,
+    [key: string]: any
+  }[]
+}
+interface DynamicBase{
+  entity_id: string,
+  relations: {
+    _id: string,
+    description: string,
+    name: string,
+    [key: string]: any
+  }
+}
+export interface SemanticsOfDatasItem{
+  filters: {
+    /** Ver valores pré-definidos na tipagem WorkflowConfigFilterRefType */
+    ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+    value: any,
+    type: WorkflowConfigFilterType['type']
+  }[],
+  description: string,
+  title: string,
+}
+export interface WorkflowViewModeGroup extends WorkflowViewModeBase {
+  view_mode: 'group',
+  /** Por qual campo será realizado o agrupamento */
+  base: StaticBase | DynamicBase,
+  /** Lógica de redirecionamento de rota */
+  redirect_to: string,
+  /** current_step_id dos steps para identificar a evolução do projeto como um todo */
+  semantics_of_datas: {
+    pending?: SemanticsOfDatasItem,
+    in_progress: SemanticsOfDatasItem,
+    blocked?: SemanticsOfDatasItem,
+    cancelled?: SemanticsOfDatasItem,
+    finished: SemanticsOfDatasItem,
+  },
+  /** Controle de status do grupo */
+  control_status: {
+    ref: string,
+    theme_by_value: Record<string, ThemeColorType>
+  },
+}
+interface BaseIndicators {
+  name: string,
+  description?: string, 
+  group_by?: string,
+  icon?: AvailableIcons,
+  /** Indica se é uma contagem de itens. */
+  count?: boolean,
+}
+export interface IBaseIndicatorsFlowDataIBaseQuery {
+  ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+  value: any,
+  type: WorkflowConfigFilterType['type']
+}
+export interface BaseIndicatorsFlowData extends BaseIndicators {
+  ref: 'flow-data',
+  query?: IBaseIndicatorsFlowDataIBaseQuery[],
+}
+interface BaseIndicatorsEntity extends BaseIndicators {
+  ref: 'entity',
+  entity_id: string,
+}
+type TotalCards = BaseIndicatorsFlowData | BaseIndicatorsEntity;
+export interface IWorkflowViewModeResumeSemanticOfDatas {
+  /** Nome do agrupamento */
+  name: string,
+  query: IBaseIndicatorsFlowDataIBaseQuery[]
+}
+
+interface IChartsRefFlowData {
+  ref: 'flow-data',
+  /** Título da seção */
+  name: string,
+  chart_type: 'bar' | 'donut',
+  semantics_of_datas: (IWorkflowViewModeResumeSemanticOfDatas & { color: string })[],
+}
+
+interface IChartsRefEntity {
+  ref: 'entity',
+  /** Título da seção */
+  name: string,
+  /** É o id da entidade */
+  entity_id: string,
+  chart_type: 'bar' | 'donut',
+  semantics_of_datas: (IWorkflowViewModeResumeSemanticOfDatas & {
+    query: (IBaseIndicatorsFlowDataIBaseQuery & { 
+      /** Suporte apenas para o tipo 'text' */
+      type: 'text'
+    })[],
+    color: string
+  })[],
+}
+
+type Charts = IChartsRefFlowData | IChartsRefEntity;
+export interface WorkflowViewModeResume extends WorkflowViewModeBase {
+  view_mode: 'resume',
+  /** Seção de cards totais\
+   * \
+   * Aparecem na parte superior da página.
+   */
+  total_cards: TotalCards[],
+  /** Seção de cards com gráficos */
+  charts: Charts[],
+  /** Seção de listagem */
+  list: Pick <WorkflowViewModeGroup, 'control_status'> & {
+    name: string,
+    redirect_to: string,
+    ref: 'entity',
+    entity_id: string,
+    /** De-Para das keys do objeto */
+    from_to_fields: {
+      id: string,
+      title: string
+      date: string
+      status: string
+    },
+    progress_helpers: {
+      /** Key usada como identificação nos regitros */
+      base_ref: string,
+      /** Key que armazena a identificação */
+      data_ref: string,
+      /** Step final das tasks usado como base para calcular o progresso do projeto */
+      finished_step: string,
+    }
+  }
 }
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
@@ -535,7 +804,7 @@ export interface WorkflowViewModeDashboardFn{
   data?: { filter?: any, dynamic_filters?: boolean }
 }
 
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard;
+export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup | WorkflowViewModeResume;
 
 export interface WorkflowAuthTemplateType {
   id: string,
@@ -577,6 +846,10 @@ export interface WorkflowAuthType {
 type AvailableTimeToNotify = 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18
 export const availableTimeToNotify: AvailableTimeToNotify[] = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 export type AvailableHoursType = Partial<Record<0 | 1 | 2 | 3 | 4 | 5 | 6, [string, string]>>
+export type WFConfigSlaVariationType = {
+  condition: string,
+  modifier: { value: number, mode: 'percent', label: string }
+}
 export interface WorkflowConfigSlasType {
   title: string,
   icon?: AvailableIcons,
@@ -589,6 +862,8 @@ export interface WorkflowConfigSlasType {
   notify?: WFConfigSlaNotifyType[],
   outher_fields?: WorkflowSlaOutherField[],
   permission?: string,
+  /** Caso essa função seja habilitada o SLA das Etapas é controlado por um painel e não pelo template */
+  editable_steps_sla?: boolean,
   filter_scope?: WorkflowViewModeFilterScope[],
   columns: ConfigViewModeColumnsType[],
   /**
@@ -614,7 +889,13 @@ export interface WorkflowConfigSlasType {
    */
   days_exception_settings?: {
     entity_key: string,
-  }
+  },
+  /** 
+   * Configurar para exibir um outher field no lugar do stay caso o stay não esteja definido na etapa \
+   * passe a key do outher_fields
+   */
+  replacement_stay?: string,
+  variation_step_sla?: WFConfigSlaVariationType[]
 }
 export interface WFConfigSlaNotifyType {
   subject: string,
@@ -729,15 +1010,73 @@ export interface WorkflowMenuShortcut{
   title: string,
   action_permission?: string,
 }
+export interface PublicRouteGet{
+  /**
+   * Por padrão a rota publica sempre fará uma requisição em [flow-datas], \
+   * mas esse comportamento pode ser alterado definindo este campo como [steps] \
+   * ou [me], porém os demais modos as funções de pesquisa, filtro e formatação \
+   * do body são limitadas.
+   * 
+   * O modo [me] só é valido caso auth seja preenchido com o tipo [\@network-flow-auth], \
+   * e neste caso, retornará o usuario autenticado.
+   * 
+   * Existe o tipo [count-flow-datas], que ira retorna o total de registro com base no \
+   * filtro realizado. Este tipo não tem suporte a prop [body] e [order_by]
+   */
+  request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas',
+  auth?: AuthPublicRouteType,
+  /**
+   * Query Params disponíveis para pesquisa.
+   * 
+   * Record< [query-param] , [path-no-flow-data] >
+   * 
+   * Palavras reservadas: take, skip
+   * 
+   * Toda a pesquisa será feita por comparação absoluta, a menos \
+   * que o valor inicie com ~. Ex:
+   * 
+   * ```
+   * { id: '~path.id' }
+   * ```
+   *
+   * Desse jeito fará a pesquisa parcial case insensitive.
+   *  
+   * Também é possível fazer pesquisar por range, para utilizar basta \
+   * iniciar o valor com <>, e dessa forma, você precisará de dois query \
+   * params para representar esse campo, um contendo o prefixo *start_* e \
+   * outro *end_*. Ex:
+   * 
+   * ```
+   * { date: '<>path.date' }
+   * 
+   * <url>?start_date=...&end_date=...
+   * ```
+   
+   */
+  available_query_params?: Record<string, string>,
+  required_params?: string[],
+  order_by?: Record<string, 'desc' | 'asc'>,
+  filter_scope?: WorkflowViewModeFilterScope[],
+  /** Se não for informado trará o flow_data.data completo */
+  body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
+}
+export interface WorkflowConfigExceptionView{
+  slug: string,
+  title: string,
+  permission?: string,
+  icon?: AvailableIcons,
+  subpage_of_flow_data?: {
+    identifier: string,
+    view_mode?: { condition?: string, slug: string }[],
+    is_public?: boolean
+  }
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
-  exception_views?: {
-    slug: string,
-    title: string,
-    icon?: AvailableIcons 
-  }[],
+  exception_views?: WorkflowConfigExceptionView[],
   filters?: Record<string, WorkflowConfigFilterType[]>,
+  open_dialog?: WorkflowConfigOpenDialogType,
   permissions?: ConfigPermissionType,
   menu?: {
     /**
@@ -757,6 +1096,7 @@ export interface WorkflowConfigType {
     }>>
   },
   triggers?: WorkflowTriggerType[],
+  ivrim_notes?: WorkflowIvrimNotes,
   webhooks?: WorkflowWebhookType,
   notifications?: WorkflowConfigNotificationType[],
   integrations?: WorkflowConfigIntegrationsType,
@@ -774,55 +1114,7 @@ export interface WorkflowConfigType {
       onDeleteTask?: WorkflowConfigObserverFnType[]
     },
     publicRoutes?: {
-      get?: Record<string, {
-        /**
-         * Por padrão a rota publica sempre fará uma requisição em [flow-datas], \
-         * mas esse comportamento pode ser alterado definindo este campo como [steps] \
-         * ou [me], porém os demais modos as funções de pesquisa, filtro e formatação \
-         * do body são limitadas.
-         * 
-         * O modo [me] só é valido caso auth seja preenchido com o tipo [\@network-flow-auth], \
-         * e neste caso, retornará o usuario autenticado.
-         * 
-         * Existe o tipo [count-flow-datas], que ira retorna o total de registro com base no \
-         * filtro realizado. Este tipo não tem suporte a prop [body] e [order_by]
-         */
-        request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas',
-        auth?: AuthPublicRouteType,
-        /**
-         * Query Params disponíveis para pesquisa.
-         * 
-         * Record< [query-param] , [path-no-flow-data] >
-         * 
-         * Palavras reservadas: take, skip
-         * 
-         * Toda a pesquisa será feita por comparação absoluta, a menos \
-         * que o valor inicie com ~. Ex:
-         * 
-         * ```
-         * { id: '~path.id' }
-         * ```
-         *
-         * Desse jeito fará a pesquisa parcial case insensitive.
-         *  
-         * Também é possível fazer pesquisar por range, para utilizar basta \
-         * iniciar o valor com <>, e dessa forma, você precisará de dois query \
-         * params para representar esse campo, um contendo o prefixo *start_* e \
-         * outro *end_*. Ex:
-         * 
-         * ```
-         * { date: '<>path.date' }
-         * 
-         * <url>?start_date=...&end_date=...
-         * ```
-         
-         */
-        available_query_params?: Record<string, string>,
-        order_by?: Record<string, 'desc' | 'asc'>,
-        filter_scope?: WorkflowViewModeFilterScope[],
-        /** Se não for informado trará o flow_data.data completo */
-        body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
-      }>,
+      get?: Record<string, PublicRouteGet>,
       post?: Record<string, {
         auth?: AuthPublicRouteType,
         /** Escopo de alteração dentro do objeto flow_data.data */
@@ -902,7 +1194,8 @@ export interface WorkflowConfigType {
     whatsapp: string
   },
   rules?: WorkflowConfigRulesType[],
-  flow_alerts?: WorkflowConfigFlowAlert[]
+  flow_alerts?: WorkflowConfigFlowAlert[],
+  activity_panel?: WorkflowConfigActivePanel[]
 }
 export interface WorkflowConfigFlowAlert{
   key: string,
@@ -964,6 +1257,26 @@ export interface WorkflowConfigFlowAlertItem{
 
 type WFIntegrationKeys = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'outhers';
 
+export type WFIntegrationProviderType = 'GPT' | 'Gemini';
+
+export type WFIntegrationModelGoogleType = 
+  'Gemini 2.0 Flash'    | 'Gemini 2.0 Flash-Lite' | 'Gemini 2.0 Pro Experimental' | 'Gemini 1.5 Flash' | 
+  'Gemini 1.5 Flash-8B' | 'Gemini 1.5 Pro'        | 'Gemini Embedding'            | 'Imagen 3';
+export type WFIntegrationModelGPTType = 'GPT-4o mini';
+export interface WFIntegrationIAProvider {
+  /** Qual é o provedor da IA */
+  provider: WFIntegrationProviderType,
+  /**
+   * Modelo da IA.\
+   * \
+   * Exemplo: Gemini 1.5 Flash.\
+   * Conforme a lista que aparece no link: https://bit.ly/4ioEEbg
+   */
+  model: WFIntegrationModelGoogleType | WFIntegrationModelGPTType,
+  /** Token de acesso da IA */
+  token: string
+}
+
 export interface WorkflowConfigIntegrationsType {
   email?: {
     emailFrom: string,
@@ -991,9 +1304,32 @@ export interface WorkflowConfigIntegrationsType {
     name: string,
     status: boolean,
     data: any
-  }[]
+  }[],
+  /**
+   * Provedores de IA
+   */
+  ias?: WFIntegrationIAProvider
+}
+export type WorkflowConfigIntegrationsChatbotBalanceType = WorkflowConfigIntegrationsChatbot & {
+  /** Herdar propriedades do chatbot pai */
+  extends?: (
+    'delay_after_contact_creation' | 
+    'loadContactData' | 
+    'observers' | 
+    'attempt_limit' |
+    'limit_of_contacts_by_day' |
+    'control_errors'
+  )[],
+  /**
+   * Personalizar mensagem para quando um usuário entrar em contato com o chatbot incorreto(estando associado a outro). \
+   * Mensagem padrão: "Você já está conversando com outro número da nossa empresa, continue a conversa por aquele canal"
+   **/
+  balance_conflit_message?: string
 }
 export interface WorkflowConfigIntegrationsChatbot{
+  /** Obrigatório caso utilize balanceamento */
+  key?: string,
+  delay_after_contact_creation?: boolean,
   /** Token do Mensagex, se não for informado utilizará o token do hub */
   token?: string,
   /**
@@ -1023,6 +1359,54 @@ export interface WorkflowConfigIntegrationsChatbot{
     parse: { firstName: string, lastName: string, [key: string]: string } | { fullname: string, [key: string]: string }
     /** Mensagem de erro caso os dados não possam ser carregados */
     error_message: string
+  },
+  /** 
+   * Informações customizadas que devem ser sincronizadas com o contato do mensagex \
+   * ``` { 'mensagex-field-id': 'flow-message-contact.contact_data-ref' } ```
+  */
+  custom_contact_data?: Record<string, string>,
+  /** Listas de contato */
+  lists: Array<{ id: number, name: string }>,
+  observers?: Array<{
+    /** 
+     * Tipo de recebimento que deseja observar
+     * - message: É uma mensagem recebida
+     * - sent: Confirmação de enviada
+     * - received: Confirmação de recebimento
+     * - viewed:  Confirmação de visualização
+     * - error: Erro de mensagem \
+     *   Quando está nesse modelo, alguns valores serão injetados nos parametros. Caso não haja entidade \
+     *   de controle de erros terá apenas 'default_message', mas se tiver a entidade de controle de erros \
+     *   terá os seguintes campos:
+     * ```
+     *  {
+     *    default_message: 'Mensagem de erro tratada(mascarada caso configurado)'
+     *    raw_default_message: 'Mensagem real'
+     *    error_status: 'Status correspondente'
+     *  }
+     * ```
+     */
+    on: 'message' | 'sent' | 'received' | 'viewed' | 'error',
+  } & Omit<FlowMessageFnCallTrigger, 'execute'>>,
+  /** Limite de Retentativa de Envio */
+  /** Limite de contatos para balancear, por dia */
+  limit_of_contacts_by_day?: number,
+  balance?: WorkflowConfigIntegrationsChatbotBalanceType[],
+  attempt_limit?: number,
+  control_errors?: {
+    /**
+     * A entidade deve conter as seguintes propriedades:
+     * ```ts
+     * {
+     *    error: string
+     *    translate?: string
+     *    status: string
+     *    can_retry: boolean
+     *    is_default: boolean
+     * }
+     * ```
+     */
+    entity_id: string,
   }
 }
 
@@ -1058,9 +1442,22 @@ export interface AuthIntegrationRoute {
 export interface WorkflowSlaOutherField extends Omit<StepSlaType, 'stay'> {
   /** Caminho dentro do flowData.data para o campo de data que gerencia esse SLA */
   key: string,
+  /** Obrigatório colocar ele caso o mode seja "stay" */
+  identifier?: string,
   title: string,
+  /**
+   * Se não colocar nenhum valor, o "expiration" será usado como default.
+   */
+  mode?: 'expiration' | 'stay',
+  /** Tempo esperado de permanência em uma etapa. */
+  stay?: number,
+  validity?: {
+    available_steps?: string[],
+    condition?: string,
+    restriction?: string
+  }
 }
-export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over'
+export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over' | 'footer-slide-over'
 export interface WFCActionFnCallStep {
   type: 'call-step',
   target: string
@@ -1074,8 +1471,23 @@ export interface WFCActionFnUpdateSelected {
    * - update-and-remove: Atualiza e remove da tabela e do excludeIds 
    */
   effect?: 'update' | 'update-and-open' | 'update-and-remove',
-  append_values: Record<string, any>,
-  trigger_observer_events?: string[],
+  restrictions?: {
+    condition: string,
+    title: string
+  }[],
+  append_values?: Record<string, any>,
+  trigger_actions?: {
+    step_id: string,
+    action_key: string
+  }[]
+  /**
+   * Disparar eventos do observer.\
+   * Para referenciar observador é necessário adicionar a ref no observer.
+   */
+  trigger_observers?: {
+    ref: string,
+    condition?: string,
+  }[],
   confirm?: StepActionConfirmType,
   /**
    * O que fazer em confirmação múltipla:
@@ -1111,6 +1523,7 @@ export interface WFActionFnCallTrigger {
   id_is_required?: boolean,
   /** Este confirm não tem suporte a inserção de dados */
   confirm?: StepActionConfirmType,
+  append_values?: Record<string, any>,
   effects?: Partial<Record<AvailableTriggerEffects, boolean | {
     condition: string,
     [key: string]: any
@@ -1148,7 +1561,31 @@ export interface WFActionFnDownloadFiles {
 }
 export interface WFActionFnCallReport {
   type: 'call-report',
-  target: string
+  target: string,
+  /** Parâmetros para realiar o auto download */
+  parameters?: Record<string, any>
+}
+export interface WFActionExportInDynamicSchema{
+  type: 'call-export-in-dynamic-schema',
+  /**
+   * Referência do campo dentro do flow-data que contém o id \
+   * do schema selecionado
+   */
+  entity_data_ref: string,
+  /**
+   * Referência do campo dentro do flow-data que contém o item na versão de quando foi criado \
+   */
+  version_data_ref?: string,
+  /** key da entidade que armazena os modelos */
+  entity_key: string,
+  /** Propriedades utilizadas para gerar as linhas do excel*/
+  cumulative: string[],
+  /**
+   * Caso o flow-data não tenha modelo selecionado ele utilizará o \
+   * formato do report abaixo para gerar a exportação
+   */
+  default_report_id: string,
+  title: string
 }
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
@@ -1175,8 +1612,10 @@ export interface WorkflowConfigActionsType {
   available_view_modes?: string[],
   render?: {
     in: WFCActionRenderIn,
-    /** Não implementado */
-    condition?: string
+    /** Quando renderizado no footer-slide-over, tem acesso a prop is_stateless */
+    condition?: string,
+    /** Tipo do botão, quando in = 'footer-slide-over' */
+    theme?: 'warning' | 'info' | 'danger' | 'success' | 'primary' | 'light'
   },
   /**
    * As funções do tipo WFCActionFnUpdateSelected, WFActionFnDownloadFiles e \
@@ -1188,7 +1627,7 @@ export interface WorkflowConfigActionsType {
    * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
    * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest,
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema,
   group_buttons?: WorkflowConfigActionsGroupButtons
 }
 export interface WorkflowConfigActionsGroupButtons{
@@ -1210,6 +1649,36 @@ export interface WorkflowRoutinesType {
 }
 export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications', 'bot']
 export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications | WorkflowRoutinesBot
+export type WeekDays = 'SUNDAY' | // Domingo
+  'MONDAY'   | // Segunda-feira
+  'TUESDAY'  | // Terça-feira
+  'WEDNESDAY'| // Quarta-feira
+  'THURSDAY' | // Quinta-feira
+  'FRIDAY'   | // Sexta-feira
+  'SATURDAY'   // Sábado
+  ;
+type WeekDayInterval = {
+  type: 'weekly';
+  /**
+   * - Informe os dias da semana em que a rotina será executada \
+   * - Opções: \
+   *  'SUNDAY' = Domingo \
+   *  'TUESDAY' = Terça \
+   *  'WEDNESDAY' = Quarta \
+   *  'THURSDAY' = Quinta \
+   *  'FRIDAY' = Sexta \
+   *  'SATURDAY' = Sábado
+   */
+  days: WeekDays[];
+}
+type MonthDayInterval = {
+  type: 'monthly';
+  /**
+   * - Informe os dias do mês em que a rotina será executada \
+   * - Do dia 1 ao 31 ou 'last-day', se o valor informado maior que 31 será last-day
+   */
+  days: (number | 'last-day')[]; // Array de números de 1 a 31
+}
 interface WorkflowRoutinesExecutorBase {
   /** Utilizada para a rotina poder ser chamada por outros lugares */
   key?: string,
@@ -1224,9 +1693,10 @@ interface WorkflowRoutinesExecutorBase {
   time_to_exec?: 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5 | 5.5 | 6 | 6.5 | 7 | 7.5 | 8 | 8.5 | 9 | 9.5 | 10 | 10.5 | 11 | 11.5 | 12 | 12.5 | 13 | 13.5 | 14 | 14.5 | 15 | 15.5 | 16 | 16.5 | 17 | 17.5 | 18 | 18.5 | 19 | 19.5 | 20 | 20.5 | 21 | 21.5 | 22 | 22.5 | 23,
   /**
    * Intervalo(em dias) em que a rotina repetirá. \
-   * Por padrão o valor é 1 (todo dia)
+   * Por padrão o valor é 1 (todo dia) \
+   * Abra um object para ter acesso a dias especificos: dias da semana ou dias do mês
    */
-  interval?: number,
+  interval?: number | WeekDayInterval | MonthDayInterval,
 }
 export interface WorkflowRoutinesExecutorIBD extends WorkflowRoutinesExecutorBase {
   type: 'sync-ivrim-big-data'
@@ -1285,7 +1755,19 @@ export interface WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls{
     }
   }
 }
-export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls;
+export interface WfRoutinesManageFlowEventResetContactStep{
+  id: '@reset-contact-step',
+  data: {
+    /** Referência que liga o flow-data ao flow-message-contact */
+    phone_ref: string,
+    append_values?: Record<string, any>
+  }
+}
+export interface WfRoutinesManageFlowEventSendWhatsappMessages {
+  id?: '@send-whatsapp-messages',
+  data?: any
+}
+export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages;
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
   type: 'manage-flow',
   data: {
@@ -1329,7 +1811,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
 }
 export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecutorBase {
   type: 'make-notifications',
-  data: Array<Omit<WorkflowConfigNotificationType, 'condition'> & {
+  data: Array<Omit<WorkflowConfigNotificationType, 'condition' | 'separate_shipping'> & {
     /** 
      * Query de consulta do flowData seguindo padrões do mongodb. Com suporte ao \
      * codehelper ```__@now__```. O codehelper pode ser identificado caso esteja em \
@@ -1356,16 +1838,20 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
      * 
      * flow-datas (default)
      */
-    data_id?: string
+    data_id?: string,
+    /**
+     * A separação de disparo deve acontecer apenas no makeNotifications \
+     * Não ha suporte para essa funcionalidade combinada com a rotina
+     */
+    separate_shipping?: boolean
   }>
 }
-export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external'; 
+export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external' | 'ability-scheduling'; 
 export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
   type: 'bot',
   exception?: WorkflowRoutinesBotExceptions,
   /**
-   * Qual horário a rotina será executada. Por padrão ela é executada imediatamente, \
-   * caso queira definir, o horário é de 00:30 até 23, pulando de meia em meia hora \
+   * Qual horário a rotina deve ser encerrada. o horário é de 00:30 até 23, pulando de meia em meia hora \
    * (.5 = 30min)
    */
   maximum_execution_time?: 0.5 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5 | 5.5 | 6 | 6.5 | 7 | 7.5 | 8 | 8.5 | 9 | 9.5 | 10 | 10.5 | 11 | 11.5 | 12 | 12.5 | 13 | 13.5 | 14 | 14.5 | 15 | 15.5 | 16 | 16.5 | 17 | 17.5 | 18 | 18.5 | 19 | 19.5 | 20 | 20.5 | 21 | 21.5 | 22 | 22.5 | 23,
@@ -1395,4 +1881,18 @@ export interface WFActionFnCallExternalRequest {
     /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
     breakExec?: boolean
   }[]
+}
+export interface WorkflowConfigOpenDialogType{
+  icon?: AvailableIcons,
+  title: string,
+}
+
+export interface WorkflowConfigActivePanel {
+  action_permissions: string[],
+  query: any,
+  description: {
+    single: string,
+    plural: string
+  },
+  view_mode?: string
 }

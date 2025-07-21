@@ -1,5 +1,5 @@
 import { CreateScheduleEvent } from "./schedule.type"
-import { WorkflowNotificationEffectType } from "./workflow.config.type"
+import { HandlerMapType, WorkflowNotificationEffectType } from "./workflow.config.type"
 
 //#region CALENDAR EVENTS
 export interface WFCalendarMultipleType{
@@ -77,7 +77,10 @@ export interface ReplicateFlowDataType{
   inner_data?: Record<string, any>[],
   /** Campo referência para replicação */
   ref: string,
-  /** { 'campo-replicado': 'destino-do-campo' } */
+  /** 
+   * { 'campo-replicado': 'destino-do-campo' }
+   * Utilize _parent na 'campo-replicado' para referenciar o flowData principal
+   * */
   replace: Record<string, string>
   effects?: ReplicateFlowDataEffectType[],
   /**
@@ -85,7 +88,16 @@ export interface ReplicateFlowDataType{
    * ponteiros de referência em cada uma das replicações para \
    * se referênciar as demais
    */
-  relate?: ReplicateFlowDataRelateType
+  relate?: ReplicateFlowDataRelateType,
+  /**
+   * Esse laço do array(ref) será redirecionado para o registro de origem (principal) \
+   * condition: utilizado para validar se o laço deverá redirecionado para o registro de origem, utilize _index para validar com index do laço \
+   * breakExec: utilizado para interromper a execução do laço e não gerar um novo registro a partir dele
+   */
+  enriched_main?: {
+    condition?: string,
+    breakExec?: boolean
+  }
 }
 export interface ConsolidateFlowDataEventType{
   query?: any,
@@ -225,6 +237,31 @@ export interface RequestExternalApiEvent{
    **/
   effects: RequestExternalEffect[]
 }
+export interface SendWhatsappMessagesEvent{
+  restrictions?: RequestExternalRestriction[], 
+  /**
+   * Objetivo: De-Para de como tratar a resposta.
+   * 
+   * ``` { 'path-no-flow-data': { value: 'path-na-resposta' ou valor hardcode, static: bool para ativar o modo hardcode } } ```
+   **/
+  effects?: RequestExternalEffect[],
+  concluded_step_id: string,
+  control_errors?: {
+    /**
+     * A entidade deve conter as seguintes propriedades:
+     * ```ts
+     * {
+     *    error: string
+     *    translate?: string
+     *    status: string
+     *    can_retry: boolean
+     *    is_default: boolean
+     * }
+     * ```
+     */
+    entity_id: string
+  }
+}
 export interface RequestExternalDBEvent{
   db_host: string,
   db_port: string,
@@ -241,3 +278,66 @@ export interface RequestExternalDBEvent{
   effects: RequestExternalEffect[],
   params?: string[]
 }
+export interface RelationshipWithFlowEntityEvent {
+  entity_id: string,
+  /**
+   * Com suporte a shortcodes.
+  */
+  query: any,
+  mode: 'find-one' | 'find-many' | 'count', 
+  /**
+   * A resposta da query virá no formato: \
+   * ```
+   * {
+   *   result: boolean,
+   *   response: string,
+   *   data: {
+   *     // O datas virá de acordo com o mode selecionado
+   *     datas: {} | [] | undefined,
+   *     total: number
+   *   }
+   * }
+   * ```
+   */
+  effects: RelationshipWithFlowEntityEventEffect[],
+}
+export interface RelationshipWithFlowEntityEventEffect{
+    /** default: success */
+    only?: 'success' | 'fail' | 'always',
+    append_values?: Record<string, {
+      value: any,
+      /**
+       * default: static = false
+       * 
+       * Quando static = true, quer dizer que estamos adicionando o valor \
+       * hardcode, quando não, é a referência do valor na resposta.
+       * 
+       * Exemplo static:
+       * append_values: { name: 'Hello World', static: true }
+       * flow_data: { name: 'Hello World' }
+       *  
+       * Exemplo não static:
+       * resposta: { content: 'Hello World' }
+       * append_values: { name: 'content' }
+       * flow_data: { name: 'Hello World' }
+       */
+      static?: boolean,
+      handlers?: HandlerMapType[]
+    }>
+    /**
+     * Válido apenas se only === 'fail'
+     * ```{ 'condition': 'message' }```
+     * 
+     * Caso não queira usar as conditions para multiplas mensagens de erro \
+     * utiliza a chave 'true' para utilizar a mensagem como padrão
+     **/
+    error_message?: Record<string, string>,
+    breakExec?: boolean,
+    condition?: string,
+    trigger_event?: {
+      /** Primeiro parâmetro de match para localizar o evento */
+      name: string,
+      /** Fazer match por condição */
+      find_by_condition?: string
+    }
+  }

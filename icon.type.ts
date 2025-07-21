@@ -3,11 +3,14 @@ export type AvailableIcons =
   'ChevronUpDownIcon' |
   'ChevronsRightIcon' |
   'ArrowRightIcon' |
+  'ArrowDownRightIcon' |
   'ArrowDownCircleIcon' |
   'CloseIcon' |
   'TrashIcon' |
   'PlusIcon' |
+  'MinusIcon' |
   'CheckedIcon' |
+  'DoubleCheckedIcon' |
   'FileIcon' |
   'UploadIcon' |
   'ChatIcon' |
@@ -96,4 +99,19 @@ export type AvailableIcons =
   'WarningIcon'  |
   'CastEducationIcon'  |
   'EducationIcon'   |
-  'HelpIcon'
+  'HelpIcon' |
+  'WarningIcon' |
+  'CalendarCheckIcon' |
+  'FilterBarsIcon' |
+  'PhoneCallIcon' |
+  'GlobeIcon' |
+  'TrendingUpIcon' |
+  'BrainIcon' |
+  'QuestionIcon' |
+  'SupportIcon' |
+  'SaveAltIcon' |
+  'CogIcon' |
+  'StarIcon' |
+  'SendIcon' |
+  'ClockIcon' | 
+  'ListBulletIcon' 

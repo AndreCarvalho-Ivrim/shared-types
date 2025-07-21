@@ -63,6 +63,12 @@ export interface StepCustomRuleRedirectToStep{
   /** Use \@current-step no target para redirecionar para o step atual do flow-data */
   id: '@redirect-to-step'
 }
+export interface StepCustomRuleRedirectToLink{
+  /** Adicione o link no target */
+  id: '@redirect-to-link',
+  /** default: _blank */
+  target?: '_blank' | '_self'
+}
 export interface StepCustomRuleFormWasModified{
   id: '@form-was-modified',
   /** Será usado caso o usuario tenha a opção de prosseguir mesmo sem modificações - não tem suporte para items */
@@ -128,6 +134,7 @@ export interface StepTypeRules{
   owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
   /** Seguindo as mesmas regras de owner */
   can_change_owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
+  sole_owner?: boolean,
   /** Configura permissões personalizadas de ações dentro desta etapa */
   actions?: Record<WorkflowConfigActionsType['id'], {
     group_permission?: ('@data_creator' | '@data_owner' | '@not-allowed' | string)[],
@@ -141,7 +148,7 @@ export interface StepTypeRules{
    * em atualizações
    * - [@select-owner]: Utilizar o botão para chamar o modal de seleção de owners
    */
-  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | StepCustomRuleRedirectToStep | StepCustomRuleFormWasModified,
+  customRules?: StepCustomRuleFind | StepCustomRuleCumulative | StepCustomRuleSelectOwner | StepCustomRuleRedirectToStep | StepCustomRuleFormWasModified | StepCustomRuleRedirectToLink,
   /**
    * STRC \
    * Os valores observados são os itens com observer: true e caso \
@@ -149,11 +156,14 @@ export interface StepTypeRules{
    * [$flow_data:] antes do nome da prop.
    */
   render?: string,
+  switch_render?: string[],
   /** Utilizado para ter o funcionamento de createOrUpdate baseado nos dados de cadastro. */
   update_if_match?: {
     match: string[],
-    exception?: 'ability-check-dates'
-  }
+    exception?: 'ability-check-dates',
+    data?: any
+  },
+  badges?: BadgeType[]
 }
 export interface StepSlaType{
   /** Tempo esperado de permanência em uma etapa */
@@ -273,4 +283,11 @@ export interface OnConnectType{
   target: string | null,
   targetHandle: string | null,
   label?: string
+}
+
+export interface BadgeType{
+  title: string,
+  theme: ThemeColorType,
+  condition: string,
+  tooltip?: string
 }

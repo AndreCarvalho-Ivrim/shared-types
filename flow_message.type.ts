@@ -11,6 +11,7 @@ interface FlowMessageBase{
    * passive: Interação passiva, é quando o cliente entra em contato
    */
   interaction_mode: 'active' | 'passive',
+  title?: string,
   message_of_invalid_answer?: string,
   /**
    * São palavras chaves para validar a chamada dessa mensagem. Muito utilizado \
@@ -18,11 +19,16 @@ interface FlowMessageBase{
    * seja enviada apenas se ele digitar uma opção X.
    */
   matchs?: string[],
+  condition?: string,
   /** Conteúdo da mensagem, podendo ser N mensagens. */
   contents: string[],
   /** A função é considerada ao entrar no diálogo atual */
   fns?: FlowMessageFn[]
   store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> }
+}
+export interface FlowMessageIfError {
+  count: number,
+  default_response: string
 }
 export interface FlowMessageInfoType extends FlowMessageBase{
   /** info: Informação apenas envia uma mensagem sem esperar retorno */
@@ -34,25 +40,35 @@ export interface FlowMessageRedirectType{
   key: string,
   /** redirect: É a possibilidade de redirecionar para outra região do diálogo */
   mode: 'redirect',
+  title?: string,
   matchs?: string[],
+  condition?: string,
   /** Mensagem de transição, antes de redirecionar */
   contents?: string[],
   /** Chave(ou caminho) do diálogo que quer chamar */
   redirect_to: string[],
-  store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> }
+  store?: { interaction_data?: Record<string, any>, contact_data?: Record<string, any> },
+  fns?: FlowMessageFn[]
 }
 export type FlowMessageResponse = (
   Omit<FlowMessageInfoType, 'interaction_mode' | '_id' | 'client_id'> | 
   Omit<FlowMessageAskType, 'interaction_mode' | '_id' | 'client_id'> | 
+  Omit<FlowMessageOpenDialogType, 'interaction_mode' | '_id' | 'client_id'> | 
   FlowMessageRedirectType
 )
 export interface FlowMessageAskType extends FlowMessageBase{
   /** ask: É uma pergunta que necessita da resposta do cliente */
   mode: 'ask',
+  condition?: string,
+  if_error?: FlowMessageIfError,
   /** respostas possíveis do usuário */
   responses: FlowMessageResponse[]
 }
-export type FlowMessageType = FlowMessageInfoType | FlowMessageAskType;
+export interface FlowMessageOpenDialogType extends FlowMessageBase{
+  /** open: O usuario e o cliente podem trocar mensagem livremente */
+  mode: 'open-dialog'
+}
+export type FlowMessageType = FlowMessageInfoType | FlowMessageAskType | FlowMessageOpenDialogType;
 
 export interface FlowMessageFnCallTrigger{
   mode: 'call-trigger',
@@ -164,20 +180,41 @@ export interface FlowMessageContact{
   user_id?: string,
   first_name?: string,
   last_name?: string,
-  status?: string,
+  status?: FlowMessageContactStatus,
   phone: string
-  contact_data?: any,
-  interaction?: {
-    flow_message_id: string,
-    /** Chave de onde o contato está no fluxo */
-    step: string[],
-    start_of_interection: Date,
-    last_update: Date,
-    interaction_data?: any
-  }
+  contact_data?: Record<string, any>,
+  flow_id?: string,
+  sent_default_template?: Array<{
+    template_id: string;
+    sent_at: Date;
+  }>,
+  interaction?: IFlowMessageContactInteraction
+  provider_id?: string,
+  pending_messages?: FlowMessageContactPendingMessage[]
+  created_at?: Date,
+  updated_at?: Date,
 }
+
 export interface FlowMessageContactPendingMessage{
   flow_message_id: string;
   step: string[];
   interaction_data?: any;
+}
+
+export type FlowMessageContactStatus = "optin" | "optout" | "error";
+interface IFlowMessageContactInteraction {
+  flow_message_id: string;
+  /** Chave de onde o contato está no fluxo */
+  step: string[];
+  start_of_interaction: Date;
+  last_update: Date;
+  interaction_data?: Record<string, any>;
+  historic?: FlowMessageContactInteractionHistoric[];
+}
+export interface FlowMessageContactInteractionHistoric{
+  integration_response: any,
+  step: string[],
+  message_sent?: string,
+  message_received?: string,
+  created_at: Date
 }

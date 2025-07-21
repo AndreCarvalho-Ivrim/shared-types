@@ -66,7 +66,8 @@ export interface WorkflowTriggerObserverEvents extends WorkflowTriggerBase{
   name: '@observer-events',
   /** Adicione as condicionais dos eventos do observer que quer disparar */
   data: {
-    matchs: Array<{ condition: string, name: string }>
+    matchs?: Array<{ condition: string, name: string }>,
+    ref?: string,
   } 
 }
 export interface WorkflowTriggerUpdateFlowEntityData extends  WorkflowTriggerBase{
@@ -94,14 +95,78 @@ export interface WorkflowTriggerUpdateFlowData extends  WorkflowTriggerBase{
    */
   name: '@update-flow-data',
   data: {
-    /** Id da entidade. Caso seja uma entidade fora do workflow, usar a notação ```flow-id#entity-key``` */
-    entity_key: string,
+    /**
+     * OPCIONAL - propriedade só é valida quando mode é igual a FlowEntityData: Id da entidade. \
+     * Caso seja uma entidade fora do workflow, usar a notação ```flow-id#entity-key```.
+     **/
+    entity_key?: string,
+    /**
+     * Todas propriedades tem o data. adicionado automaticamente, então use o \@id = _id e \@current_step = current_step_id,\
+     * caso queira acessar essas propriedades.
+     **/
     query?: any,
     /** 
      * Record<chave-na-entidade-dinamica, (valor-estatico | \@[shortcode] | \@code_helper)>
+     * 
+     * Se adicionar ? no final da 'chave-na-entidade-dinamica', o dado só será inserido caso seja \
+     * válido.
      */
-    append_values: Record<string, any>
+    append_values?: Record<string, any>,
+    conditional_append_values?: {
+      /**
+       * Para se referenciar os parametros passados, utilize o prefixo ```_params.```, \
+       * exemplo: ```_params.id```
+       */
+      condition?: string,
+      append_values: Record<string, any>,
+      /**
+       * Caso essa propriedade esteja marcada como true, quando uma condição der match, ela \
+       * interromperá o loop, caso contrário, continuará executando as próximas condições \
+       * e incrementando os valores 
+       **/
+      breakExec?: boolean
+    }[]
   }
 }
 
 export type WorkflowTriggerType = WorkflowTriggerSyncFlowDatas | WorkflowTriggerGamificationActionLog | WorkflowTriggerObserverEvents | WorkflowTriggerUpdateFlowEntityData | WorkflowTriggerUpdateFlowData;
+
+export type WorkflowFlowComments = { mode: 'comments' };
+export type WorkflowFlowChat = {
+  mode: 'chat',
+  /**
+   * É a ref de uma propriedade do flow-data utilizada para montar \
+   * o título da página externa do ivrim notes
+   */
+  identifier: string,
+  /**
+   * Permite enviar mensagens a partir de uma página publica \
+   */
+  external_email?: boolean,
+  permissions?: {
+    /** Rotas onde será possivel abrir chat e manda mensagem */
+    steps_open_chats: 'all' | string[],
+    /** Permite ver os chats de outros usuários */
+    view_all_chats: 'all' | 'all-with-permissions' | string[],
+    /** Permite abrir novos chats com usuários da empresa */
+    open_chats: 'all' | 'all-with-permissions' | string[],
+    /**
+     * Permite navegar entre os chats em que está incluso, quando está \
+     * na página externa.
+     * 
+     * - all: todos podem ver a sidebar
+     * - all-with-permissions: apenas usuários com permissão no fluxo
+     * - string[]: apenas permissões selecionadas
+     */
+    sidebar_on_external_page: 'all' | 'all-with-permissions' | string[],
+    /**
+     * Opção complementar ao open_chats \
+     * 
+     * O usuario só terá permissão caso passe em algum condicional \
+     * disponível: $_user_id
+     */
+    switch_condition?: string[]
+  }
+};
+
+export type WorkflowIvrimNotes = WorkflowFlowComments | WorkflowFlowChat;

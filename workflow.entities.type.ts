@@ -1,4 +1,5 @@
 import { AvailableIcons } from "./icon.type";
+import { StepViewAttrMaskType } from "./step.item.view.type";
 import { WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
 
 export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom" | 'time';
@@ -15,6 +16,7 @@ export interface FlowEntitySchemaInfoRule{
   render?: string,
   min?: number,
   max?: number,
+  step?: number,
   hidden?: 'visualization' | 'edition'
 }
 export interface FlowEntitySchemaInfo{
@@ -30,6 +32,15 @@ export interface FlowEntitySchemaInfo{
    * de ter recursos de geração de token automática
    */
   mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe' | 'access-token',
+  condition_mask?: {
+    type: StepViewAttrMaskType,
+    condition: string,
+    /**
+     * Utilizado para subistituir o valor do campo pelo icone pela cor indicada
+     */
+    icon?: AvailableIcons,
+    alt?: string
+  }[],
   options?: { value: string, name: string }[],
   autocomplete?: {
     /** Se iniciar com @ está se referindo alguma função hardcode, e não do WF Entities */ 
@@ -65,7 +76,7 @@ export interface FlowEntitySchemaInfo{
      */ 
     conflit?: 'overwrite' | 'merge'
   },
-  customData?: StepItemCustomListDraggable | {
+  customData?: StepItemCustomListDraggable | StepItemCustomList | {
     mode: '@list-draggable',
     settings?: any
   },
@@ -213,6 +224,16 @@ export interface FlowEntityInfo{
 export interface StepItemCustomListDraggable{
   mode: '@list-draggable',
   settings: {
+    /** Título que aparecerá no modal */
+    title?: string,
+    initial_value?: Record<string, any>[]
+  }
+}
+
+export interface StepItemCustomList{
+  mode: '@list',
+  settings: {
+    mode: 'inline',
     /** Título que aparecerá no modal */
     title?: string,
     initial_value?: Record<string, any>[]

@@ -49,7 +49,13 @@ export interface StepViewColumnType{
    */
   id: string, 
   name: string,
-  type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file' |  AvailableCustomItemModeType,
+  /**
+   * Caso use o \@link, o id será o link de redirecionamento, e caso precise de configurações a mais \
+   * utilize a propriedade data.
+   * 
+   * Caso a url esteja no conteúdo da referência, deve utilizar o \@redirect-to
+   */
+  type: IntegrationExcelColumnTypeType | 'file-multiple' | 'file' |  AvailableCustomItemModeType | 'group',
   /**
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
@@ -60,25 +66,68 @@ export interface StepViewColumnType{
   translate?: Record<string, string>,
   condition?: string,
   required?: boolean,
-  permission_to_view?: string
+  permission_to_view?: string,
+  /**
+   * Caso type \@link, você pode preencher as configurações a seguir:
+   * ```
+   *  {
+   *    // default: _blank
+   *    target?: '_blank' | '_self'
+   *    // texto do botão, default: Acessar
+   *    text?: string
+   *  }
+   * ```
+   */
+  data?: any
 }
 export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
+export type AdditionalTablesType = {
+  label: string,
+  columns: StepViewColumnType[],
+}
 export interface StepViewTableType extends StepViewBaseType{
   type: 'table',
+  columns: (StepViewColumnType | StepViewColumnGroupType)[],
+  additionalTables?: AdditionalTablesType[]
+  arrayTable?: {
+    /** Id do array de objects */
+    id: string,
+    /**
+     * Condicional para validar se uma posição do array será renderizado ou não. Observações:
+     * - Use [$flow_data:] para mencionar dados que estão no flow-data
+     * - Use [$] para acessar dados que estão sendo observados no formulário
+     * - Use [$this.] para acessar dados do laço atual
+     **/
+    condition?: string
+  }
+}
+export interface StepViewColumnGroupType extends Omit<StepViewColumnType, 'type'>{
+  type: 'group',
   columns: StepViewColumnType[]
 }
 export interface StepViewGroupTableType extends StepViewBaseType{
   id: string,
   type: 'group-table',
   resume: StepViewColumnType[],
-  columns: StepViewColumnType[],
+  columns: (StepViewColumnType | StepViewColumnGroupType)[],
   required?: boolean
 }
 export interface StepViewHorizontalTableType extends Omit<StepViewGroupTableType, "type" > {
   type: 'horizontal-table',
   split_table?: number,
   /** true (default) */
-  has_pagination?: boolean
+  has_pagination?: boolean,
+  default_requirements?: {
+    /** Dados que espero na visualização */
+    data: any[],
+    /** Quais propriedades será realizado o match */
+    matchs: string[]
+  },
+  order_by?: {
+    field: string,
+    order: 'asc' | 'desc'
+  }
+  filter?: { condition: string }
 }
 export interface StepViewTasksType extends StepViewBaseType{
   /**
@@ -109,6 +158,17 @@ export interface StepViewListType extends StepViewBaseType{
   type: 'list',
   required?: boolean
 }
+export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar'
+export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
+  'none':          'Sem máscara',
+  'alert-danger':  'Alerta Perigo (Vermelho)',
+  'alert-warning': 'Alerta Atenção (Amarelo)',
+  'alert-info':    'Alerta Informação (Azul Claro)',
+  'alert-light':   'Alerta Leve (Cinza Claro)',
+  'alert-success': 'Alerta Sucesso (Verde)',
+  'progress-bar':  'Barra de Progresso'
+}
+
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   type: 'description' | 'html',
   /**
@@ -120,10 +180,18 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
   id?: string,
   replacers?: string[],
   /**
+  * Filter so é utilizado quando informado o id do array
+  */
+  filter?: string,
+  /**
    * Para utilizar a mascara de progress-bar é necessário que no conteúdo tenha \
    * dois números separados por virgula(,)
    */
-  mask?: 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar',
+  mask?: StepViewAttrMaskType,
+  condition_mask?: {
+    type: StepViewAttrMaskType,
+    condition: string
+  }[],
   rules?: {
     /** 
      * STRING CONDITIONAL
