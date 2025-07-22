@@ -151,6 +151,8 @@ export type SubhandlerType = {
    * split-non-alphanumeric - Separa os valores por caracteres especiais exeto espaço \
    */
   formatter?: IntegrationExcelColumnTypeType | 'split-comma' | 'split-non-alphanumeric';
+  /** Letras ou caracteres que serão ignorados no formatter */
+  ignore_formatter?: string[];
   /** Se for true, será salvo apenas uma vez */
   writeOnce?: boolean;
   required?: boolean
