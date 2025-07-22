@@ -114,4 +114,6 @@ export type AvailableIcons =
   'StarIcon' |
   'SendIcon' |
   'ClockIcon' | 
-  'ListBulletIcon' 
+  'ListBulletIcon' |
+  'ContactIcon' |
+  'AddressIcon'
