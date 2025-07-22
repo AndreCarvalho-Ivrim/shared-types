@@ -226,7 +226,7 @@ export const getDomain = (application: 'hub' | 'isac' | 'isac_back' |  'hub_back
   try {
     // @ts-ignore
     const PORTAL = import.meta.env.VITE_PORTAL_URL;
-    urls.hub = PORTAL!;
+    urls.hub = ''; // PORTAL!; -- portal descontinuado
     // @ts-ignore
     urls.isac_back = import.meta.env.VITE_BASE_URL
     // @ts-ignore
