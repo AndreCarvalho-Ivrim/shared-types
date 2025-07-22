@@ -99,6 +99,9 @@ export const hubRoutes = {
   support: {
     home: () => '/suporte',
     details: (_id: string) => `/suport/${_id}`
+  },
+  learning_center: {
+    home: () => '/learning-center'
   }
 }
 export const isacBackRoutes = {
