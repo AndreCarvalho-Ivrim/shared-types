@@ -85,9 +85,6 @@ export const hubRoutes = {
     home: () => '/meus-docs',
     show: (id: string) => `/meus-docs/${id}`,
   },
-  training: {
-    home: () => '/treinamentos',
-  },
   closing_folder: {
     home: (paths?: string[]) => `/fechamento-financeiro/${(paths ?? []).join('/')}`,
   },
@@ -101,7 +98,8 @@ export const hubRoutes = {
     details: (_id: string) => `/suport/${_id}`
   },
   learning_center: {
-    home: () => '/learning-center'
+    home: () => '/learning-center',
+    show: (id: string) => `/learning-center/${id}`
   }
 }
 export const isacBackRoutes = {
@@ -159,7 +157,8 @@ export type AvailableRegexUrls =
   '@hub:support.details(_id)' |
   '@hub:session.home' |
   '@isac_back:public_route(flow_id,variation)' |
-  '@hub:training.home' 
+  '@hub:learning_center.home' |
+  '@hub:learning_center.show(id)' 
 
 /**
  * *obs. Use handleRegexUrl('custom-url' as any) para ignorar o erro de tipagem.*
