@@ -146,6 +146,8 @@ export type SubhandlerType = {
   range?: number | string;
   /** Local onde será adicionado o valor */
   key: string;
+  /** Utilizado para mostrar visualização no pré-processamento */
+  title: string,
   /** Adicionar uma formatação especial ao salvar o valor \
    * split-comma - Separa os valores por vírgula \
    * split-non-alphanumeric - Separa os valores por caracteres especiais exeto espaço \
