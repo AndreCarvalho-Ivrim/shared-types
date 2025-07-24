@@ -1488,6 +1488,8 @@ export interface WFCActionFnUpdateSelected {
     ref: string,
     condition?: string,
   }[],
+  /** Se estiver true, disparo o handleNotifications após a atualização */
+  trigger_notifications?: boolean,
   confirm?: StepActionConfirmType,
   /**
    * O que fazer em confirmação múltipla:
