@@ -983,8 +983,9 @@ export interface WorkflowConfigExceptionView{
   subpage_of_flow_data?: {
     identifier: string,
     view_mode?: { condition?: string, slug: string }[],
-    is_public?: boolean
-  }
+    is_public?: boolean,
+  },
+  whithout_flow_data?: boolean
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
