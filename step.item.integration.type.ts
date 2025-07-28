@@ -141,17 +141,23 @@ export type SubhandlerType = {
   /** verifica se na linha atual tem o search */
   search: string;
   /** Modo para pegar o valor */
-  mode: 'all' | 'includes' | 'after-includes' | 'before-includes';
+  mode: 'all' | 'includes' | 'after-includes' | 'before-includes' | 'ignore';
   /** quantos caracteres devem ser capturados ou até qual string */
   range?: number | string;
   /** Local onde será adicionado o valor */
   key: string;
+  /** Utilizado para mostrar visualização no pré-processamento */
+  title: string,
   /** Adicionar uma formatação especial ao salvar o valor \
    * split-comma - Separa os valores por vírgula \
    * split-non-alphanumeric - Separa os valores por caracteres especiais exeto espaço \
    */
   formatter?: IntegrationExcelColumnTypeType | 'split-comma' | 'split-non-alphanumeric';
+  /** Letras ou caracteres que serão ignorados no formatter */
+  ignore_formatter?: string[];
+  /** Se for true, será salvo apenas uma vez */
   writeOnce?: boolean;
+  required?: boolean
 }
 
 export type HandlerPDFType = {
@@ -177,6 +183,8 @@ export type HandlerPDFType = {
   key: string;
   /** Cada handler deve ter um indetificador unico */
   identifier: string;
+  /** Nome de indentificação do handler */
+  name: string
 }
 
 export interface IntegrationPDFType {
@@ -195,5 +203,6 @@ export interface IntegrationPDFType {
   },
   /** Entitidade para salvar o registro de importação da planilha */
   import_registration?: string,
+  preprocess?: boolean
 }
 export type IntegrationsType = IntegrationExcelType | IntegrationOmieType | IntegrationPDFType;

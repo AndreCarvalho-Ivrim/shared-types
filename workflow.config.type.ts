@@ -21,7 +21,7 @@ export interface WorkflowConfigFilterType {
    * - not-list: Não está na lista de opções (nin)
    * - array-object: Verifica se dentro de um array, se algum elemento dele da match com o value passado
    */
-  type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in',
+  type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in' | 'elem-match',
   /** Veja a tipagem de WorkflowConfigFilterRefType para ver opções pré-definidas */
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
@@ -596,6 +596,91 @@ export interface WorkflowViewModeGroup extends WorkflowViewModeBase {
     theme_by_value: Record<string, ThemeColorType>
   },
 }
+interface BaseIndicators {
+  name: string,
+  description?: string, 
+  group_by?: string,
+  icon?: AvailableIcons,
+  /** Indica se é uma contagem de itens. */
+  count?: boolean,
+}
+export interface IBaseIndicatorsFlowDataIBaseQuery {
+  ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+  value: any,
+  type: WorkflowConfigFilterType['type']
+}
+export interface BaseIndicatorsFlowData extends BaseIndicators {
+  ref: 'flow-data',
+  query?: IBaseIndicatorsFlowDataIBaseQuery[],
+}
+interface BaseIndicatorsEntity extends BaseIndicators {
+  ref: 'entity',
+  entity_id: string,
+}
+type TotalCards = BaseIndicatorsFlowData | BaseIndicatorsEntity;
+export interface IWorkflowViewModeResumeSemanticOfDatas {
+  /** Nome do agrupamento */
+  name: string,
+  query: IBaseIndicatorsFlowDataIBaseQuery[]
+}
+
+interface IChartsRefFlowData {
+  ref: 'flow-data',
+  /** Título da seção */
+  name: string,
+  chart_type: 'bar' | 'donut',
+  semantics_of_datas: (IWorkflowViewModeResumeSemanticOfDatas & { color: string })[],
+}
+
+interface IChartsRefEntity {
+  ref: 'entity',
+  /** Título da seção */
+  name: string,
+  /** É o id da entidade */
+  entity_id: string,
+  chart_type: 'bar' | 'donut',
+  semantics_of_datas: (IWorkflowViewModeResumeSemanticOfDatas & {
+    query: (IBaseIndicatorsFlowDataIBaseQuery & { 
+      /** Suporte apenas para o tipo 'text' */
+      type: 'text'
+    })[],
+    color: string
+  })[],
+}
+
+type Charts = IChartsRefFlowData | IChartsRefEntity;
+export interface WorkflowViewModeResume extends WorkflowViewModeBase {
+  view_mode: 'resume',
+  /** Seção de cards totais\
+   * \
+   * Aparecem na parte superior da página.
+   */
+  total_cards: TotalCards[],
+  /** Seção de cards com gráficos */
+  charts: Charts[],
+  /** Seção de listagem */
+  list: Pick <WorkflowViewModeGroup, 'control_status'> & {
+    name: string,
+    redirect_to: string,
+    ref: 'entity',
+    entity_id: string,
+    /** De-Para das keys do objeto */
+    from_to_fields: {
+      id: string,
+      title: string
+      date: string
+      status: string
+    },
+    progress_helpers: {
+      /** Key usada como identificação nos regitros */
+      base_ref: string,
+      /** Key que armazena a identificação */
+      data_ref: string,
+      /** Step final das tasks usado como base para calcular o progresso do projeto */
+      finished_step: string,
+    }
+  }
+}
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
@@ -719,7 +804,7 @@ export interface WorkflowViewModeDashboardFn{
   data?: { filter?: any, dynamic_filters?: boolean }
 }
 
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup;
+export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup | WorkflowViewModeResume;
 
 export interface WorkflowAuthTemplateType {
   id: string,
@@ -1404,6 +1489,8 @@ export interface WFCActionFnUpdateSelected {
     ref: string,
     condition?: string,
   }[],
+  /** Se estiver true, disparo o handleNotifications após a atualização */
+  trigger_notifications?: boolean,
   confirm?: StepActionConfirmType,
   /**
    * O que fazer em confirmação múltipla:
