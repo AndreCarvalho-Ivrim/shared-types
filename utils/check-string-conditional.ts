@@ -73,6 +73,7 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  * 
  * **Operadores**
  * - eq
+ * - eqi (igualdade case-isensitive)
  * - lt
  * - lte
  * - gt
@@ -178,8 +179,11 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
       }
     }
 
+    const toLower = (v: any) => typeof v === 'string' ? v.toLowerCase() : v;
+
     switch (operator) {
       case 'eq': return val_1 === val_2;
+      case 'eqi': return toLower(val_1) === toLower(val_2);
       case 'lt': return val_1 < val_2;
       case 'lte': return val_1 <= val_2;
       case 'gt': return val_1 > val_2;
@@ -493,7 +497,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 };
 export const makeStrc = (arrStrc: Array<{
   '$'?: string,
-  '#'?: 'eq' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains',
+  '#'?: 'eq' | 'eqi' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains',
   '*'?: string,
   /** Se o -end for mais de 2 fechamentos use o as any para ignorar o erro de tipagem */
   '&'?: 'and' | 'or' | 'and-begin' | 'or-begin' | 'and-end' | 'or-end' | 'and-end-end' | 'or-end-end'
