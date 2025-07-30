@@ -174,6 +174,10 @@ export interface ICalculateRecurringSalesPriceParams {
   icmsArion: number;
 }
 export interface ICalculateRecurringSalesPriceResul extends ICalculateBaseResult {
+  /** Líquido (ATO COTEPE) Unitário */
+  netPriceUnitCotepe: number;
+  /** Líquido (ATO COTEPE) Total */
+  netPriceTotalCotepe: number;
   /** Bruto (ATO COTEPE) Unitário */
   grossPriceUnitCotepe: number;
   /** Bruto (ATO COTEPE) Total */
@@ -205,6 +209,9 @@ export interface ICalculateMarginResult {
 //#endregion
 
 export class CalculatorMatrix {
+  /** PIS e COFINS sem ATO COTEPE */
+  private static pisCofins = 0.02993;
+
   static execute(data: ICalculatorMatrixData) {
     const {
       operator,
@@ -277,7 +284,7 @@ export class CalculatorMatrix {
       recurringMargin,
       possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
       monthlyCostsWithOverhead: hiringCosts.monthlyCostsWithOverhead,
-      linkQtd
+      linkQtd,
     });
     /** Preço de Venda Eventual ou Taxa de Instalação */
     const eventualSalePriceOrInstallationFee = this.calculateEventualSalePriceOrInstallationFee({
@@ -385,10 +392,9 @@ export class CalculatorMatrix {
     let netPriceUnit = 0;
     /** Líquido total */
     let netPriceTotal = 0;
-    /** PIS e COFINS sem ATO COTEPE */
-    const pisCofins = 0.02993;
+
     if (recurringUnitCostWithTax) {
-      grossPriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + pisCofins))
+      grossPriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + this.pisCofins))
       grossPriceUnit = grossPriceTotal / linkQtd;
       netPriceUnit = ((grossPriceUnit * (1 - icmsArion)) * (1 - (0.0365))) * (1 - 0.015);
       netPriceTotal = netPriceUnit * linkQtd;
@@ -445,8 +451,12 @@ export class CalculatorMatrix {
     recurringMargin,
     possibleOverheadCosts,
     monthlyCostsWithOverhead,
-    linkQtd
-  }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'possibleOverheadCosts' | 'linkQtd' | 'monthlyCostsWithOverhead'>): ICalculateRecurringSalesPriceResul {
+    linkQtd,
+    icmsArion
+  }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'possibleOverheadCosts' | 'linkQtd' | 'monthlyCostsWithOverhead' | 'icmsArion'>): ICalculateRecurringSalesPriceResul {
+    /** PIS e COFINS do ATO COTEPE */
+    const pisCofins = 0.0365;
+
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -455,6 +465,10 @@ export class CalculatorMatrix {
     let netPriceUnit = 0;
     /** Líquido total */
     let netPriceTotal = 0;
+    /** Líquido unitário ATO COTEPE */
+    let netPriceUnitCotepe = 0;
+    /** Líquido total ATO COTEPE */
+    let netPriceTotalCotepe = 0;
     /** Bruto total ATO COTEPE */
     let grossPriceTotalCotepe = 0;
     /** Bruto unitário ATO COTEPE */
@@ -471,29 +485,41 @@ export class CalculatorMatrix {
         recurringSalesPriceWithPercentual.grossPriceUnit :
         0;
     
+    const discount = (grossPriceTotal * icmsArion) + ((grossPriceTotal - (grossPriceTotal * icmsArion)) * pisCofins);
     netPriceTotal = customerProfile === 'Operadora' ?
-      recurringSalesPriceFull.netPriceTotal:
+      grossPriceTotal - discount :
       customerProfile === 'Corporativo' ?
         recurringSalesPriceWithPercentual.netPriceTotal :
         0;
     netPriceUnit = customerProfile === 'Operadora' ?
-      recurringSalesPriceFull.netPriceUnit:
+      netPriceTotal / linkQtd :
       customerProfile === 'Corporativo' ?
         recurringSalesPriceWithPercentual.netPriceUnit :
         0;
 
-    /** PIS e COFINS do ATO COTEPE */
-    const pisCofins = 0.0365;
     grossPriceTotalCotepe = customerProfile === 'Operadora' ? 
       (grossPriceTotal * (monthlyCostsWithOverhead! / grossPriceTotal)) / (1 - (recurringMargin + pisCofins)) : 
       0;
     grossPriceUnitCotepe = customerProfile === 'Operadora' ? 
       grossPriceTotalCotepe / linkQtd : 
       0;
-  
+
+    netPriceTotalCotepe = customerProfile === 'Operadora' ?
+      grossPriceTotalCotepe - (grossPriceTotalCotepe * pisCofins) :
+      customerProfile === 'Corporativo' ?
+        recurringSalesPriceWithPercentual.netPriceTotal :
+        0;
+    netPriceUnitCotepe = customerProfile === 'Operadora' ?
+      netPriceTotalCotepe / linkQtd:
+      customerProfile === 'Corporativo' ?
+        recurringSalesPriceWithPercentual.netPriceUnit :
+        0;
+
     return {
       netPriceUnit: this.convertDecimals(netPriceUnit),
       netPriceTotal: this.convertDecimals(netPriceTotal),
+      netPriceUnitCotepe: this.convertDecimals(netPriceUnitCotepe),
+      netPriceTotalCotepe: this.convertDecimals(netPriceTotalCotepe),
       grossPriceUnit: this.convertDecimals(grossPriceUnit),
       grossPriceTotal: this.convertDecimals(grossPriceTotal),
       grossPriceUnitCotepe: this.convertDecimals(grossPriceUnitCotepe),
