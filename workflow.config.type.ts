@@ -1236,11 +1236,20 @@ export interface WorkflowConfigFlowAlert{
     }>>,
   }[]
 }
-export interface WorkflowConfigFlowAlertFn{
+interface WorkflowConfigFlowAlertFnBase{
   listening?: { condition: string },
+  /** Essa funcionalidade faz com que seja feitas requisições mais espados quando o modo está inativo */
+  stand_by?: boolean
+}
+export interface WorkflowConfigFlowAlertFnFlowEntity extends WorkflowConfigFlowAlertFnBase{
   request: 'flow-entity',
   data: { entity_key: string }
 }
+export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfigFlowAlertFnBase{
+  request: 'generic-singleton',
+  data: { ref: string }
+}
+export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton;
 export interface WorkflowConfigFlowAlertItem{
   type: 'div' | 'strong' | 'span',
   condition?: string,
