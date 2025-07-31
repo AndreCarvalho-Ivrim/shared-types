@@ -54,6 +54,8 @@ export interface ICircuit {
   contracted_installation?: number;
   grouping_type: 'single' | 'group' | 'ungroup';
   established_group?: boolean;
+  sale_price_monthly?: number;
+  sale_price_installation?: number;
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
