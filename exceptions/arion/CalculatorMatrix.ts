@@ -52,6 +52,8 @@ export interface ICircuit {
   third_party_provider?: string;
   contracted_monthly?: number;
   contracted_installation?: number;
+  grouping_type: 'single' | 'group' | 'ungroup';
+  established_group?: boolean;
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
@@ -335,7 +337,7 @@ export class CalculatorMatrix {
 
     if (!product || !uf || !speed) return;
 
-    const linkGroupKey = [uf,product,speed].join('|');
+    const linkGroupKey = [uf,product,speed].join('‡');
     circuit.link_group_key = linkGroupKey;
     return linkGroupKey;
   }
