@@ -82,6 +82,19 @@ export interface FlowPermissionOnUserType{
   flow_actions_permitted: string[],
 }
 
+export interface TrainingType{
+  _id: string;
+  title: string;
+  tags: string[];
+  key_words: string[];
+  description: string;
+  wallpaper: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  visits: number;
+}
+
 export type StringConditionalTypes = 'prop' | 'operator' | 'value' | 'logic';
 export type ItemOrViewOrWidgetOrIntegration = StepItemType | IntegrationsType | StepViewType | WidgetType;
 
