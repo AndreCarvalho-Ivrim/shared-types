@@ -75,6 +75,9 @@ export const hubRoutes = {
     integrations: {
       whatsapp: () => '/painel-adm/integracao-whatsapp',
     },
+    docs: {
+      home: () => '/painel-adm/documentos'
+    }
   },
   icon: () => '/icones',
   dashboard: {
@@ -158,7 +161,8 @@ export type AvailableRegexUrls =
   '@hub:session.home' |
   '@isac_back:public_route(flow_id,variation)' |
   '@hub:learning_center.home' |
-  '@hub:learning_center.show(id)' 
+  '@hub:learning_center.show(id)' |
+  '@hub:admin_panel.docs.home' 
 
 /**
  * *obs. Use handleRegexUrl('custom-url' as any) para ignorar o erro de tipagem.*
