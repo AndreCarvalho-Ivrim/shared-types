@@ -185,14 +185,14 @@ export type HandlerPDFType = {
   identifier: string;
   /** Nome de indentificação do handler */
   name: string
-  /** Margem de erro para quebra de linha considerando eixo Y */
-  y_axis_margin_of_error?: number
 }
 
 export interface IntegrationPDFType {
   key: string,
   type: 'pdf',
   mode: 'integration',
+  /** Margem de erro para quebra de linha considerando eixo Y */
+  y_axis_margin_of_error?: number,
   label?: string,
   placeholder?: string,
   required?: boolean,
