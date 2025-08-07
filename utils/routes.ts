@@ -75,6 +75,9 @@ export const hubRoutes = {
     integrations: {
       whatsapp: () => '/painel-adm/integracao-whatsapp',
     },
+    docs: {
+      home: () => '/painel-adm/documentos'
+    }
   },
   icon: () => '/icones',
   dashboard: {
@@ -84,9 +87,6 @@ export const hubRoutes = {
   gallery: {
     home: () => '/meus-docs',
     show: (id: string) => `/meus-docs/${id}`,
-  },
-  training: {
-    home: () => '/treinamentos',
   },
   closing_folder: {
     home: (paths?: string[]) => `/fechamento-financeiro/${(paths ?? []).join('/')}`,
@@ -99,6 +99,10 @@ export const hubRoutes = {
   support: {
     home: () => '/suporte',
     details: (_id: string) => `/suport/${_id}`
+  },
+  learning_center: {
+    home: () => '/learning-center',
+    show: (id: string) => `/learning-center/${id}`
   }
 }
 export const isacBackRoutes = {
@@ -156,7 +160,9 @@ export type AvailableRegexUrls =
   '@hub:support.details(_id)' |
   '@hub:session.home' |
   '@isac_back:public_route(flow_id,variation)' |
-  '@hub:training.home' 
+  '@hub:learning_center.home' |
+  '@hub:learning_center.show(id)' |
+  '@hub:admin_panel.docs.home' 
 
 /**
  * *obs. Use handleRegexUrl('custom-url' as any) para ignorar o erro de tipagem.*
@@ -226,7 +232,7 @@ export const getDomain = (application: 'hub' | 'isac' | 'isac_back' |  'hub_back
   try {
     // @ts-ignore
     const PORTAL = import.meta.env.VITE_PORTAL_URL;
-    urls.hub = PORTAL!;
+    urls.hub = ''; // PORTAL!; -- portal descontinuado
     // @ts-ignore
     urls.isac_back = import.meta.env.VITE_BASE_URL
     // @ts-ignore
