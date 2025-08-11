@@ -61,6 +61,13 @@ export interface WorkflowConfigNotificationType {
    */
   template_id: string,
   type: 'email' | 'message',
+  /**
+   * Utilitários no valor:
+   * - (date): utilizar para formatar uma data do padrão YYYY-MM-DD p/ DD/MM/YYYY
+   * - |: para adicionar um valor padrão se o referido for inválido
+   * - #\<val\>:\<traslate\>: utilize o # para marcar traduções, com o primeiro valor sendo o valor de match, \
+   * e após os : o valor de substituição
+   */
   params: Record<string, string>,
   replacers: Record<string, string | {
     codition?: string,
@@ -250,7 +257,12 @@ export interface HandlersType {
   handlers: AllHandlersType
 }
 export interface WorkflowConfigObserverFnType {
-  /** EVENTS -> available names on type event
+  /** 
+   * APPEND -> available reserved-words on type append
+   * 
+   * \@current_step_id: Para modificar a etapa do flow-data
+   * 
+   * EVENTS -> available names on type event
    * 
    * \@revalidate-when-updated-product: Evento válido apenas no FlowData, para revalidação de estoque na \
    * estrutura do WF Duzani.
