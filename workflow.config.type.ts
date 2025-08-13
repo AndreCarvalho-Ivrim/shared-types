@@ -1,4 +1,5 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
+import { FlowEntityDataFilters } from "../services/flowEntity";
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
@@ -1256,7 +1257,7 @@ interface WorkflowConfigFlowAlertFnBase{
 }
 export interface WorkflowConfigFlowAlertFnFlowEntity extends WorkflowConfigFlowAlertFnBase{
   request: 'flow-entity',
-  data: { entity_key: string, query?: any }
+  data: { entity_key: string, query?: FlowEntityDataFilters['query'] }
 }
 export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfigFlowAlertFnBase{
   request: 'generic-singleton',
@@ -1264,7 +1265,13 @@ export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfi
 }
 export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton;
 export interface WorkflowConfigFlowAlertItem{
-  type: 'div' | 'strong' | 'span',
+  /**
+   * - indicator: são icones com tooltip para demonstrar estados como progresso/finalizado/falha. \
+   * Para utilizá-lo é necessário parametrizar a propriedade states, e caso queira utilizar o tooltip \
+   * configurar a propriedade tooltip informando a referência do valor, com o valor atual sendo \
+   * referênciado como this.
+   */
+  type: 'div' | 'strong' | 'span' | 'indicator',
   condition?: string,
   className?: string,
   /**
@@ -1281,6 +1288,14 @@ export interface WorkflowConfigFlowAlertItem{
   static?: boolean,
   /** Válido apenas, quando type = 'div' */
   items?: WorkflowConfigFlowAlertItem[]
+  /** Válido apenas quando type = 'indicator', com o valor sendo a referência da string, com o valor atual sendo this */
+  tooltip?: string,
+  /** Válido apenas quando type = 'indicator', com o valor para cada estado sendo um strc, com o valor atual sendo this */
+  states?: {
+    loading?: string,
+    success?: string,
+    fail?: string,
+  }
 }
 
 type WFIntegrationKeys = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'outhers';
