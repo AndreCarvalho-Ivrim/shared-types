@@ -1219,6 +1219,7 @@ export interface WorkflowConfigFlowAlert{
     'danger' | 'warning' | 'success' | 'info'  | 'light'
   ), string | true>>,
   fn?: WorkflowConfigFlowAlertFn,
+  fn_real_time_modal?: WorkflowConfigFlowAlertFn,
   tooltip?: {
     condition?: string,
     /** 
@@ -1255,7 +1256,7 @@ interface WorkflowConfigFlowAlertFnBase{
 }
 export interface WorkflowConfigFlowAlertFnFlowEntity extends WorkflowConfigFlowAlertFnBase{
   request: 'flow-entity',
-  data: { entity_key: string }
+  data: { entity_key: string, query?: any }
 }
 export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfigFlowAlertFnBase{
   request: 'generic-singleton',
@@ -1266,6 +1267,11 @@ export interface WorkflowConfigFlowAlertItem{
   type: 'div' | 'strong' | 'span',
   condition?: string,
   className?: string,
+  /**
+   * Quando essa propriedade esta ativa, ao invés de olhar para o data, gerado pela FN \
+   * olha para o valor gerado pela fn_real_time_modal.
+   */
+  real_time?: boolean,
   /** 
    * Quando valor não estático(static) é possível passar máscara de formatação de data usando ':'. Exemplo:
    * 
@@ -1560,8 +1566,13 @@ export interface WFActionFnCallTrigger {
   /** Este confirm não tem suporte a inserção de dados */
   confirm?: StepActionConfirmType,
   append_values?: Record<string, any>,
+  /**
+   * - trigger-flow-alert: é obrigatório informar a key do flow-alert e action \
+   * que deve ser 'start' (para inicar o listening de um flow-alert) ou 'open' \
+   * (para abrir o modal de um flow-alert).
+   */
   effects?: Partial<Record<AvailableTriggerEffects, boolean | {
-    condition: string,
+    condition?: string,
     [key: string]: any
   }>>,
 }

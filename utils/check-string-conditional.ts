@@ -773,8 +773,8 @@ export const handleCodeHelper__diffInDays = ({ data, param, value }:{ value: str
 const avHandleCodeHelpers = ['sum', 'sumWithMultiplier', 'len', 'linearArithmetic', 'distinct', 'groupByAndSum'];
 export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
   codeHelper: string,
-  chParam: string,
-  parsedParams: any[]
+  chParam?: string,
+  parsedParams?: any[]
 }) => {
   let value: any = undefined;
   
@@ -813,7 +813,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
     }, 0)
   } else
   if (codeHelper === 'len') {
-    if (!chParam || (parsedParams ?? []).length === 0) return;
+    if (!chParam || !parsedParams) return;
 
     let arr = parsedParams;
 
@@ -821,7 +821,7 @@ export const handleCodeHelpers = ({ codeHelper, chParam, parsedParams }: {
     else value = arr.length;
   } else
   if (codeHelper === 'linearArithmetic') {
-    if (!chParam || (parsedParams ?? []).length < 2) throw new Error(
+    if (!chParam || !parsedParams || parsedParams.length < 2) throw new Error(
       'É obrigatório informar pelo menos dois valores e um operador para usar o code-helper de calculo aritmético linear'
     )
 
