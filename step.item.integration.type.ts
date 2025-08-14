@@ -92,6 +92,8 @@ export interface IntegrationExcelType {
     save_order_columns?: string,
     /** Caso queira salvar dados não conhecidos, especifique o nome da prop que armazerá esses dados */
     save_outher_fields?: string,
+    /** Caso haja campos opcionais e que precisem obrigatoriamente ser associados, marcar essa opção */
+    required_associations?: string[]
   }
   append_values?: Record<string, any>,
   /**
