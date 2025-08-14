@@ -247,7 +247,9 @@ export interface StepType{
         /** Apenas alguns itens, como o group collapse tem suporte ao container */
         container?: string,
         /** Válido apenas quando o item é do tipo table */
-        tr?: string
+        tr?: string,
+        /** Estilizações condicionais ```{ strc: { ...options } }``` */
+        conditional?: Record<string, { wrapper?: string, container?: string, tr?: string }>
       }>,
       footer?: {
         container?: string,
