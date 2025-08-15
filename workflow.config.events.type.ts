@@ -341,3 +341,22 @@ export interface RelationshipWithFlowEntityEventEffect{
       find_by_condition?: string
     }
   }
+  export interface FillInPdfTemplateEventType{
+  filename: string,
+  template_url: string,
+  replacers: Record<string, string>,
+  effects: {
+    success: {
+      path_to_save_file: string,
+      is_array?: boolean,
+      /** válido apenas se is_array = true */
+      marge_array?: boolean,
+      append_values?: Record<string, any>
+    },
+    fail: {
+      path_to_save_error: string,
+      append_values?: Record<string, any>
+    },
+    always?: Record<string, any>
+  }
+}

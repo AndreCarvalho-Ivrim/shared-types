@@ -288,6 +288,8 @@ export interface WorkflowConfigObserverFnType {
    * \@send-whatsapp-messages: Evento para disparar mensagens de whatsapp usando o chatbot
    * 
    * \@relationship-with-flow-entity: Evento para relacionar um flow-data com uma entidade dinâmica
+   * 
+   * \@fill-in-pdf-template: Evento para utilizar um docx e gerar um pdf
    */
   name: string,
   /**
@@ -382,6 +384,8 @@ export interface WorkflowConfigObserverFnType {
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
    * 
    * \@handlers: seguir a tipagem de [HandlersType]
+   * 
+   * \@fill-in-pdf-template: seguir a tipagem de [FillInPdfTemplateEventType]
    */
   data?: HandlersType | any
 }
