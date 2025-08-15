@@ -1,3 +1,4 @@
+import { ColumnBadgeType } from "../types";
 import { AvailableCustomItemModeType, ThemeColorType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
@@ -64,6 +65,7 @@ export interface StepViewColumnType{
    * '_default': 'Tradução caso nenhuma opção anterior dê match'
    */
   translate?: Record<string, string>,
+  badge?: ColumnBadgeType,
   condition?: string,
   required?: boolean,
   permission_to_view?: string,
