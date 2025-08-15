@@ -1,5 +1,4 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
-import { FlowEntityDataFilters } from "../services/flowEntity";
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
@@ -1270,7 +1269,14 @@ interface WorkflowConfigFlowAlertFnBase{
 }
 export interface WorkflowConfigFlowAlertFnFlowEntity extends WorkflowConfigFlowAlertFnBase{
   request: 'flow-entity',
-  data: { entity_key: string, query?: FlowEntityDataFilters['query'] }
+  data: {
+    entity_key: string,
+    query?: {
+      ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+      type: WorkflowConfigFilterType['type'],
+      value: any
+    }[]
+  }
 }
 export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfigFlowAlertFnBase{
   request: 'generic-singleton',
