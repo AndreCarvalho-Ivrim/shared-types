@@ -443,7 +443,16 @@ export interface ConfigViewModeColumnsType {
    * 
    * Podendo ter também, '_default' que define o valor padrão caso não seja satisfeito.
    */
-  translate?: Record<string, string>
+  translate?: Record<string, string>,
+  badge?: ColumnBadgeType
+}
+export interface ColumnBadgeType{
+  light?: string[],
+  success?: string[],
+  primary?: string[],
+  warning?: string[],
+  danger?: string[],
+  default?: 'light' | 'success' | 'primary' | 'warning' | 'danger'
 }
 type WorkflowFilterScopeFilter = Record<string, string | {
   type: WorkflowConfigFilterType['type'],
