@@ -3,7 +3,7 @@ export interface AnalysisGroupColumn{
    * Key do flow-data ou utilitários:
    * 
    * - \@steps: Gera uma coluna por etapa
-   * - \@progress: Se a análise gera um progresso acessa o valor
+   * - \@progress.total | \@progress.total_completed | \@progress.percent: Gera o calculo de completos baseado no completed_steps
    */
   key: string,
   /**
@@ -18,7 +18,7 @@ interface AnalysisGroupBase{
   columns: AnalysisGroupColumn[]
 }
 
-interface AnalysisGroupQuantityPerStep extends AnalysisGroupBase{
+export interface AnalysisGroupQuantityPerStep extends AnalysisGroupBase{
   mode: 'quantity-per-step',
   groupBy?: string[],
   completed_steps: string[]
