@@ -10,6 +10,7 @@ export interface AnalysisGroupColumn{
    * No caso da key = \@steps é necessário utilizar o valor \@step-title ou \@step-name
    */
   name: string
+  formating?: 'percent'
 }
 interface AnalysisGroupBase{
   key: string,
