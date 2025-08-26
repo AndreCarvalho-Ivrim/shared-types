@@ -47,6 +47,8 @@ export interface ICircuit {
     months_gross_rate?: number,
     months_gross_cotepe?: number,
     months_gross_cotepe_rate?: number,
+    monthly_fee_margin_of_error?: number,
+    installation_fee_margin_of_error?: number
   }[],
   activation_deadline?: number;
   third_party_provider?: string;
@@ -56,6 +58,8 @@ export interface ICircuit {
   established_group?: boolean;
   sale_price_monthly?: number;
   sale_price_installation?: number;
+  target_monthly_fee?: number;
+  target_installation_fee?: number;
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
