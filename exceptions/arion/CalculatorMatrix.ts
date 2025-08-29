@@ -13,6 +13,7 @@ export interface ICircuit {
   cnl: string;
   latitude_a: string;
   longitude_a: string;
+  linkQtd: number;
   
   monthly_cancellation_fee: number;
   installation_fee: number;
