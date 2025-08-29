@@ -319,7 +319,7 @@ export class CalculatorMatrix {
 
   static getQuantityLinksByUFandSpeed(circuits: ICircuit[]) {
     const links: Record<string, number> = {};
-    for (const circuit of circuits) {      
+    for (const circuit of circuits) {
       let uf = circuit.uf_a;
       if(!uf) {
         uf = this.getUFByAdress(circuit.address_a);
@@ -329,6 +329,8 @@ export class CalculatorMatrix {
       if(circuit.status === 'Reprovado') continue;
 
       const linkGroupKey = CalculatorMatrix.makeLinkGroupKey(circuit);
+
+      if(circuit.grouping_type === 'single' || circuit.grouping_type === 'ungroup') continue;
       if(!linkGroupKey) continue;
 
       if (!links[linkGroupKey]) links[linkGroupKey] = 1;
