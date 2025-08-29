@@ -289,6 +289,9 @@ export interface WorkflowConfigObserverFnType {
    * \@relationship-with-flow-entity: Evento para relacionar um flow-data com uma entidade dinâmica
    * 
    * \@fill-in-pdf-template: Evento para utilizar um docx e gerar um pdf
+   * 
+   * \@fn-exception: Disparar uma fn exception. É importante caso usar value = sync, que retorne o \
+   * flowData atualizado.
    */
   name: string,
   /**
@@ -385,8 +388,15 @@ export interface WorkflowConfigObserverFnType {
    * \@handlers: seguir a tipagem de [HandlersType]
    * 
    * \@fill-in-pdf-template: seguir a tipagem de [FillInPdfTemplateEventType]
+   * 
+   * \@fn-exception
+   * ```
+   * {
+   *    "exception": <nome-da-exception>
+   * }
+   * ```
    */
-  data?: HandlersType | any
+  data?: any
 }
 export interface WFConfigObserverDataEntity {
   entity_key: string,
