@@ -5,40 +5,41 @@ interface ValidateDataParams {
 export interface ICircuit {
   status?: 'Reprovado',
   link_group_key?: string,
-  code: string;
-  speed: string;
-  address_a: string;
-  municipality_a: string;
-  uf_a: string;
-  cnl: string;
-  latitude_a: string;
-  longitude_a: string;
+  linkQtd: number,
+  code: string,
+  speed: string,
+  address_a: string,
+  municipality_a: string,
+  uf_a: string,
+  cnl: string,
+  latitude_a: string,
+  longitude_a: string,
   
-  monthly_cancellation_fee: number;
-  installation_fee: number;
-  gross_unit_price: number;
-  gross_installation_unit: number;
+  monthly_cancellation_fee: number,
+  installation_fee: number,
+  gross_unit_price: number,
+  gross_installation_unit: number,
 
-  contracted_operator?: string;
-  monthly_fee: number;
-  own_network: string;
-  product: string;
-  cep_a: string;
-  uf_b: string;
-  municipality_b: string;
-  address_b: string;
-  cep_b: string;
-  latitude_b: string;
-  longitude_B: string;
-  term: number;
-  unit_of_measure: string;
-  sla: string;
-  interface: string;
-  connector_type: string;
-  type_of_protection: string;
-  observations?: string;
-  margin_recurring?: number;
-  margin_eventual?: number;
+  contracted_operator?: string,
+  monthly_fee: number,
+  own_network: string,
+  product: string,
+  cep_a: string,
+  uf_b: string,
+  municipality_b: string,
+  address_b: string,
+  cep_b: string,
+  latitude_b: string,
+  longitude_B: string,
+  term: number,
+  unit_of_measure: string,
+  sla: string,
+  interface: string,
+  connector_type: string,
+  type_of_protection: string,
+  observations?: string,
+  margin_recurring?: number,
+  margin_eventual?: number,
   contract_term_values: {
     term: number,
     months_net: number,
@@ -50,16 +51,16 @@ export interface ICircuit {
     monthly_fee_margin_of_error?: number,
     installation_fee_margin_of_error?: number
   }[],
-  activation_deadline?: number;
-  third_party_provider?: string;
-  contracted_monthly?: number;
-  contracted_installation?: number;
-  grouping_type: 'single' | 'group' | 'ungroup';
-  established_group?: boolean;
-  sale_price_monthly?: number;
-  sale_price_installation?: number;
-  target_monthly_fee?: number;
-  target_installation_fee?: number;
+  activation_deadline?: number,
+  third_party_provider?: string,
+  contracted_monthly?: number,
+  contracted_installation?: number,
+  grouping_type: 'single' | 'group' | 'ungroup',
+  established_group?: boolean,
+  sale_price_monthly?: number,
+  sale_price_installation?: number,
+  target_monthly_fee?: number,
+  target_installation_fee?: number,
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
@@ -319,7 +320,7 @@ export class CalculatorMatrix {
 
   static getQuantityLinksByUFandSpeed(circuits: ICircuit[]) {
     const links: Record<string, number> = {};
-    for (const circuit of circuits) {      
+    for (const circuit of circuits) {
       let uf = circuit.uf_a;
       if(!uf) {
         uf = this.getUFByAdress(circuit.address_a);
@@ -329,6 +330,8 @@ export class CalculatorMatrix {
       if(circuit.status === 'Reprovado') continue;
 
       const linkGroupKey = CalculatorMatrix.makeLinkGroupKey(circuit);
+
+      if(circuit.grouping_type === 'single' || circuit.grouping_type === 'ungroup') continue;
       if(!linkGroupKey) continue;
 
       if (!links[linkGroupKey]) links[linkGroupKey] = 1;
