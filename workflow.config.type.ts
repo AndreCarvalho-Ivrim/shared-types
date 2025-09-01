@@ -392,7 +392,8 @@ export interface WorkflowConfigObserverFnType {
    * \@fn-exception
    * ```
    * {
-   *    "exception": <nome-da-exception>
+   *    "exception": <nome-da-exception>,
+   *    "additional_datas"?: any
    * }
    * ```
    */
