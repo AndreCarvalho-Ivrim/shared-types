@@ -392,7 +392,8 @@ export interface WorkflowConfigObserverFnType {
    * \@fn-exception
    * ```
    * {
-   *    "exception": <nome-da-exception>
+   *    "exception": <nome-da-exception>,
+   *    "additional_datas"?: any
    * }
    * ```
    */
@@ -1218,7 +1219,11 @@ export interface WorkflowConfigType {
         /** Interromper assim que a condition for true */
         break?: boolean,
       }[]
-    }
+    },
+    queueables?: {
+      exception: string
+      accepts_public_access?: boolean
+    }[]
   },
   schema?: Record<string, FlowEntitySchemaInfo>,
   slas?: WorkflowConfigSlasType,
