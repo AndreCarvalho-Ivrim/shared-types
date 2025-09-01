@@ -14,3 +14,20 @@ export interface EventType{
     quotas: number,
   }[]
 }
+
+type AvailableStatus =
+  'Ag. Check-in'               | 'Check-in Parcial' | 'Check-in Realizado' |
+  'Ag. Pesquisa de Satisfação' | 'Pesquisa Respondida' |
+  'Arquivado'
+
+export interface FlowDataReservation{
+  token: string,
+  name: string,
+  email: string,
+  status: AvailableStatus,
+  cpf: string,
+  event_name: string,
+  schedule: string,
+  guests?: number,
+  guest_check_in?: number,
+}
