@@ -1218,7 +1218,11 @@ export interface WorkflowConfigType {
         /** Interromper assim que a condition for true */
         break?: boolean,
       }[]
-    }
+    },
+    queueables?: {
+      exception: string
+      accepts_public_access?: boolean
+    }[]
   },
   schema?: Record<string, FlowEntitySchemaInfo>,
   slas?: WorkflowConfigSlasType,
