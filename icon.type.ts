@@ -118,4 +118,5 @@ export type AvailableIcons =
   'ContactIcon'         |
   'AddressIcon'         |
   'MailIcon'            |
-  'EyeIcon'
+  'EyeIcon'             |
+  'CameraIcon'
