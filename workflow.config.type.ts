@@ -36,7 +36,8 @@ export interface WorkflowConfigFilterType {
    * - \@now: Caso esteja usando o type=date você pode usar este default value para pegar a \
    *  data atual.
    */
-  defaultValue?: any
+  defaultValue?: any,
+  custom_input?: { mode: 'qrcode' }
 }
 export interface WorkflowNotificationEffectType{
   /**
