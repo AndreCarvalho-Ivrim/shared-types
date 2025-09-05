@@ -251,7 +251,7 @@ export class CalculatorMatrix {
     if (icmsByUF[uf]) {
       if (
         operator && icmsByUF[uf]['operators'] &&
-        icmsByUF[uf]['operators'][operator] >= 0
+        icmsByUF[uf]['operators'][operator] != undefined
       ) icms = icmsByUF[uf]['operators'][operator] / 100;
       else icms = icmsByUF[uf];
     } 
