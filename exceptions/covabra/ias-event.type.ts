@@ -7,6 +7,8 @@ export interface EventType{
   form_image: string,
   footer_form_image: string,
   guests_accepted: boolean,
+  max_guests?: number,
+  receive_companies: boolean,
   schedules: {
     consumed_quotas: number,
     final_hour: string,
