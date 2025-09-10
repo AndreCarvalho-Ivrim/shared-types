@@ -32,4 +32,6 @@ export interface FlowDataReservation{
   schedule: string,
   guests?: number,
   guest_check_in?: number,
+  is_company: boolean,
+  company_name?: string
 }
