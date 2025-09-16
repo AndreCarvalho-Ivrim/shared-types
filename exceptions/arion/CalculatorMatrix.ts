@@ -397,11 +397,22 @@ export class CalculatorMatrix {
     /** Líquido total */
     let netPriceTotal = 0;
     /** PIS e COFINS sem ATO COTEPE */
-    const pisCofins = 0.02993;
+    const pisCofins = 0.0365; // 0.02993;
+
     if (recurringUnitCostWithTax) {
+      let calculateBy : 'gross' | 'gross_cotepe' = 'gross';
+
       grossPriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + pisCofins))
+      const grossCotepePriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + pisCofins))
       grossPriceUnit = grossPriceTotal / linkQtd;
-      netPriceUnit = ((grossPriceUnit * (1 - icmsArion)) * (1 - (0.0365))) * (1 - 0.015);
+      const grossCotepePriceUnit = grossCotepePriceTotal / linkQtd;
+
+      netPriceUnit = calculateBy === 'gross' ? (
+        ((grossPriceUnit * (1 - icmsArion)) *  (1 - (0.0365))) * (1 - 0.015)
+      ) : (
+        grossCotepePriceUnit * (1 - (0.0365))
+      );
+      
       netPriceTotal = netPriceUnit * linkQtd;
     }
   
