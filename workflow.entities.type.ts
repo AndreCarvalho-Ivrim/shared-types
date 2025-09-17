@@ -11,6 +11,7 @@ export interface FlowEntitySubSchema{
   placeholder: string,
   schema: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
   required?: boolean,
+  observer?: boolean,
   /** Restrições de dados */
   restrictions?: {
     /**
