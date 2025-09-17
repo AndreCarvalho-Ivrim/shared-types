@@ -14,6 +14,7 @@ export interface EventType{
     final_hour: string,
     initial_hour: string,
     quotas: number,
+    unique_cpf: number
   }[]
 }
 
