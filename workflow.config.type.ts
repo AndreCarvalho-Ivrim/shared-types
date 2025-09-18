@@ -1342,7 +1342,7 @@ export type WFIntegrationModelGoogleType =
   'Gemini 2.0 Flash'    | 'Gemini 2.0 Flash-Lite' | 'Gemini 2.0 Pro Experimental' | 'Gemini 1.5 Flash' | 
   'Gemini 1.5 Flash-8B' | 'Gemini 1.5 Pro'        | 'Gemini Embedding'            | 'Imagen 3'
 ;
-export type WFIntegrationModelGPTType = 'GPT-4o mini';
+export type WFIntegrationModelGPTType = 'GPT-4o mini' | 'GPT-4.1 mini';
 export const availableIAModels = [
   'Gemini 2.0 Flash',
   'Gemini 2.0 Flash-Lite',
@@ -1352,7 +1352,8 @@ export const availableIAModels = [
   'Gemini 1.5 Pro',
   'Gemini Embedding',
   'Imagen 3',
-  'GPT-4o mini'
+  'GPT-4o mini',
+  'GPT-4.1 mini'
 ];
 export interface WFIntegrationIAProvider {
   /** Qual é o provedor da IA */
