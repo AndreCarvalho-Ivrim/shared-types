@@ -23,6 +23,7 @@ export interface EventType{
   }[],
   satisfaction_survey_id?: string,
   satisfaction_survey?: string,
+  satisfaction_survey_sent?: boolean
 }
 
 type AvailableStatus =
@@ -36,12 +37,14 @@ export interface FlowDataReservation{
   email: string,
   status: AvailableStatus,
   cpf: string,
+  event_id: string,
   event_name: string,
+  event_date: string,
   schedule: string,
   guests?: number,
   guest_check_in?: number,
   is_company: boolean,
-  company_name?: string
+  company_name?: string,
 }
 
 export interface SatisfactionSurveyType{
