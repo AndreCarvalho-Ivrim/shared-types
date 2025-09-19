@@ -27,7 +27,7 @@ export interface EventType{
 }
 
 type AvailableStatus =
-  'Ag. Check-in'               | 'Check-in Parcial' | 'Check-in Realizado' |
+  'Ag. Check-in'               | 'Check-in Parcial'    | 'Check-in Realizado' |
   'Ag. Pesquisa de Satisfação' | 'Pesquisa Respondida' |
   'Arquivado'
 
@@ -44,7 +44,8 @@ export interface FlowDataReservation{
   guests?: number,
   guest_check_in?: number,
   is_company: boolean,
-  company_name?: string,
+  company_name?: string
+  satisfaction_survey_send?: boolean
 }
 
 export interface SatisfactionSurveyType{
