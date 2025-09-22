@@ -1,3 +1,5 @@
+import { getCodeHelpers, handleCodeHelper__now, handleCodeHelpers } from "./check-string-conditional";
+
 export const handleRegexId = (id: string, item: { data: any }) => {
   const pattern = /@\[(.*?)\]/g;
   const matches = id.match(pattern);
@@ -43,6 +45,30 @@ export const handleRegexId = (id: string, item: { data: any }) => {
       }
     }while(value.includes(replacer.shortcode))
   })
+
+  if(typeof value === 'string'){
+    const codeHelpers = getCodeHelpers(value, true);
+    if(codeHelpers?.length) codeHelpers.forEach(([code, param, splitParam]) => {
+      switch (code) {
+        case '@now': value = handleCodeHelper__now(value, code, param); break;
+        case 'linearArithmetic':
+          if(!param) throw new Error(`Erro code: ${code}`)
+          const parsedParams: number[] = [];
+          (splitParam ?? []).forEach(shortcode => {
+            const valueToReplace = getRecursiveValue(shortcode, item) ?? Number(shortcode);
+            parsedParams.push(valueToReplace);
+          });
+          let total = handleCodeHelpers({
+            chParam: param,
+            codeHelper: code,
+            parsedParams: parsedParams
+          });
+
+          value = replaceAll(value, `__${code}(${param})__`, total ?? '');
+          break;
+      }
+    })
+  }
   return value;
 }
 export const getRecursiveValue = (id: string, item: { data: any }) : any => {

@@ -127,6 +127,7 @@ export type AvailableRegexUrls =
   '@isac:menu' |
   '@isac:admin_hub.workflows' |
   '@isac:public.workflow(flow_id,variation,params?)' |
+  '@isac:public.exception(flow_id,exception)' |
   '@isac:chatbot.home' | 
   '@isac:chatbot.manage(module_name)' |
   '@isac:chatbot.manage_contact(module_name)' |
@@ -220,19 +221,8 @@ export const handleRegexUrl = (url: AvailableRegexUrls, token?: string): string 
 }
 export const getDomain = (application: 'hub' | 'isac' | 'isac_back' |  'hub_back', removeLastSlash = false) => {
   let urls = { hub: '', isac: '', isac_back: '', hub_back: '' }
+
   try {
-    // @ts-ignore
-    const WORKFLOW_MODULE = process.env.REACT_APP_WORKFLOW_MODULAR;
-    urls.isac = WORKFLOW_MODULE!;
-    // @ts-ignore
-    urls.isac_back = process.env.REACT_APP_API_WF_URL
-    // @ts-ignore
-    urls.hub_back = process.env.REACT_APP_BASE_URL
-  } catch (e) { }
-  try {
-    // @ts-ignore
-    const PORTAL = import.meta.env.VITE_PORTAL_URL;
-    urls.hub = ''; // PORTAL!; -- portal descontinuado
     // @ts-ignore
     urls.isac_back = import.meta.env.VITE_BASE_URL
     // @ts-ignore
@@ -269,24 +259,7 @@ export const getSupportKeys = () => {
     support.steps["approval-test"] = import.meta.env.VITE_SUPPORT_APPROVAL_TEST;
     // @ts-ignore
     support.steps["called-closed"] = import.meta.env.VITE_SUPPORT_CALLED_CLOSED;
-  } catch (e) {
-    try {
-      // @ts-ignore
-      support.flow_id = process.env.REACT_APP_SUPPORT_FLOW_ID;
-      // @ts-ignore
-      support.steps["open-request-called"] = process.env.REACT_APP_SUPPORT_OPEN_REQUEST_CALLED;
-      // @ts-ignore
-      support.steps["internal-approval"] = process.env.REACT_APP_SUPPORT_INTERNAL_APPROVAL;
-      // @ts-ignore
-      support.steps["in-progress"] = process.env.REACT_APP_SUPPORT_IN_PROGRESS;
-      // @ts-ignore
-      support.steps["internal-test"] = process.env.REACT_APP_SUPPORT_INTERNAL_TEST;
-      // @ts-ignore
-      support.steps["approval-test"] = process.env.REACT_APP_SUPPORT_APPROVAL_TEST;
-      // @ts-ignore
-      support.steps["called-closed"] = process.env.REACT_APP_SUPPORT_CALLED_CLOSED;
-    } catch (e) { }
-  }
+  } catch (e) { }
   
   return support
 }

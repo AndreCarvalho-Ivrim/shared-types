@@ -92,6 +92,17 @@ export interface IntegrationExcelType {
     save_order_columns?: string,
     /** Caso queira salvar dados não conhecidos, especifique o nome da prop que armazerá esses dados */
     save_outher_fields?: string,
+    /**
+     * Caso haja campos opcionais e que precisem obrigatoriamente ser associados, marcar essa opção.
+     * 
+     * Se a posição do array for um array em vez de string quer dizer que pelo menos um dos valores \
+     * deve ser válido. Exemplo:
+     * 
+     * ``` required_associations: ['field-1', ['field-2', 'field-3']] ```
+     * 
+     * Isso quer dizer que o field-1 é obrigatório, e que é obrigatório preencher o field-2 ou field-3
+     **/
+    required_associations?: (string | string[])[]
   }
   append_values?: Record<string, any>,
   /**
@@ -191,6 +202,8 @@ export interface IntegrationPDFType {
   key: string,
   type: 'pdf',
   mode: 'integration',
+  /** Margem de erro para quebra de linha considerando eixo Y */
+  y_axis_margin_of_error?: number,
   label?: string,
   placeholder?: string,
   required?: boolean,

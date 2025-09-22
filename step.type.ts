@@ -214,12 +214,7 @@ export interface StepType{
   is_stateless?: boolean,
   actions?: StepActionType[],
   action_button?: Omit<StepActionType, 'key' | 'target' | 'isRedirect'>,
-  descriptions?: {
-    execute: ExecuteDescriptionType,
-    /** strc com adição da propriedade target, sendo o id(web-id) da etapa de destino */
-    condition?: string,
-    content: string
-  }[],
+  descriptions?: StepHistoryDescriptionType[],
   /** Válido apenas quando step.type === 'page' */
   page?: {
     step_links?: Array<{
@@ -247,7 +242,9 @@ export interface StepType{
         /** Apenas alguns itens, como o group collapse tem suporte ao container */
         container?: string,
         /** Válido apenas quando o item é do tipo table */
-        tr?: string
+        tr?: string,
+        /** Estilizações condicionais ```{ strc: { ...options } }``` */
+        conditional?: Record<string, { wrapper?: string, container?: string, tr?: string }>
       }>,
       footer?: {
         container?: string,
@@ -259,6 +256,12 @@ export interface StepType{
   }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
   sla?: StepSlaType
+}
+export interface StepHistoryDescriptionType{
+  execute: ExecuteDescriptionType,
+  /** strc com adição da propriedade target, sendo o id(web-id) da etapa de destino */
+  condition?: string,
+  content: string
 }
 export interface OptionalStepType extends Omit<StepType, 'name' | 'type' | 'position' | 'target_mode' | 'index'>{
   name?: string,

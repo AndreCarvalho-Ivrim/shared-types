@@ -36,7 +36,8 @@ export interface WorkflowConfigFilterType {
    * - \@now: Caso esteja usando o type=date você pode usar este default value para pegar a \
    *  data atual.
    */
-  defaultValue?: any
+  defaultValue?: any,
+  custom_input?: { mode: 'qrcode' }
 }
 export interface WorkflowNotificationEffectType{
   /**
@@ -61,6 +62,13 @@ export interface WorkflowConfigNotificationType {
    */
   template_id: string,
   type: 'email' | 'message',
+  /**
+   * Utilitários no valor:
+   * - (date): utilizar para formatar uma data do padrão YYYY-MM-DD p/ DD/MM/YYYY
+   * - |: para adicionar um valor padrão se o referido for inválido
+   * - #\<val\>:\<traslate\>: utilize o # para marcar traduções, com o primeiro valor sendo o valor de match, \
+   * e após os : o valor de substituição
+   */
   params: Record<string, string>,
   replacers: Record<string, string | {
     codition?: string,
@@ -250,7 +258,12 @@ export interface HandlersType {
   handlers: AllHandlersType
 }
 export interface WorkflowConfigObserverFnType {
-  /** EVENTS -> available names on type event
+  /** 
+   * APPEND -> available reserved-words on type append
+   * 
+   * \@current_step_id: Para modificar a etapa do flow-data
+   * 
+   * EVENTS -> available names on type event
    * 
    * \@revalidate-when-updated-product: Evento válido apenas no FlowData, para revalidação de estoque na \
    * estrutura do WF Duzani.
@@ -275,6 +288,11 @@ export interface WorkflowConfigObserverFnType {
    * \@send-whatsapp-messages: Evento para disparar mensagens de whatsapp usando o chatbot
    * 
    * \@relationship-with-flow-entity: Evento para relacionar um flow-data com uma entidade dinâmica
+   * 
+   * \@fill-in-pdf-template: Evento para utilizar um docx e gerar um pdf
+   * 
+   * \@fn-exception: Disparar uma fn exception. É importante caso usar value = sync, que retorne o \
+   * flowData atualizado.
    */
   name: string,
   /**
@@ -369,8 +387,18 @@ export interface WorkflowConfigObserverFnType {
    * \@entity: seguir tipagem de [WFConfigObserverDataEntity]
    * 
    * \@handlers: seguir a tipagem de [HandlersType]
+   * 
+   * \@fill-in-pdf-template: seguir a tipagem de [FillInPdfTemplateEventType]
+   * 
+   * \@fn-exception
+   * ```
+   * {
+   *    "exception": <nome-da-exception>,
+   *    "additional_datas"?: any
+   * }
+   * ```
    */
-  data?: HandlersType | any
+  data?: any
 }
 export interface WFConfigObserverDataEntity {
   entity_key: string,
@@ -427,7 +455,16 @@ export interface ConfigViewModeColumnsType {
    * 
    * Podendo ter também, '_default' que define o valor padrão caso não seja satisfeito.
    */
-  translate?: Record<string, string>
+  translate?: Record<string, string>,
+  badge?: ColumnBadgeType
+}
+export interface ColumnBadgeType{
+  light?: string[],
+  success?: string[],
+  primary?: string[],
+  warning?: string[],
+  danger?: string[],
+  default?: 'light' | 'success' | 'primary' | 'warning' | 'danger'
 }
 type WorkflowFilterScopeFilter = Record<string, string | {
   type: WorkflowConfigFilterType['type'],
@@ -1070,7 +1107,8 @@ export interface WorkflowConfigExceptionView{
     view_mode?: { condition?: string, slug: string }[],
     is_public?: boolean,
   },
-  whithout_flow_data?: boolean
+  whithout_flow_data?: boolean,
+  data?: any
 }
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
@@ -1182,7 +1220,11 @@ export interface WorkflowConfigType {
         /** Interromper assim que a condition for true */
         break?: boolean,
       }[]
-    }
+    },
+    queueables?: {
+      exception: string
+      accepts_public_access?: boolean
+    }[]
   },
   schema?: Record<string, FlowEntitySchemaInfo>,
   slas?: WorkflowConfigSlasType,
@@ -1207,6 +1249,7 @@ export interface WorkflowConfigFlowAlert{
     'danger' | 'warning' | 'success' | 'info'  | 'light'
   ), string | true>>,
   fn?: WorkflowConfigFlowAlertFn,
+  fn_real_time_modal?: WorkflowConfigFlowAlertFn,
   tooltip?: {
     condition?: string,
     /** 
@@ -1243,7 +1286,14 @@ interface WorkflowConfigFlowAlertFnBase{
 }
 export interface WorkflowConfigFlowAlertFnFlowEntity extends WorkflowConfigFlowAlertFnBase{
   request: 'flow-entity',
-  data: { entity_key: string }
+  data: {
+    entity_key: string,
+    query?: {
+      ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+      type: WorkflowConfigFilterType['type'],
+      value: any
+    }[]
+  }
 }
 export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfigFlowAlertFnBase{
   request: 'generic-singleton',
@@ -1251,9 +1301,20 @@ export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfi
 }
 export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton;
 export interface WorkflowConfigFlowAlertItem{
-  type: 'div' | 'strong' | 'span',
+  /**
+   * - indicator: são icones com tooltip para demonstrar estados como progresso/finalizado/falha. \
+   * Para utilizá-lo é necessário parametrizar a propriedade states, e caso queira utilizar o tooltip \
+   * configurar a propriedade tooltip informando a referência do valor, com o valor atual sendo \
+   * referênciado como this.
+   */
+  type: 'div' | 'strong' | 'span' | 'indicator',
   condition?: string,
   className?: string,
+  /**
+   * Quando essa propriedade esta ativa, ao invés de olhar para o data, gerado pela FN \
+   * olha para o valor gerado pela fn_real_time_modal.
+   */
+  real_time?: boolean,
   /** 
    * Quando valor não estático(static) é possível passar máscara de formatação de data usando ':'. Exemplo:
    * 
@@ -1263,6 +1324,14 @@ export interface WorkflowConfigFlowAlertItem{
   static?: boolean,
   /** Válido apenas, quando type = 'div' */
   items?: WorkflowConfigFlowAlertItem[]
+  /** Válido apenas quando type = 'indicator', com o valor sendo a referência da string, com o valor atual sendo this */
+  tooltip?: string,
+  /** Válido apenas quando type = 'indicator', com o valor para cada estado sendo um strc, com o valor atual sendo this */
+  states?: {
+    loading?: string,
+    success?: string,
+    fail?: string,
+  }
 }
 
 type WFIntegrationKeys = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'outhers';
@@ -1548,8 +1617,13 @@ export interface WFActionFnCallTrigger {
   /** Este confirm não tem suporte a inserção de dados */
   confirm?: StepActionConfirmType,
   append_values?: Record<string, any>,
+  /**
+   * - trigger-flow-alert: é obrigatório informar a key do flow-alert e action \
+   * que deve ser 'start' (para inicar o listening de um flow-alert) ou 'open' \
+   * (para abrir o modal de um flow-alert).
+   */
   effects?: Partial<Record<AvailableTriggerEffects, boolean | {
-    condition: string,
+    condition?: string,
     [key: string]: any
   }>>,
 }
@@ -1671,8 +1745,8 @@ export interface WorkflowRoutinesType {
   },
   executors: AvailableRoutinesExecutorsType[],
 }
-export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications', 'bot']
-export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications | WorkflowRoutinesBot
+export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications', 'bot', 'exception']
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications | WorkflowRoutinesBot | WorkflowRoutinesException
 export type WeekDays = 'SUNDAY' | // Domingo
   'MONDAY'   | // Segunda-feira
   'TUESDAY'  | // Terça-feira
@@ -1882,6 +1956,11 @@ export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
   /** Tempo minimo e de 5 minutos  */
   waiting_time: number,
   data: any
+}
+export interface WorkflowRoutinesException extends WorkflowRoutinesExecutorBase{
+  type: 'exception',
+  exception: string,
+  data?: any
 }
 export interface WFActionFnCallWebhook {
   type: 'call-webhook',
