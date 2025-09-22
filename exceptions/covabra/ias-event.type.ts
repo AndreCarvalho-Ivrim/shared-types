@@ -1,6 +1,11 @@
+import { StepItemType } from "../../step.item.field.type"
+import { StepViewType } from "../../step.item.view.type"
+
+export type AvailableEventStatus = 'Aberto' | 'Cancelado' | 'Em Andamento' | 'Encerrado';
 export interface EventType{
   _id: string,
   name: string,
+  status?: AvailableEventStatus,
   event_date: string, 
   form_title: string,
   form_description: string,
@@ -15,11 +20,14 @@ export interface EventType{
     initial_hour: string,
     quotas: number,
     unique_cpf: number
-  }[]
+  }[],
+  satisfaction_survey_id?: string,
+  satisfaction_survey?: string,
+  satisfaction_survey_sent?: boolean
 }
 
 type AvailableStatus =
-  'Ag. Check-in'               | 'Check-in Parcial' | 'Check-in Realizado' |
+  'Ag. Check-in'               | 'Check-in Parcial'    | 'Check-in Realizado' |
   'Ag. Pesquisa de Satisfação' | 'Pesquisa Respondida' |
   'Arquivado'
 
@@ -29,10 +37,21 @@ export interface FlowDataReservation{
   email: string,
   status: AvailableStatus,
   cpf: string,
+  event_id: string,
   event_name: string,
+  event_date: string,
   schedule: string,
   guests?: number,
   guest_check_in?: number,
   is_company: boolean,
   company_name?: string
+  satisfaction_survey_send?: boolean
+}
+
+export interface SatisfactionSurveyType{
+  _id: string,
+  name: string,
+  status: 'Criada' | 'Associada a Eventos' | 'Pesquisa Ativa',
+  fields: (StepItemType | StepViewType)[],
+  linked_event?: { event_id: string, event_name: string }[]
 }
