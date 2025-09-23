@@ -55,3 +55,10 @@ export interface SatisfactionSurveyType{
   fields: (StepItemType | StepViewType)[],
   linked_event?: { event_id: string, event_name: string }[]
 }
+export interface SurveyResponseType{
+  _id: string,
+  satisfaction_survey_id: string,
+  flow_data_id: string,
+  event_id: string,
+  response: Record<string,any>
+}
