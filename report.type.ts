@@ -23,7 +23,17 @@ export type ReportAnalyticsSearchDynamicColumnType = {
    * 
    */
   generate_columns_with: 'register-with-more-positions' | 'first-register',
-  columns: Record<string, string | { condition: string, value: string }[]>
+  columns: Record<string, string | {
+    /**
+     * Com acesso as variáveis [curr] que se refere ao item no laço de repetição \
+     * e flow_datas, que é o array puro de registros encontrados.
+     * 
+     * Obs. se o search tiver cumulative, a raiz do flow_data estará na prop old, \
+     * ao invés de data.
+     */
+    condition: string,
+    value: string
+  }[]>
 }
 export interface ReportAnalyticsSearchType{
   request: 'flow_datas' | 'flow_entities',
