@@ -23,7 +23,7 @@ export type ReportAnalyticsSearchDynamicColumnType = {
    * 
    */
   generate_columns_with: 'register-with-more-positions' | 'first-register',
-  columns: Record<string, string>
+  columns: Record<string, string | { condition: string, value: string }[]>
 }
 export interface ReportAnalyticsSearchType{
   request: 'flow_datas' | 'flow_entities',
