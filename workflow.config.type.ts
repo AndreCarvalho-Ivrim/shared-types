@@ -1725,7 +1725,7 @@ export interface WorkflowConfigActionsType {
    * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
    * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema,
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema | WFActionFnCallExceptionModal,
   group_buttons?: WorkflowConfigActionsGroupButtons
 }
 export interface WorkflowConfigActionsGroupButtons{
@@ -1984,6 +1984,10 @@ export interface WFActionFnCallExternalRequest {
     /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
     breakExec?: boolean
   }[]
+}
+export interface WFActionFnCallExceptionModal{
+  type: 'call-exception-modal',
+  exception: string
 }
 export interface WorkflowConfigOpenDialogType{
   icon?: AvailableIcons,
