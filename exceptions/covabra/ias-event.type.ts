@@ -51,6 +51,10 @@ export interface FlowDataReservation{
 export interface SatisfactionSurveyType{
   _id: string,
   name: string,
+  description: string,
+  email_image: string,
+  header_image: string,
+  footer_image: string,
   status: 'Criada' | 'Associada a Eventos' | 'Pesquisa Ativa',
   fields: (StepItemType | StepViewType)[],
   linked_event?: { event_id: string, event_name: string }[]
