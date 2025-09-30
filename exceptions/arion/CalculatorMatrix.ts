@@ -3,7 +3,9 @@ interface ValidateDataParams {
   circuits: Record<string, any>[];
 }
 export interface ICircuit {
-  status?: 'Reprovado',
+  status?: 'Reprovado' | 'Projeto Especial',
+  special_project_reason?: string,
+  possible_selected_providers?: any,
   link_group_key?: string,
   linkQtd: number,
   code: string,
