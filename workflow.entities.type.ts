@@ -10,7 +10,30 @@ export interface FlowEntitySubSchema{
   label: string,
   placeholder: string,
   schema: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
-  required?: boolean
+  required?: boolean,
+  observer?: boolean,
+  /** Restrições de dados */
+  restrictions?: {
+    /**
+     * - $this.<key>: para o dado que está sendo inserido no sub-schema
+     * - quando não utiliza o $this, o dado se referirá a raiz do flowEntityData
+     */
+    condition: string,
+    /**
+     * Tem a capacidade de renomear a variável $this do condition (usada para se referir ao valor atual). \
+     * Ex:
+     * ```
+     *  const newData = { name: 'Teste' }
+     * 
+     *  const defaultRef = '$this.name;#eq;*Teste'; // true
+     *  // this_ref = 'curr' 
+     *  const changedRef = '$curr.name;#eq;*Teste'; // true
+     * ```
+     */
+    this_ref?: string,
+    /** Mensagem de erro caso a restrição seja verdadeira */
+    message: string
+  }[]
 }
 export interface FlowEntitySchemaInfoRule{
   render?: string,

@@ -3,45 +3,53 @@ interface ValidateDataParams {
   circuits: Record<string, any>[];
 }
 export interface ICircuit {
-  status?: 'Reprovado',
+  status?: 'Reprovado' | 'Projeto Especial',
+  special_project_reason?: string,
+  possible_selected_providers?: any,
   link_group_key?: string,
-  code: string;
-  speed: string;
-  address_a: string;
-  municipality_a: string;
-  uf_a: string;
-  cnl: string;
-  latitude_a: string;
-  longitude_a: string;
+  linkQtd: number,
+  code: string,
+  speed: string,
+  address_a: string,
+  municipality_a: string,
+  uf_a: string,
+  id_erp?: string,
+  cnl?: string,
+  latitude_a?: string,
+  longitude_a?: string,
   
-  monthly_cancellation_fee: number;
-  installation_fee: number;
-  gross_unit_price: number;
-  gross_installation_unit: number;
+  monthly_cancellation_fee: number,
+  installation_fee: number,
+  gross_unit_price?: number,
+  gross_installation_unit?: number,
+  cotation_date?: Date,
+  reproval_reason?: string
 
-  contracted_operator?: string;
-  monthly_fee: number;
-  own_network: string;
-  product: string;
-  cep_a: string;
-  uf_b: string;
-  municipality_b: string;
-  address_b: string;
-  cep_b: string;
-  latitude_b: string;
-  longitude_B: string;
-  term: number;
-  unit_of_measure: string;
-  sla: string;
-  interface: string;
-  connector_type: string;
-  type_of_protection: string;
-  observations?: string;
-  margin_recurring?: number;
-  margin_eventual?: number;
+  contracted_operator?: string,
+  monthly_fee: number,
+  own_network?: string,
+  product: string,
+  raw_product?: string,
+  cep_a?: string,
+  uf_b?: string,
+  municipality_b?: string,
+  address_b?: string,
+  cep_b?: string,
+  latitude_b?: string,
+  longitude_B?: string,
+  term?: number,
+  unit_of_measure?: string,
+  sla?: string,
+  interface?: string,
+  connector_type?: string,
+  type_of_protection?: string,
+  observations?: string,
+  margin_recurring?: number,
+  margin_eventual?: number,
   contract_term_values: {
     term: number,
     months_net: number,
+    months_net_cotepe: number,
     months_net_rate: number,
     months_gross?: number,
     months_gross_rate?: number,
@@ -50,16 +58,17 @@ export interface ICircuit {
     monthly_fee_margin_of_error?: number,
     installation_fee_margin_of_error?: number
   }[],
-  activation_deadline?: number;
-  third_party_provider?: string;
-  contracted_monthly?: number;
-  contracted_installation?: number;
-  grouping_type: 'single' | 'group' | 'ungroup';
-  established_group?: boolean;
-  sale_price_monthly?: number;
-  sale_price_installation?: number;
-  target_monthly_fee?: number;
-  target_installation_fee?: number;
+  activation_deadline?: number,
+  third_party_provider?: string,
+  contracted_monthly?: number,
+  contracted_installation?: number,
+  grouping_type: 'single' | 'group' | 'ungroup',
+  established_group?: boolean,
+  sale_price_monthly?: number,
+  sale_price_installation?: number,
+  target_monthly_fee?: number,
+  target_installation_fee?: number,
+  claro_order_id?: string,
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
@@ -182,6 +191,10 @@ export interface ICalculateRecurringSalesPriceParams {
   icmsArion: number;
 }
 export interface ICalculateRecurringSalesPriceResul extends ICalculateBaseResult {
+  /** Líquido (ATO COTEPE) Unitário */
+  netPriceUnitCotepe: number;
+  /** Líquido (ATO COTEPE) Total */
+  netPriceTotalCotepe: number;
   /** Bruto (ATO COTEPE) Unitário */
   grossPriceUnitCotepe: number;
   /** Bruto (ATO COTEPE) Total */
@@ -213,6 +226,9 @@ export interface ICalculateMarginResult {
 //#endregion
 
 export class CalculatorMatrix {
+  /** PIS e COFINS sem ATO COTEPE */
+  private static pisCofins = 0.0365; // 0.02993;
+
   static execute(data: ICalculatorMatrixData) {
     const {
       operator,
@@ -250,7 +266,7 @@ export class CalculatorMatrix {
     if (icmsByUF[uf]) {
       if (
         operator && icmsByUF[uf]['operators'] &&
-        icmsByUF[uf]['operators'][operator] >= 0
+        icmsByUF[uf]['operators'][operator] != undefined
       ) icms = icmsByUF[uf]['operators'][operator] / 100;
       else icms = icmsByUF[uf];
     } 
@@ -285,7 +301,7 @@ export class CalculatorMatrix {
       recurringMargin,
       possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
       monthlyCostsWithOverhead: hiringCosts.monthlyCostsWithOverhead,
-      linkQtd
+      linkQtd,
     });
     /** Preço de Venda Eventual ou Taxa de Instalação */
     const eventualSalePriceOrInstallationFee = this.calculateEventualSalePriceOrInstallationFee({
@@ -319,7 +335,7 @@ export class CalculatorMatrix {
 
   static getQuantityLinksByUFandSpeed(circuits: ICircuit[]) {
     const links: Record<string, number> = {};
-    for (const circuit of circuits) {      
+    for (const circuit of circuits) {
       let uf = circuit.uf_a;
       if(!uf) {
         uf = this.getUFByAdress(circuit.address_a);
@@ -329,6 +345,8 @@ export class CalculatorMatrix {
       if(circuit.status === 'Reprovado') continue;
 
       const linkGroupKey = CalculatorMatrix.makeLinkGroupKey(circuit);
+
+      if(circuit.grouping_type === 'single' || circuit.grouping_type === 'ungroup') continue;
       if(!linkGroupKey) continue;
 
       if (!links[linkGroupKey]) links[linkGroupKey] = 1;
@@ -393,12 +411,21 @@ export class CalculatorMatrix {
     let netPriceUnit = 0;
     /** Líquido total */
     let netPriceTotal = 0;
-    /** PIS e COFINS sem ATO COTEPE */
-    const pisCofins = 0.02993;
+    
     if (recurringUnitCostWithTax) {
-      grossPriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + pisCofins))
+      let calculateBy : 'gross' | 'gross_cotepe' = 'gross';
+
+      grossPriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + this.pisCofins))
+      const grossCotepePriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + this.pisCofins))
       grossPriceUnit = grossPriceTotal / linkQtd;
-      netPriceUnit = ((grossPriceUnit * (1 - icmsArion)) * (1 - (0.0365))) * (1 - 0.015);
+      const grossCotepePriceUnit = grossCotepePriceTotal / linkQtd;
+
+      netPriceUnit = calculateBy === 'gross' ? (
+        ((grossPriceUnit * (1 - icmsArion)) *  (1 - (0.0365))) * (1 - 0.015)
+      ) : (
+        grossCotepePriceUnit * (1 - (0.0365))
+      );
+      
       netPriceTotal = netPriceUnit * linkQtd;
     }
   
@@ -453,8 +480,12 @@ export class CalculatorMatrix {
     recurringMargin,
     possibleOverheadCosts,
     monthlyCostsWithOverhead,
-    linkQtd
-  }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'possibleOverheadCosts' | 'linkQtd' | 'monthlyCostsWithOverhead'>): ICalculateRecurringSalesPriceResul {
+    linkQtd,
+    icmsArion
+  }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'possibleOverheadCosts' | 'linkQtd' | 'monthlyCostsWithOverhead' | 'icmsArion'>): ICalculateRecurringSalesPriceResul {
+    /** PIS e COFINS do ATO COTEPE */
+    const pisCofins = 0.0365;
+
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -463,6 +494,10 @@ export class CalculatorMatrix {
     let netPriceUnit = 0;
     /** Líquido total */
     let netPriceTotal = 0;
+    /** Líquido unitário ATO COTEPE */
+    let netPriceUnitCotepe = 0;
+    /** Líquido total ATO COTEPE */
+    let netPriceTotalCotepe = 0;
     /** Bruto total ATO COTEPE */
     let grossPriceTotalCotepe = 0;
     /** Bruto unitário ATO COTEPE */
@@ -479,29 +514,41 @@ export class CalculatorMatrix {
         recurringSalesPriceWithPercentual.grossPriceUnit :
         0;
     
+    const discount = (grossPriceTotal * icmsArion) + ((grossPriceTotal - (grossPriceTotal * icmsArion)) * pisCofins);
     netPriceTotal = customerProfile === 'Operadora' ?
-      recurringSalesPriceFull.netPriceTotal:
+      grossPriceTotal - discount :
       customerProfile === 'Corporativo' ?
         recurringSalesPriceWithPercentual.netPriceTotal :
         0;
     netPriceUnit = customerProfile === 'Operadora' ?
-      recurringSalesPriceFull.netPriceUnit:
+      netPriceTotal / linkQtd :
       customerProfile === 'Corporativo' ?
         recurringSalesPriceWithPercentual.netPriceUnit :
         0;
 
-    /** PIS e COFINS do ATO COTEPE */
-    const pisCofins = 0.0365;
     grossPriceTotalCotepe = customerProfile === 'Operadora' ? 
       (grossPriceTotal * (monthlyCostsWithOverhead! / grossPriceTotal)) / (1 - (recurringMargin + pisCofins)) : 
       0;
     grossPriceUnitCotepe = customerProfile === 'Operadora' ? 
       grossPriceTotalCotepe / linkQtd : 
       0;
-  
+
+    netPriceTotalCotepe = customerProfile === 'Operadora' ?
+      grossPriceTotalCotepe - (grossPriceTotalCotepe * pisCofins) :
+      customerProfile === 'Corporativo' ?
+        recurringSalesPriceWithPercentual.netPriceTotal :
+        0;
+    netPriceUnitCotepe = customerProfile === 'Operadora' ?
+      netPriceTotalCotepe / linkQtd:
+      customerProfile === 'Corporativo' ?
+        recurringSalesPriceWithPercentual.netPriceUnit :
+        0;
+
     return {
       netPriceUnit: this.convertDecimals(netPriceUnit),
       netPriceTotal: this.convertDecimals(netPriceTotal),
+      netPriceUnitCotepe: this.convertDecimals(netPriceUnitCotepe),
+      netPriceTotalCotepe: this.convertDecimals(netPriceTotalCotepe),
       grossPriceUnit: this.convertDecimals(grossPriceUnit),
       grossPriceTotal: this.convertDecimals(grossPriceTotal),
       grossPriceUnitCotepe: this.convertDecimals(grossPriceUnitCotepe),

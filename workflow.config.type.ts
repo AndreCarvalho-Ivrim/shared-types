@@ -36,7 +36,8 @@ export interface WorkflowConfigFilterType {
    * - \@now: Caso esteja usando o type=date você pode usar este default value para pegar a \
    *  data atual.
    */
-  defaultValue?: any
+  defaultValue?: any,
+  custom_input?: { mode: 'qrcode' }
 }
 export interface WorkflowNotificationEffectType{
   /**
@@ -289,6 +290,9 @@ export interface WorkflowConfigObserverFnType {
    * \@relationship-with-flow-entity: Evento para relacionar um flow-data com uma entidade dinâmica
    * 
    * \@fill-in-pdf-template: Evento para utilizar um docx e gerar um pdf
+   * 
+   * \@fn-exception: Disparar uma fn exception. É importante caso usar value = sync, que retorne o \
+   * flowData atualizado.
    */
   name: string,
   /**
@@ -385,8 +389,16 @@ export interface WorkflowConfigObserverFnType {
    * \@handlers: seguir a tipagem de [HandlersType]
    * 
    * \@fill-in-pdf-template: seguir a tipagem de [FillInPdfTemplateEventType]
+   * 
+   * \@fn-exception
+   * ```
+   * {
+   *    "exception": <nome-da-exception>,
+   *    "additional_datas"?: any
+   * }
+   * ```
    */
-  data?: HandlersType | any
+  data?: any
 }
 export interface WFConfigObserverDataEntity {
   entity_key: string,
@@ -1208,7 +1220,11 @@ export interface WorkflowConfigType {
         /** Interromper assim que a condition for true */
         break?: boolean,
       }[]
-    }
+    },
+    queueables?: {
+      exception: string
+      accepts_public_access?: boolean
+    }[]
   },
   schema?: Record<string, FlowEntitySchemaInfo>,
   slas?: WorkflowConfigSlasType,
@@ -1709,7 +1725,7 @@ export interface WorkflowConfigActionsType {
    * A função WFCActionFnUpdateMainAndSelected necessita ser chamada por um item(exemplo no slide-over) \
    * e depois ser complementada com a seleção de N itens.
    */
-  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema,
+  fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema | WFActionFnCallExceptionModal,
   group_buttons?: WorkflowConfigActionsGroupButtons
 }
 export interface WorkflowConfigActionsGroupButtons{
@@ -1729,8 +1745,8 @@ export interface WorkflowRoutinesType {
   },
   executors: AvailableRoutinesExecutorsType[],
 }
-export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications', 'bot']
-export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications | WorkflowRoutinesBot
+export const availableExecutorsTypes: (AvailableRoutinesExecutorsType['type'])[] = ['sync-ivrim-big-data', 'integration-omie', 'manage-flow', 'make-notifications', 'bot', 'exception']
+export type AvailableRoutinesExecutorsType = WorkflowRoutinesExecutorIBD | WorkflowRoutinesExecuterIOmie | WorkflowRoutinesManageFlow | WorkflowRoutinesMakeNotifications | WorkflowRoutinesBot | WorkflowRoutinesException
 export type WeekDays = 'SUNDAY' | // Domingo
   'MONDAY'   | // Segunda-feira
   'TUESDAY'  | // Terça-feira
@@ -1941,6 +1957,11 @@ export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
   waiting_time: number,
   data: any
 }
+export interface WorkflowRoutinesException extends WorkflowRoutinesExecutorBase{
+  type: 'exception',
+  exception: string,
+  data?: any
+}
 export interface WFActionFnCallWebhook {
   type: 'call-webhook',
   webhook: string
@@ -1963,6 +1984,10 @@ export interface WFActionFnCallExternalRequest {
     /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
     breakExec?: boolean
   }[]
+}
+export interface WFActionFnCallExceptionModal{
+  type: 'call-exception-modal',
+  exception: string
 }
 export interface WorkflowConfigOpenDialogType{
   icon?: AvailableIcons,

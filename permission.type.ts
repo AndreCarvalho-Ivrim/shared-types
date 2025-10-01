@@ -19,6 +19,7 @@ export enum PossiblePermissions {
   EDITION              = 'edicao',
   CONTAS_A_PAGAR       = 'cap',
   PLANILHA             = 'sheet',
+  PADRAO               = 'padrao'
 }
 export const availablePossiblePermissions : UserCategory[] = [
   {
