@@ -21,7 +21,7 @@ export interface WorkflowConfigFilterType {
    * - not-list: Não está na lista de opções (nin)
    * - array-object: Verifica se dentro de um array, se algum elemento dele da match com o value passado
    */
-  type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in' | 'elem-match',
+  type: 'text' | 'select' | 'not' | 'date' | 'list' | 'not-list' | 'strc' | 'date-in' | 'elem-match' | 'exists',
   /** Veja a tipagem de WorkflowConfigFilterRefType para ver opções pré-definidas */
   ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
   options?: string[] | { value: string, name: string }[],
