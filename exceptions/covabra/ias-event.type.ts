@@ -14,6 +14,7 @@ export interface EventType{
   guests_accepted: boolean,
   max_guests?: number,
   receive_companies: boolean,
+  company_name_required?: boolean,
   schedules: {
     consumed_quotas: number,
     final_hour: string,
