@@ -16,14 +16,14 @@ interface StepViewBaseType{
 }
 export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
+  description: 'Descrição',
   table: 'Tabela',
   'group-table': 'Grupo de Tabelas',
   'horizontal-table': 'Tabela Horizontal',
-  description: 'Descrição',
-  html: 'Conteúdo Customizado',
-  redirect: 'Redirecionamento',
   list: 'Lista',
+  redirect: 'Redirecionamento',
   markdown: 'Markdown',
+  html: 'Conteúdo Customizado',
   tasks: 'Tarefas'
 };
 export interface StepViewColumnType{
