@@ -1228,6 +1228,10 @@ export interface WorkflowConfigType {
   },
   schema?: Record<string, FlowEntitySchemaInfo>,
   slas?: WorkflowConfigSlasType,
+  /** { [fn-exception]: rule } */
+  fn_exceptions?: Record<string, {
+    auth?: AuthPublicRouteType,
+  }>
   routines?: WorkflowRoutinesType,
   owner?: {
     id?: string
