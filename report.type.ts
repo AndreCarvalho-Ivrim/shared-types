@@ -36,10 +36,11 @@ export type ReportAnalyticsSearchDynamicColumnType = {
   }[]>
 }
 export interface ReportAnalyticsSearchType{
-  request: 'flow_datas' | 'flow_entities',
+  request: 'flow_datas' | 'flow_entities' | 'fn-exceptions',
   /**
    * - Caso request = flow_datas, o target_ids = [wf_id],
    * - Caso request = flow_entities, o target_ids = [wf_id, entity_key]
+   * - Caso request = fn-exceptions, o target_ids [exception]
    */
   target_ids: string[],
   /**
@@ -66,7 +67,9 @@ export interface ReportAnalyticsSearchType{
    * ! Ainda não há suporte para mais de uma referência cumulativa !
    */
   cumulative?: string[],
-  dynamicColumns?: ReportAnalyticsSearchDynamicColumnType[]
+  dynamicColumns?: ReportAnalyticsSearchDynamicColumnType[],
+  /** Válido quando request = fn-exceptions */
+  additional_params?: any
 }
 export interface ReportAnalyticsSearchQuery{
   /** strc */
@@ -127,7 +130,7 @@ export interface ReportType{
   /** URL de download de um report estático */
   url?: string,
   analytics?: ReportAnalyticsType,
-  /** Utilizar uma rota para gerar o report */
+  /** Utilizar uma rota para gerar o report - descontinuando esse parametro para configurar dentro do analytics */
   route?: {
     url: string,
     method: 'get' | 'post',
