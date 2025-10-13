@@ -2,11 +2,15 @@ import { ShortUser } from ".";
 import { AvailableIcons } from "./icon.type";
 import { AvailableRegexUrls } from "./utils/routes";
 
+export interface DashboardActionFnCallReport{
+  mode: 'call-report',
+  report_id: string
+}
 export type DashboardModes = 'all' | 'selected';
 export interface DashboardActionType{
   icon?: string,
   name: string,
-  fn?: string,
+  fn?: DashboardActionFnCallReport,
   href?: string
 }
 export interface DashboardType{
