@@ -127,6 +127,11 @@ export interface ReportType{
   /** URL de download de um report estático */
   url?: string,
   analytics?: ReportAnalyticsType,
+  /** Utilizar uma rota para gerar o report */
+  route?: {
+    url: string,
+    method: 'get' | 'post',
+  },
   /**
    * INDISPONÍVEL:
    * 
