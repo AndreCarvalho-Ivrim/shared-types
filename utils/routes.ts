@@ -120,6 +120,7 @@ export type AvailableRegexUrls =
   '@isac:workflow.calendar(module_name)' |
   '@isac:workflow.sla_panel(module_name)' |
   '@isac:workflow.open_dialog(module_name)' |
+  '@isac:workflow.exception(module_name,exception)' |
   '@isac:report.home' |
   '@isac:permission(module_name)' |
   '@isac:icon' |
