@@ -130,11 +130,6 @@ export interface ReportType{
   /** URL de download de um report estático */
   url?: string,
   analytics?: ReportAnalyticsType,
-  /** Utilizar uma rota para gerar o report - descontinuando esse parametro para configurar dentro do analytics */
-  route?: {
-    url: string,
-    method: 'get' | 'post',
-  },
   /**
    * INDISPONÍVEL:
    * 
@@ -170,7 +165,6 @@ export interface ShortReportType{
   url?: string,
   analytics?: boolean | ReportAnalyticsType,
   params?: ReportAnalyticsType['params'],
-  route?: ReportType['route'],
   extension?: 'xlsx' | 'csv',
   permissions?: ReportType['permissions']
 }
