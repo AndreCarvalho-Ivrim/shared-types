@@ -1,6 +1,7 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
+import { ReportAnalyticsFormatAndOrTranslate } from "./report.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 import { WorkflowTriggerType, AvailableTriggerEffects, WorkflowIvrimNotes } from "./workflow.config.triggers.type";
 
@@ -1095,7 +1096,8 @@ export interface PublicRouteGet{
   order_by?: Record<string, 'desc' | 'asc'>,
   filter_scope?: WorkflowViewModeFilterScope[],
   /** Se não for informado trará o flow_data.data completo */
-  body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>
+  body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
+  format?: Record<string, ReportAnalyticsFormatAndOrTranslate>,
 }
 export interface WorkflowConfigExceptionView{
   slug: string,

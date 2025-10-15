@@ -2,7 +2,7 @@ import { StepItemType } from "./step.item.field.type"
 import { StepViewType } from "./step.item.view.type"
 import { WorkflowConfigFilterType } from "./workflow.config.type"
 
-export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)'
+export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)' | 'number'
 export type ReportAnalyticsSearchDynamicColumnType = {
   /**
    * - array-destructuring: Desestruturação de array, irá gerar as colunas dinamicamente, \
@@ -93,7 +93,8 @@ export interface ReportAnalyticsSearchQuery{
 }
 export interface ReportAnalyticsFormatAndOrTranslate{
   type: ReportFormatTypes,
-  translate?: Record<string, string>
+  translate?: Record<string, string>,
+  defaultValue?: any
 }
 export interface ReportAnalyticsType{
   /**
