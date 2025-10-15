@@ -2,6 +2,7 @@ import { StepItemType } from "./step.item.field.type"
 import { StepViewType } from "./step.item.view.type"
 import { WorkflowConfigFilterType } from "./workflow.config.type"
 
+/** money inclui o tratamento de casas decimais forçando duas casas */
 export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)' | 'number'
 export type ReportAnalyticsSearchDynamicColumnType = {
   /**
