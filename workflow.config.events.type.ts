@@ -131,7 +131,8 @@ export interface ConsolidateFlowDataEventType{
   /** Efeitos no valor recebido pelo consolidate */
   effects_before?: Array<{
     condition?: string,
-    append_values: Record<string, any>
+    /** { 'ref-que-sera-salvo': 'ref-do-valor-que-sera-copiado' } */
+    append_values: Record<string, string>
   }>
   effects?: Array<{
     condition?: string,
