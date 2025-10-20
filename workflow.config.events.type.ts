@@ -144,6 +144,8 @@ export interface ToAffectFlowDataEventType{
   effects: {
     condition?: string,
     append_values?: Record<string, any>,
+    /** Caso tiver append_values, e resetHistory for true o history do flowData será resetado(mantido) */
+    resetHistory?: boolean,
     /** Forçar o disparo de uma trigger */
     trigger_event?: {
       /** Primeiro parâmetro de match para localizar o evento */
