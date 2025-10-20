@@ -128,6 +128,11 @@ export interface ConsolidateFlowDataEventType{
     /** Se for true interrompe a execução após match */
     breakExec?: boolean
   }>,
+  /** Efeitos no valor recebido pelo consolidate */
+  effects_before?: Array<{
+    condition?: string,
+    append_values: Record<string, any>
+  }>
   effects?: Array<{
     condition?: string,
     append_values: Record<string, any>
