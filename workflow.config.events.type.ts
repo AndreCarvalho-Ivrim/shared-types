@@ -128,6 +128,12 @@ export interface ConsolidateFlowDataEventType{
     /** Se for true interrompe a execução após match */
     breakExec?: boolean
   }>,
+  /** Efeitos no valor recebido pelo consolidate */
+  effects_before?: Array<{
+    condition?: string,
+    /** { 'ref-que-sera-salvo': 'ref-do-valor-que-sera-copiado' } */
+    append_values: Record<string, string>
+  }>
   effects?: Array<{
     condition?: string,
     append_values: Record<string, any>
@@ -144,6 +150,8 @@ export interface ToAffectFlowDataEventType{
   effects: {
     condition?: string,
     append_values?: Record<string, any>,
+    /** Caso tiver append_values, e resetHistory for true o history do flowData será resetado(mantido) */
+    reset_history?: boolean,
     /** Forçar o disparo de uma trigger */
     trigger_event?: {
       /** Primeiro parâmetro de match para localizar o evento */
