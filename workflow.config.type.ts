@@ -128,6 +128,15 @@ export interface WfConfigObserverBackupData{
   }[]
 
 }
+export type FlowNetworkAppendValues = Record<string, {
+  value: any,
+  /** Utilize _target ou _origin \
+   *  _target: alvo (data do wf ao qual está se conectando) - disponivel apenas em updates \
+   *  _origin: origem (data do wf que fez a conexão) \
+   *  _side: utilize para saber em qual lado está fazendo o append, 'target' ou 'origin'
+   */
+  condition?: string
+}>
 export interface FlowNetworkParams {
   flow_id: string,
   restrictions?: { where: any }[],
@@ -150,15 +159,17 @@ export interface FlowNetworkParams {
    */
   match: Record<string, string>,
   /** Adicionar um valor no registro de destino */
-  append_values?: Record<string, {
-    value: any,
+  append_values?: {
     /** Utilize _target ou _origin \
      *  _target: alvo (data do wf ao qual está se conectando) - disponivel apenas em updates \
      *  _origin: origem (data do wf que fez a conexão) \
      *  _side: utilize para saber em qual lado está fazendo o append, 'target' ou 'origin'
      */
-    condition?: string
-  }>,
+    condition?: string,
+    /** Interrompe os próximos appends caso o atual de match */
+    breakExec?: boolean,
+    append_values: FlowNetworkAppendValues
+  }[] | FlowNetworkAppendValues,
   /** 
    * [by-step]: irá usar a validação de um step(do target-wf) para receber os dados \
    * [public-route]: irá usar uma a validação de uma rota publica(do target-wf) para receber os dados \
