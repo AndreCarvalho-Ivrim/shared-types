@@ -248,13 +248,13 @@ export type HandlerMapType = {
    * utilizado para passar os valores de array para o flowData \
    * */
   pass_values?: {
-    /** Utilize $current para se referir ao valor atual do array */
+    /** Utilize $current para se referir ao valor atual caso for um array ou objeto */
     condition?: string;
     mode: 'overwrite' | 'merge';
     local_save: string,
     /** Utilize $current para se referir ao valor atual do array */
     path_to_save: string
-  }
+  }[]
 }
 
 export type HandlerFindType = {
