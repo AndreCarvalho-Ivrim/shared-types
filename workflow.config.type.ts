@@ -244,12 +244,21 @@ export type HandlerMapType = {
    * Use this ou (reference_this) para se referir ao valor atual do array
    * */
   appends: HandlerAppendType[];
+  /**
+   * Caso o recurso for um object e possível adicionar valores \
+   * Use this ou (reference_this) para se referir ao valor atual do array
+   * */
+  pass_values?: {
+    condition?: string;
+    mode: 'overwrite' | 'merge';
+    path_to_save: string
+  }
 }
 
 export type HandlerFindType = {
   type: 'find';
-  /** Local onde está o recurso - apenas nas notificações*/
-  path?: string;
+  /** Local onde está o recurso */
+  path: string;
   /** Local onde salvar o valor encontrado (recurso) */
   path_to_save?: string;
   /** 
