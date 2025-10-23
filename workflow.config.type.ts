@@ -248,8 +248,8 @@ export type HandlerMapType = {
 
 export type HandlerFindType = {
   type: 'find';
-  /** Local onde está o recurso */
-  path: string;
+  /** Local onde está o recurso - apenas nas notificações*/
+  path?: string;
   /** Local onde salvar o valor encontrado (recurso) */
   path_to_save?: string;
   /** 
