@@ -244,6 +244,19 @@ export type HandlerMapType = {
    * Use this ou (reference_this) para se referir ao valor atual do array
    * */
   appends: HandlerAppendType[];
+  /**
+   * utilizado para passar os valores de array para o flowData \
+   * */
+  pass_values?: {
+    /** Local onde está o recurso */
+    path: string;
+    /** Utilize $current para se referir ao valor atual caso for um array ou objeto */
+    condition?: string;
+    mode: 'overwrite' | 'merge';
+    local_save: 'current' | 'flow_data',
+    /** Utilize $current para se referir ao valor atual do array */
+    path_to_save: string
+  }[]
 }
 
 export type HandlerFindType = {
