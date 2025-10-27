@@ -120,4 +120,5 @@ export type AvailableIcons =
   'MailIcon'            |
   'EyeIcon'             |
   'CameraIcon'          |
-  'EqualIcon'
+  'EqualIcon'           |
+  'FolderSettingIcon'
