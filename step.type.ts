@@ -243,6 +243,8 @@ export interface StepType{
         container?: string,
         /** Válido apenas quando o item é do tipo table */
         tr?: string,
+        /** Válido para tabelas como Horizontal Table */
+        th?: string,
         /** Estilizações condicionais ```{ strc: { ...options } }``` */
         conditional?: Record<string, { wrapper?: string, container?: string, tr?: string }>
       }>,
