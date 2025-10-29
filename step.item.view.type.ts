@@ -1,4 +1,4 @@
-import { ColumnBadgeType } from "../types";
+import { ColumnBadgeType, ItemOrViewOrWidgetOrIntegration } from "../types";
 import { AvailableCustomItemModeType, ThemeColorType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
@@ -143,6 +143,8 @@ export interface StepViewTasksType extends StepViewBaseType{
   expiration: string,
   resume: StepViewColumnType[],
   columns: StepViewColumnType[],
+  /** Items adicionado na criação da tarefa */
+  items?:  ItemOrViewOrWidgetOrIntegration[],
   /**
    * É necessário ter um status configurado como default para iniciar os \
    * registros, e pelo menos um com type = success para finalizar a tarefa
