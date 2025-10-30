@@ -174,13 +174,13 @@ export interface StepItemType{
      */
     filter_condition?: string,
   },
-  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | {
+  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
     settings?: any
   },
   is_expanded?: boolean
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to';
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json';
 export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to'];
 export interface StepItemCustomDataSettings{
   mode: '@list',
@@ -300,4 +300,8 @@ export interface StepItemCustomDataNumberWithUnitOfMeasurement{
     },
     converted: { key: string }
   }
+}
+export interface StepItemCustomJson{
+  mode: '@json',
+  settings: { hidden?: boolean }
 }
