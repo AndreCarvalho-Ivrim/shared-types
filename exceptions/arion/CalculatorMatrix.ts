@@ -69,6 +69,8 @@ export interface ICircuit {
   target_monthly_fee?: number,
   target_installation_fee?: number,
   claro_order_id?: string,
+  target_margin_installation_fee?: number,
+  target_margin_monthly_fee?: number,
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
