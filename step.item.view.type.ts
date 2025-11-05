@@ -250,14 +250,10 @@ export interface StepViewMarkdownType extends StepViewBaseType{
   url: string
 }
 
-export interface StepViewExceptionType{
-  key: string,
-  mode: 'view',
-  label: string,
+export interface StepViewExceptionType extends StepViewBaseType{
   type: 'exception',
-  placeholder?: string,
-  rules?: {
-    render?: string,
-  },
-  customCSS?: string
+  customCSS?: any,
+  /** Parametros adicionais para a exception */
+  data?: any,
+  exception: string
 }
