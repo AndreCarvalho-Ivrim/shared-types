@@ -143,8 +143,6 @@ export interface StepViewTasksType extends StepViewBaseType{
   expiration: string,
   resume: StepViewColumnType[],
   columns: StepViewColumnType[],
-  /** Items adicionado na criação da tarefa */
-  items?:  ItemOrViewOrWidgetOrIntegration[],
   /**
    * É necessário ter um status configurado como default para iniciar os \
    * registros, e pelo menos um com type = success para finalizar a tarefa
