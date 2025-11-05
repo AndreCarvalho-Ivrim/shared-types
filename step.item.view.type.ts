@@ -82,7 +82,7 @@ export interface StepViewColumnType{
    */
   data?: any
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType;
 export type AdditionalTablesType = {
   label: string,
   columns: StepViewColumnType[],
@@ -248,4 +248,16 @@ export interface StepViewRedirectType extends StepViewBaseType{
 export interface StepViewMarkdownType extends StepViewBaseType{
   type: 'markdown',
   url: string
+}
+
+export interface StepViewExceptionType{
+  key: string,
+  mode: 'view',
+  label: string,
+  type: 'exception',
+  placeholder?: string,
+  rules?: {
+    render?: string,
+  },
+  customCSS?: string
 }
