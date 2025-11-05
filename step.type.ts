@@ -55,7 +55,7 @@ export interface StepTypeRuleRedirect{
   action_permission?: string,
   confirm?: StepActionConfirmType,
 }
-export type StepTypeRulesEffects = Partial<Record<(AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open' | 'redirect-to-step-if-successful' | 'enable-flow-alert-listeners'), boolean | {
+export type StepTypeRulesEffects = Partial<Record<(AvailableTriggerEffects | 'close-if-successful' | 'result-page' | 'redirect-and-autocomplete' | 'reload-and-open' | 'redirect-to-step-if-successful' | 'enable-flow-alert-listeners' | 'reload-page'), boolean | {
   condition?: string,
   [key: string]: any
 } | Array<{ condition?: string, [key: string]: any }>> >

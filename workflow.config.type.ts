@@ -1071,6 +1071,15 @@ export interface WorkflowMenuShortcut{
   icon?: AvailableIcons,
   title: string,
   action_permission?: string,
+  extends?: {
+    of: 'flow_entities',
+    flow_id: string,
+    /**
+     * - groupped: O conteúdo extendido ficará dentro de uma única opção
+     * - destructuring: O conteúdo extendido gerará várias opções
+     */
+    mode: 'groupped' | 'destructuring'
+  }
 }
 export interface PublicRouteGet{
   /**
