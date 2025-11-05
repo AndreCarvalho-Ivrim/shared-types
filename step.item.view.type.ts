@@ -1,4 +1,4 @@
-import { ColumnBadgeType, ItemOrViewOrWidgetOrIntegration } from "../types";
+import { ColumnBadgeType } from "../types";
 import { AvailableCustomItemModeType, ThemeColorType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
