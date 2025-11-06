@@ -14,7 +14,7 @@ interface StepViewBaseType{
     render?: string,
   }
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'exception';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   description: 'Descrição',
   table: 'Tabela',
@@ -24,7 +24,8 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   redirect: 'Redirecionamento',
   markdown: 'Markdown',
   html: 'Conteúdo Customizado',
-  tasks: 'Tarefas'
+  tasks: 'Tarefas',
+  exception: 'Exceção',
 };
 export interface StepViewColumnType{
   /** 
