@@ -254,6 +254,7 @@ export interface SendWhatsappMessagesEvent{
    **/
   effects?: RequestExternalEffect[],
   concluded_step_id: string,
+  not_answered_step_id?: string,
   control_errors?: {
     /**
      * A entidade deve conter as seguintes propriedades:
@@ -268,7 +269,20 @@ export interface SendWhatsappMessagesEvent{
      * ```
      */
     entity_id: string
-  }
+  },
+  /**
+   * Valores que irão gerar o contact_data. Obs:
+   * - Por padrão já é adicionado o campo ```flow_data_id```
+   * - Os valores em string são referência do flowData utilizando getRecursiveValue
+   * - Para adicionar valores dinâmicos passe no value o objecto com a prop static = true, e \
+   * o conteúdo na prop value. Se passar static = false, o value continuará sendo usado para ref \
+   * do flowData
+   **/
+  dynamic_contact_data?: Record<string, string | {
+    static: boolean,
+    value: any,
+    formatting?: { mode: 'moment', format: string }
+  }>
 }
 export interface RequestExternalDBEvent{
   db_host: string,
