@@ -278,12 +278,13 @@ export interface SendWhatsappMessagesEvent{
    * o conteúdo na prop value. Se passar static = false, o value continuará sendo usado para ref \
    * do flowData
    **/
-  dynamic_contact_data?: Record<string, string | {
+  dynamic_contact_data?: Record<string, string | SendWhatsappMessageDynamicContactDataValue>
+}
+export interface SendWhatsappMessageDynamicContactDataValue{
     static: boolean,
     value: any,
     formatting?: { mode: 'moment', format: string }
-  }>
-}
+  }
 export interface RequestExternalDBEvent{
   db_host: string,
   db_port: string,
