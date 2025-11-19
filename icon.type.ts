@@ -124,4 +124,5 @@ export type AvailableIcons =
   'FolderSettingIcon'      |
   'DeliveryTruckSpeedIcon' |
   'MaintenanceIcon'        |
-  'PowerOffIcon'
+  'PowerOffIcon'           |
+  'UserAltIcon'
