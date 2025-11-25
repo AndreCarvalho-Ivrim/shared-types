@@ -25,7 +25,8 @@ export const isacRoutes = {
     flowchat: (module_name: string, flow_data_id: string, chat_id: string) => `/flowchat/${module_name}/${flow_data_id}/${chat_id}`,
   },
   report: {
-    home: () => '/report'
+    home: () => '/report',
+    by_flow: (module_name: string) => `/report/${module_name}`
   },
   permission: (module_name: string) => `/permissoes-de-usuarios/${module_name}`,
   icon: () => '/icones',
@@ -82,6 +83,7 @@ export const hubRoutes = {
   icon: () => '/icones',
   dashboard: {
     home: () => '/co-pilot-dashboard',
+    by_flow: (module_name: string) => `/co-pilot-dashboard/flow/${module_name}`,
     show: (slug: string) => `/co-pilot-dashboard/${slug}`,
   },
   gallery: {
@@ -110,60 +112,62 @@ export const isacBackRoutes = {
 }
 
 export type AvailableRegexUrls =
-  '@isac:home' |
-  '@isac:template' |
-  '@isac:workflow.home' |
-  '@isac:workflow.create(module_name)' |
-  '@isac:workflow.test(module_name)' |
-  '@isac:workflow.exec(module_name,view_mode?)' |
-  '@isac:workflow.entity(module_name,entity)' |
-  '@isac:workflow.calendar(module_name)' |
-  '@isac:workflow.sla_panel(module_name)' |
-  '@isac:workflow.open_dialog(module_name)' |
-  '@isac:workflow.exception(module_name,exception)' |
-  '@isac:report.home' |
-  '@isac:permission(module_name)' |
-  '@isac:icon' |
-  '@isac:login' |
-  '@isac:menu' |
-  '@isac:admin_hub.workflows' |
+  '@isac:home'                                       |
+  '@isac:template'                                   |
+  '@isac:workflow.home'                              |
+  '@isac:workflow.create(module_name)'               |
+  '@isac:workflow.test(module_name)'                 |
+  '@isac:workflow.exec(module_name,view_mode?)'      |
+  '@isac:workflow.entity(module_name,entity)'        |
+  '@isac:workflow.calendar(module_name)'             |
+  '@isac:workflow.sla_panel(module_name)'            |
+  '@isac:workflow.open_dialog(module_name)'          |
+  '@isac:workflow.exception(module_name,exception)'  |
+  '@isac:report.home'                                |
+  '@isac:report.by_flow(module_name)'                |
+  '@isac:permission(module_name)'                    |
+  '@isac:icon'                                       |
+  '@isac:login'                                      |
+  '@isac:menu'                                       |
+  '@isac:admin_hub.workflows'                        |
   '@isac:public.workflow(flow_id,variation,params?)' |
-  '@isac:public.exception(flow_id,exception)' |
-  '@isac:chatbot.home' | 
-  '@isac:chatbot.manage(module_name)' |
-  '@isac:chatbot.manage_contact(module_name)' |
-  '@hub:admin_panel.companies' |
-  '@hub:auth.login' |
-  '@hub:auth.logout' |
-  '@hub:profile.home' |
-  '@hub:old_cap.alert' |
-  '@hub:old_cap.home' |
-  '@hub:old_cap.docs(id)' |
-  '@hub:old_cap.models' |
-  '@hub:reconciliation.home' |
-  '@hub:reconciliation.manage' |
-  '@hub:reconciliation.history' |
-  '@hub:admin_panel.client' |
-  '@hub:admin_panel.users' |
-  '@hub:admin_panel.projects' |
-  '@hub:admin_panel.dashboards' |
-  '@hub:admin_panel.integrations.whatsapp' |
-  '@hub:admin_panel.users_by_client' |
-  '@hub:dashboard.home' |
-  '@hub:dashboard.show(slug)' |
-  '@hub:icon' |
-  '@hub:gallery.home' |
-  '@hub:gallery.show(id)' |
-  '@hub:closing_folder.home' |
-  '@hub:notification.all' |
-  '@hub:notification.preference' |
-  '@hub:notification.create' |
-  '@hub:support.home' |
-  '@hub:support.details(_id)' |
-  '@hub:session.home' |
-  '@isac_back:public_route(flow_id,variation)' |
-  '@hub:learning_center.home' |
-  '@hub:learning_center.show(id)' |
+  '@isac:public.exception(flow_id,exception)'        |
+  '@isac:chatbot.home'                               | 
+  '@isac:chatbot.manage(module_name)'                |
+  '@isac:chatbot.manage_contact(module_name)'        |
+  '@hub:admin_panel.companies'                       |
+  '@hub:auth.login'                                  |
+  '@hub:auth.logout'                                 |
+  '@hub:profile.home'                                |
+  '@hub:old_cap.alert'                               |
+  '@hub:old_cap.home'                                |
+  '@hub:old_cap.docs(id)'                            |
+  '@hub:old_cap.models'                              |
+  '@hub:reconciliation.home'                         |
+  '@hub:reconciliation.manage'                       |
+  '@hub:reconciliation.history'                      |
+  '@hub:admin_panel.client'                          |
+  '@hub:admin_panel.users'                           |
+  '@hub:admin_panel.projects'                        |
+  '@hub:admin_panel.dashboards'                      |
+  '@hub:admin_panel.integrations.whatsapp'           |
+  '@hub:admin_panel.users_by_client'                 |
+  '@hub:dashboard.home'                              |
+  '@hub:dashboard.by_flow(module_name)'              |
+  '@hub:dashboard.show(slug)'                        |
+  '@hub:icon'                                        |
+  '@hub:gallery.home'                                |
+  '@hub:gallery.show(id)'                            |
+  '@hub:closing_folder.home'                         |
+  '@hub:notification.all'                            |
+  '@hub:notification.preference'                     |
+  '@hub:notification.create'                         |
+  '@hub:support.home'                                |
+  '@hub:support.details(_id)'                        |
+  '@hub:session.home'                                |
+  '@isac_back:public_route(flow_id,variation)'       |
+  '@hub:learning_center.home'                        |
+  '@hub:learning_center.show(id)'                    |
   '@hub:admin_panel.docs.home' 
 
 /**
