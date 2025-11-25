@@ -173,11 +173,19 @@ export const handleFillable = (id: string, flowData: any, value: any, i: number 
     flowData = handleRecursiveValue(ids, flowData, value, i, cumulative);
     delete flowData[id];
   }else{
-    if(cumulative.includes(id)){
-      if(!flowData[id]) flowData[id] = [];
-      flowData[id][i] = value;
+    if(typeof flowData !== 'object') flowData = {};
+
+    try{
+      if(cumulative.includes(id)){
+        if(!flowData[id]) flowData[id] = [];
+        flowData[id][i] = value;
+      }
+      else{
+        flowData[id] = value;
+      }
+    }catch(e){
+      console.error(e);
     }
-    else flowData[id] = value;
   }
 
   return flowData;
