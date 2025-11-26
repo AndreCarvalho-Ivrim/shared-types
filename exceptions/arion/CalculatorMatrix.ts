@@ -237,6 +237,7 @@ export interface ICalculateMarginResult {
 export class CalculatorMatrix {
   /** PIS e COFINS sem ATO COTEPE */
   private static pisCofins = 0.0365; // 0.02993;
+  private static minPositive = 0.0001;
 
   static execute(data: ICalculatorMatrixData) {
     const {
@@ -420,8 +421,14 @@ export class CalculatorMatrix {
     if (recurringUnitCostWithTax) {
       let calculateBy : 'gross' | 'gross_cotepe' = 'gross';
 
-      grossPriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + this.pisCofins))
-      let grossCotepePriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + this.pisCofins))
+      grossPriceTotal = monthlyCostsWithOverhead! / this.limitedValue(
+        1 - (recurringMargin + icmsArion + this.pisCofins),
+        this.minPositive
+      );
+      let grossCotepePriceTotal = monthlyCostsWithOverhead! / this.limitedValue(
+        1 - (recurringMargin + this.pisCofins),
+        this.minPositive
+      );
       grossPriceUnit = grossPriceTotal / linkQtd;
       let grossCotepePriceUnit = grossCotepePriceTotal / linkQtd;
 
@@ -492,7 +499,10 @@ export class CalculatorMatrix {
     let marginOfError = 0;
 
     if (recurringUnitCostWithTax) {
-      grossPriceTotal = this.roundDecimals(monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + 0.01007)));
+      grossPriceTotal = this.roundDecimals(monthlyCostsWithOverhead! / this.limitedValue(
+        1 - (recurringMargin + icmsArion + 0.01007),
+        this.minPositive
+      ));
       grossPriceUnit = grossPriceTotal / linkQtd;
       
       if(calculator === 'margin'){
@@ -597,7 +607,10 @@ export class CalculatorMatrix {
         netPriceTotal = target_monthly_fee * linkQtd;
       }
 
-      grossPriceTotalCotepe = (grossPriceTotal * (monthlyCostsWithOverhead! / grossPriceTotal)) / (1 - (recurringMargin + this.pisCofins));
+      grossPriceTotalCotepe = (grossPriceTotal * (monthlyCostsWithOverhead! / grossPriceTotal)) / this.limitedValue(
+        1 - (recurringMargin + this.pisCofins),
+        this.minPositive
+      );
       grossPriceUnitCotepe = grossPriceTotalCotepe / linkQtd;
 
       if(calculator === 'margin' && valueInProposal === 'gross_cotepe'){
@@ -674,7 +687,10 @@ export class CalculatorMatrix {
     let netPriceTotal = 0;
     let marginOfError = 0;
   
-    grossPriceUnit = possibleOverheadCosts / ( 1 - (eventualMargin + 0.05 + 0.076 + 0.0165));
+    grossPriceUnit = possibleOverheadCosts / this.limitedValue(
+      1 - (eventualMargin + 0.05 + 0.076 + 0.0165),
+      this.minPositive
+    );
     if(calculator === 'margin'){
       if(!target_installation_fee) target_installation_fee = 0;
       if(valueInProposal === 'gross' || valueInProposal === 'gross_cotepe'){
@@ -763,6 +779,9 @@ export class CalculatorMatrix {
       type === 'floor' ? Math.floor(value * factor) / factor :
       type === 'round' ? Math.round(value * factor) / factor : value
     );
+  }
+  private static limitedValue(value: number, limit: number){
+    return value > limit ? limit : value
   }
   //#endregion UTILS
 }
