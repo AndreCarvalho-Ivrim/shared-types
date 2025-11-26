@@ -106,7 +106,9 @@ export interface ICalculatorMatrixData {
   /** Multa por cancelamento */
   costCancellationPenalty?: number,
   valueInProposal: ValueInProposalType | null,
-  calculator: 'direct' | 'indirect' | 'margin'
+  calculator: 'direct' | 'indirect' | 'margin',
+  target_installation_fee: number | null,
+  target_monthly_fee: number | null,
 }
 export interface ICalculateTotalParams {
   totalRecurring: number,
@@ -157,12 +159,13 @@ export interface ICalculateRecurringSalesPriceFullAndPercentualParams {
   recurringUnitCostWithTax: number,
   /** Custo Mensal com Overhead */
   monthlyCostsWithOverhead?: number,
-  /** Custo Eventual c/ Overhead */
-  possibleOverheadCosts?: number,
   /** Margem Recorrente */
   recurringMargin: number,
   /** ICMS da filial da Arion */
   icmsArion: number,
+  valueInProposal: ValueInProposalType | null,
+  calculator: 'direct' | 'indirect' | 'margin',
+  target_monthly_fee: number | null,
 }
 export interface ICalculateBaseResult {
   /** Preço Líquido Unitário */
@@ -173,6 +176,8 @@ export interface ICalculateBaseResult {
   grossPriceUnit: number,
   /** Preço Bruto Total */
   grossPriceTotal: number,
+  /** Margem de erro */
+  marginOfError: number
 }
 export interface ICalculateRecurringSalesPriceWithPercentualResult extends ICalculateBaseResult {
   /** Telecom 60% */
@@ -185,12 +190,11 @@ export interface ICalculateRecurringSalesPriceParams {
   customerProfile?: CustomerProfile,
   /** Custos de Contratação > Recuperação Mensal de ICMS */
   monthlyRecoveryICMS: number,
-  /** Preço de venda recorrente 100% */
-  recurringSalesPriceFull: ICalculateBaseResult,
-  /** Preço de venda recorrente 60%-40% */
-  recurringSalesPriceWithPercentual: ICalculateRecurringSalesPriceWithPercentualResult,
   /** ICMS da filial da Arion */
   icmsArion: number,
+  valueInProposal: ValueInProposalType | null,
+  calculator: 'direct' | 'indirect' | 'margin',
+  target_monthly_fee: number | null,
 }
 export interface ICalculateRecurringSalesPriceResul extends ICalculateBaseResult {
   /** Líquido (ATO COTEPE) Unitário */
@@ -211,6 +215,9 @@ export interface ICalculateEventualSalePriceOrInstallationFeeParams {
   possibleOverheadCosts: number,
   /** Margem Eventual */
   eventualMargin: number,
+  valueInProposal: ValueInProposalType | null,
+  calculator: 'direct' | 'indirect' | 'margin',
+  target_installation_fee: number | null,
 }
 export interface ICalculateMarginParams {
   /** Quantidade de Links */
@@ -243,11 +250,14 @@ export class CalculatorMatrix {
       icmsArion,
       icmsByUF,
       uf,
-      speed,
       monthlyFee,
       installationFee,
       linkQtd,
-      costCancellationPenalty
+      costCancellationPenalty,
+      valueInProposal,
+      calculator,
+      target_installation_fee,
+      target_monthly_fee
     } = data;
     const monthly_fee = monthlyFee;
     const installation_fee = installationFee;
@@ -263,7 +273,6 @@ export class CalculatorMatrix {
     /** Custo mensal da multa por cancelamento */
     const monthlyCostCancellationPenalty = costCancellationPenalty ?? 0;
     /** ICMS da Operadora Contratada. Buscar o ICMS referente a empresa na planilha */
-    // [ ] Puxar o ICMS por região
     let icms = null;
     if (icmsByUF[uf]) {
       if (
@@ -276,42 +285,32 @@ export class CalculatorMatrix {
 
     /** Custos de contratação */
     const hiringCosts = this.calculateHiringCosts({ linkQtd, recurringUnitCostWithTax, unitCostInstallationWithTax, monthlyCostCancellationPenalty, icms, recurringOH, eventualOH });
-    /** Preço de venda recorrente 100% */
-    const recurringSalesPriceFull = this.calculateRecurringSalesPriceFull({
-      recurringUnitCostWithTax,
-      linkQtd,
-      possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
-      monthlyCostsWithOverhead: hiringCosts.monthlyCostsWithOverhead,
-      recurringMargin,
-      icmsArion,
-    });
-    /** Preço de venda recorrente 60%-40% */
-    const recurringSalesPriceWithPercentual = this.calculateRecurringSalesPriceWithPercentual({
-      recurringUnitCostWithTax,
-      linkQtd,
-      monthlyCostsWithOverhead: hiringCosts.monthlyCostsWithOverhead,
-      recurringMargin,
-      icmsArion,
-    });
+    
     /** Preço de venda recorrente */
     const recurringSalesPrice = this.calculateRecurringSalesPrice({
       customerProfile,
       monthlyRecoveryICMS: hiringCosts.monthlyRecoveryICMS,
-      recurringSalesPriceFull,
-      recurringSalesPriceWithPercentual,
       icmsArion,
       recurringMargin,
-      possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
       monthlyCostsWithOverhead: hiringCosts.monthlyCostsWithOverhead,
       linkQtd,
+      valueInProposal,
+      calculator,
+      target_monthly_fee,
+      recurringUnitCostWithTax
     });
+
     /** Preço de Venda Eventual ou Taxa de Instalação */
     const eventualSalePriceOrInstallationFee = this.calculateEventualSalePriceOrInstallationFee({
       monthlyRecoveryICMS: hiringCosts.monthlyRecoveryICMS,
       possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
       eventualMargin,
       linkQtd,
+      valueInProposal,
+      calculator,
+      target_installation_fee,
     });
+
     /** Margem */
     const margin = this.calculateMargin({
       hiringCosts,
@@ -319,17 +318,17 @@ export class CalculatorMatrix {
       eventualSalePriceOrInstallationFee,
       linkQtd,
     });
-
+    
     const result = {
       hiringCosts,
-      recurringSalesPriceFull,
-      recurringSalesPriceWithPercentual,
       recurringSalesPrice,
       eventualSalePriceOrInstallationFee,
       margin,
       marginRecurring: margin.recurring,
       marginEventual: margin.eventual,
       linkQtd,
+      monthly_fee_margin_of_error: this.roundDecimals(recurringSalesPrice.marginOfError, 'round'),
+      installation_fee_margin_of_error: this.roundDecimals(eventualSalePriceOrInstallationFee.marginOfError, 'round')
     };
 
     return result;
@@ -400,10 +399,12 @@ export class CalculatorMatrix {
   private static calculateRecurringSalesPriceFull({
     recurringUnitCostWithTax,
     linkQtd,
-    possibleOverheadCosts,
     monthlyCostsWithOverhead,
     recurringMargin,
     icmsArion,
+    calculator,
+    valueInProposal,
+    target_monthly_fee
   }: ICalculateRecurringSalesPriceFullAndPercentualParams): ICalculateBaseResult {
     /** Bruto total */
     let grossPriceTotal = 0;
@@ -414,28 +415,56 @@ export class CalculatorMatrix {
     /** Líquido total */
     let netPriceTotal = 0;
     
+    let marginOfError = 0;
+
     if (recurringUnitCostWithTax) {
       let calculateBy : 'gross' | 'gross_cotepe' = 'gross';
 
       grossPriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + this.pisCofins))
-      const grossCotepePriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + this.pisCofins))
+      let grossCotepePriceTotal = monthlyCostsWithOverhead! / (1 - (recurringMargin + this.pisCofins))
       grossPriceUnit = grossPriceTotal / linkQtd;
-      const grossCotepePriceUnit = grossCotepePriceTotal / linkQtd;
+      let grossCotepePriceUnit = grossCotepePriceTotal / linkQtd;
+
+      if(calculator === 'margin'){
+        if(!target_monthly_fee) target_monthly_fee = 0;
+        if(valueInProposal === 'gross'){
+          marginOfError =  grossPriceUnit - target_monthly_fee;
+          grossPriceUnit = target_monthly_fee;
+          grossPriceTotal = target_monthly_fee * linkQtd;
+        }
+        else if(valueInProposal === 'gross_cotepe'){
+          marginOfError =  grossCotepePriceUnit - target_monthly_fee;
+          grossCotepePriceUnit = target_monthly_fee;
+          grossCotepePriceTotal = target_monthly_fee * linkQtd;
+        }
+      }
+      else marginOfError = 0;
 
       netPriceUnit = calculateBy === 'gross' ? (
-        ((grossPriceUnit * (1 - icmsArion)) *  (1 - (0.0365))) * (1 - 0.015)
+        ((grossPriceUnit * (1 - icmsArion)) *  (1 - this.pisCofins)) * (1 - 0.015)
       ) : (
-        grossCotepePriceUnit * (1 - (0.0365))
+        grossCotepePriceUnit * (1 - this.pisCofins)
       );
       
       netPriceTotal = netPriceUnit * linkQtd;
     }
   
-    return {
+    if(calculator === 'margin'){
+      if(!target_monthly_fee) target_monthly_fee = 0;
+
+      if(valueInProposal === 'net' || valueInProposal === 'net_cotepe'){
+        marginOfError =  netPriceUnit - target_monthly_fee;
+        netPriceUnit = target_monthly_fee;
+        netPriceTotal = target_monthly_fee * linkQtd;
+      }
+    }
+  
+    return { 
       netPriceUnit: this.convertDecimals(netPriceUnit),
       netPriceTotal: this.convertDecimals(netPriceTotal),
       grossPriceUnit: this.convertDecimals(grossPriceUnit),
       grossPriceTotal: this.convertDecimals(grossPriceTotal),
+      marginOfError: this.convertDecimals(marginOfError)
     }
   }
   private static calculateRecurringSalesPriceWithPercentual({
@@ -444,6 +473,9 @@ export class CalculatorMatrix {
     monthlyCostsWithOverhead,
     recurringMargin,
     icmsArion,
+    calculator,
+    target_monthly_fee,
+    valueInProposal
   }: ICalculateRecurringSalesPriceFullAndPercentualParams): ICalculateRecurringSalesPriceWithPercentualResult {
     /** Bruto total */
     let grossPriceTotal = 0;
@@ -457,12 +489,40 @@ export class CalculatorMatrix {
     let telecom = 0;
     /** SERVICE */
     let service = 0;
+    let marginOfError = 0;
+
     if (recurringUnitCostWithTax) {
       grossPriceTotal = this.roundDecimals(monthlyCostsWithOverhead! / (1 - (recurringMargin + icmsArion + 0.01007)));
       grossPriceUnit = grossPriceTotal / linkQtd;
-      netPriceTotal = (((grossPriceTotal * 0.60) * (1 - icmsArion)) * (1 - (0.0365))) * (1 - 0.015) + (grossPriceTotal * 0.40 * (1 - (0.05 + 0.076 + 0.0165)));
+      
+      if(calculator === 'margin'){
+        if(!target_monthly_fee) target_monthly_fee = 0;
+        if(valueInProposal === 'gross'){
+          marginOfError =  grossPriceUnit - target_monthly_fee;
+          grossPriceUnit = target_monthly_fee;
+          grossPriceTotal = target_monthly_fee * linkQtd;
+        }
+      }
+      else marginOfError = 0;
+      
+      netPriceTotal = (
+        ((grossPriceTotal * 0.60) * (1 - icmsArion)) * (1 - this.pisCofins)
+      ) * (1 - 0.015) + (
+        grossPriceTotal * 0.40 * (1 - (0.05 + 0.076 + 0.0165))
+      );
       netPriceUnit = netPriceTotal / linkQtd;
-      telecom = this.roundDecimals(((( grossPriceTotal * 0.60 ) * (1 - (icmsArion))) * (1 - (0.0365))) * (1 - 0.015), 'floor');
+
+      if(calculator === 'margin'){
+        if(!target_monthly_fee) target_monthly_fee = 0;
+
+        if(valueInProposal === 'net' || valueInProposal === 'net_cotepe'){
+          marginOfError =  netPriceUnit - target_monthly_fee;
+          netPriceUnit = target_monthly_fee;
+          netPriceTotal = target_monthly_fee * linkQtd;
+        }
+      }
+
+      telecom = this.roundDecimals(((( grossPriceTotal * 0.60 ) * (1 - (icmsArion))) * (1 - this.pisCofins)) * (1 - 0.015), 'floor');
       service = (grossPriceTotal * 0.40 * (1 - (0.05 + 0.076 + 0.0165)))
     }
   
@@ -473,21 +533,21 @@ export class CalculatorMatrix {
       service: this.convertDecimals(service),
       grossPriceUnit: this.convertDecimals(grossPriceUnit),
       grossPriceTotal: this.convertDecimals(grossPriceTotal),
+      marginOfError
     }
   }
   private static calculateRecurringSalesPrice({
     customerProfile,
-    recurringSalesPriceFull,
-    recurringSalesPriceWithPercentual,
     recurringMargin,
-    possibleOverheadCosts,
     monthlyCostsWithOverhead,
     linkQtd,
-    icmsArion
-  }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'possibleOverheadCosts' | 'linkQtd' | 'monthlyCostsWithOverhead' | 'icmsArion'>): ICalculateRecurringSalesPriceResul {
-    /** PIS e COFINS do ATO COTEPE */
-    const pisCofins = 0.0365;
-
+    icmsArion,
+    calculator,
+    target_monthly_fee,
+    valueInProposal,
+    recurringUnitCostWithTax
+  }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'linkQtd' | 'monthlyCostsWithOverhead' | 'icmsArion' | 'recurringUnitCostWithTax'>): ICalculateRecurringSalesPriceResul {
+    //#region DECLARATION
     /** Bruto total */
     let grossPriceTotal = 0;
     /** Bruto unitário */
@@ -504,47 +564,84 @@ export class CalculatorMatrix {
     let grossPriceTotalCotepe = 0;
     /** Bruto unitário ATO COTEPE */
     let grossPriceUnitCotepe = 0;
+    let marginOfError = 0;
+    //#endregion DECLARATION
     
-    grossPriceTotal = customerProfile === 'Operadora' ?
-      recurringSalesPriceFull.grossPriceTotal:
-      customerProfile === 'Corporativo' ?
-        recurringSalesPriceWithPercentual.grossPriceTotal :
-        0;
-    grossPriceUnit = customerProfile === 'Operadora' ?
-      recurringSalesPriceFull.grossPriceUnit:
-      customerProfile === 'Corporativo' ?
-        recurringSalesPriceWithPercentual.grossPriceUnit :
-        0;
-    
-    const discount = (grossPriceTotal * icmsArion) + ((grossPriceTotal - (grossPriceTotal * icmsArion)) * pisCofins);
-    netPriceTotal = customerProfile === 'Operadora' ?
-      grossPriceTotal - discount :
-      customerProfile === 'Corporativo' ?
-        recurringSalesPriceWithPercentual.netPriceTotal :
-        0;
-    netPriceUnit = customerProfile === 'Operadora' ?
-      netPriceTotal / linkQtd :
-      customerProfile === 'Corporativo' ?
-        recurringSalesPriceWithPercentual.netPriceUnit :
-        0;
+    if(customerProfile === 'Operadora'){
+      /** Preço de venda recorrente 100% */
+      const recurringSalesPriceFull = this.calculateRecurringSalesPriceFull({
+        recurringUnitCostWithTax,
+        linkQtd,
+        monthlyCostsWithOverhead,
+        recurringMargin,
+        icmsArion,
+        valueInProposal,
+        calculator,
+        target_monthly_fee
+      });
 
-    grossPriceTotalCotepe = customerProfile === 'Operadora' ? 
-      (grossPriceTotal * (monthlyCostsWithOverhead! / grossPriceTotal)) / (1 - (recurringMargin + pisCofins)) : 
-      0;
-    grossPriceUnitCotepe = customerProfile === 'Operadora' ? 
-      grossPriceTotalCotepe / linkQtd : 
-      0;
+      marginOfError = recurringSalesPriceFull.marginOfError;
 
-    netPriceTotalCotepe = customerProfile === 'Operadora' ?
-      grossPriceTotalCotepe - (grossPriceTotalCotepe * pisCofins) :
-      customerProfile === 'Corporativo' ?
-        recurringSalesPriceWithPercentual.netPriceTotal :
-        0;
-    netPriceUnitCotepe = customerProfile === 'Operadora' ?
-      netPriceTotalCotepe / linkQtd:
-      customerProfile === 'Corporativo' ?
-        recurringSalesPriceWithPercentual.netPriceUnit :
-        0;
+      grossPriceTotal = recurringSalesPriceFull.grossPriceTotal;
+      grossPriceUnit = recurringSalesPriceFull.grossPriceUnit;
+
+      const discount = (grossPriceTotal * icmsArion) + ((grossPriceTotal - (grossPriceTotal * icmsArion)) * this.pisCofins);
+      netPriceTotal = grossPriceTotal - discount;
+      netPriceUnit = netPriceTotal / linkQtd;
+
+      if(!target_monthly_fee) target_monthly_fee = 0;
+
+      if(calculator === 'margin' && valueInProposal === 'net'){
+        marginOfError =  netPriceUnit - target_monthly_fee;
+        netPriceUnit = target_monthly_fee;
+        netPriceTotal = target_monthly_fee * linkQtd;
+      }
+
+      grossPriceTotalCotepe = (grossPriceTotal * (monthlyCostsWithOverhead! / grossPriceTotal)) / (1 - (recurringMargin + this.pisCofins));
+      grossPriceUnitCotepe = grossPriceTotalCotepe / linkQtd;
+
+      if(calculator === 'margin' && valueInProposal === 'gross_cotepe'){
+        marginOfError =  grossPriceUnitCotepe - target_monthly_fee;
+        grossPriceUnitCotepe = target_monthly_fee;
+        grossPriceTotalCotepe = target_monthly_fee * linkQtd;
+      }
+
+      netPriceTotalCotepe = grossPriceTotalCotepe - (grossPriceTotalCotepe * this.pisCofins);
+      netPriceUnitCotepe = netPriceTotalCotepe / linkQtd;
+
+      if(calculator === 'margin' && valueInProposal === 'net_cotepe'){
+        marginOfError =  netPriceUnitCotepe - target_monthly_fee;
+        netPriceUnitCotepe = target_monthly_fee;
+        netPriceTotalCotepe = target_monthly_fee * linkQtd;
+      }
+    }
+    else if(customerProfile === 'Corporativo'){
+      /** Preço de venda recorrente 60%-40% */
+      const recurringSalesPriceWithPercentual = this.calculateRecurringSalesPriceWithPercentual({
+        recurringUnitCostWithTax,
+        linkQtd,
+        monthlyCostsWithOverhead,
+        recurringMargin,
+        icmsArion,
+        valueInProposal,
+        calculator,
+        target_monthly_fee
+      });
+
+      marginOfError = recurringSalesPriceWithPercentual.marginOfError;
+
+      grossPriceTotal = recurringSalesPriceWithPercentual.grossPriceTotal;
+      grossPriceUnit = recurringSalesPriceWithPercentual.grossPriceUnit;
+
+      netPriceTotal = recurringSalesPriceWithPercentual.netPriceTotal;
+      netPriceUnit = recurringSalesPriceWithPercentual.netPriceUnit;
+
+      grossPriceTotalCotepe = 0;
+      grossPriceUnitCotepe = 0;
+
+      netPriceTotalCotepe = recurringSalesPriceWithPercentual.netPriceTotal;
+      netPriceUnitCotepe = recurringSalesPriceWithPercentual.netPriceUnit;
+    }
 
     return {
       netPriceUnit: this.convertDecimals(netPriceUnit),
@@ -555,13 +652,17 @@ export class CalculatorMatrix {
       grossPriceTotal: this.convertDecimals(grossPriceTotal),
       grossPriceUnitCotepe: this.convertDecimals(grossPriceUnitCotepe),
       grossPriceTotalCotepe: this.convertDecimals(grossPriceTotalCotepe),
+      marginOfError
     }
   }
   private static calculateEventualSalePriceOrInstallationFee({
     monthlyRecoveryICMS,
     possibleOverheadCosts,
     eventualMargin,
-    linkQtd
+    linkQtd,
+    valueInProposal,
+    calculator,
+    target_installation_fee,
   }: ICalculateEventualSalePriceOrInstallationFeeParams): ICalculateBaseResult {
     /** Bruto total */
     let grossPriceTotal = 0;
@@ -571,10 +672,26 @@ export class CalculatorMatrix {
     let netPriceUnit = 0;
     /** Líquido total */
     let netPriceTotal = 0;
+    let marginOfError = 0;
   
     grossPriceUnit = possibleOverheadCosts / ( 1 - (eventualMargin + 0.05 + 0.076 + 0.0165));
+    if(calculator === 'margin'){
+      if(!target_installation_fee) target_installation_fee = 0;
+      if(valueInProposal === 'gross' || valueInProposal === 'gross_cotepe'){
+        marginOfError =  grossPriceUnit - target_installation_fee;
+        grossPriceUnit = target_installation_fee;
+      }
+    }
     grossPriceTotal = grossPriceUnit * linkQtd;
+    
     netPriceUnit = grossPriceUnit * (1 - (0.05 + 0.076 + 0.0165));
+    if(calculator === 'margin'){
+      if(!target_installation_fee) target_installation_fee = 0;
+      if(valueInProposal === 'net' || valueInProposal === 'net_cotepe'){
+        marginOfError =  netPriceUnit - target_installation_fee;
+        netPriceUnit = target_installation_fee;
+      }
+    }
     netPriceTotal = netPriceUnit * linkQtd;
   
     return {
@@ -582,6 +699,7 @@ export class CalculatorMatrix {
       netPriceTotal: this.convertDecimals(netPriceTotal),
       grossPriceUnit: this.convertDecimals(grossPriceUnit),
       grossPriceTotal: this.convertDecimals(grossPriceTotal),
+      marginOfError
     }
   }
   private static calculateMargin({
@@ -637,12 +755,14 @@ export class CalculatorMatrix {
   private static convertDecimals(value: number) {
     return !isNaN(value) ? parseFloat(value.toFixed(2)) : 0;
   }
-  private static roundDecimals(value: number, type: 'ceil' | 'floor' = 'ceil') {
+  private static roundDecimals(value: number, type: 'ceil' | 'floor' | 'round'= 'ceil') {
     const decimals = 2;
     const factor = Math.pow(10, decimals);
-    return type === 'ceil' ?
-      Math.ceil(value * factor) / factor :
-      Math.floor(value * factor) / factor;
+    return (
+      type === 'ceil'  ? Math.ceil(value * factor) / factor  :
+      type === 'floor' ? Math.floor(value * factor) / factor :
+      type === 'round' ? Math.round(value * factor) / factor : value
+    );
   }
   //#endregion UTILS
 }
