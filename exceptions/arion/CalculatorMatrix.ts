@@ -1,7 +1,5 @@
 //#region TYPES
-interface ValidateDataParams {
-  circuits: Record<string, any>[];
-}
+export type ValueInProposalType =  'net' | 'net_cotepe' | 'gross' |'gross_cotepe'
 export interface ICircuit {
   status?: 'Reprovado' | 'Projeto Especial',
   special_project_reason?: string,
@@ -78,152 +76,154 @@ export type CalculatorMatrixICMSByUF = Record<CalculatorMatrixUF, any>;
 export type CalculatorMatrixUFLinkQtdByUF = Record<CalculatorMatrixUF, any>;
 export interface ICalculatorMatrixData {
   /** Perfil do cliente */
-  customerProfile?: CustomerProfile;
+  customerProfile?: CustomerProfile,
   /** Ato COTEPE */
-  cotepeAct?: boolean;
+  cotepeAct?: boolean,
   /** OH recorrente */
-  recurringOH: number;
+  recurringOH: number,
   /** OH eventual */
-  eventualOH: number;
+  eventualOH: number,
   /** Margem recorrente */
-  recurringMargin: number;
+  recurringMargin: number,
   /** Margem eventual */
-  eventualMargin: number;
+  eventualMargin: number,
   /** ICMS da CNPJ da Arion */
-  icmsArion: number;
+  icmsArion: number,
   /** Alíquota do ICMS por UF */
-  icmsByUF: CalculatorMatrixICMSByUF;
+  icmsByUF: CalculatorMatrixICMSByUF,
   /** SIGLA DO ESTADO */
-  uf: CalculatorMatrixUF;
+  uf: CalculatorMatrixUF,
   /** Velocidade da internet */
-  speed: string;
+  speed: string,
   /** Operadora Contratada */
-  operator?: string;
+  operator?: string,
   /** Mensalidade */
-  monthlyFee: number;
+  monthlyFee: number,
   /** Instalação */
-  installationFee: number;
+  installationFee: number,
   /** Quantidade de links por estado e velocidade */
-  linkQtd: number;
+  linkQtd: number,
   /** Multa por cancelamento */
-  costCancellationPenalty?: number;
+  costCancellationPenalty?: number,
+  valueInProposal: ValueInProposalType | null,
+  calculator: 'direct' | 'indirect' | 'margin'
 }
 export interface ICalculateTotalParams {
-  totalRecurring: number;
-  totalEventual: number;
-  contractDeadline: number;
-  marginRecurringTotal: number;
-  marginEventualTotal: number;
-  recurringSalesPriceGrossTotal: number;
+  totalRecurring: number,
+  totalEventual: number,
+  contractDeadline: number,
+  marginRecurringTotal: number,
+  marginEventualTotal: number,
+  recurringSalesPriceGrossTotal: number,
 }
 export interface ICalculateTotalResult {
-  totalProposal: number;
-  totalContract: number;
-  marginRecurringPercentual: number;
-  marginEventualTotalPercentual: number;
-  marginContractTotal: number;
-  marginContractTotalPercentual: number;
+  totalProposal: number,
+  totalContract: number,
+  marginRecurringPercentual: number,
+  marginEventualTotalPercentual: number,
+  marginContractTotal: number,
+  marginContractTotalPercentual: number,
 }
 export interface ICalculateHiringCostsParams {
   /** Quantidade de Links: links de circuito por município e velocidade */
-  linkQtd: number;
+  linkQtd: number,
   /** Custo unitário recorrente com impostos */
-  recurringUnitCostWithTax: number;
+  recurringUnitCostWithTax: number,
   /** Custo unitário da instalação com impostos */
-  unitCostInstallationWithTax: number;
+  unitCostInstallationWithTax: number,
   /** Custo mensal da multa por cancelamento */
-  monthlyCostCancellationPenalty: number;
+  monthlyCostCancellationPenalty: number,
   /** ICMS por região  */
-  icms: number;
+  icms: number,
   /** OH recorrente */
-  recurringOH: number; 
+  recurringOH: number, 
   /** OH eventual */
-  eventualOH: number;
+  eventualOH: number,
 }
 export interface ICalculateHiringCostsResult {
   /** Recuperação Mensal de ICMS */
-  monthlyRecoveryICMS: number;
+  monthlyRecoveryICMS: number,
   /** Mensal Bruto c/ Impostos */
-  monthlyGrossWithTax: number;
+  monthlyGrossWithTax: number,
   /** Custo Mensal c/ Overhead */
-  monthlyCostsWithOverhead: number;
+  monthlyCostsWithOverhead: number,
   /** Custo Eventual c/ Overhead */
-  possibleOverheadCosts: number;
+  possibleOverheadCosts: number,
 }
 export interface ICalculateRecurringSalesPriceFullAndPercentualParams {
   /** Quantidade de Links: links de circuito por município e velocidade */
-  linkQtd: number;
+  linkQtd: number,
   /** Custo unitário recorrente com impostos */
-  recurringUnitCostWithTax: number;
+  recurringUnitCostWithTax: number,
   /** Custo Mensal com Overhead */
-  monthlyCostsWithOverhead?: number;
+  monthlyCostsWithOverhead?: number,
   /** Custo Eventual c/ Overhead */
-  possibleOverheadCosts?: number;
+  possibleOverheadCosts?: number,
   /** Margem Recorrente */
-  recurringMargin: number;
+  recurringMargin: number,
   /** ICMS da filial da Arion */
-  icmsArion: number;
+  icmsArion: number,
 }
 export interface ICalculateBaseResult {
   /** Preço Líquido Unitário */
-  netPriceUnit: number;
+  netPriceUnit: number,
   /** Preço Líquido Total */
-  netPriceTotal: number;
+  netPriceTotal: number,
   /** Preço Bruto Unitário */
-  grossPriceUnit: number;
+  grossPriceUnit: number,
   /** Preço Bruto Total */
-  grossPriceTotal: number;
+  grossPriceTotal: number,
 }
 export interface ICalculateRecurringSalesPriceWithPercentualResult extends ICalculateBaseResult {
   /** Telecom 60% */
-  telecom: number;
+  telecom: number,
   /** Serviço 40% */
-  service: number;
+  service: number,
 } 
 export interface ICalculateRecurringSalesPriceParams {
   /** Perfil do Cliente */
-  customerProfile?: CustomerProfile;
+  customerProfile?: CustomerProfile,
   /** Custos de Contratação > Recuperação Mensal de ICMS */
-  monthlyRecoveryICMS: number;
+  monthlyRecoveryICMS: number,
   /** Preço de venda recorrente 100% */
-  recurringSalesPriceFull: ICalculateBaseResult;
+  recurringSalesPriceFull: ICalculateBaseResult,
   /** Preço de venda recorrente 60%-40% */
-  recurringSalesPriceWithPercentual: ICalculateRecurringSalesPriceWithPercentualResult;
+  recurringSalesPriceWithPercentual: ICalculateRecurringSalesPriceWithPercentualResult,
   /** ICMS da filial da Arion */
-  icmsArion: number;
+  icmsArion: number,
 }
 export interface ICalculateRecurringSalesPriceResul extends ICalculateBaseResult {
   /** Líquido (ATO COTEPE) Unitário */
-  netPriceUnitCotepe: number;
+  netPriceUnitCotepe: number,
   /** Líquido (ATO COTEPE) Total */
-  netPriceTotalCotepe: number;
+  netPriceTotalCotepe: number,
   /** Bruto (ATO COTEPE) Unitário */
-  grossPriceUnitCotepe: number;
+  grossPriceUnitCotepe: number,
   /** Bruto (ATO COTEPE) Total */
-  grossPriceTotalCotepe: number;
+  grossPriceTotalCotepe: number,
 }
 export interface ICalculateEventualSalePriceOrInstallationFeeParams {
   /** Quantidade de Links */
-  linkQtd: number;
+  linkQtd: number,
   /** Recuperação Mensal de ICMS */
-  monthlyRecoveryICMS: number;
+  monthlyRecoveryICMS: number,
   /** Custo Eventual com Overhead */
-  possibleOverheadCosts: number;
+  possibleOverheadCosts: number,
   /** Margem Eventual */
-  eventualMargin: number;
+  eventualMargin: number,
 }
 export interface ICalculateMarginParams {
   /** Quantidade de Links */
-  linkQtd: number;
-  hiringCosts: any;
-  recurringSalesPrice: ICalculateRecurringSalesPriceResul;
-  eventualSalePriceOrInstallationFee: ICalculateBaseResult;
+  linkQtd: number,
+  hiringCosts: any,
+  recurringSalesPrice: ICalculateRecurringSalesPriceResul,
+  eventualSalePriceOrInstallationFee: ICalculateBaseResult,
 }
 export interface ICalculateMarginResult {
   /** Margem Recorrente */
-  recurring: number;
+  recurring: number,
   /** Margem Eventual */
-  eventual: number;
+  eventual: number,
 }
 //#endregion
 
