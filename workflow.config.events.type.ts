@@ -133,15 +133,15 @@ export interface ConsolidateFlowDataEventType{
     condition?: string,
     /** { 'ref-que-sera-salvo': 'ref-do-valor-que-sera-copiado' } */
     append_values: Record<string, string>,
+  }>
+  effects?: Array<{
+    condition?: string,
+    append_values: Record<string, any>,
     /**
      * Interrompe os próximos appends caso o atual de match \
      * default: true, para não interromper passe false
      * */
     breakExec?: boolean
-  }>
-  effects?: Array<{
-    condition?: string,
-    append_values: Record<string, any>
   }>
 }
 export interface ToAffectFlowDataEventType{
