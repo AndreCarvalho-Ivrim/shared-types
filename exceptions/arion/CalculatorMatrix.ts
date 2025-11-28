@@ -751,7 +751,7 @@ export class CalculatorMatrix {
     /** Margem do contrato % */
     const marginContractTotalPercentual = (
       (contractDeadline * marginRecurringTotal) + marginEventualTotal
-    ) / (recurringSalesPriceGrossTotal * contractDeadline + totalEventual);
+    ) / (totalRecurring * contractDeadline + totalEventual);
     
     const result = {
       totalProposal,
