@@ -737,18 +737,21 @@ export class CalculatorMatrix {
     marginEventualTotal,
     recurringSalesPriceGrossTotal,
   }: ICalculateTotalParams): ICalculateTotalResult {
+    
     const totalProposal = this.roundDecimals(totalRecurring + totalEventual, 'floor');
-    // [ ] Arrumar "totalRecurring", por ele estar com 1 centavo a menos, está dando uma diferença de 14 centavos no final
+    
     /** Total do contrato */
     const totalContract = (totalRecurring * contractDeadline) + totalEventual;
     /** Margem recorrente % */
-    const marginRecurringPercentual = marginRecurringTotal / recurringSalesPriceGrossTotal;
+    const marginRecurringPercentual = marginRecurringTotal / totalRecurring;
     /** Margem eventual % */
     const marginEventualTotalPercentual = marginEventualTotal / totalEventual;
     /** Margem do contrato */
     const marginContractTotal = (contractDeadline * marginRecurringTotal) + marginEventualTotal;
     /** Margem do contrato % */
-    const marginContractTotalPercentual = ((contractDeadline * marginRecurringTotal) + marginEventualTotal) / (recurringSalesPriceGrossTotal * contractDeadline + totalEventual);
+    const marginContractTotalPercentual = (
+      (contractDeadline * marginRecurringTotal) + marginEventualTotal
+    ) / (recurringSalesPriceGrossTotal * contractDeadline + totalEventual);
     
     const result = {
       totalProposal,
