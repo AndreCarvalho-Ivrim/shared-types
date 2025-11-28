@@ -1278,6 +1278,9 @@ export interface WorkflowConfigType {
   rules?: WorkflowConfigRulesType[],
   flow_alerts?: WorkflowConfigFlowAlert[],
   activity_panel?: WorkflowConfigActivePanel[],
+  /** 
+   * Faz o retorno do getFlowDatas por chunk de steps
+   */
   get_stream?: boolean
 }
 export interface WorkflowConfigFlowAlert{
