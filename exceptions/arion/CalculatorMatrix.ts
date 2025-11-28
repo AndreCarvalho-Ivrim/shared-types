@@ -731,13 +731,12 @@ export class CalculatorMatrix {
     if(calculator === 'margin'){
       if(valueInProposal === 'net_cotepe') recurring = recurringSalesPrice.netPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
       else if(valueInProposal === 'gross') recurring = recurringSalesPrice.grossPriceTotal - hiringCosts.monthlyCostsWithOverhead;
-      else if(valueInProposal === 'gross_cotepe') recurring = recurringSalesPrice.grossPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
+      else if(valueInProposal === 'gross_cotepe') recurring = recurringSalesPrice.grossPriceTotalCotepe - (
+        recurringSalesPrice.grossPriceTotalCotepe * this.pisCofins
+      ) - hiringCosts.monthlyCostsWithOverhead;
     }
 
     eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
-    if(calculator === 'margin' && (
-      valueInProposal === 'gross' || valueInProposal === 'gross_cotepe'
-    )) eventual = eventualSalePriceOrInstallationFee.grossPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
   
     return {
       recurring: this.convertDecimals(recurring),
