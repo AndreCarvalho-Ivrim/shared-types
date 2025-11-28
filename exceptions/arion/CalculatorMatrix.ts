@@ -225,6 +225,8 @@ export interface ICalculateMarginParams {
   hiringCosts: any,
   recurringSalesPrice: ICalculateRecurringSalesPriceResul,
   eventualSalePriceOrInstallationFee: ICalculateBaseResult,
+  valueInProposal: ValueInProposalType | null,
+  calculator: 'direct' | 'indirect' | 'margin',
 }
 export interface ICalculateMarginResult {
   /** Margem Recorrente */
@@ -317,6 +319,8 @@ export class CalculatorMatrix {
       recurringSalesPrice,
       eventualSalePriceOrInstallationFee,
       linkQtd,
+      valueInProposal,
+      calculator,
     });
     
     const result = {
@@ -717,12 +721,23 @@ export class CalculatorMatrix {
     recurringSalesPrice,
     eventualSalePriceOrInstallationFee,
     linkQtd,
+    calculator,
+    valueInProposal
   }: ICalculateMarginParams): ICalculateMarginResult {
     let recurring = 0;
     let eventual = 0;
   
     recurring = recurringSalesPrice.netPriceTotal - hiringCosts.monthlyCostsWithOverhead;
+    if(calculator === 'margin'){
+      if(valueInProposal === 'net_cotepe') recurring = recurringSalesPrice.netPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
+      else if(valueInProposal === 'gross') recurring = recurringSalesPrice.grossPriceTotal - hiringCosts.monthlyCostsWithOverhead;
+      else if(valueInProposal === 'gross_cotepe') recurring = recurringSalesPrice.grossPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
+    }
+
     eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
+    if(calculator === 'margin' && (
+      valueInProposal === 'gross' || valueInProposal === 'gross_cotepe'
+    )) eventual = eventualSalePriceOrInstallationFee.grossPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
   
     return {
       recurring: this.convertDecimals(recurring),
