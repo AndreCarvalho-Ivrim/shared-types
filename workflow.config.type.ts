@@ -1277,7 +1277,8 @@ export interface WorkflowConfigType {
   },
   rules?: WorkflowConfigRulesType[],
   flow_alerts?: WorkflowConfigFlowAlert[],
-  activity_panel?: WorkflowConfigActivePanel[]
+  activity_panel?: WorkflowConfigActivePanel[],
+  get_stream?: boolean
 }
 export interface WorkflowConfigFlowAlert{
   key: string,
