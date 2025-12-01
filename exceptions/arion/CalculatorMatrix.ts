@@ -225,6 +225,8 @@ export interface ICalculateMarginParams {
   hiringCosts: any,
   recurringSalesPrice: ICalculateRecurringSalesPriceResul,
   eventualSalePriceOrInstallationFee: ICalculateBaseResult,
+  valueInProposal: ValueInProposalType | null,
+  calculator: 'direct' | 'indirect' | 'margin',
 }
 export interface ICalculateMarginResult {
   /** Margem Recorrente */
@@ -317,6 +319,8 @@ export class CalculatorMatrix {
       recurringSalesPrice,
       eventualSalePriceOrInstallationFee,
       linkQtd,
+      valueInProposal,
+      calculator,
     });
     
     const result = {
@@ -717,11 +721,21 @@ export class CalculatorMatrix {
     recurringSalesPrice,
     eventualSalePriceOrInstallationFee,
     linkQtd,
+    calculator,
+    valueInProposal
   }: ICalculateMarginParams): ICalculateMarginResult {
     let recurring = 0;
     let eventual = 0;
   
     recurring = recurringSalesPrice.netPriceTotal - hiringCosts.monthlyCostsWithOverhead;
+    if(calculator === 'margin'){
+      if(valueInProposal === 'net_cotepe') recurring = recurringSalesPrice.netPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
+      else if(valueInProposal === 'gross') recurring = recurringSalesPrice.grossPriceTotal - hiringCosts.monthlyCostsWithOverhead;
+      else if(valueInProposal === 'gross_cotepe') recurring = recurringSalesPrice.grossPriceTotalCotepe - (
+        recurringSalesPrice.grossPriceTotalCotepe * this.pisCofins
+      ) - hiringCosts.monthlyCostsWithOverhead;
+    }
+
     eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
   
     return {
@@ -737,18 +751,21 @@ export class CalculatorMatrix {
     marginEventualTotal,
     recurringSalesPriceGrossTotal,
   }: ICalculateTotalParams): ICalculateTotalResult {
+    
     const totalProposal = this.roundDecimals(totalRecurring + totalEventual, 'floor');
-    // [ ] Arrumar "totalRecurring", por ele estar com 1 centavo a menos, está dando uma diferença de 14 centavos no final
+    
     /** Total do contrato */
     const totalContract = (totalRecurring * contractDeadline) + totalEventual;
     /** Margem recorrente % */
-    const marginRecurringPercentual = marginRecurringTotal / recurringSalesPriceGrossTotal;
+    const marginRecurringPercentual = marginRecurringTotal / totalRecurring;
     /** Margem eventual % */
     const marginEventualTotalPercentual = marginEventualTotal / totalEventual;
     /** Margem do contrato */
     const marginContractTotal = (contractDeadline * marginRecurringTotal) + marginEventualTotal;
     /** Margem do contrato % */
-    const marginContractTotalPercentual = ((contractDeadline * marginRecurringTotal) + marginEventualTotal) / (recurringSalesPriceGrossTotal * contractDeadline + totalEventual);
+    const marginContractTotalPercentual = (
+      (contractDeadline * marginRecurringTotal) + marginEventualTotal
+    ) / (totalRecurring * contractDeadline + totalEventual);
     
     const result = {
       totalProposal,
