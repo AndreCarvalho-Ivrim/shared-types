@@ -965,7 +965,8 @@ export interface WorkflowConfigSlasType {
   horizontal_table?: {
     icon: AvailableIcons,
     title: string,
-    to: string
+    to: string,
+    active?: boolean
   }[]
 }
 export interface WFConfigSlaNotifyType {
