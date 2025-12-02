@@ -747,6 +747,10 @@ export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
 }
+export interface WorkflowViewModeRedirect extends WorkflowViewModeBase {
+  view_mode: 'redirect',
+  to: string
+}
 export interface WorkflowViewModeDashboard extends WorkflowViewModeBase{
   view_mode: 'dashboard',
   modules: Array<WorkflowViewModeDashboardModule>
@@ -866,7 +870,7 @@ export interface WorkflowViewModeDashboardFn{
   data?: { filter?: any, dynamic_filters?: boolean }
 }
 
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup | WorkflowViewModeResume;
+export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup | WorkflowViewModeResume | WorkflowViewModeRedirect;
 
 export interface WorkflowAuthTemplateType {
   id: string,
@@ -923,6 +927,7 @@ export interface WorkflowConfigSlasType {
   time_to_notify?: AvailableTimeToNotify,
   notify?: WFConfigSlaNotifyType[],
   outher_fields?: WorkflowSlaOutherField[],
+  active_aside_item?: string,
   permission?: string,
   /** Caso essa função seja habilitada o SLA das Etapas é controlado por um painel e não pelo template */
   editable_steps_sla?: boolean,
@@ -957,7 +962,13 @@ export interface WorkflowConfigSlasType {
    * passe a key do outher_fields
    */
   replacement_stay?: string,
-  variation_step_sla?: WFConfigSlaVariationType[]
+  variation_step_sla?: WFConfigSlaVariationType[],
+  horizontal_menu?: {
+    icon: AvailableIcons,
+    title: string,
+    to: string,
+    active?: boolean
+  }[]
 }
 export interface WFConfigSlaNotifyType {
   subject: string,
