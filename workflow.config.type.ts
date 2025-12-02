@@ -963,7 +963,7 @@ export interface WorkflowConfigSlasType {
    */
   replacement_stay?: string,
   variation_step_sla?: WFConfigSlaVariationType[],
-  horizontal_table?: {
+  horizontal_menu?: {
     icon: AvailableIcons,
     title: string,
     to: string,
