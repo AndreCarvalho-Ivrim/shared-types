@@ -747,6 +747,10 @@ export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
 }
+export interface WorkflowViewModeRedirect extends WorkflowViewModeBase {
+  view_mode: 'redirect',
+  to: string
+}
 export interface WorkflowViewModeDashboard extends WorkflowViewModeBase{
   view_mode: 'dashboard',
   modules: Array<WorkflowViewModeDashboardModule>
@@ -866,7 +870,7 @@ export interface WorkflowViewModeDashboardFn{
   data?: { filter?: any, dynamic_filters?: boolean }
 }
 
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup | WorkflowViewModeResume;
+export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup | WorkflowViewModeResume | WorkflowViewModeRedirect;
 
 export interface WorkflowAuthTemplateType {
   id: string,
@@ -957,7 +961,12 @@ export interface WorkflowConfigSlasType {
    * passe a key do outher_fields
    */
   replacement_stay?: string,
-  variation_step_sla?: WFConfigSlaVariationType[]
+  variation_step_sla?: WFConfigSlaVariationType[],
+  horizontal_table?: {
+    icon: AvailableIcons,
+    title: string,
+    to: string
+  }[]
 }
 export interface WFConfigSlaNotifyType {
   subject: string,
