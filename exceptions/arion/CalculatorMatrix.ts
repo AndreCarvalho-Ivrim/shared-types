@@ -1,7 +1,7 @@
 //#region TYPES
 export type ValueInProposalType =  'net' | 'net_cotepe' | 'gross' |'gross_cotepe'
 export interface ICircuit {
-  status?: 'Reprovado' | 'Projeto Especial',
+  status?: 'Reprovado' | 'Projeto Especial' | 'Em Negociação',
   special_project_reason?: string,
   possible_selected_providers?: any,
   link_group_key?: string,
@@ -25,6 +25,8 @@ export interface ICircuit {
 
   contracted_operator?: string,
   monthly_fee: number,
+  first_monthly_fee?: number,
+  first_installation_fee?: number,
   own_network?: string,
   product: string,
   raw_product?: string,
@@ -60,6 +62,8 @@ export interface ICircuit {
   third_party_provider?: string,
   contracted_monthly?: number,
   contracted_installation?: number,
+  first_contracted_monthly?: number,
+  first_contracted_installation?: number,
   grouping_type: 'single' | 'group' | 'ungroup',
   established_group?: boolean,
   sale_price_monthly?: number,
@@ -69,6 +73,7 @@ export interface ICircuit {
   claro_order_id?: string,
   target_margin_installation_fee?: number,
   target_margin_monthly_fee?: number,
+  network?: { id: string }
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
