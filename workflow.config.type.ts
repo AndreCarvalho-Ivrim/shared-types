@@ -471,7 +471,7 @@ export interface ConfigViewModeColumnsType {
    */
   id: '@user' | '@owners' | 'created_at' | 'step' | '@title-and-subtitle:id_1,id_2' | string,
   name: string,
-  type: IntegrationExcelColumnTypeType,
+  type: IntegrationExcelColumnTypeType | 'tasks',
   /**
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
@@ -481,7 +481,8 @@ export interface ConfigViewModeColumnsType {
    * Podendo ter também, '_default' que define o valor padrão caso não seja satisfeito.
    */
   translate?: Record<string, string>,
-  badge?: ColumnBadgeType
+  badge?: ColumnBadgeType,
+  data?: any
 }
 export interface ColumnBadgeType{
   light?: string[],
