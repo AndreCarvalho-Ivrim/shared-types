@@ -243,7 +243,17 @@ export interface FlowEntityInfo{
   created_at?: Date,
   importSheet?: FlowEntityImportSheet,
   exportDatas?: Array<FlowEntityExportDatas>,
-  is_public?: boolean
+  is_public?: boolean,
+  styles_form?: FlowEntityStylesForm
+}
+
+export interface FlowEntityStylesFormGroup{
+  mode: 'group-collapse',
+  title: string,
+  items: string[]
+}
+export interface FlowEntityStylesForm {
+  groups?: FlowEntityStylesFormGroup[]
 }
 
 export interface StepItemCustomListDraggable{
