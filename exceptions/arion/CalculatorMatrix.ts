@@ -1,7 +1,7 @@
 //#region TYPES
 export type ValueInProposalType =  'net' | 'net_cotepe' | 'gross' |'gross_cotepe'
 export interface ICircuit {
-  status?: 'Reprovado' | 'Projeto Especial',
+  status?: 'Reprovado' | 'Projeto Especial' | 'Em Negociação' | 'Ag. Retorno Operadora',
   special_project_reason?: string,
   possible_selected_providers?: any,
   link_group_key?: string,
@@ -25,6 +25,8 @@ export interface ICircuit {
 
   contracted_operator?: string,
   monthly_fee: number,
+  first_monthly_fee?: number,
+  first_installation_fee?: number,
   own_network?: string,
   product: string,
   raw_product?: string,
@@ -49,10 +51,10 @@ export interface ICircuit {
     months_net: number,
     months_net_cotepe: number,
     months_net_rate: number,
-    months_gross?: number,
-    months_gross_rate?: number,
-    months_gross_cotepe?: number,
-    months_gross_cotepe_rate?: number,
+    months_gross: number,
+    months_gross_rate: number,
+    months_gross_cotepe: number,
+    months_gross_cotepe_rate: number,
     monthly_fee_margin_of_error?: number,
     installation_fee_margin_of_error?: number
   }[],
@@ -60,6 +62,8 @@ export interface ICircuit {
   third_party_provider?: string,
   contracted_monthly?: number,
   contracted_installation?: number,
+  first_contracted_monthly?: number,
+  first_contracted_installation?: number,
   grouping_type: 'single' | 'group' | 'ungroup',
   established_group?: boolean,
   sale_price_monthly?: number,
@@ -69,6 +73,7 @@ export interface ICircuit {
   claro_order_id?: string,
   target_margin_installation_fee?: number,
   target_margin_monthly_fee?: number,
+  network?: { id: string }
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
@@ -227,6 +232,7 @@ export interface ICalculateMarginParams {
   eventualSalePriceOrInstallationFee: ICalculateBaseResult,
   valueInProposal: ValueInProposalType | null,
   calculator: 'direct' | 'indirect' | 'margin',
+  cotepeAct: boolean
 }
 export interface ICalculateMarginResult {
   /** Margem Recorrente */
@@ -321,6 +327,7 @@ export class CalculatorMatrix {
       linkQtd,
       valueInProposal,
       calculator,
+      cotepeAct: cotepeAct ?? false
     });
     
     const result = {
@@ -722,12 +729,17 @@ export class CalculatorMatrix {
     eventualSalePriceOrInstallationFee,
     linkQtd,
     calculator,
-    valueInProposal
+    valueInProposal,
+    cotepeAct
   }: ICalculateMarginParams): ICalculateMarginResult {
     let recurring = 0;
     let eventual = 0;
   
-    recurring = recurringSalesPrice.netPriceTotal - hiringCosts.monthlyCostsWithOverhead;
+    recurring = cotepeAct ?
+      (recurringSalesPrice.netPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead):
+      (recurringSalesPrice.netPriceTotal - hiringCosts.monthlyCostsWithOverhead)
+    ;
+
     if(calculator === 'margin'){
       if(valueInProposal === 'net_cotepe') recurring = recurringSalesPrice.netPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
       else if(valueInProposal === 'gross') recurring = recurringSalesPrice.grossPriceTotal - hiringCosts.monthlyCostsWithOverhead;

@@ -73,7 +73,9 @@ export interface FlowEntitySchemaInfo{
     trigger?: { mode: 'keyup' } | {
       mode: 'clickToNext',
       target: string
-    }
+    },
+    /** Valida se o valor inserido na importação existe na base do autocomplete */
+    restricted?: boolean
   }
   required: boolean,
   unique?: boolean

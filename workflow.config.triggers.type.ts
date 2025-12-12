@@ -165,7 +165,8 @@ export type WorkflowFlowChat = {
      * O usuario só terá permissão caso passe em algum condicional \
      * disponível: $_user_id
      */
-    switch_condition?: string[]
+    switch_condition?: string[],
+    delete_chats?: 'all' | 'all-with-permissions' | string[]
   }
 };
 
