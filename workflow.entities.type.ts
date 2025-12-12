@@ -54,7 +54,7 @@ export interface FlowEntitySchemaInfo{
    * front-end, e não permite atualização, apenas sobreescrita. Além \
    * de ter recursos de geração de token automática
    */
-  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe' | 'access-token',
+  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe' | 'access-token' | 'percent',
   condition_mask?: {
     type: StepViewAttrMaskType,
     condition: string,
