@@ -75,7 +75,9 @@ export interface FlowEntitySchemaInfo{
       target: string
     },
     /** Valida se o valor inserido na importação existe na base do autocomplete */
-    restricted?: boolean
+    restricted?: boolean,
+    /** Adiciona uma opção no final para adicionar registro na base  informada */
+    add_more_options?: boolean
   }
   required: boolean,
   unique?: boolean
