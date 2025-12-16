@@ -173,6 +173,8 @@ export interface StepItemType{
      * - $observer:\<variavel>: É uma variável observável alterada em tempo de execução
      */
     filter_condition?: string,
+    /** Adiciona uma opção no final para adicionar registro na base  informada */
+    add_more_options?: boolean
   },
   customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
