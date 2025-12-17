@@ -241,6 +241,7 @@ export interface StepType{
         wrapper?: string,
         /** Apenas alguns itens, como o group collapse tem suporte ao container */
         container?: string,
+        label?: string,
         /** Válido apenas quando o item é do tipo table */
         tr?: string,
         /** Válido para tabelas como Horizontal Table */
