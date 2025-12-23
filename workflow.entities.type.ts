@@ -1,3 +1,4 @@
+import { FlowEntityDataFilters } from "../services/flowEntity";
 import { AvailableIcons } from "./icon.type";
 import { StepViewAttrMaskType } from "./step.item.view.type";
 import { WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
@@ -168,7 +169,8 @@ export type AvailableFlowEntityViewModes = FlowEntityViewModeGrid
 export interface FlowEntityRelations {
   entity_id: string,
   append_values: Record<string, any>,
-  title: string
+  title: string,
+  find?: FlowEntityDataFilters
 }
 export interface FlowEntityInfo{
   title: string,
