@@ -170,7 +170,7 @@ export interface FlowEntityRelations {
   entity_id: string,
   append_values: Record<string, any>,
   title: string,
-  find?: FlowEntityDataFilters
+  query?: Record<string, string>
 }
 export interface FlowEntityInfo{
   title: string,
