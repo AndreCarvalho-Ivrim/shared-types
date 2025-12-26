@@ -126,12 +126,17 @@ export interface FlowEntityImportSheet{
    * Se os registros serão adicionados no inicio ou no final. \
    * Por padrão é append(final)
    */
-  line_aggregation?: boolean,
+  insert_mode?: 'append' | 'prepend',
   /**
    * Aglutinação de linhas \
    * Utilizado para aglutinar linas de sub-schemas
    */
-  insert_mode?: 'append' | 'prepend'
+  line_aggregation?: {
+    /**
+   * Quais valores serão utilizado para identificar o registro \
+   */
+    identifier: string[]
+  },
 }
 export interface FlowEntityExportDatas{
   title: string,
