@@ -131,7 +131,24 @@ export interface WorkflowTriggerUpdateFlowData extends  WorkflowTriggerBase{
 
 export type WorkflowTriggerType = WorkflowTriggerSyncFlowDatas | WorkflowTriggerGamificationActionLog | WorkflowTriggerObserverEvents | WorkflowTriggerUpdateFlowEntityData | WorkflowTriggerUpdateFlowData;
 
-export type WorkflowFlowComments = { mode: 'comments' };
+export interface WorkflowFlowCommentsNetwork {
+  /**
+   * Id do wf de network
+   */
+  flow_network_id: string,
+  /**
+   * propriedade onde está o flow-data do wf de network
+   */
+  flow_data_id: string,
+  /**
+   * Nome que será exibido na seleção de comentários
+   */
+  name: string
+}
+export type WorkflowFlowComments = {
+  mode: 'comments',
+  comments_network?: WorkflowFlowCommentsNetwork[]
+};
 export type WorkflowFlowChat = {
   mode: 'chat',
   /**
