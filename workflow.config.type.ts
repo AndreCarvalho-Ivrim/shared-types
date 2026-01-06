@@ -1157,6 +1157,12 @@ export interface WorkflowConfigExceptionView{
   whithout_flow_data?: boolean,
   data?: any
 }
+export interface WorkflowConfigVisualManagement {
+  title: string,
+  ref: string,
+  values: string[],
+  translate?: Record<string, string>
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
@@ -1293,7 +1299,8 @@ export interface WorkflowConfigType {
   /** 
    * Faz o retorno do getFlowDatas por chunk de steps
    */
-  get_stream?: boolean
+  get_stream?: boolean,
+  visual_management?: WorkflowConfigVisualManagement[]
 }
 export interface WorkflowConfigFlowAlert{
   key: string,
