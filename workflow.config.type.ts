@@ -1300,7 +1300,10 @@ export interface WorkflowConfigType {
    * Faz o retorno do getFlowDatas por chunk de steps
    */
   get_stream?: boolean,
-  visual_management?: WorkflowConfigVisualManagement[]
+  visual_management?: {
+    permission?: string,
+    fields: WorkflowConfigVisualManagement[]
+  }
 }
 export interface WorkflowConfigFlowAlert{
   key: string,
