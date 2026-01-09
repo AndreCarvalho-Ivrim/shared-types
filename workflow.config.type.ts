@@ -1175,15 +1175,18 @@ export interface WorkflowConfigType {
      * Id de todas as configurações que podem gerar botões para acesso no menu. \
      * Abaixo terá um exemplo do prefixo de uma view, entidade, entre outros:
      * 
-     * - view:     view-mode--vm-slug
-     * - entity:   entity--en-id
-     * - shortcut: shortcut--id
+     * - view:      view-mode--vm-slug
+     * - entity:    entity--en-id
+     * - shortcut:  shortcut--id
+     * - exception: exception--id
      */
     ordenation?: string[],
     shortcuts?: WorkflowMenuShortcut[]
-    groups?: Partial<Record<'flow_entities' | 'exception_views' | 'shortcuts', {
+    groups?: Partial<Record<'flow_entities' | 'exception_views' | 'shortcuts' | 'outhers', {
       title: string,
       icon?: AvailableIcons,
+      additionals?: string[],
+      /** É obrigatório informar o only caso seja outhers */
       only?: string[]
     }>>
   },
