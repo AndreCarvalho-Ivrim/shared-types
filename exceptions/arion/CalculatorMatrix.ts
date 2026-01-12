@@ -27,6 +27,8 @@ export interface ICircuit {
   monthly_fee: number,
   first_monthly_fee?: number,
   first_installation_fee?: number,
+  real_monthly_fee?: number,
+  real_installation_fee?: number,
   own_network?: string,
   product: string,
   raw_product?: string,
