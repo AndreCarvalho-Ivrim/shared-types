@@ -52,6 +52,16 @@ export interface WorkflowNotificationEffectType{
   /** { ['flow-data-key']: \<value-to-add> } */
   append_values: Record<string, any>
 }
+export interface WorkflowConfigNotificationTargetType {
+  /** Entidade single para pegar os emails */
+  single_entity: string,
+  /** Campo dentro da entidade que contém os emails */
+  target?: string,
+  conditional_targets?: {
+    condition: string
+    target: string
+  }[]
+}
 export interface WorkflowConfigNotificationType {
   name: string,
   condition: string,
@@ -89,7 +99,7 @@ export interface WorkflowConfigNotificationType {
    * - 'path-to-contact'                Caminho para o registro dentro do flow_data.data que contenha 
    *                                    o contato
    */
-  target?: '@data_creator' | '@data_owner' | '@wf_owner' | '@group-permission:<N>' | string,
+  target?: '@data_creator' | '@data_owner' | '@wf_owner' | '@group-permission:<N>' | string | WorkflowConfigNotificationTargetType,
   /** Segue as mesmas regras do target */
   conditional_targets?: { condition: string, target: string }[],
   default_target?: string[],
