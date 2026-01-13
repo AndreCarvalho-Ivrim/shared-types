@@ -1088,7 +1088,8 @@ export interface WorkflowMenuShortcut{
    * 
    * O valor entre parentes é usado para passar 1 ou mais parametros para a rota
    */
-  to: string,
+  to?: string,
+  fn?: WFActionFnCallSingleEntity,
   /** Icones disponíveis na página de icones */
   icon?: AvailableIcons,
   title: string,
