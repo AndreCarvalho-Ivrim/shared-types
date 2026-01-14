@@ -1089,6 +1089,7 @@ export interface WorkflowMenuShortcut{
    * O valor entre parentes é usado para passar 1 ou mais parametros para a rota
    */
   to?: string,
+  target?: '_blank' | '_self',
   fn?: WFActionFnCallSingleEntity,
   /** Icones disponíveis na página de icones */
   icon?: AvailableIcons,
@@ -1193,13 +1194,7 @@ export interface WorkflowConfigType {
      */
     ordenation?: string[],
     shortcuts?: WorkflowMenuShortcut[]
-    groups?: Partial<Record<'flow_entities' | 'exception_views' | 'shortcuts' | 'outhers', {
-      title: string,
-      icon?: AvailableIcons,
-      additionals?: string[],
-      /** É obrigatório informar o only caso seja outhers */
-      only?: string[]
-    }>>
+    groups?: Partial<Record<'flow_entities' | 'exception_views' | 'shortcuts' | 'outhers', WorkflowConfigMenuGroupType | Array<WorkflowConfigMenuGroupType>>>
   },
   triggers?: WorkflowTriggerType[],
   ivrim_notes?: WorkflowIvrimNotes,
@@ -1357,6 +1352,13 @@ export interface WorkflowConfigFlowAlert{
       [key: string]: any
     }>>,
   }[]
+}
+export interface WorkflowConfigMenuGroupType{
+  title: string,
+  icon?: AvailableIcons,
+  additionals?: string[],
+  /** É obrigatório informar o only caso seja outhers */
+  only?: string[]
 }
 interface WorkflowConfigFlowAlertFnBase{
   listening?: { condition: string },
