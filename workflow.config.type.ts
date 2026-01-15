@@ -328,6 +328,8 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@fn-exception: Disparar uma fn exception. É importante caso usar value = sync, que retorne o \
    * flowData atualizado.
+   * 
+   * \@generic-singleton: Evento para adicioanr um fn-exception na fila generica \
    */
   name: string,
   /**
@@ -426,6 +428,13 @@ export interface WorkflowConfigObserverFnType {
    * \@fill-in-pdf-template: seguir a tipagem de [FillInPdfTemplateEventType]
    * 
    * \@fn-exception
+   * ```
+   * {
+   *    "exception": <nome-da-exception>,
+   *    "additional_datas"?: any
+   * }
+   * ```
+   * \@generic-singleton
    * ```
    * {
    *    "exception": <nome-da-exception>,
