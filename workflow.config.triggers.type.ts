@@ -129,7 +129,11 @@ export interface WorkflowTriggerUpdateFlowData extends  WorkflowTriggerBase{
   }
 }
 
-export type WorkflowTriggerType = WorkflowTriggerSyncFlowDatas | WorkflowTriggerGamificationActionLog | WorkflowTriggerObserverEvents | WorkflowTriggerUpdateFlowEntityData | WorkflowTriggerUpdateFlowData;
+export type WorkflowTriggerType = WorkflowTriggerSyncFlowDatas | WorkflowTriggerGamificationActionLog | WorkflowTriggerObserverEvents | WorkflowTriggerUpdateFlowEntityData | WorkflowTriggerUpdateFlowData |
+{
+  name: '@generic'
+  data?: any
+} & WorkflowTriggerBase
 
 export interface WorkflowFlowCommentsNetwork {
   /**
