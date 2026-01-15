@@ -27,6 +27,8 @@ export interface ICircuit {
   monthly_fee: number,
   first_monthly_fee?: number,
   first_installation_fee?: number,
+  real_monthly_fee?: number,
+  real_installation_fee?: number,
   own_network?: string,
   product: string,
   raw_product?: string,
@@ -441,8 +443,7 @@ export class CalculatorMatrix {
       grossPriceUnit = grossPriceTotal / linkQtd;
       let grossCotepePriceUnit = grossCotepePriceTotal / linkQtd;
 
-      if(calculator === 'margin'){
-        if(!target_monthly_fee) target_monthly_fee = 0;
+      if(calculator === 'margin' && target_monthly_fee){
         if(valueInProposal === 'gross'){
           marginOfError =  grossPriceUnit - target_monthly_fee;
           grossPriceUnit = target_monthly_fee;
@@ -465,9 +466,7 @@ export class CalculatorMatrix {
       netPriceTotal = netPriceUnit * linkQtd;
     }
   
-    if(calculator === 'margin'){
-      if(!target_monthly_fee) target_monthly_fee = 0;
-
+    if(calculator === 'margin' && target_monthly_fee){
       if(valueInProposal === 'net' || valueInProposal === 'net_cotepe'){
         marginOfError =  netPriceUnit - target_monthly_fee;
         netPriceUnit = target_monthly_fee;
@@ -513,8 +512,7 @@ export class CalculatorMatrix {
       ));
       grossPriceUnit = grossPriceTotal / linkQtd;
       
-      if(calculator === 'margin'){
-        if(!target_monthly_fee) target_monthly_fee = 0;
+      if(calculator === 'margin' && target_monthly_fee){
         if(valueInProposal === 'gross'){
           marginOfError =  grossPriceUnit - target_monthly_fee;
           grossPriceUnit = target_monthly_fee;
@@ -530,9 +528,7 @@ export class CalculatorMatrix {
       );
       netPriceUnit = netPriceTotal / linkQtd;
 
-      if(calculator === 'margin'){
-        if(!target_monthly_fee) target_monthly_fee = 0;
-
+      if(calculator === 'margin' && target_monthly_fee){
         if(valueInProposal === 'net' || valueInProposal === 'net_cotepe'){
           marginOfError =  netPriceUnit - target_monthly_fee;
           netPriceUnit = target_monthly_fee;
@@ -607,9 +603,7 @@ export class CalculatorMatrix {
       netPriceTotal = grossPriceTotal - discount;
       netPriceUnit = netPriceTotal / linkQtd;
 
-      if(!target_monthly_fee) target_monthly_fee = 0;
-
-      if(calculator === 'margin' && valueInProposal === 'net'){
+      if(calculator === 'margin' && valueInProposal === 'net' && target_monthly_fee){
         marginOfError =  netPriceUnit - target_monthly_fee;
         netPriceUnit = target_monthly_fee;
         netPriceTotal = target_monthly_fee * linkQtd;
@@ -620,7 +614,7 @@ export class CalculatorMatrix {
       );
       grossPriceUnitCotepe = grossPriceTotalCotepe / linkQtd;
 
-      if(calculator === 'margin' && valueInProposal === 'gross_cotepe'){
+      if(calculator === 'margin' && valueInProposal === 'gross_cotepe' && target_monthly_fee){
         marginOfError =  grossPriceUnitCotepe - target_monthly_fee;
         grossPriceUnitCotepe = target_monthly_fee;
         grossPriceTotalCotepe = target_monthly_fee * linkQtd;
@@ -629,7 +623,7 @@ export class CalculatorMatrix {
       netPriceTotalCotepe = grossPriceTotalCotepe - (grossPriceTotalCotepe * this.pisCofins);
       netPriceUnitCotepe = netPriceTotalCotepe / linkQtd;
 
-      if(calculator === 'margin' && valueInProposal === 'net_cotepe'){
+      if(calculator === 'margin' && valueInProposal === 'net_cotepe' && target_monthly_fee){
         marginOfError =  netPriceUnitCotepe - target_monthly_fee;
         netPriceUnitCotepe = target_monthly_fee;
         netPriceTotalCotepe = target_monthly_fee * linkQtd;
@@ -697,8 +691,7 @@ export class CalculatorMatrix {
     grossPriceUnit = possibleOverheadCosts / (
       1 - (eventualMargin + 0.05 + 0.076 + 0.0165)
     );
-    if(calculator === 'margin'){
-      if(!target_installation_fee) target_installation_fee = 0;
+    if(calculator === 'margin' && target_installation_fee){
       if(valueInProposal === 'gross' || valueInProposal === 'gross_cotepe'){
         marginOfError =  grossPriceUnit - target_installation_fee;
         grossPriceUnit = target_installation_fee;
@@ -707,8 +700,7 @@ export class CalculatorMatrix {
     grossPriceTotal = grossPriceUnit * linkQtd;
     
     netPriceUnit = grossPriceUnit * (1 - (0.05 + 0.076 + 0.0165));
-    if(calculator === 'margin'){
-      if(!target_installation_fee) target_installation_fee = 0;
+    if(calculator === 'margin' && target_installation_fee){
       if(valueInProposal === 'net' || valueInProposal === 'net_cotepe'){
         marginOfError =  netPriceUnit - target_installation_fee;
         netPriceUnit = target_installation_fee;
