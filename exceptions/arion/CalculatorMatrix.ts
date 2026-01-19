@@ -357,7 +357,7 @@ export class CalculatorMatrix {
         circuit.uf_a = uf;
       };
       
-      if(['Reprovado', 'Cancelado'].includes(circuit.status)) continue;
+      if(['Reprovado', 'Cancelado'].includes(circuit.status!)) continue;
 
       const linkGroupKey = CalculatorMatrix.makeLinkGroupKey(circuit);
 
