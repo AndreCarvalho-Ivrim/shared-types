@@ -120,7 +120,11 @@ export interface StepItemType{
     /**
      * Número de colunas. Válido para campos checkbox e radio
      */
-    columns?: 1 | 2 | 3 | 4 | 5
+    columns?: 1 | 2 | 3 | 4 | 5,
+    /**
+    * Apenas disponível na pesquisa de satisfação covabra
+    */
+    translate_options?: boolean
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
