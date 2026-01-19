@@ -437,8 +437,9 @@ export interface WorkflowConfigObserverFnType {
    * \@generic-singleton
    * ```
    * {
-   *    "exception": <nome-da-exception>,
-   *    "additional_datas"?: any
+   *    exception: <nome-da-exception>,
+   *    additional_datas?: any
+   *    limit_per_minutes?: number
    * }
    * ```
    */
@@ -1367,7 +1368,8 @@ export interface WorkflowConfigMenuGroupType{
   icon?: AvailableIcons,
   additionals?: string[],
   /** É obrigatório informar o only caso seja outhers */
-  only?: string[]
+  only?: string[],
+  exclude?: string[]
 }
 interface WorkflowConfigFlowAlertFnBase{
   listening?: { condition: string },
