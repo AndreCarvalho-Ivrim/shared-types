@@ -437,8 +437,9 @@ export interface WorkflowConfigObserverFnType {
    * \@generic-singleton
    * ```
    * {
-   *    "exception": <nome-da-exception>,
-   *    "additional_datas"?: any
+   *    exception: <nome-da-exception>,
+   *    additional_datas?: any
+   *    limit_per_minutes?: number
    * }
    * ```
    */
