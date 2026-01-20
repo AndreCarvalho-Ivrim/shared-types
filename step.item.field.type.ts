@@ -120,7 +120,11 @@ export interface StepItemType{
     /**
      * Número de colunas. Válido para campos checkbox e radio
      */
-    columns?: 1 | 2 | 3 | 4 | 5
+    columns?: 1 | 2 | 3 | 4 | 5,
+    /**
+    * Apenas disponível na pesquisa de satisfação covabra
+    */
+    translate_options?: boolean
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
@@ -137,6 +141,7 @@ export interface StepItemType{
      * - \@availableBranchsOfActivity: Lista de ramos de atividade
      * - \@cep-autocomplete: Autocomplete de CEP
      * - \@options: A lista será determinada no options do item
+     * - \@fn-exception:\<variation\>: Chamará uma exceção do backend. Caso queira passar parametros, use a prop 'data'
      */
     name: string,
     /**
@@ -174,7 +179,8 @@ export interface StepItemType{
      */
     filter_condition?: string,
     /** Adiciona uma opção no final para adicionar registro na base  informada */
-    add_more_options?: boolean
+    add_more_options?: boolean,
+    data?: any
   },
   customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | {
     mode: '@select-multiple-and-prorating' | '@filter-options',
