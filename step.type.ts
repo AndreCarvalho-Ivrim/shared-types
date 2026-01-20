@@ -258,7 +258,8 @@ export interface StepType{
     asterisk_when_required?: boolean
   }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
-  sla?: StepSlaType
+  sla?: StepSlaType,
+  color?: ThemeColorType
 }
 export interface StepHistoryDescriptionType{
   execute: ExecuteDescriptionType,

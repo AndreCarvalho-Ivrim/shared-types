@@ -52,6 +52,16 @@ export interface WorkflowNotificationEffectType{
   /** { ['flow-data-key']: \<value-to-add> } */
   append_values: Record<string, any>
 }
+export interface WorkflowConfigNotificationTargetType {
+  /** Entidade single para pegar os emails */
+  single_entity: string,
+  /** Campo dentro da entidade que contém os emails */
+  target?: string,
+  conditional_targets?: {
+    condition: string
+    target: string
+  }[]
+}
 export interface WorkflowConfigNotificationType {
   name: string,
   condition: string,
@@ -89,7 +99,7 @@ export interface WorkflowConfigNotificationType {
    * - 'path-to-contact'                Caminho para o registro dentro do flow_data.data que contenha 
    *                                    o contato
    */
-  target?: '@data_creator' | '@data_owner' | '@wf_owner' | '@group-permission:<N>' | string,
+  target?: '@data_creator' | '@data_owner' | '@wf_owner' | '@group-permission:<N>' | string | WorkflowConfigNotificationTargetType,
   /** Segue as mesmas regras do target */
   conditional_targets?: { condition: string, target: string }[],
   default_target?: string[],
@@ -318,6 +328,8 @@ export interface WorkflowConfigObserverFnType {
    * 
    * \@fn-exception: Disparar uma fn exception. É importante caso usar value = sync, que retorne o \
    * flowData atualizado.
+   * 
+   * \@generic-singleton: Evento para adicioanr um fn-exception na fila generica \
    */
   name: string,
   /**
@@ -420,6 +432,14 @@ export interface WorkflowConfigObserverFnType {
    * {
    *    "exception": <nome-da-exception>,
    *    "additional_datas"?: any
+   * }
+   * ```
+   * \@generic-singleton
+   * ```
+   * {
+   *    exception: <nome-da-exception>,
+   *    additional_datas?: any
+   *    limit_per_minutes?: number
    * }
    * ```
    */
@@ -1078,7 +1098,9 @@ export interface WorkflowMenuShortcut{
    * 
    * O valor entre parentes é usado para passar 1 ou mais parametros para a rota
    */
-  to: string,
+  to?: string,
+  target?: '_blank' | '_self',
+  fn?: WFActionFnCallSingleEntity,
   /** Icones disponíveis na página de icones */
   icon?: AvailableIcons,
   title: string,
@@ -1157,6 +1179,12 @@ export interface WorkflowConfigExceptionView{
   whithout_flow_data?: boolean,
   data?: any
 }
+export interface WorkflowConfigVisualManagement {
+  title: string,
+  ref: string,
+  values: string[],
+  translate?: Record<string, string>
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
@@ -1169,17 +1197,14 @@ export interface WorkflowConfigType {
      * Id de todas as configurações que podem gerar botões para acesso no menu. \
      * Abaixo terá um exemplo do prefixo de uma view, entidade, entre outros:
      * 
-     * - view:     view-mode--vm-slug
-     * - entity:   entity--en-id
-     * - shortcut: shortcut--id
+     * - view:      view-mode--vm-slug
+     * - entity:    entity--en-id
+     * - shortcut:  shortcut--id
+     * - exception: exception--id
      */
     ordenation?: string[],
     shortcuts?: WorkflowMenuShortcut[]
-    groups?: Partial<Record<'flow_entities' | 'exception_views' | 'shortcuts', {
-      title: string,
-      icon?: AvailableIcons,
-      only?: string[]
-    }>>
+    groups?: Partial<Record<'flow_entities' | 'exception_views' | 'shortcuts' | 'outhers', WorkflowConfigMenuGroupType | Array<WorkflowConfigMenuGroupType>>>
   },
   triggers?: WorkflowTriggerType[],
   ivrim_notes?: WorkflowIvrimNotes,
@@ -1293,7 +1318,11 @@ export interface WorkflowConfigType {
   /** 
    * Faz o retorno do getFlowDatas por chunk de steps
    */
-  get_stream?: boolean
+  get_stream?: boolean,
+  visual_management?: {
+    permission?: string,
+    fields: WorkflowConfigVisualManagement[]
+  }
 }
 export interface WorkflowConfigFlowAlert{
   key: string,
@@ -1333,6 +1362,14 @@ export interface WorkflowConfigFlowAlert{
       [key: string]: any
     }>>,
   }[]
+}
+export interface WorkflowConfigMenuGroupType{
+  title: string,
+  icon?: AvailableIcons,
+  additionals?: string[],
+  /** É obrigatório informar o only caso seja outhers */
+  only?: string[],
+  exclude?: string[]
 }
 interface WorkflowConfigFlowAlertFnBase{
   listening?: { condition: string },

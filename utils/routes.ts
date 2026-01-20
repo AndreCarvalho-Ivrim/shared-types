@@ -268,3 +268,54 @@ export const getSupportKeys = () => {
   
   return support
 }
+export const isRegexUrl = (url: string): boolean => {
+  if (!url || typeof url !== 'string') return false;
+  
+  if (url.substring(0, 4) === 'http') return false;
+  
+  let urlWithoutQuery = url;
+  if (url.includes('?')) {
+    urlWithoutQuery = url.split('?')[0];
+  }
+  
+  const validPrefixes = ['@hub:', '@isac:', '@isac_back:'];
+  const hasValidPrefix = validPrefixes.some(prefix => urlWithoutQuery.startsWith(prefix));
+  
+  if (!hasValidPrefix) return false;
+  
+  let prefix = '';
+  let routes: Record<string, any> = {};
+  
+  if (urlWithoutQuery.includes('@hub:')) {
+    prefix = '@hub:';
+    routes = hubRoutes;
+  } else if (urlWithoutQuery.includes('@isac_back:')) {
+    prefix = '@isac_back:';
+    routes = isacBackRoutes;
+  } else if (urlWithoutQuery.includes('@isac:')) {
+    prefix = '@isac:';
+    routes = isacRoutes;
+  }
+  
+  const withoutPrefix = urlWithoutQuery.replace(prefix, '');
+  const route_name = withoutPrefix.includes('(') 
+    ? withoutPrefix.split('(')[0] 
+    : withoutPrefix;
+  
+  try {
+    const route = getRecursiveValue(route_name, { data: routes });
+    return typeof route === 'function';
+  } catch (e) {
+    return false;
+  }
+};
+export const isValidUrl = (url: string): boolean => {
+  if (!url || typeof url !== 'string') return false;
+  if (url === '#') return true;
+  
+  const isHttpUrl = /^https?:\/\/.+/.test(url);
+  
+  const isRegex = isRegexUrl(url);
+  
+  return isHttpUrl || isRegex;
+};

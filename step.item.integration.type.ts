@@ -102,7 +102,10 @@ export interface IntegrationExcelType {
      * 
      * Isso quer dizer que o field-1 é obrigatório, e que é obrigatório preencher o field-2 ou field-3
      **/
-    required_associations?: (string | string[])[]
+    required_associations?: (string | string[] | {
+      condition: string,
+      ref: string | string[]
+    })[]
   }
   append_values?: Record<string, any>,
   /**
@@ -126,6 +129,7 @@ export interface IntegrationExcelColumnType {
   type: IntegrationExcelColumnTypeType,
   required?: boolean,
   rules?: {
+    condition?: string,
     /**
      * Modificadores de string, é um array de substituições, onde \
      * cada substituição é composta por duas strings, a str de pesquisa \
