@@ -1,3 +1,4 @@
+import { FlowEntityDataFilters } from "../services/flowEntity";
 import { AvailableIcons } from "./icon.type";
 import { StepViewAttrMaskType } from "./step.item.view.type";
 import { WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
@@ -151,6 +152,7 @@ export interface FlowEntityViewModeGrid{
   resume: {
     picture?: string,
     title: string,
+    subtitle?: string,
     /**
      * O content utiliza as configurações do schema para renderizar \
      * a sua coluna.
@@ -164,6 +166,12 @@ export interface FlowEntityViewModeGrid{
   }
 }
 export type AvailableFlowEntityViewModes = FlowEntityViewModeGrid
+export interface FlowEntityRelations {
+  entity_id: string,
+  append_values: Record<string, any>,
+  title: string,
+  query?: Record<string, string>
+}
 export interface FlowEntityInfo{
   title: string,
   icon?: AvailableIcons,
@@ -246,7 +254,8 @@ export interface FlowEntityInfo{
   importSheet?: FlowEntityImportSheet,
   exportDatas?: Array<FlowEntityExportDatas>,
   is_public?: boolean,
-  styles_form?: FlowEntityStylesForm
+  styles_form?: FlowEntityStylesForm,
+  relations?: FlowEntityRelations[]
 }
 
 export interface FlowEntityStylesFormGroup{
