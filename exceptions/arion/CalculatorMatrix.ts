@@ -1,7 +1,7 @@
 //#region TYPES
 export type ValueInProposalType =  'net' | 'net_cotepe' | 'gross' |'gross_cotepe'
 export interface ICircuit {
-  status?: 'Reprovado' | 'Projeto Especial' | 'Em Negociação' | 'Ag. Retorno Operadora',
+  status?: 'Reprovado' | 'Projeto Especial' | 'Em Negociação' | 'Ag. Retorno Operadora' | 'Cancelado',
   special_project_reason?: string,
   possible_selected_providers?: any,
   link_group_key?: string,
@@ -357,7 +357,7 @@ export class CalculatorMatrix {
         circuit.uf_a = uf;
       };
       
-      if(circuit.status === 'Reprovado') continue;
+      if(['Reprovado', 'Cancelado'].includes(circuit.status!)) continue;
 
       const linkGroupKey = CalculatorMatrix.makeLinkGroupKey(circuit);
 
