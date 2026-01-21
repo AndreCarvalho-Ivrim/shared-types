@@ -1,8 +1,23 @@
-import { FlowEntityDataFilters } from "../services/flowEntity";
 import { AvailableIcons } from "./icon.type";
 import { StepViewAttrMaskType } from "./step.item.view.type";
 import { WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
 
+interface FlowEntityDataFilters {
+  "_key"?: string,
+  /**
+  * Indica se a consulta deve usar collation para ignorar acentuação e diferenças de caixa.
+  * Quando true, aplica collation com locale 'pt' e strength 1, permitindo que buscas
+  * como "joao" encontrem "João", "JOAO", etc.
+  */
+  is_collation?: boolean
+  query?: {
+    ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[],
+    type: WorkflowConfigFilterType['type'],
+    value: any,
+    without_accentuation?: boolean,
+    group?: 'and' | 'or'
+  }[]
+}
 export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom" | 'time';
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
 export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
