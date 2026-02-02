@@ -290,7 +290,7 @@ export class CalculatorMatrix {
         operator && icmsByUF[uf]['operators'] &&
         icmsByUF[uf]['operators'][operator] != undefined
       ) icms = icmsByUF[uf]['operators'][operator] / 100;
-      else icms = icmsByUF[uf];
+      else icms = (icmsByUF[uf].tax / 100);
     } 
     if (!icms && icms !== 0) throw new Error(`A alíquota do estado ${uf} não está cadastrada`);
 
