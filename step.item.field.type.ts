@@ -124,7 +124,11 @@ export interface StepItemType{
     /**
     * Apenas disponível na pesquisa de satisfação covabra
     */
-    translate_options?: boolean
+    translate_options?: boolean,
+    /**
+    * Apenas disponível para textarea
+    */
+    rows?: number
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
