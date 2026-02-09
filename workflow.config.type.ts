@@ -1156,7 +1156,24 @@ export interface PublicRouteGet{
    * 
    * <url>?start_date=...&end_date=...
    * ```
-   
+   * 
+   * Para negar um único valor, use !. Ex:
+   * 
+   * ```
+   * { status: '!data.status' }
+   * 
+   * <url>?status=active  // Retorna todos EXCETO 'active'
+   * ```
+   * 
+   * Para excluir múltiplos valores (not in), use ![]. Ex:
+   * 
+   * ```
+   * { status: '![]data.status' }
+   * 
+   * <url>?status=cancelled,rejected  // Retorna todos EXCETO 'cancelled' e 'rejected'
+   * ```
+   * 
+   * Os valores podem ser passados separados por vírgula ou como array.
    */
   available_query_params?: Record<string, string>,
   required_params?: string[],
