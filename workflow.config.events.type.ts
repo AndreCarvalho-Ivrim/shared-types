@@ -97,6 +97,17 @@ export interface ReplicateFlowDataType{
   enriched_main?: {
     condition?: string,
     breakExec?: boolean
+  },
+  abort?: {
+    mode: 'query' | 'condition',
+    query?: Record<string, {
+      type: 'in' | 'nin' | 'not' | 'text',
+      /** REF */
+      value: any,
+      /** Se for true, o value será um valor direto e não uma referência. */
+      static?: boolean
+    }>,
+    condition?: string,
   }
 }
 export interface ConsolidateFlowDataEventType{
