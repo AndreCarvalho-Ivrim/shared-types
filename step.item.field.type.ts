@@ -170,6 +170,18 @@ export interface StepItemType{
      * cada respectivo campo configurar o customData com o \@cep-autocomplete
      */
     toFill?: Record<string, string>,
+    /** 
+     * Mapeia campos da entidade selecionada para preencher automaticamente outros componentes da tela.
+     * 
+     * @example
+     * autoFillTrigger: { 
+     *   'campo_na_entidade': 'id-no-customData-do-destino' 
+     * }
+     * 
+     * O componente de destino deve possuir:
+     * customData: { mode: '@auto-fill', id: 'id-no-customData-do-destino' }
+     */
+    autoFillTrigger?: Record<string, string>,
     trigger?: { mode: 'keyup' } | {
       mode: 'clickToNext',
       target: string
@@ -281,7 +293,7 @@ export interface StepItemCustomDataEditableTableInline{
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
-  mode: '@cep-autocomplete',
+  mode: '@cep-autocomplete' | '@trigger-autocomplete',
   /** NÃO UTILIZADO */
   settings?: any,
   id: string
