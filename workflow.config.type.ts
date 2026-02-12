@@ -1809,8 +1809,11 @@ export interface WorkflowConfigActionsType {
    *  - Excluí multiplos flow_datas
    *  - É renderizado na barra de filtro ao lado do filtro de etapas
    *  - Possui renderização condicional, aparecendo somente quando existe items selecionados
+   * 
+   * multiple-action: 
+   *  - Chama a função de ação multipla.
    */
-  id: 'start-flow' | 'delete-datas' | string, /*[obsoletos]: | 'list-datas' | 'alarm' | 'search' | 'models' */
+  id: 'start-flow' | 'delete-datas' | 'multiple-action' | string, /*[obsoletos]: | 'list-datas' | 'alarm' | 'search' | 'models' */
   alt: string,
   /**
    * Pode ser usada uma permissão existente em [wf.config.permissions.actions] \
