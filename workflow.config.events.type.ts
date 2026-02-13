@@ -103,7 +103,7 @@ export interface ReplicateFlowDataType{
    * mode: tipo de validação \
    * query: utilizado para fazer uma busca no banco de dados e validar se já existe um registro nesses parametros, se sim não será criado, o main será ignorado na busca \
    * condition: utilizado para validar se o registro deverá ser criado \
-   * exclude_main: utilizado para excluir o registro principal caso a condição ou query não seja atendida (necessario o enriched_main para que faça sentido)
+   * exclude_main: utilizado para excluir o registro principal caso a condição ou query não seja atendida (necessario o enriched_main para que faça sentido), 
    */
   abort?: {
     mode: 'query' | 'condition',
@@ -115,7 +115,8 @@ export interface ReplicateFlowDataType{
       static?: boolean
     }>,
     condition?: string,
-    exclude_main?: boolean
+    exclude_main?: boolean,
+    abort_message?: string
   }
 }
 export interface ConsolidateFlowDataEventType{
