@@ -1155,8 +1155,7 @@ export const handleLinearArithmetic = (params: string, data: any) => {
     let parsed = v.trim();
 
     if (isNaN(Number(parsed))) {
-      const newValue = getRecursiveValue(parsed, data);
-      console.log({ parsed, newValue });
+      const newValue = getRecursiveValue(parsed, { data });
 
       if (isNaN(Number(newValue))) {
         throw new Error(`O valor "${parsed}" não é um número e não pôde ser resolvido a partir dos dados`);
