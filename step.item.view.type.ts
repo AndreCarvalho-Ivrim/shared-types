@@ -161,7 +161,7 @@ export interface StepViewListType extends StepViewBaseType{
   type: 'list',
   required?: boolean
 }
-export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar'
+export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar' | 'code';
 export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
   'none':          'Sem máscara',
   'alert-danger':  'Alerta Perigo (Vermelho)',
@@ -169,7 +169,8 @@ export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
   'alert-info':    'Alerta Informação (Azul Claro)',
   'alert-light':   'Alerta Leve (Cinza Claro)',
   'alert-success': 'Alerta Sucesso (Verde)',
-  'progress-bar':  'Barra de Progresso'
+  'progress-bar':  'Barra de Progresso',
+  'code':          'Código'
 }
 
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
