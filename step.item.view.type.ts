@@ -14,7 +14,7 @@ interface StepViewBaseType{
     render?: string,
   }
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'exception';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'exception' | 'thumbnail';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   description: 'Descrição',
   table: 'Tabela',
@@ -26,6 +26,7 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   html: 'Conteúdo Customizado',
   tasks: 'Tarefas',
   exception: 'Exceção',
+  thumbnail: 'Thumbnail'
 };
 export interface StepViewColumnType{
   /** 
@@ -83,7 +84,7 @@ export interface StepViewColumnType{
    */
   data?: any
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType | StepViewThumbnailType;
 export type AdditionalTablesType = {
   label: string,
   columns: StepViewColumnType[],
@@ -258,4 +259,11 @@ export interface StepViewExceptionType extends StepViewBaseType{
   /** Parametros adicionais para a exception */
   data?: any,
   exception: string
+}
+
+export interface StepViewThumbnailType extends StepViewBaseType{
+  type: 'thumbnail',
+  url: string,
+  /** Texto alternativo da imagem */
+  alt_text?: string,
 }

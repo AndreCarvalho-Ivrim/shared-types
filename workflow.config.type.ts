@@ -1206,6 +1206,9 @@ export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
   exception_views?: WorkflowConfigExceptionView[],
+  /**
+   * A chave é o slug dos view_modes ou "painel-sla" para a tela de sla
+   */
   filters?: Record<string, WorkflowConfigFilterType[]>,
   open_dialog?: WorkflowConfigOpenDialogType,
   permissions?: ConfigPermissionType,
