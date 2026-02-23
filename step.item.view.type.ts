@@ -14,7 +14,7 @@ interface StepViewBaseType{
     render?: string,
   }
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'exception';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'exception' | 'thumbnail';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   description: 'Descrição',
   table: 'Tabela',
@@ -26,6 +26,7 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   html: 'Conteúdo Customizado',
   tasks: 'Tarefas',
   exception: 'Exceção',
+  thumbnail: 'Thumbnail'
 };
 export interface StepViewColumnType{
   /** 
@@ -83,7 +84,7 @@ export interface StepViewColumnType{
    */
   data?: any
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType | StepViewThumbnailType;
 export type AdditionalTablesType = {
   label: string,
   columns: StepViewColumnType[],
@@ -161,7 +162,7 @@ export interface StepViewListType extends StepViewBaseType{
   type: 'list',
   required?: boolean
 }
-export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar'
+export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar' | 'code';
 export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
   'none':          'Sem máscara',
   'alert-danger':  'Alerta Perigo (Vermelho)',
@@ -169,7 +170,8 @@ export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
   'alert-info':    'Alerta Informação (Azul Claro)',
   'alert-light':   'Alerta Leve (Cinza Claro)',
   'alert-success': 'Alerta Sucesso (Verde)',
-  'progress-bar':  'Barra de Progresso'
+  'progress-bar':  'Barra de Progresso',
+  'code':          'Código'
 }
 
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
@@ -257,4 +259,11 @@ export interface StepViewExceptionType extends StepViewBaseType{
   /** Parametros adicionais para a exception */
   data?: any,
   exception: string
+}
+
+export interface StepViewThumbnailType extends StepViewBaseType{
+  type: 'thumbnail',
+  url: string,
+  /** Texto alternativo da imagem */
+  alt_text?: string,
 }

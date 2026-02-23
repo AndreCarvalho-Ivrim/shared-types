@@ -491,7 +491,7 @@ export interface ConfigViewModeColumnsType {
    */
   id: '@user' | '@owners' | 'created_at' | 'step' | '@title-and-subtitle:id_1,id_2' | string,
   name: string,
-  type: IntegrationExcelColumnTypeType | 'tasks',
+  type: IntegrationExcelColumnTypeType | 'tasks' | 'multi-progress',
   /**
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
@@ -1156,7 +1156,24 @@ export interface PublicRouteGet{
    * 
    * <url>?start_date=...&end_date=...
    * ```
-   
+   * 
+   * Para negar um único valor, use !. Ex:
+   * 
+   * ```
+   * { status: '!data.status' }
+   * 
+   * <url>?status=active  // Retorna todos EXCETO 'active'
+   * ```
+   * 
+   * Para excluir múltiplos valores (not in), use ![]. Ex:
+   * 
+   * ```
+   * { status: '![]data.status' }
+   * 
+   * <url>?status=cancelled,rejected  // Retorna todos EXCETO 'cancelled' e 'rejected'
+   * ```
+   * 
+   * Os valores podem ser passados separados por vírgula ou como array.
    */
   available_query_params?: Record<string, string>,
   required_params?: string[],
@@ -1189,6 +1206,9 @@ export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
   exception_views?: WorkflowConfigExceptionView[],
+  /**
+   * A chave é o slug dos view_modes ou "painel-sla" para a tela de sla
+   */
   filters?: Record<string, WorkflowConfigFilterType[]>,
   open_dialog?: WorkflowConfigOpenDialogType,
   permissions?: ConfigPermissionType,

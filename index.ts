@@ -31,7 +31,8 @@ export interface User extends ShortUser{
   token: string,
   current_client: string,
   userCategories?: UserCategory[],
-  userCategory?: UserCategory
+  userCategory?: UserCategory,
+  first_access: boolean
 }
 export interface Client{
   id: string,
