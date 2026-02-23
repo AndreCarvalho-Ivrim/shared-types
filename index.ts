@@ -3,6 +3,7 @@ import { StepItemType } from './step.item.field.type';
 import { IntegrationsType } from './step.item.integration.type';
 import { StepViewType } from './step.item.view.type';
 import { WidgetType } from './step.item.widget.type';
+import { TrainingPermissionMode } from './training.type';
 
 export interface PermissionType{
   name: string,
@@ -94,6 +95,10 @@ export interface TrainingType{
   created_at: string;
   updated_at: string;
   visits: number;
+  permissions?: {
+    mode: TrainingPermissionMode,
+    allowed: string[]
+  },
 }
 
 export type StringConditionalTypes = 'prop' | 'operator' | 'value' | 'logic';
