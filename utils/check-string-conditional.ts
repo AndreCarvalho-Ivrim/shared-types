@@ -1147,3 +1147,37 @@ export const isMatchCaseInsensitiveWithoutAccentuation = (matchs: string[], valu
   const normalizedMessage = normalizeText(value);
   return matchs.some(match => normalizeText(match) === normalizedMessage);
 }
+export const handleLinearArithmetic = (params: string, data: any) => {
+  const values = params.split(/[+\-*/]/); 
+  const operators = params.match(/[+\-*/]/g) || [];
+
+  const parsedValues = values.map((v) => {
+    let parsed = v.trim();
+
+    if (isNaN(Number(parsed))) {
+      const newValue = getRecursiveValue(parsed, { data });
+
+      if (isNaN(Number(newValue))) {
+        throw new Error(`O valor "${parsed}" não é um número e não pôde ser resolvido a partir dos dados`);
+      }
+      return Number(newValue);
+    } 
+    
+    return Number(parsed);
+  });
+
+  let finalResult = parsedValues[0];
+
+  for (let i = 0; i < operators.length; i++) {
+    const operator = operators[i];
+    
+    const nextValue = parsedValues[i + 1];
+
+    if (operator === '+') finalResult += nextValue;
+    if (operator === '-') finalResult -= nextValue;
+    if (operator === '*') finalResult *= nextValue;
+    if (operator === '/') finalResult /= nextValue;
+  }
+
+  return finalResult;
+};
