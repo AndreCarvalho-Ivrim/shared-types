@@ -80,6 +80,7 @@ export interface StepItemType{
   defaultValue?: any;
   required?: boolean,
   required_if?: string,
+  switch_required_if?: string[],
   rules?: {
     min?: number,
     max?: number,
