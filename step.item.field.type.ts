@@ -232,6 +232,16 @@ export interface StepItemCustomDataEditableTable{
     initial_value?: Record<string, any>[],
     readonly_if_fillable?: boolean,
     addable?: boolean,
+    /**
+     * Dividir uma coluna em N colunas, para acessar objeto interno
+     */
+    divide_columns?: Record<string, {
+      key: string,
+      label: string,
+      type: StepItemAttrTypeType,
+      mask?: StepItemAttrMaskType,
+      required?: boolean
+    }[]>
     replicate?: boolean | Record<string, string>,
     /**
      * Função que utiliza um item múltiplo como base para gerar multiplas \
