@@ -108,6 +108,8 @@ export interface WorkflowConfigNotificationType {
     condition?: string,
     handlers?: AllHandlersType
   },
+  /** Emails que serão bloqueados de receber essa notificação */
+  blacklist?: string[],
   effects?: Array<WorkflowNotificationEffectType>
 }
 export interface WorkflowConfigAutocomplete {
