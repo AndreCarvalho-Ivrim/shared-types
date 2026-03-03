@@ -93,7 +93,15 @@ export interface FlowEntitySchemaInfo{
     /** Valida se o valor inserido na importação existe na base do autocomplete */
     restricted?: boolean,
     /** Adiciona uma opção no final para adicionar registro na base  informada */
-    add_more_options?: boolean
+    add_more_options?: boolean,
+    /**
+     * String condition, para filtrar os dados do autocomplete. \
+     * Para acessar variáveis considere que:
+     * - $\<variavel>: É uma variável dentro do valor retornado
+     * - $flow_data:\<variavel>: É uma variável dentro do flow_data
+     * - $observer:\<variavel>: É uma variável observável alterada em tempo de execução
+     */
+    filter_condition?: string,
   }
   required: boolean,
   unique?: boolean
