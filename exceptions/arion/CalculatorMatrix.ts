@@ -733,13 +733,13 @@ export class CalculatorMatrix {
       (recurringSalesPrice.netPriceTotal - hiringCosts.monthlyCostsWithOverhead)
     ;
 
-    if(calculator === 'margin'){
+    // if(calculator === 'margin'){
       if(valueInProposal === 'net_cotepe') recurring = recurringSalesPrice.netPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
       else if(valueInProposal === 'gross') recurring = recurringSalesPrice.grossPriceTotal - hiringCosts.monthlyCostsWithOverhead;
       else if(valueInProposal === 'gross_cotepe') recurring = recurringSalesPrice.grossPriceTotalCotepe - (
         recurringSalesPrice.grossPriceTotalCotepe * this.pisCofins
       ) - hiringCosts.monthlyCostsWithOverhead;
-    }
+    // }
 
     eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
   

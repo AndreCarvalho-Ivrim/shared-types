@@ -80,6 +80,7 @@ export interface StepItemType{
   defaultValue?: any;
   required?: boolean,
   required_if?: string,
+  switch_required_if?: string[],
   rules?: {
     min?: number,
     max?: number,
@@ -170,6 +171,18 @@ export interface StepItemType{
      * cada respectivo campo configurar o customData com o \@cep-autocomplete
      */
     toFill?: Record<string, string>,
+    /** 
+     * Mapeia campos da entidade selecionada para preencher automaticamente outros componentes da tela.
+     * 
+     * @example
+     * autoFillTrigger: { 
+     *   'campo_na_entidade': 'id-no-customData-do-destino' 
+     * }
+     * 
+     * O componente de destino deve possuir:
+     * customData: { mode: '@auto-fill', id: 'id-no-customData-do-destino' }
+     */
+    autoFillTrigger?: Record<string, string>,
     trigger?: { mode: 'keyup' } | {
       mode: 'clickToNext',
       target: string
@@ -187,13 +200,13 @@ export interface StepItemType{
     data?: any
   },
   customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | {
-    mode: '@select-multiple-and-prorating' | '@filter-options',
+    mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores',
     settings?: any
   },
   is_expanded?: boolean
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores'];
 export interface StepItemCustomDataSettings{
   mode: '@list',
   settings: {
@@ -219,6 +232,16 @@ export interface StepItemCustomDataEditableTable{
     initial_value?: Record<string, any>[],
     readonly_if_fillable?: boolean,
     addable?: boolean,
+    /**
+     * Dividir uma coluna em N colunas, para acessar objeto interno
+     */
+    divide_columns?: Record<string, {
+      key: string,
+      label: string,
+      type: StepItemAttrTypeType,
+      mask?: StepItemAttrMaskType,
+      required?: boolean
+    }[]>
     replicate?: boolean | Record<string, string>,
     /**
      * Função que utiliza um item múltiplo como base para gerar multiplas \
@@ -281,7 +304,7 @@ export interface StepItemCustomDataEditableTableInline{
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
-  mode: '@cep-autocomplete',
+  mode: '@cep-autocomplete' | '@trigger-autocomplete',
   /** NÃO UTILIZADO */
   settings?: any,
   id: string
