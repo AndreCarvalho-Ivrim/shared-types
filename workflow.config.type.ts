@@ -734,7 +734,7 @@ interface IChartsRefEntity {
   })[],
 }
 
-interface IVariations {
+export interface IVariations {
   name: string,
   /*
    * ID da etapa onde as colunas serão exibidas \
@@ -745,7 +745,7 @@ interface IVariations {
   /** IDS das colunas que serão exibidas */
   columns: string[]
 }
-interface IDynamicColumnsByStep {
+export interface IDynamicColumnsByStep {
   /*
    * Permissão para criar, editar e excluir as variações
    */
