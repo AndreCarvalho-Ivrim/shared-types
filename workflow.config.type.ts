@@ -733,6 +733,29 @@ interface IChartsRefEntity {
   })[],
 }
 
+interface IVariations {
+  name: string,
+  /*
+   * ID da etapa onde as colunas serão exibidas \
+   * 
+   * Não pode mencionar a mesma etapa em mais de uma variação
+   */
+  available_steps: string[],
+  /** IDS das colunas que serão exibidas */
+  columns: string[]
+}
+interface IDynamicColumnsByStep {
+  /*
+   * Permissão para criar, editar e excluir as variações
+   */
+  permission: string,
+  /*
+   * Campos disponíveis para as variações
+   */
+  available_columns: ConfigViewModeColumnsType[],
+  variations: IVariations[],
+}
+
 type Charts = IChartsRefFlowData | IChartsRefEntity;
 export interface WorkflowViewModeResume extends WorkflowViewModeBase {
   view_mode: 'resume',
@@ -769,6 +792,7 @@ export interface WorkflowViewModeResume extends WorkflowViewModeBase {
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
+  dynamic_columns_by_step?: IDynamicColumnsByStep
 }
 export interface WorkflowViewModeRedirect extends WorkflowViewModeBase {
   view_mode: 'redirect',
