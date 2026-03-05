@@ -557,6 +557,7 @@ export interface WorkflowViewModeBaseSubOptions {
     filter_scope: WorkflowViewModeFilterScope[],
   }
 }
+export type HorizontalMenuItemType = (AvailableViewModesType | ({ extends: string, view_mode: 'extends', slug: string } & Partial<Omit<AvailableViewModesType, 'view_mode' | 'slug'>>));
 export interface WorkflowViewModeBase {
   title: string,
   description?: string,
@@ -566,7 +567,7 @@ export interface WorkflowViewModeBase {
   available_steps?: string[],
   horizontal_menu?: {
     current_title?: string,
-    items: (AvailableViewModesType | ({ extends: string, view_mode: 'extends', slug: string } & Partial<Omit<AvailableViewModesType, 'view_mode' | 'slug'>>))[]
+    items: HorizontalMenuItemType[]
   }
   /** { 'ref-no-flow-data': 'título-visual' } */ 
   dynamic_order_by?: Record<string, string>,
