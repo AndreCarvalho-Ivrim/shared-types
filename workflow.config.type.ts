@@ -493,7 +493,7 @@ export interface ConfigViewModeColumnsType {
    */
   id: '@user' | '@owners' | 'created_at' | 'step' | '@title-and-subtitle:id_1,id_2' | string,
   name: string,
-  type: IntegrationExcelColumnTypeType | 'tasks' | 'multi-progress',
+  type: IntegrationExcelColumnTypeType | 'tasks' | 'multi-progress' | '@link',
   /**
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
