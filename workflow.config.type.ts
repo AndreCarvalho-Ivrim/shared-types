@@ -557,6 +557,7 @@ export interface WorkflowViewModeBaseSubOptions {
     filter_scope: WorkflowViewModeFilterScope[],
   }
 }
+export type HorizontalMenuItemType = (AvailableViewModesType | ({ extends: string, view_mode: 'extends', slug: string } & Partial<Omit<AvailableViewModesType, 'view_mode' | 'slug'>>));
 export interface WorkflowViewModeBase {
   title: string,
   description?: string,
@@ -566,7 +567,7 @@ export interface WorkflowViewModeBase {
   available_steps?: string[],
   horizontal_menu?: {
     current_title?: string,
-    items: (AvailableViewModesType | ({ extends: string, view_mode: 'extends', slug: string } & Partial<Omit<AvailableViewModesType, 'view_mode' | 'slug'>>))[]
+    items: HorizontalMenuItemType[]
   }
   /** { 'ref-no-flow-data': 'título-visual' } */ 
   dynamic_order_by?: Record<string, string>,
@@ -733,6 +734,29 @@ interface IChartsRefEntity {
   })[],
 }
 
+export interface IVariations {
+  name: string,
+  /*
+   * ID da etapa onde as colunas serão exibidas \
+   * 
+   * Não pode mencionar a mesma etapa em mais de uma variação
+   */
+  available_steps: string[],
+  /** IDS das colunas que serão exibidas */
+  columns: string[]
+}
+export interface IDynamicColumnsByStep {
+  /*
+   * Permissão para criar, editar e excluir as variações
+   */
+  permission: string,
+  /*
+   * Campos disponíveis para as variações
+   */
+  available_columns: ConfigViewModeColumnsType[],
+  variations: IVariations[],
+}
+
 type Charts = IChartsRefFlowData | IChartsRefEntity;
 export interface WorkflowViewModeResume extends WorkflowViewModeBase {
   view_mode: 'resume',
@@ -769,6 +793,7 @@ export interface WorkflowViewModeResume extends WorkflowViewModeBase {
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
+  dynamic_columns_by_step?: IDynamicColumnsByStep
 }
 export interface WorkflowViewModeRedirect extends WorkflowViewModeBase {
   view_mode: 'redirect',
