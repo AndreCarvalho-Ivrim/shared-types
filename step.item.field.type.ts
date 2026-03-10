@@ -265,8 +265,14 @@ export interface StepItemCustomDataEditableTable{
      * */
     field_blacklist?: string[],
     disable_row_deletion?: boolean,
-    disable_add_row?: boolean
+    disable_add_row?: boolean,
+    restrictions?: EditableTableRestriction[]
   }
+}
+export interface EditableTableRestriction{
+  type: 'exception',
+  name: string, // Nome da exceção de validação
+  data?: any
 }
 export interface EditableTableInlineInputs{
   key: string,
