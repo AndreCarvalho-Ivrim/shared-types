@@ -83,6 +83,8 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  * - not
  * - filled (exclusivo para arrays)
  * - contains (exclusivo para arrays)
+ * - like
+ * - likei
  * 
  * **Operadores Lógicos**
  * - and
@@ -199,6 +201,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
         return !val_2.includes(String(val_1));
       case 'not': return val_1 !== val_2;
+      case 'like': return String(val_1).includes(String(val_2));
+      case 'likei': return String(val_1).toLowerCase().includes(String(val_2).toLowerCase());
     }
     return false;
   }
@@ -497,7 +501,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 };
 export const makeStrc = (arrStrc: Array<{
   '$'?: string,
-  '#'?: 'eq' | 'eqi' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains',
+  '#'?: 'eq' | 'eqi' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains' | 'like' | 'likei',
   '*'?: string,
   /** Se o -end for mais de 2 fechamentos use o as any para ignorar o erro de tipagem */
   '&'?: 'and' | 'or' | 'and-begin' | 'or-begin' | 'and-end' | 'or-end' | 'and-end-end' | 'or-end-end'
