@@ -129,7 +129,11 @@ export interface StepItemType{
     /**
     * Apenas disponível para textarea
     */
-    rows?: number
+    rows?: number,
+    /**
+    * Esconde o campo
+    */
+   hidden?: boolean | string
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
