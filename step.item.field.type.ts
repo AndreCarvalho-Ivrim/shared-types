@@ -77,6 +77,9 @@ export interface StepItemType{
    * quando essa opção for selecionada as outras serão deselecionadas
    * caso essa esteja selecionada e outra seja selecionada essa será deselecionada  */
   single_option?: ValueAndNameStringType[],
+  /** 
+   * Utilizar @flow-data: para adicionar o value do flow data ao value do campo como default
+   * */
   defaultValue?: any;
   required?: boolean,
   required_if?: string,
@@ -84,6 +87,7 @@ export interface StepItemType{
   rules?: {
     min?: number,
     max?: number,
+    conditional_max?: Record<string, number>,
     /**
      * - \@today: Minimo hoje com precisão de dia
      * - \@now: Minimo com precisão de segundos
@@ -133,7 +137,7 @@ export interface StepItemType{
     /**
     * Esconde o campo
     */
-   hidden?: boolean | string
+    hidden?: boolean | string
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
@@ -265,8 +269,14 @@ export interface StepItemCustomDataEditableTable{
      * */
     field_blacklist?: string[],
     disable_row_deletion?: boolean,
-    disable_add_row?: boolean
+    disable_add_row?: boolean,
+    restrictions?: EditableTableRestriction[]
   }
+}
+export interface EditableTableRestriction{
+  type: 'exception',
+  name: string, // Nome da exceção de validação
+  data?: any
 }
 export interface EditableTableInlineInputs{
   key: string,
