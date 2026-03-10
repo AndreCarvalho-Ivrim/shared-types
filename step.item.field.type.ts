@@ -78,7 +78,7 @@ export interface StepItemType{
    * caso essa esteja selecionada e outra seja selecionada essa será deselecionada  */
   single_option?: ValueAndNameStringType[],
   /** 
-   * Utilizar @flow_data: para adicionar o value do flow data ao value do campo como default
+   * Utilizar @flow-data: para adicionar o value do flow data ao value do campo como default
    * */
   defaultValue?: any;
   required?: boolean,
