@@ -1,4 +1,5 @@
 import { AvailableIcons } from "./icon.type";
+import { StepItemAttrMaskDynamicType, StepItemAttrMaskStringType } from "./step.item.field.type";
 import { StepViewAttrMaskType } from "./step.item.view.type";
 import { WorkflowConfigFilterRefType, WorkflowConfigFilterType, WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
 
@@ -132,7 +133,8 @@ export interface FlowEntitySchemaInfo{
     settings?: any
   },
   rules?: FlowEntitySchemaInfoRule,
-  observer?: boolean
+  observer?: boolean,
+  dynamic_mask?: StepItemAttrMaskDynamicType | StepItemAttrMaskStringType,
 }
 export interface FlowEntityAssociationColumns{
   name: string,
