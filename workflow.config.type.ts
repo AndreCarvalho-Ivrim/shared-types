@@ -1868,7 +1868,8 @@ export interface WorkflowConfigActionsType {
    * e depois ser complementada com a seleção de N itens.
    */
   fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema | WFActionFnCallExceptionModal,
-  group_buttons?: WorkflowConfigActionsGroupButtons
+  group_buttons?: WorkflowConfigActionsGroupButtons,
+  data?: any
 }
 export interface WorkflowConfigActionsGroupButtons{
   id: string,
