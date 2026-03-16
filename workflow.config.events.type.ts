@@ -69,6 +69,19 @@ export interface ReplicateFlowDataEffectType{
   breakExec?: boolean,
   replace: Record<string, any>
 }
+export interface IAboutReplicateFlowData{
+  mode: 'query' | 'condition',
+  query?: Record<string, {
+    type: 'in' | 'nin' | 'not' | 'text',
+    /** REF */
+    value: any,
+    /** Se for true, o value será um valor direto e não uma referência. */
+    static?: boolean
+  }>,
+  condition?: string,
+  exclude_main?: boolean,
+  abort_message?: string
+}
 export interface ReplicateFlowDataType{
   /**
    * Adicionar explicitamente a regra de replicação, Para usá-lo preencha a prop e \
@@ -105,19 +118,7 @@ export interface ReplicateFlowDataType{
    * condition: utilizado para validar se o registro deverá ser criado \
    * exclude_main: utilizado para excluir o registro principal caso a condição ou query não seja atendida (necessario o enriched_main para que faça sentido), 
    */
-  abort?: {
-    mode: 'query' | 'condition',
-    query?: Record<string, {
-      type: 'in' | 'nin' | 'not' | 'text',
-      /** REF */
-      value: any,
-      /** Se for true, o value será um valor direto e não uma referência. */
-      static?: boolean
-    }>,
-    condition?: string,
-    exclude_main?: boolean,
-    abort_message?: string
-  }
+  abort?: IAboutReplicateFlowData | IAboutReplicateFlowData[]
 }
 export interface ConsolidateFlowDataEventType{
   query?: any,
