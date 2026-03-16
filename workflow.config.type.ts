@@ -493,7 +493,7 @@ export interface ConfigViewModeColumnsType {
    */
   id: '@user' | '@owners' | 'created_at' | 'step' | '@title-and-subtitle:id_1,id_2' | string,
   name: string,
-  type: IntegrationExcelColumnTypeType | 'tasks' | 'multi-progress' | '@link',
+  type: IntegrationExcelColumnTypeType | 'tasks' | 'multi-progress' | '@link' | 'table',
   /**
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
@@ -1836,8 +1836,11 @@ export interface WorkflowConfigActionsType {
    *  - Excluí multiplos flow_datas
    *  - É renderizado na barra de filtro ao lado do filtro de etapas
    *  - Possui renderização condicional, aparecendo somente quando existe items selecionados
+   * 
+   * multiple-action: 
+   *  - Chama a função de ação multipla.
    */
-  id: 'start-flow' | 'delete-datas' | string, /*[obsoletos]: | 'list-datas' | 'alarm' | 'search' | 'models' */
+  id: 'start-flow' | 'delete-datas' | 'multiple-action' | string, /*[obsoletos]: | 'list-datas' | 'alarm' | 'search' | 'models' */
   alt: string,
   /**
    * Pode ser usada uma permissão existente em [wf.config.permissions.actions] \
@@ -1865,7 +1868,8 @@ export interface WorkflowConfigActionsType {
    * e depois ser complementada com a seleção de N itens.
    */
   fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema | WFActionFnCallExceptionModal,
-  group_buttons?: WorkflowConfigActionsGroupButtons
+  group_buttons?: WorkflowConfigActionsGroupButtons,
+  data?: any
 }
 export interface WorkflowConfigActionsGroupButtons{
   id: string,

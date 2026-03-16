@@ -191,6 +191,11 @@ export interface StepItemType{
      * customData: { mode: '@auto-fill', id: 'id-no-customData-do-destino' }
      */
     autoFillTrigger?: Record<string, string>,
+    /**  Possibilidade de injetar opções */
+    append_options?: {
+      mode: 'before' | 'after',
+      options: any[]
+    }
     trigger?: { mode: 'keyup' } | {
       mode: 'clickToNext',
       target: string
