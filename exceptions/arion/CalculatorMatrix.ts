@@ -76,7 +76,11 @@ export interface ICircuit {
   target_margin_installation_fee?: number,
   target_margin_monthly_fee?: number,
   network?: { id: string },
-  special_project_with_adjustment?: boolean
+  special_project_with_adjustment?: boolean,
+  overload_info?: {
+    diff_installation_fee: number,
+    diff_monthly_fee: number
+  }
 }
 export interface IValidedSingleCircuitResult {
   hiringCosts: ICalculateHiringCostsResult,
