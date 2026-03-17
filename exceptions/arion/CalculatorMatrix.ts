@@ -76,7 +76,22 @@ export interface ICircuit {
   target_margin_installation_fee?: number,
   target_margin_monthly_fee?: number,
   network?: { id: string },
-  special_project_with_adjustment?: boolean
+  special_project_with_adjustment?: boolean,
+  overload_info?: {
+    diff_installation_fee: number,
+    diff_monthly_fee: number
+  }
+}
+export interface IValidedSingleCircuitResult {
+  hiringCosts: ICalculateHiringCostsResult,
+  recurringSalesPrice: ICalculateRecurringSalesPriceResul,
+  eventualSalePriceOrInstallationFee: ICalculateBaseResult,
+  margin: ICalculateMarginResult,
+  marginRecurring: number,
+  marginEventual: number,
+  linkQtd: number,
+  monthly_fee_margin_of_error: number,
+  installation_fee_margin_of_error: number,
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
