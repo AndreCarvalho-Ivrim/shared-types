@@ -1303,7 +1303,11 @@ export interface WorkflowConfigType {
           /** Valores que serão atualizados no flowData */
           append_values: Record<string, any>
           /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
-          breakExec?: boolean
+          breakExec?: boolean,
+          trigger?: {
+            condition?: string,
+            ref: string
+          }
         }[],
         use_observer?: boolean
       }>,
