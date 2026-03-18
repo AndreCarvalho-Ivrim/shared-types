@@ -1210,6 +1210,44 @@ export interface PublicRouteGet{
   body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
   format?: Record<string, ReportAnalyticsFormatAndOrTranslate>,
 }
+export interface PublicRoutePost {
+  auth?: AuthPublicRouteType,
+  /** Escopo de alteração dentro do objeto flow_data.data */
+  scope?: string,
+  /** Se não for informado trará o flow_data.data completo */
+  body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
+  /** 
+   * É utilizado apenas quando a requisição inclui find.
+   * 
+   * - [merge] Mascla os dados com o do registro encontrado (interfere apenas flowData.data)
+   * - [overwrite] Sobrescreve os dados do registro encontrado (interfere apenas flowData.data)
+   * - [process] Realiza alguma ação interna configurado em rules
+   */
+  mode?: 'merge' | 'overwrite' | 'process',
+  /** Se for true, desabilita a funcionalidade find */
+  only_creation?: boolean,
+  schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
+  rule?: {
+    available_steps?: string[],
+    append_value?: Record<string, any>,
+    required_find?: string[],
+    is_unique?: boolean
+  },
+  effects?: {
+    /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+    only: 'success' | 'error' | 'always',
+    condition?: string,
+    /** Valores que serão atualizados no flowData */
+    append_values: Record<string, any>
+    /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+    breakExec?: boolean,
+    trigger?: {
+      condition?: string,
+      ref: string
+    }
+  }[],
+  use_observer?: boolean
+}
 export interface WorkflowConfigExceptionView{
   slug: string,
   title: string,
@@ -1273,40 +1311,7 @@ export interface WorkflowConfigType {
     },
     publicRoutes?: {
       get?: Record<string, PublicRouteGet>,
-      post?: Record<string, {
-        auth?: AuthPublicRouteType,
-        /** Escopo de alteração dentro do objeto flow_data.data */
-        scope?: string,
-        /** Se não for informado trará o flow_data.data completo */
-        body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
-        /** 
-         * É utilizado apenas quando a requisição inclui find.
-         * 
-         * - [merge] Mascla os dados com o do registro encontrado (interfere apenas flowData.data)
-         * - [overwrite] Sobrescreve os dados do registro encontrado (interfere apenas flowData.data)
-         * - [process] Realiza alguma ação interna configurado em rules
-         */
-        mode?: 'merge' | 'overwrite' | 'process',
-        /** Se for true, desabilita a funcionalidade find */
-        only_creation?: boolean,
-        schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
-        rule?: {
-          available_steps?: string[],
-          append_value?: Record<string, any>,
-          required_find?: string[],
-          is_unique?: boolean
-        },
-        effects?: {
-          /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
-          only: 'success' | 'error' | 'always',
-          condition?: string,
-          /** Valores que serão atualizados no flowData */
-          append_values: Record<string, any>
-          /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
-          breakExec?: boolean
-        }[],
-        use_observer?: boolean
-      }>,
+      post?: Record<string, PublicRoutePost>,
       /**
        * Visualizações públicas são páginas abertas,
        * que podem ser montadas com base em stateless-step,
