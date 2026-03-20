@@ -80,7 +80,8 @@ export interface ICircuit {
   overload_info?: {
     diff_installation_fee: number,
     diff_monthly_fee: number
-  }
+  },
+  _largestGroupSize?: number
 }
 export interface IValidedSingleCircuitResult {
   hiringCosts: ICalculateHiringCostsResult,
