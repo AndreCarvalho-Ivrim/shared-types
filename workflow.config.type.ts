@@ -108,6 +108,8 @@ export interface WorkflowConfigNotificationType {
     condition?: string,
     handlers?: AllHandlersType
   },
+  /** Emails que serão bloqueados de receber essa notificação */
+  blacklist?: string[],
   effects?: Array<WorkflowNotificationEffectType>
 }
 export interface WorkflowConfigAutocomplete {
@@ -491,7 +493,7 @@ export interface ConfigViewModeColumnsType {
    */
   id: '@user' | '@owners' | 'created_at' | 'step' | '@title-and-subtitle:id_1,id_2' | string,
   name: string,
-  type: IntegrationExcelColumnTypeType | 'tasks' | 'multi-progress',
+  type: IntegrationExcelColumnTypeType | 'tasks' | 'multi-progress' | '@link' | 'table',
   /**
    * Serve para fazer correspondência entre valores, exemplo, em um campo boolean:
    * 
@@ -555,6 +557,7 @@ export interface WorkflowViewModeBaseSubOptions {
     filter_scope: WorkflowViewModeFilterScope[],
   }
 }
+export type HorizontalMenuItemType = (AvailableViewModesType | ({ extends: string, view_mode: 'extends', slug: string } & Partial<Omit<AvailableViewModesType, 'view_mode' | 'slug'>>));
 export interface WorkflowViewModeBase {
   title: string,
   description?: string,
@@ -564,7 +567,7 @@ export interface WorkflowViewModeBase {
   available_steps?: string[],
   horizontal_menu?: {
     current_title?: string,
-    items: (AvailableViewModesType | ({ extends: string, view_mode: 'extends', slug: string } & Partial<Omit<AvailableViewModesType, 'view_mode' | 'slug'>>))[]
+    items: HorizontalMenuItemType[]
   }
   /** { 'ref-no-flow-data': 'título-visual' } */ 
   dynamic_order_by?: Record<string, string>,
@@ -731,6 +734,29 @@ interface IChartsRefEntity {
   })[],
 }
 
+export interface IVariations {
+  name: string,
+  /*
+   * ID da etapa onde as colunas serão exibidas \
+   * 
+   * Não pode mencionar a mesma etapa em mais de uma variação
+   */
+  available_steps: string[],
+  /** IDS das colunas que serão exibidas */
+  columns: string[]
+}
+export interface IDynamicColumnsByStep {
+  /*
+   * Permissão para criar, editar e excluir as variações
+   */
+  permission: string,
+  /*
+   * Campos disponíveis para as variações
+   */
+  available_columns: ConfigViewModeColumnsType[],
+  variations: IVariations[],
+}
+
 type Charts = IChartsRefFlowData | IChartsRefEntity;
 export interface WorkflowViewModeResume extends WorkflowViewModeBase {
   view_mode: 'resume',
@@ -767,6 +793,7 @@ export interface WorkflowViewModeResume extends WorkflowViewModeBase {
 export interface WorkflowViewModeTable extends WorkflowViewModeBase {
   view_mode: 'table',
   columns: ConfigViewModeColumnsType[],
+  dynamic_columns_by_step?: IDynamicColumnsByStep
 }
 export interface WorkflowViewModeRedirect extends WorkflowViewModeBase {
   view_mode: 'redirect',
@@ -1183,6 +1210,44 @@ export interface PublicRouteGet{
   body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
   format?: Record<string, ReportAnalyticsFormatAndOrTranslate>,
 }
+export interface PublicRoutePost {
+  auth?: AuthPublicRouteType,
+  /** Escopo de alteração dentro do objeto flow_data.data */
+  scope?: string,
+  /** Se não for informado trará o flow_data.data completo */
+  body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
+  /** 
+   * É utilizado apenas quando a requisição inclui find.
+   * 
+   * - [merge] Mascla os dados com o do registro encontrado (interfere apenas flowData.data)
+   * - [overwrite] Sobrescreve os dados do registro encontrado (interfere apenas flowData.data)
+   * - [process] Realiza alguma ação interna configurado em rules
+   */
+  mode?: 'merge' | 'overwrite' | 'process',
+  /** Se for true, desabilita a funcionalidade find */
+  only_creation?: boolean,
+  schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
+  rule?: {
+    available_steps?: string[],
+    append_value?: Record<string, any>,
+    required_find?: string[],
+    is_unique?: boolean
+  },
+  effects?: {
+    /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
+    only: 'success' | 'error' | 'always',
+    condition?: string,
+    /** Valores que serão atualizados no flowData */
+    append_values: Record<string, any>
+    /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
+    breakExec?: boolean,
+    trigger?: {
+      condition?: string,
+      ref: string
+    }
+  }[],
+  use_observer?: boolean
+}
 export interface WorkflowConfigExceptionView{
   slug: string,
   title: string,
@@ -1246,40 +1311,7 @@ export interface WorkflowConfigType {
     },
     publicRoutes?: {
       get?: Record<string, PublicRouteGet>,
-      post?: Record<string, {
-        auth?: AuthPublicRouteType,
-        /** Escopo de alteração dentro do objeto flow_data.data */
-        scope?: string,
-        /** Se não for informado trará o flow_data.data completo */
-        body?: Record<'__extends' | '__omit' | '__cumulative' | string, string | string[]>,
-        /** 
-         * É utilizado apenas quando a requisição inclui find.
-         * 
-         * - [merge] Mascla os dados com o do registro encontrado (interfere apenas flowData.data)
-         * - [overwrite] Sobrescreve os dados do registro encontrado (interfere apenas flowData.data)
-         * - [process] Realiza alguma ação interna configurado em rules
-         */
-        mode?: 'merge' | 'overwrite' | 'process',
-        /** Se for true, desabilita a funcionalidade find */
-        only_creation?: boolean,
-        schema?: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
-        rule?: {
-          available_steps?: string[],
-          append_value?: Record<string, any>,
-          required_find?: string[],
-          is_unique?: boolean
-        },
-        effects?: {
-          /** Efeito considerado apenas em caso de (sucesso, erro ou sempre respectivamente) */
-          only: 'success' | 'error' | 'always',
-          condition?: string,
-          /** Valores que serão atualizados no flowData */
-          append_values: Record<string, any>
-          /** Interromper os efeitos colaterais assim que o primeiro der match no condition */
-          breakExec?: boolean
-        }[],
-        use_observer?: boolean
-      }>,
+      post?: Record<string, PublicRoutePost>,
       /**
        * Visualizações públicas são páginas abertas,
        * que podem ser montadas com base em stateless-step,
@@ -1809,8 +1841,11 @@ export interface WorkflowConfigActionsType {
    *  - Excluí multiplos flow_datas
    *  - É renderizado na barra de filtro ao lado do filtro de etapas
    *  - Possui renderização condicional, aparecendo somente quando existe items selecionados
+   * 
+   * multiple-action: 
+   *  - Chama a função de ação multipla.
    */
-  id: 'start-flow' | 'delete-datas' | string, /*[obsoletos]: | 'list-datas' | 'alarm' | 'search' | 'models' */
+  id: 'start-flow' | 'delete-datas' | 'multiple-action' | string, /*[obsoletos]: | 'list-datas' | 'alarm' | 'search' | 'models' */
   alt: string,
   /**
    * Pode ser usada uma permissão existente em [wf.config.permissions.actions] \
@@ -1838,7 +1873,8 @@ export interface WorkflowConfigActionsType {
    * e depois ser complementada com a seleção de N itens.
    */
   fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema | WFActionFnCallExceptionModal,
-  group_buttons?: WorkflowConfigActionsGroupButtons
+  group_buttons?: WorkflowConfigActionsGroupButtons,
+  data?: any
 }
 export interface WorkflowConfigActionsGroupButtons{
   id: string,

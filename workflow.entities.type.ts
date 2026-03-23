@@ -1,4 +1,5 @@
 import { AvailableIcons } from "./icon.type";
+import { StepItemAttrMaskDynamicType, StepItemAttrMaskStringType } from "./step.item.field.type";
 import { StepViewAttrMaskType } from "./step.item.view.type";
 import { WorkflowConfigActionsType, WorkflowConfigFilterRefType, WorkflowConfigFilterType, WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
 
@@ -93,7 +94,15 @@ export interface FlowEntitySchemaInfo{
     /** Valida se o valor inserido na importação existe na base do autocomplete */
     restricted?: boolean,
     /** Adiciona uma opção no final para adicionar registro na base  informada */
-    add_more_options?: boolean
+    add_more_options?: boolean,
+    /**
+     * String condition, para filtrar os dados do autocomplete. \
+     * Para acessar variáveis considere que:
+     * - $\<variavel>: É uma variável dentro do valor retornado
+     * - $flow_data:\<variavel>: É uma variável dentro do flow_data
+     * - $observer:\<variavel>: É uma variável observável alterada em tempo de execução
+     */
+    filter_condition?: string,
   }
   required: boolean,
   unique?: boolean
@@ -124,7 +133,8 @@ export interface FlowEntitySchemaInfo{
     settings?: any
   },
   rules?: FlowEntitySchemaInfoRule,
-  observer?: boolean
+  observer?: boolean,
+  dynamic_mask?: StepItemAttrMaskDynamicType | StepItemAttrMaskStringType,
 }
 export interface FlowEntityAssociationColumns{
   name: string,

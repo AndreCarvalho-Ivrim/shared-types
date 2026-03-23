@@ -77,6 +77,9 @@ export interface StepItemType{
    * quando essa opção for selecionada as outras serão deselecionadas
    * caso essa esteja selecionada e outra seja selecionada essa será deselecionada  */
   single_option?: ValueAndNameStringType[],
+  /** 
+   * Utilizar @flow-data: para adicionar o value do flow data ao value do campo como default
+   * */
   defaultValue?: any;
   required?: boolean,
   required_if?: string,
@@ -84,6 +87,7 @@ export interface StepItemType{
   rules?: {
     min?: number,
     max?: number,
+    conditional_max?: Record<string, number>,
     /**
      * - \@today: Minimo hoje com precisão de dia
      * - \@now: Minimo com precisão de segundos
@@ -129,7 +133,11 @@ export interface StepItemType{
     /**
     * Apenas disponível para textarea
     */
-    rows?: number
+    rows?: number,
+    /**
+    * Esconde o campo
+    */
+    hidden?: boolean | string
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
@@ -183,6 +191,11 @@ export interface StepItemType{
      * customData: { mode: '@auto-fill', id: 'id-no-customData-do-destino' }
      */
     autoFillTrigger?: Record<string, string>,
+    /**  Possibilidade de injetar opções */
+    append_options?: {
+      mode: 'before' | 'after',
+      options: any[]
+    }
     trigger?: { mode: 'keyup' } | {
       mode: 'clickToNext',
       target: string
@@ -200,13 +213,13 @@ export interface StepItemType{
     data?: any
   },
   customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | {
-    mode: '@select-multiple-and-prorating' | '@filter-options',
+    mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores',
     settings?: any
   },
   is_expanded?: boolean
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores'];
 export interface StepItemCustomDataSettings{
   mode: '@list',
   settings: {
@@ -232,6 +245,16 @@ export interface StepItemCustomDataEditableTable{
     initial_value?: Record<string, any>[],
     readonly_if_fillable?: boolean,
     addable?: boolean,
+    /**
+     * Dividir uma coluna em N colunas, para acessar objeto interno
+     */
+    divide_columns?: Record<string, {
+      key: string,
+      label: string,
+      type: StepItemAttrTypeType,
+      mask?: StepItemAttrMaskType,
+      required?: boolean
+    }[]>
     replicate?: boolean | Record<string, string>,
     /**
      * Função que utiliza um item múltiplo como base para gerar multiplas \
@@ -251,8 +274,14 @@ export interface StepItemCustomDataEditableTable{
      * */
     field_blacklist?: string[],
     disable_row_deletion?: boolean,
-    disable_add_row?: boolean
+    disable_add_row?: boolean,
+    restrictions?: EditableTableRestriction[]
   }
+}
+export interface EditableTableRestriction{
+  type: 'exception',
+  name: string, // Nome da exceção de validação
+  data?: any
 }
 export interface EditableTableInlineInputs{
   key: string,
