@@ -57,7 +57,8 @@ export interface IntegrationExcelType {
     formatter?: IntegrationExcelRulesFormatterType,
     /** Filtra os dados de importação */
     filters?: IntegrationExcelFilterRule[],
-    is_update?: boolean
+    is_update?: boolean,
+    accumulate_errors?: boolean
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
