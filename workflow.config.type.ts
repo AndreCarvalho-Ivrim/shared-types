@@ -1155,7 +1155,7 @@ export interface PublicRouteGet{
    * Existe o tipo [count-flow-datas], que ira retorna o total de registro com base no \
    * filtro realizado. Este tipo não tem suporte a prop [body] e [order_by]
    */
-  request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas',
+  request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas' | 'users' | 'notes',
   auth?: AuthPublicRouteType,
   /**
    * Query Params disponíveis para pesquisa.
