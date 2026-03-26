@@ -241,6 +241,11 @@ export type HandlerAppendType = {
 
 export type HandlerMapType = {
   type: 'map';
+  /** 
+   * Condição para que o item atual do array seja processado e mantido.
+   * Se a condição falhar, o item é descartado do resultado final.
+   */
+  condition?: string;
   /**
   * Utilizado para informar que será um novo item dentro do array \
   * Caso já tenha valores dentro do array não serão afetados por esse handler
