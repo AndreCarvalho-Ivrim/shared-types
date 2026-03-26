@@ -297,7 +297,11 @@ export type HandlerFindType = {
 export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
 
 export interface HandlersType {
-  handlers: AllHandlersType
+  handlers: AllHandlersType,
+  /**
+   * Utilizado para salvar o array em processamento em outro local (propriedade) \
+   * */
+  path_to_save?: string
 }
 export interface WorkflowConfigObserverFnType {
   /** 
