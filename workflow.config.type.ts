@@ -271,8 +271,8 @@ export type HandlerMapType = {
     condition?: string;
     mode: 'overwrite' | 'merge';
     local_save: 'current' | 'flow_data',
-    /** Utilize $current para se referir ao valor atual do array */
-    path_to_save: string
+    path_to_save: string,
+    formatter: 'json-parse'
   }[]
 }
 

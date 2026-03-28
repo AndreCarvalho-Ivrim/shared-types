@@ -1,5 +1,5 @@
-import { ColumnBadgeType } from "../types";
-import { AvailableCustomItemModeType, ThemeColorType } from "./step.item.field.type";
+import { ColumnBadgeType, ItemOrViewOrWidgetOrIntegration } from "../types";
+import { AvailableCustomItemModeType, StepItemAttrMaskType, StepItemAttrTypeType, ThemeColorType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
 interface StepViewBaseType{
@@ -252,11 +252,50 @@ export interface StepViewMarkdownType extends StepViewBaseType{
   type: 'markdown',
   url: string
 }
-
+export interface AvailableColumnsApproverControlType {
+  key: string,
+  label: string,
+  type: StepItemAttrTypeType,
+  mask?: StepItemAttrMaskType,
+  required?: boolean
+}
+export interface IDataExceptionApproverControl{
+  /** Propriedade utilizada para controle de aprovadores */
+  ref: string,
+  /** Itens do modal a serem preenchidos */
+  items: ItemOrViewOrWidgetOrIntegration[],
+  /** 
+   * Utilizado para definir os valores do header e body \
+   * Caso o não utlizado será definido pelo items*/
+  render_items?: AvailableColumnsApproverControlType[],
+  /** 
+   * Utilizado para definir quem pode adicionar e editar
+   * */
+  add_approvers?: {
+    type: '@group-permission',
+    permission: string | string[],
+    condition?: string
+  },
+  /**
+   * Utilizado para definir quem pode remover
+   * */
+  remove_approvers?: {
+    type: '@group-permission',
+    permission: string | string[],
+    condition?: string
+  },
+  /**
+   * Se tiver items do tipo select-multiple ou select, essas opções será usada para não permitir selecionar a mesma opção caso já selecionada
+   **/
+  not_repeat_option?: boolean
+}
 export interface StepViewExceptionType extends StepViewBaseType{
   type: 'exception',
   customCSS?: any,
-  /** Parametros adicionais para a exception */
+  /** 
+   * Parametros adicionais para a exception \
+   * Para controle de aprovadores utilize a paramentrização IDataExceptionApproverControl
+   * */
   data?: any,
   exception: string
 }
