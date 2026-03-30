@@ -1,4 +1,5 @@
-import { ColumnBadgeType, ItemOrViewOrWidgetOrIntegration } from "../types";
+import { ColumnBadgeType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType } from "../types";
+import { AvailableIcons } from "./icon.type";
 import { AvailableCustomItemModeType, StepItemAttrMaskType, StepItemAttrTypeType, ThemeColorType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
@@ -259,6 +260,22 @@ export interface AvailableColumnsApproverControlType {
   mask?: StepItemAttrMaskType,
   required?: boolean
 }
+export interface StepActionApproverControlType {
+  label: string,
+  type: ThemeColorType,
+  key: string,
+  icon?: AvailableIcons,
+  target_exception: string,
+  /** Utilizado para verificar se tem acesso ao botão \
+   * Propriedades reservadas: \@group-permission, \@user-permission
+   */
+  condition?: string,
+  isRedirect?: boolean,
+  confirm?: StepActionConfirmType,
+  append_values?: Record<string, {
+    value: any
+  }>
+}
 export interface IDataExceptionApproverControl{
   /** Propriedade utilizada para controle de aprovadores */
   ref: string,
@@ -274,7 +291,11 @@ export interface IDataExceptionApproverControl{
   add_approvers?: {
     type: '@group-permission',
     permission: string | string[],
-    condition?: string
+    condition?: string,
+    /** 
+    * Utilizado para realizar o salvamento dos dados adicionados ou editados
+    * */
+    fn_exception?: string
   },
   /**
    * Utilizado para definir quem pode remover
@@ -282,12 +303,26 @@ export interface IDataExceptionApproverControl{
   remove_approvers?: {
     type: '@group-permission',
     permission: string | string[],
-    condition?: string
+    condition?: string,
+    /** 
+    * Utilizado para realizar o salvamento dos dados removidos
+    **/
+    fn_exception?: string
   },
   /**
    * Se tiver items do tipo select-multiple ou select, essas opções será usada para não permitir selecionar a mesma opção caso já selecionada
    **/
-  not_repeat_option?: boolean
+  not_repeat_option?: boolean,
+  actions?: StepActionApproverControlType[],
+  /** 
+   * Utilizado para filtrar as fichas \
+   * Propriedades reservadas: \@group-permission, \@user-permission
+   * */
+  filters?: {
+    condition: string,
+    filter_condition?: string,
+    break?: boolean
+  }[]
 }
 export interface StepViewExceptionType extends StepViewBaseType{
   type: 'exception',
