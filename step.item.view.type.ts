@@ -1,4 +1,5 @@
 import { ColumnBadgeType } from "../types";
+import { AvailableIcons } from "./icon.type";
 import { AvailableCustomItemModeType, ThemeColorType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
@@ -247,6 +248,10 @@ export interface StepViewRedirectType extends StepViewBaseType{
     /** STRING-CONDITIONAL */
     render?: string
   }
+  /** Icone de redirecionamento. Default = ChevronDownIcon.-rotate-90 */
+  icon?: AvailableIcons,
+  /** Default = medium (medium = py-4 | small = py-2) */
+  size?: 'medium' | 'small'
 }
 export interface StepViewMarkdownType extends StepViewBaseType{
   type: 'markdown',
