@@ -216,7 +216,7 @@ export interface StepType{
   status?: AvailableWorkflowStatusType,
   is_stateless?: boolean,
   actions?: StepActionType[],
-  action_button?: Omit<StepActionType, 'key' | 'target' | 'isRedirect'>,
+  action_button?: Omit<StepActionType, 'key' | 'target'>,
   descriptions?: StepHistoryDescriptionType[],
   /** Válido apenas quando step.type === 'page' */
   page?: {
