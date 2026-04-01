@@ -280,7 +280,7 @@ export interface IDataExceptionApproverControl{
   /** Propriedade utilizada para controle de aprovadores */
   ref: string,
   /** Itens do modal a serem preenchidos */
-  items: ItemOrViewOrWidgetOrIntegration[],
+  items?: ItemOrViewOrWidgetOrIntegration[],
   /** 
    * Utilizado para definir os valores do header e body \
    * Caso o não utlizado será definido pelo items*/
@@ -297,6 +297,7 @@ export interface IDataExceptionApproverControl{
     * */
     fn_exception?: string
   },
+  edit_approvers?: boolean,
   /**
    * Utilizado para definir quem pode remover
    * */
