@@ -276,6 +276,13 @@ export interface StepActionApproverControlType {
     value: any
   }>
 }
+export interface IActNotification {
+  notify: string,
+  /** 
+   * Utilizado para definir onde será salvo o item adicionado, editado ou removido \
+   * */
+  path_to_save?: string,
+}
 export interface IDataExceptionApproverControl{
   /** Propriedade utilizada para controle de aprovadores */
   ref: string,
@@ -295,7 +302,8 @@ export interface IDataExceptionApproverControl{
     /** 
     * Utilizado para realizar o salvamento dos dados adicionados ou editados
     * */
-    fn_exception?: string
+    fn_exception?: string,
+    notification?: IActNotification
   },
   edit_approvers?: boolean,
   /**
