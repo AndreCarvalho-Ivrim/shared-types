@@ -1874,6 +1874,12 @@ export interface WorkflowConfigActionsType {
    */
   fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema | WFActionFnCallExceptionModal,
   group_buttons?: WorkflowConfigActionsGroupButtons,
+  /**
+   * Caso a action seja [multiple-action], alguns informações válidas no data são:
+   * - ignore_form?(boolean): Faz com que a ação multipla lide somente com os botões de ação, enviando as informações de \
+   * formulário pré-definidas, caso existam.
+   * - available_steps?(string[] : _ids): Faz com que a ação seja válida apenas para as etapas selecionadas
+   */
   data?: any
 }
 export interface WorkflowConfigActionsGroupButtons{
