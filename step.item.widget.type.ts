@@ -32,14 +32,8 @@ export interface WidgetWorkerThreadQuery{
   type: 'in' | 'nin' | 'not' | 'text' | 'eq' | 'gte' | 'lte' | 'lt' | 'exists' | 'date' | 'not-exists-or-null',
   value?: any
 }
-export interface WidgetWorkerThread extends StepWidgetBaseType{
+interface WidgetWorkerThreadBase extends StepWidgetBaseType{
   type: 'widget-worker-thread',
-  query?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
-  query_secondary?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
-  query_tertiary?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
-  step_primary?: string,
-  step_secondary?: string,
-  origins?: string[],
   control_entity: {
     name: string,
     verification_parameter: string,
@@ -57,16 +51,26 @@ export interface WidgetWorkerThread extends StepWidgetBaseType{
       ref: string
     }
   },
+  items?: ItemOrViewOrWidgetOrIntegration[],
+  data?: any
+}
+interface WidgetWorkerThreadAbilityRoterization extends WidgetWorkerThreadBase{
+  query?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
+  query_secondary?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
+  query_tertiary?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
+  step_primary?: string,
+  step_secondary?: string,
+  origins?: string[],
   effects?: {
     /** Nomear ações para serem chamadas na função */
     action?: string,
     condition?: string,
     append_values: Record<string, any>
   }[],
-  items?: ItemOrViewOrWidgetOrIntegration[],
   exception?: 'ifm-roterization' | 'ifm-roterization-external' | 'ifm-anticipation',
   variation?: string
 }
+export type WidgetWorkerThread = WidgetWorkerThreadAbilityRoterization | (WidgetWorkerThreadBase & { exception: 'send-whatsapp-messages' });
 export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatbotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
   'widget-email': 'Email',
