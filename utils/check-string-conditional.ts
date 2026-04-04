@@ -335,6 +335,39 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     const stringPattern = `__@every(${pathArray},${condition})__`;
                     value =  replaceAll(value, stringPattern, String(everyonePassed));
                     break;
+                  case '@some':
+                    if (!param) {
+                      value = 'false';
+                      break;
+                    }
+                    const commaIndexSome = param.indexOf(',');
+                    if (commaIndexSome === -1) {
+                      value = 'false';
+                      break;
+                    }
+                    const pathArraySome = param.substring(0, commaIndexSome);
+                    const conditionSome = param.substring(commaIndexSome + 1);
+                    if (!pathArraySome || !conditionSome) {
+                      value = 'false';
+                      break;
+                    }
+                    const getArraySome = getRecursiveValue(pathArraySome, { data: datas });
+                    if (!Array.isArray(getArraySome)) {
+                      value = 'false';
+                      break;
+                    }
+                    const somePassed = getArraySome.some(arrData => {
+                      if (arrData === null || typeof arrData !== 'object' || Array.isArray(arrData)) {
+                        return false;
+                      }
+                      console.log('conditionSome:', conditionSome);
+                      const normalizedCondition = conditionSome.replace(/\\\\;/g, '\\;');
+                      return checkStringConditional(normalizedCondition, { ...datas, this: arrData });
+                    });
+
+                    const stringPatternSome = `__@some(${pathArraySome},${conditionSome})__`;
+                    value = replaceAll(value, stringPatternSome, String(somePassed));
+                    break;
                   case '@findIndexLast':
                     if (!param) {
                       value = '-1';

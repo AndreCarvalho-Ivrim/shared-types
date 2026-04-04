@@ -110,7 +110,51 @@ export interface WorkflowConfigNotificationType {
   },
   /** Emails que serão bloqueados de receber essa notificação */
   blacklist?: string[],
-  effects?: Array<WorkflowNotificationEffectType>
+  effects?: Array<WorkflowNotificationEffectType>,
+  calendar?: {
+    /**
+     * Título do evento. Suporta shortcodes: "Reunião com @[supplier_name]"
+     */
+    summary: string,
+    /**
+     * Caminho no flowData.data para a data de início. Ex: "date_start"
+     */
+    start: string,
+    /**
+     * Caminho no flowData.data para a data de fim. Ex: "date_end"
+     * Se não informado, usa o mesmo valor de start + 1 hora
+     */
+    end?: string,
+    /**
+     * Descrição do evento. Suporta shortcodes.
+     */
+    description?: string,
+    /**
+     * Localização do evento. Suporta shortcodes.
+     */
+    location?: string,
+    /**
+     * Caminho no flowData.data para os participantes.
+     * Pode ser um campo string (email único) ou array de strings/objetos.
+     * Se não informado, usa os próprios targets do email.
+     * 
+     * Para objetos, espera: { email: string, name?: string }
+     */
+    attendees?: string,
+    /**
+     * Organizador do evento.
+     * Se não informado, usa o emailFrom da configuração do workflow.
+     */
+    organizer?: {
+      name: string,
+      email: string
+    },
+    /**
+     * Duração em minutos, usado como fallback quando end não é informado.
+     * Default: 60
+     */
+    duration_minutes?: number
+  }
 }
 export interface WorkflowConfigAutocomplete {
   name: string,
