@@ -331,7 +331,23 @@ export interface IDataExceptionApproverControl{
     condition: string,
     filter_condition?: string,
     break?: boolean
-  }[]
+  }[],
+  /** 
+   * Utilizado para definir quem e o aprovador principal \
+   * Propriedades reservadas: \@group-permission, \@user-permission
+   * */
+  main_approver?: {
+    key: string,
+    label: string,
+    /** 
+     * Utilizado para se tem acesso a funcionalidade
+     * */
+    condition?: string,
+    /** 
+   * Utilizado para fazer uma request em uma fnException
+   * */
+    fn_exception?: string
+  }
 }
 export interface StepViewExceptionType extends StepViewBaseType{
   type: 'exception',

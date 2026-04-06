@@ -15,7 +15,7 @@ export interface AnalysisGroupColumn{
 interface AnalysisGroupBase {
   key: string,
   title: string,
-  columns: AnalysisGroupColumn[]
+  columns: AnalysisGroupColumn[],
 }
 
 export interface AnalysisGroupQuantityPerStep extends AnalysisGroupBase {
