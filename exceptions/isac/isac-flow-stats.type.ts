@@ -21,6 +21,7 @@ interface AnalysisGroupBase{
 export interface AnalysisGroupQuantityPerStep extends AnalysisGroupBase{
   mode: 'quantity-per-step',
   groupBy?: string[],
+  unwind?: string,
   completed_steps: string[]
 }
 
