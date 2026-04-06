@@ -54,7 +54,7 @@ interface WidgetWorkerThreadBase extends StepWidgetBaseType{
   items?: ItemOrViewOrWidgetOrIntegration[],
   data?: any
 }
-interface WidgetWorkerThreadAbilityRoterization extends WidgetWorkerThreadBase{
+export interface WidgetWorkerThreadAbilityRoterization extends WidgetWorkerThreadBase{
   query?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
   query_secondary?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
   query_tertiary?: Record<string, WidgetWorkerThreadQuery> | Record<'$or', Array<Record<string, WidgetWorkerThreadQuery>>>,
