@@ -346,7 +346,11 @@ export interface IDataExceptionApproverControl{
     /** 
    * Utilizado para fazer uma request em uma fnException
    * */
-    fn_exception?: string
+    fn_exception?: string,
+    /** 
+   * Utilizado para salvar o main no flowData
+   * */
+    path?: string,
   }
 }
 export interface StepViewExceptionType extends StepViewBaseType{
