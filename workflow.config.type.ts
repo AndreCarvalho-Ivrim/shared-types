@@ -2103,7 +2103,12 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       descriptions?: {
         condition?: string,
         description: string
-      }[]
+      }[],
+      counter?: {
+        path: string;
+        mode: 'increment' | 'decrement';
+        value?: number;
+      };
     }[],
     event_after_all?: WorkflowRoutinesManageFlowEvent[]
   }
