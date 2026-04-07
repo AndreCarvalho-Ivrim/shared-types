@@ -62,7 +62,12 @@ export interface ValueAndNameStringType{
    * Adicione outras chaves com o prefix outhers. para que a seleção \
    * gere o preenchimento de um campo adjacente.
    */
-  [key: string]: any
+  [key: string]: any,
+  disabled?: {
+    disabled: boolean;
+    condition?: string;
+    message?: string;
+  }
 }
 export interface IDefaultValue{
   value: any,
