@@ -113,6 +113,10 @@ export interface WorkflowConfigNotificationType {
   effects?: Array<WorkflowNotificationEffectType>,
   calendar?: {
     /**
+     * Utilizado para identificar o evento dentro do calendário
+     */
+    id: string,
+    /**
      * Título do evento. Suporta shortcodes: "Reunião com @[supplier_name]"
      */
     summary: string,
