@@ -153,7 +153,14 @@ export interface WorkflowConfigNotificationType {
      * Duração em minutos, usado como fallback quando end não é informado.
      * Default: 60
      */
-    duration_minutes?: number
+    duration_minutes?: number,
+    /**
+     * Método do convite iCalendar.
+     * - REQUEST: Envia/atualiza o convite (padrão)
+     * - CANCEL: Cancela o evento na agenda do destinatário
+     * - UPDATE: Atualiza um evento existente
+     */
+    method?: 'REQUEST' | 'CANCEL' | 'UPDATE'
   }
 }
 export interface WorkflowConfigAutocomplete {
