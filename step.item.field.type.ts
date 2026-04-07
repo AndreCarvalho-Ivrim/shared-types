@@ -64,6 +64,10 @@ export interface ValueAndNameStringType{
    */
   [key: string]: any
 }
+export interface IDefaultValue{
+  value: any,
+  condition: string
+}
 export interface StepItemType{
   key: string,
   type: StepItemAttrTypeType,
@@ -79,7 +83,8 @@ export interface StepItemType{
    * caso essa esteja selecionada e outra seja selecionada essa será deselecionada  */
   single_option?: ValueAndNameStringType[],
   /** 
-   * Utilizar @flow-data: para adicionar o value do flow data ao value do campo como default
+   * Utilizar @flow-data: para adicionar o value do flow data ao value do campo como default \
+   * IDefaultValue[]: utilizado para definir o default value de acordo com condicional
    * */
   defaultValue?: any;
   required?: boolean,
