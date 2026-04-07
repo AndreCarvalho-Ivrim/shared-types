@@ -316,7 +316,7 @@ export type HandlerMapType = {
     mode: 'overwrite' | 'merge';
     local_save: 'current' | 'flow_data',
     path_to_save: string,
-    formatter: 'json-parse'
+    formatter?: 'json-parse'
   }[]
 }
 
