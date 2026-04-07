@@ -257,12 +257,17 @@ export interface StepViewMarkdownType extends StepViewBaseType{
   type: 'markdown',
   url: string
 }
+export interface AvailableColumnsBadgeOption {
+  value: string,
+  color: 'gray' | 'red' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'indigo',
+}
 export interface AvailableColumnsApproverControlType {
   key: string,
   label: string,
   type: StepItemAttrTypeType,
   mask?: StepItemAttrMaskType,
-  required?: boolean
+  required?: boolean,
+  badge?: AvailableColumnsBadgeOption[]
 }
 export interface StepActionApproverControlType {
   label: string,
@@ -355,6 +360,10 @@ export interface IDataExceptionApproverControl{
    * Utilizado para salvar o main no flowData
    * */
     path?: string,
+    /** 
+   * Utilizado desabilitar a edição
+   * */
+    disabled?: string
   }
 }
 export interface StepViewExceptionType extends StepViewBaseType{
