@@ -1,6 +1,6 @@
 import { ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration } from ".";
 
-export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse' | 'custom';
+export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse' | 'custom' | 'datetime';
 export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   text: 'Entrada de Texto',
   textarea: 'Entrada de Texto Grande',
@@ -9,6 +9,7 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   radio: 'Caixa de Seleção',
   checkbox: 'Caixa de Multipla Escolha',
   date: 'Date',
+  datetime: 'Data e Hora',
   file: 'Upload de Arquivo',
   'file-multiple': 'Upload de Multiplos Arquivos',
   'group-collapse': 'Grupo de Campos Intercalável',
@@ -61,7 +62,12 @@ export interface ValueAndNameStringType{
    * Adicione outras chaves com o prefix outhers. para que a seleção \
    * gere o preenchimento de um campo adjacente.
    */
-  [key: string]: any
+  [key: string]: any,
+  disabled?: {
+    disabled: boolean;
+    condition?: string;
+    message?: string;
+  }
 }
 export interface IDefaultValue{
   value: any,
@@ -162,6 +168,12 @@ export interface StepItemType{
      * - \@fn-exception:\<variation\>: Chamará uma exceção do backend. Caso queira passar parametros, use a prop 'data'
      */
     name: string,
+    /**
+     * Quando utilizada essa função em um checkbox, ele armazena um array de objetos ao invés de um array primitivo \
+     * com os values selecionados ficando em uma prop declarada nesse campo, e os demais outhers que compartilham da \
+     * mesma raiz do caminho.
+     */
+    value_path?: string,
     /**
      * autocomplete.response => field to fill
      * ```

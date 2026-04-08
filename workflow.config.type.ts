@@ -110,7 +110,62 @@ export interface WorkflowConfigNotificationType {
   },
   /** Emails que serão bloqueados de receber essa notificação */
   blacklist?: string[],
-  effects?: Array<WorkflowNotificationEffectType>
+  effects?: Array<WorkflowNotificationEffectType>,
+  calendar?: {
+    /**
+     * Utilizado para identificar o evento dentro do calendário
+     */
+    id: string,
+    /**
+     * Título do evento. Suporta shortcodes: "Reunião com @[supplier_name]"
+     */
+    summary: string,
+    /**
+     * Caminho no flowData.data para a data de início. Ex: "date_start"
+     */
+    start: string,
+    /**
+     * Caminho no flowData.data para a data de fim. Ex: "date_end"
+     * Se não informado, usa o mesmo valor de start + 1 hora
+     */
+    end?: string,
+    /**
+     * Descrição do evento. Suporta shortcodes.
+     */
+    description?: string,
+    /**
+     * Localização do evento. Suporta shortcodes.
+     */
+    location?: string,
+    /**
+     * Caminho no flowData.data para os participantes.
+     * Pode ser um campo string (email único) ou array de strings/objetos.
+     * Se não informado, usa os próprios targets do email.
+     * 
+     * Para objetos, espera: { email: string, name?: string }
+     */
+    attendees?: string,
+    /**
+     * Organizador do evento.
+     * Se não informado, usa o emailFrom da configuração do workflow.
+     */
+    organizer?: {
+      name: string,
+      email: string
+    },
+    /**
+     * Duração em minutos, usado como fallback quando end não é informado.
+     * Default: 60
+     */
+    duration_minutes?: number,
+    /**
+     * Método do convite iCalendar.
+     * - REQUEST: Envia/atualiza o convite (padrão)
+     * - CANCEL: Cancela o evento na agenda do destinatário
+     * - UPDATE: Atualiza um evento existente
+     */
+    method?: 'REQUEST' | 'CANCEL' | 'UPDATE'
+  }
 }
 export interface WorkflowConfigAutocomplete {
   name: string,
@@ -241,6 +296,11 @@ export type HandlerAppendType = {
 
 export type HandlerMapType = {
   type: 'map';
+  /** 
+   * Condição para que o item atual do array seja processado e mantido.
+   * Se a condição falhar, o item é descartado do resultado final.
+   */
+  condition?: string;
   /**
   * Utilizado para informar que será um novo item dentro do array \
   * Caso já tenha valores dentro do array não serão afetados por esse handler
@@ -266,8 +326,8 @@ export type HandlerMapType = {
     condition?: string;
     mode: 'overwrite' | 'merge';
     local_save: 'current' | 'flow_data',
-    /** Utilize $current para se referir ao valor atual do array */
-    path_to_save: string
+    path_to_save: string,
+    formatter?: 'json-parse'
   }[]
 }
 
@@ -292,7 +352,11 @@ export type HandlerFindType = {
 export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
 
 export interface HandlersType {
-  handlers: AllHandlersType
+  handlers: AllHandlersType,
+  /**
+   * Utilizado para salvar o array em processamento em outro local (propriedade) \
+   * */
+  path_to_save?: string
 }
 export interface WorkflowConfigObserverFnType {
   /** 
@@ -1874,6 +1938,12 @@ export interface WorkflowConfigActionsType {
    */
   fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema | WFActionFnCallExceptionModal,
   group_buttons?: WorkflowConfigActionsGroupButtons,
+  /**
+   * Caso a action seja [multiple-action], alguns informações válidas no data são:
+   * - ignore_form?(boolean): Faz com que a ação multipla lide somente com os botões de ação, enviando as informações de \
+   * formulário pré-definidas, caso existam.
+   * - available_steps?(string[] : _ids): Faz com que a ação seja válida apenas para as etapas selecionadas
+   */
   data?: any
 }
 export interface WorkflowConfigActionsGroupButtons{
@@ -2050,7 +2120,12 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       descriptions?: {
         condition?: string,
         description: string
-      }[]
+      }[],
+      counter?: {
+        path: string;
+        mode: 'increment' | 'decrement';
+        value?: number;
+      };
     }[],
     event_after_all?: WorkflowRoutinesManageFlowEvent[]
   }

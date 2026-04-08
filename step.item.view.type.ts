@@ -1,6 +1,6 @@
-import { ColumnBadgeType } from "../types";
+import { ColumnBadgeType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType } from "../types";
 import { AvailableIcons } from "./icon.type";
-import { AvailableCustomItemModeType, ThemeColorType } from "./step.item.field.type";
+import { AvailableCustomItemModeType, StepItemAttrMaskType, StepItemAttrTypeType, ThemeColorType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
 interface StepViewBaseType{
@@ -257,11 +257,122 @@ export interface StepViewMarkdownType extends StepViewBaseType{
   type: 'markdown',
   url: string
 }
-
+export interface AvailableColumnsBadgeOption {
+  value: string,
+  color: 'gray' | 'red' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'indigo',
+}
+export interface AvailableColumnsApproverControlType {
+  key: string,
+  label: string,
+  type: StepItemAttrTypeType,
+  mask?: StepItemAttrMaskType,
+  required?: boolean,
+  badge?: AvailableColumnsBadgeOption[]
+}
+export interface StepActionApproverControlType {
+  label: string,
+  type: ThemeColorType,
+  key: string,
+  icon?: AvailableIcons,
+  target_exception: string,
+  /** Utilizado para verificar se tem acesso ao botão \
+   * Propriedades reservadas: \@group-permission, \@user-permission
+   */
+  condition?: string,
+  isRedirect?: boolean,
+  confirm?: StepActionConfirmType,
+  append_values?: Record<string, {
+    value: any
+  }>
+}
+export interface IActNotification {
+  notify: string,
+  /** 
+   * Utilizado para definir onde será salvo o item adicionado, editado ou removido \
+   * */
+  path_to_save?: string,
+}
+export interface IDataExceptionApproverControl{
+  /** Propriedade utilizada para controle de aprovadores */
+  ref: string,
+  /** Itens do modal a serem preenchidos */
+  items?: ItemOrViewOrWidgetOrIntegration[],
+  /** 
+   * Utilizado para definir os valores do header e body \
+   * Caso o não utlizado será definido pelo items*/
+  render_items?: AvailableColumnsApproverControlType[],
+  /** 
+   * Utilizado para definir quem pode adicionar e editar
+   * */
+  add_approvers?: {
+    type: '@group-permission',
+    permission: string | string[],
+    condition?: string,
+    /** 
+    * Utilizado para realizar o salvamento dos dados adicionados ou editados
+    * */
+    fn_exception?: string,
+    notification?: IActNotification
+  },
+  edit_approvers?: boolean,
+  /**
+   * Utilizado para definir quem pode remover
+   * */
+  remove_approvers?: {
+    type: '@group-permission',
+    permission: string | string[],
+    condition?: string,
+    /** 
+    * Utilizado para realizar o salvamento dos dados removidos
+    **/
+    fn_exception?: string
+  },
+  /**
+   * Se tiver items do tipo select-multiple ou select, essas opções será usada para não permitir selecionar a mesma opção caso já selecionada
+   **/
+  not_repeat_option?: boolean,
+  actions?: StepActionApproverControlType[],
+  /** 
+   * Utilizado para filtrar as fichas \
+   * Propriedades reservadas: \@group-permission, \@user-permission
+   * */
+  filters?: {
+    condition: string,
+    filter_condition?: string,
+    break?: boolean
+  }[],
+  /** 
+   * Utilizado para definir quem e o aprovador principal \
+   * Propriedades reservadas: \@group-permission, \@user-permission
+   * */
+  main_approver?: {
+    key: string,
+    label: string,
+    /** 
+     * Utilizado para se tem acesso a funcionalidade
+     * */
+    condition?: string,
+    /** 
+   * Utilizado para fazer uma request em uma fnException
+   * */
+    fn_exception?: string,
+    /** 
+   * Utilizado para salvar o main no flowData
+   * */
+    path?: string,
+    /** 
+   * Utilizado desabilitar a edição
+   * */
+    disabled?: string
+  }
+}
 export interface StepViewExceptionType extends StepViewBaseType{
   type: 'exception',
   customCSS?: any,
-  /** Parametros adicionais para a exception */
+  /** 
+   * Parametros adicionais para a exception \
+   * Para controle de aprovadores utilize a paramentrização IDataExceptionApproverControl
+   * */
   data?: any,
   exception: string
 }
