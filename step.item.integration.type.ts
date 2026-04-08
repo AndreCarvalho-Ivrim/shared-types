@@ -5,8 +5,8 @@ export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   pdf: 'PDF'
 };
 
-export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
-export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'time', 'datetime', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj'];
+export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj' | 'thumbnail';
+export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'time', 'datetime', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj', 'thumbnail'];
 export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnTypeType, string> = {
   text: 'Texto',
   date: 'Data',
@@ -17,7 +17,8 @@ export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnT
   percent: 'Percentual',
   money: 'Moeda',
   number: 'Numérico',
-  'cpf-cnpj': 'CPF/CNPJ'
+  'cpf-cnpj': 'CPF/CNPJ',
+  'thumbnail': 'thumbnail'
 };
 
 export interface IntegrationExcelRulesFormatterType{
