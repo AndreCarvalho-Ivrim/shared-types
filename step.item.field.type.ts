@@ -169,6 +169,12 @@ export interface StepItemType{
      */
     name: string,
     /**
+     * Quando utilizada essa função em um checkbox, ele armazena um array de objetos ao invés de um array primitivo \
+     * com os values selecionados ficando em uma prop declarada nesse campo, e os demais outhers que compartilham da \
+     * mesma raiz do caminho.
+     */
+    value_path?: string,
+    /**
      * autocomplete.response => field to fill
      * ```
      * interface ToFillOnSelect{
