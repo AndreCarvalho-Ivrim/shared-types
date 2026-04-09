@@ -390,14 +390,18 @@ export interface RelationshipWithFlowEntityEventEffect{
       find_by_condition?: string
     }
   }
-  interface IReplaceFormatData {
+  interface IReplaceFormatDate {
     type: 'date',
     formatting: string
+  }
+  interface IReplaceFormatMoney {
+    type: 'money',
+    formatting: 'USD'
   }
   export interface IReplacerConfig {
     type: 'dynamic' | 'static',
     value?: string,
-    format?: IReplaceFormatData
+    format?: IReplaceFormatDate | IReplaceFormatMoney
   }
   export interface FillInPdfTemplateEventType{
   filename: string,
