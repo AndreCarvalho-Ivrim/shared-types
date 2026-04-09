@@ -1189,8 +1189,21 @@ export const isMatchCaseInsensitiveWithoutAccentuation = (matchs: string[], valu
   return matchs.some(match => normalizeText(match) === normalizedMessage);
 }
 export const handleLinearArithmetic = (params: string, data: any) => {
-  const values = params.split(/[+\-*/]/); 
-  const operators = params.match(/[+\-*/]/g) || [];
+  let expression = params.trim();
+  let roundDigits: number | undefined;
+
+  // Parâmetro opcional: @ROUND:n (ex.: industry.validity.in_day*0.6@ROUND:0)
+  const roundMatch = expression.match(/@ROUND\s*:\s*(-?\d+)/i);
+  if (roundMatch) {
+    roundDigits = Number(roundMatch[1]);
+    if (Number.isNaN(roundDigits)) roundDigits = undefined;
+    else roundDigits = Math.max(0, roundDigits);
+
+    expression = expression.replace(/@ROUND\s*:\s*-?\d+/ig, '').trim();
+  }
+
+  const values = expression.split(/[+\-*/]/); 
+  const operators = expression.match(/[+\-*/]/g) || [];
 
   const parsedValues = values.map((v) => {
     let parsed = v.trim();
@@ -1218,6 +1231,11 @@ export const handleLinearArithmetic = (params: string, data: any) => {
     if (operator === '-') finalResult -= nextValue;
     if (operator === '*') finalResult *= nextValue;
     if (operator === '/') finalResult /= nextValue;
+  }
+
+  if (roundDigits !== undefined) {
+    const factor = 10 ** roundDigits;
+    finalResult = Math.round((finalResult + Number.EPSILON) * factor) / factor;
   }
 
   return finalResult;
