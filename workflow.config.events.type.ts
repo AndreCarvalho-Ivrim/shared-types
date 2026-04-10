@@ -390,10 +390,23 @@ export interface RelationshipWithFlowEntityEventEffect{
       find_by_condition?: string
     }
   }
+  interface IReplaceFormatDate {
+    type: 'date',
+    formatting: string
+  }
+  interface IReplaceFormatMoney {
+    type: 'money',
+    formatting: 'USD'
+  }
+  export interface IReplacerConfig {
+    type: 'dynamic' | 'static',
+    value?: string,
+    format?: IReplaceFormatDate | IReplaceFormatMoney
+  }
   export interface FillInPdfTemplateEventType{
   filename: string,
   template_url: string,
-  replacers: Record<string, string>,
+  replacers: Record<string, string | IReplacerConfig>,
   effects: {
     success: {
       path_to_save_file: string,
