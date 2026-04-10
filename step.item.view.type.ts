@@ -366,6 +366,18 @@ export interface IDataExceptionApproverControl{
     disabled?: string
   }
 }
+export interface IDataExceptionCallExceptionObservers{
+  fn_exception: string,
+  get_values?: string[],
+  type: ThemeColorType,
+  /** 
+   * Utilizado para salvar os valores retornado nos campos
+   * */
+  update_fields?: {
+    flow_data_key: string,
+    field_key: string,
+  }[]
+}
 export interface StepViewExceptionType extends StepViewBaseType{
   type: 'exception',
   customCSS?: any,
