@@ -1,3 +1,5 @@
+import { StepItemCustomList, StepItemCustomListDraggable } from ".";
+
 export type IntegrationTypeType = 'excel' | 'pdf' | 'omie';
 export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   excel: 'Excel (Importação)',
@@ -5,8 +7,8 @@ export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   pdf: 'PDF'
 };
 
-export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
-export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'time', 'datetime', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj'];
+export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj' | 'thumbnail' | 'custom';
+export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'time', 'datetime', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj', 'thumbnail', 'custom'];
 export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnTypeType, string> = {
   text: 'Texto',
   date: 'Data',
@@ -17,7 +19,9 @@ export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnT
   percent: 'Percentual',
   money: 'Moeda',
   number: 'Numérico',
-  'cpf-cnpj': 'CPF/CNPJ'
+  'cpf-cnpj': 'CPF/CNPJ',
+  'thumbnail': 'thumbnail',
+  custom: 'Customizado'
 };
 
 export interface IntegrationExcelRulesFormatterType{
@@ -136,7 +140,11 @@ export interface IntegrationExcelColumnType {
      * e o valor a ser substituido.
      */
     str_replacers?: Array<[string, string]>
-  }
+  },
+  customData?: StepItemCustomListDraggable | StepItemCustomList | {
+      mode: "@list-draggable";
+      settings?: any;
+  } | undefined
 }
 export interface IntegrationOmieType {
   key: string,
