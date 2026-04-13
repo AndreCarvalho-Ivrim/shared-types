@@ -26,7 +26,7 @@ export const stepItemAttrMaskType : Record<StepItemAttrMaskType,string> = {
   'cpf-cnpj': 'CPF/CNPJ',
   cep: 'CEP',
   phone: 'Telefone',
-  uppercase: 'Uppercase',
+  uppercase: 'Letras Maiúsculas',
 };
 export type StepItemAttrMaskDynamicType = {
   type: 'number',
