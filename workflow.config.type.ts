@@ -1893,6 +1893,15 @@ export interface WFActionExportInDynamicSchema{
   default_report_id: string,
   title: string
 }
+export interface IActionDataSegmentation {
+  // ignore_form?(boolean): Faz com que a ação multipla lide somente com os botões de ação, enviando as informações de formulário pré-definidas, caso existam
+  ignore_form?: boolean,
+  // available_steps?(string[] : _ids): Faz com que a ação seja válida apenas para as etapas selecionadas
+  available_steps: string[],
+}
+export interface IActionDataMultipleAction {
+  segmentations: IActionDataSegmentation[],
+}
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -1939,10 +1948,7 @@ export interface WorkflowConfigActionsType {
   fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema | WFActionFnCallExceptionModal,
   group_buttons?: WorkflowConfigActionsGroupButtons,
   /**
-   * Caso a action seja [multiple-action], alguns informações válidas no data são:
-   * - ignore_form?(boolean): Faz com que a ação multipla lide somente com os botões de ação, enviando as informações de \
-   * formulário pré-definidas, caso existam.
-   * - available_steps?(string[] : _ids): Faz com que a ação seja válida apenas para as etapas selecionadas
+   * Caso a action seja [multiple-action], utilizar IActionDataMultipleAction
    */
   data?: any
 }
