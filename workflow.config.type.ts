@@ -1896,6 +1896,8 @@ export interface WFActionExportInDynamicSchema{
 export interface IActionDataSegmentation {
   // ignore_form?(boolean): Faz com que a ação multipla lide somente com os botões de ação, enviando as informações de formulário pré-definidas, caso existam
   ignore_form?: boolean,
+  // group_by_step_only?(boolean): Quando true, agrupa todos os registros da etapa em um único lote
+  group_by_step_only?: boolean,
   // available_steps?(string[] : _ids): Faz com que a ação seja válida apenas para as etapas selecionadas
   available_steps: string[],
 }
