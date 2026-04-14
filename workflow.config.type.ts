@@ -2218,9 +2218,15 @@ export interface WFActionFnCallExceptionModal{
   type: 'call-exception-modal',
   exception: string
 }
+export interface ISearchTypeFilter {
+  ref: string;
+  name: string;
+  mode: 'compatibility' | 'exact'
+}
 export interface WorkflowConfigOpenDialogType{
   icon?: AvailableIcons,
   title: string,
+  filters?:  Omit<ISearchTypeFilter, 'mode'>[]
 }
 
 export interface WorkflowConfigActivePanel {
