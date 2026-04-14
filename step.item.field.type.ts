@@ -133,7 +133,7 @@ export interface StepItemType{
     /** Se for type string é um strc(string conditional) */
     disabled?: boolean | string,
     dynamic_value?: string,
-    restrictions?:{ condition: string, message: string }[],
+    restrictions?:{ condition: string, message: string, is_alert?: boolean }[],
     /**
      * Número de colunas. Válido para campos checkbox e radio
      */
