@@ -106,6 +106,8 @@ export interface WorkflowConfigNotificationType {
   separate_shipping?: true | {
     /** O $this e o target */
     condition?: string,
+    /** utilize para substituir o $this como chave */
+    reference_this?: string
     handlers?: AllHandlersType
   },
   /** Emails que serão bloqueados de receber essa notificação */
