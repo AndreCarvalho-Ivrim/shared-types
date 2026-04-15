@@ -360,7 +360,6 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                       if (arrData === null || typeof arrData !== 'object' || Array.isArray(arrData)) {
                         return false;
                       }
-                      console.log('conditionSome:', conditionSome);
                       const normalizedCondition = conditionSome.replace(/\\\\;/g, '\\;');
                       return checkStringConditional(normalizedCondition, { ...datas, this: arrData });
                     });
