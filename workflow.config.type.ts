@@ -108,7 +108,7 @@ export interface WorkflowConfigNotificationType {
     condition?: string,
     /** utilize para substituir o $this como chave */
     reference_this?: string
-    handlers?: AllHandlersType
+    handlers?: AllHandlersType,
   },
   /** Emails que serão bloqueados de receber essa notificação */
   blacklist?: string[],
@@ -355,6 +355,10 @@ export type HandlerFindType = {
    * Use $current para se referir ao valor atual do array
    * */
   appends?: HandlerAppendType[];
+  /** 
+   * Utilizado para não pegar notificação repetidas.
+   */
+  not_repeat?: string,
 }
 
 export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
