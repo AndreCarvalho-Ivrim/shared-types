@@ -24,7 +24,11 @@ export interface EventType{
   }[],
   satisfaction_survey_id?: string,
   satisfaction_survey?: string,
-  satisfaction_survey_sent?: boolean
+  satisfaction_survey_sent?: boolean,
+  shipping_counter?: number,
+  satisfaction_survey_date?: string
+  cancellation_date?: string
+  reason_cancellation?: string
 }
 
 type AvailableStatus =
