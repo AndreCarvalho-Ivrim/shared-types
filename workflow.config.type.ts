@@ -81,7 +81,7 @@ export interface WorkflowConfigNotificationType {
    * e após os : o valor de substituição
    */
   params: Record<string, string>,
-  replacers: Record<string, string | {
+  replacers?: Record<string, string | {
     codition?: string,
     value: string,
     static?: boolean
