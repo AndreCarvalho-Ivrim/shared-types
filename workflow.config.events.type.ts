@@ -80,7 +80,8 @@ export interface IAboutReplicateFlowData{
   }>,
   condition?: string,
   exclude_main?: boolean,
-  abort_message?: string
+  abort_message?: string,
+  relate?: boolean
 }
 export interface ReplicateFlowDataType{
   /**
