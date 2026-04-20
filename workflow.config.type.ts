@@ -81,7 +81,7 @@ export interface WorkflowConfigNotificationType {
    * e após os : o valor de substituição
    */
   params: Record<string, string>,
-  replacers: Record<string, string | {
+  replacers?: Record<string, string | {
     codition?: string,
     value: string,
     static?: boolean
@@ -106,7 +106,9 @@ export interface WorkflowConfigNotificationType {
   separate_shipping?: true | {
     /** O $this e o target */
     condition?: string,
-    handlers?: AllHandlersType
+    /** utilize para substituir o $this como chave */
+    reference_this?: string
+    handlers?: AllHandlersType,
   },
   /** Emails que serão bloqueados de receber essa notificação */
   blacklist?: string[],
@@ -296,11 +298,17 @@ export type HandlerAppendType = {
 
 export type HandlerMapType = {
   type: 'map';
-  /** 
-   * Condição para que o item atual do array seja processado e mantido.
-   * Se a condição falhar, o item é descartado do resultado final.
-   */
-  condition?: string;
+  should_item?: {
+    /** 
+     * Condição para que o item atual do array seja processado e mantido.
+     */
+    condition: string,
+    /**
+     * Se condition for verdadeira, o item atual do array será processado e mantido. \
+     * Se não, o item atual do array for removido, ou se ele deve ser ignorado.
+     * */
+    mode: 'remove' | 'skip',
+  };
   /**
   * Utilizado para informar que será um novo item dentro do array \
   * Caso já tenha valores dentro do array não serão afetados por esse handler
@@ -347,6 +355,10 @@ export type HandlerFindType = {
    * Use $current para se referir ao valor atual do array
    * */
   appends?: HandlerAppendType[];
+  /** 
+   * Utilizado para não pegar notificação repetidas.
+   */
+  not_repeat?: string,
 }
 
 export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
