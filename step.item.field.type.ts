@@ -109,6 +109,18 @@ export interface StepItemType{
     minDate?: '@today' | '@now' | '@tomorrow' | string
     /** Segue a mesma regra do minDate */
     maxDate?: '@today' | '@now' | '@tomorrow' | string
+    /**
+    * Hora mínima permitida no formato HH:mm
+    * Exemplo: '08:00'
+    */
+    minHour?: `${number}${number}:${number}${number}`
+
+    /**
+    * Hora máxima permitida no formato HH:mm
+    * Exemplo: '18:00'
+    */
+    maxHour?: `${number}${number}:${number}${number}`
+    minuteStep?: number
     render?: string,
     switch_render?: string[],
     /**
