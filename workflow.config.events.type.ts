@@ -80,7 +80,8 @@ export interface IAboutReplicateFlowData{
   }>,
   condition?: string,
   exclude_main?: boolean,
-  abort_message?: string
+  abort_message?: string,
+  relate?: boolean
 }
 export interface ReplicateFlowDataType{
   /**
@@ -145,7 +146,7 @@ export interface ConsolidateFlowDataEventType{
      * - merge:array = força a união gerar um array
      * - merge:unique = faz a união de dois arrays e garante que os valores sejam unicos
      **/
-    join: Record<string, 'overwrite' | 'merge:array' | 'merge:unique'>,
+    join: Record<string, 'overwrite' | 'merge:array' | 'merge:unique' | `merge:unique-by:${string}`>,
     /** Se for true interrompe a execução após match */
     breakExec?: boolean
   }>,

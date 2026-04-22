@@ -236,6 +236,10 @@ export interface StepViewRedirectType extends StepViewBaseType{
    * suporta objetos, ou arrays(neste caso, gerando replicações de si mesmo)
    */
   id?: string,
+  /**
+   * Caso o valor seja um array, adicione o filter_condition para delimitar as repetições
+   */
+  filter_condition?: string,
   resume: StepViewColumnType[],
   /** 
    * Se o [to] começar com @hub: ou @isac: será usada a função \
