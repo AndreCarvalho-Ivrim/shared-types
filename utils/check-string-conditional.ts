@@ -394,6 +394,45 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     if (!searchParamFind) value =  replaceAll(value, searchPatternReverse, String(indexReal));
                     else value = replaceAll(value, searchPatternReverse, String(arrayBase[indexReal][searchParamFind]));
                     break;
+                  case '@formatDate': 
+                    if (!param) return value;
+                    const commaIndex = param.indexOf(',');
+                    if (commaIndex === -1) return value;
+
+                    const fieldPath = param.substring(0, commaIndex);
+                    const format = param.substring(commaIndex + 1);
+                    const rawValue = getRecursiveValue(fieldPath, { data: datas });
+
+                    let formatted = '';
+                    
+                    if (rawValue) {
+                      try {
+                        let date: Date;
+                        if (typeof rawValue === 'number') {
+                          date = new Date(rawValue);
+                        } 
+                        else if (typeof rawValue === 'string') {
+                          date = new Date(rawValue);
+                        } 
+                        else if (rawValue instanceof Date) {
+                          date = rawValue;
+                        }
+                        else {
+                          date = new Date(rawValue);
+                        }
+                        if (!isNaN(date.getTime())) {
+                          formatted = formatDateNative(date, format);
+                        } else {
+                          console.warn(`[formatDate] Data inválida: ${rawValue}`);
+                        }
+                        
+                      } catch (error) {
+                        console.error(`[formatDate] Erro ao formatar data: ${rawValue}`, error);
+                      }
+                    }
+
+                    const stringPatternFormatDate = `__${code}(${param})__`;
+                    value = replaceAll(value, stringPatternFormatDate, formatted);
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
               });
@@ -651,10 +690,11 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
   var replacer = '';
 
   //#region HELPERS
-  const chars = ['isostring', 'Y', 'y', 'm', 'd', 'h', 'i', 's']
+  const chars = ['timestamp', 'isostring', 'Y', 'y', 'm', 'd', 'h', 'i', 's']
   const replaceDateChar = (p: string, value: string, date: Date) => {
     let replacer = '';
     if (p === 'isostring') replacer = String(date.toISOString());
+    else if (p === 'timestamp') replacer = String(date.getTime());
     else if (p === 'Y') replacer = String(date.getFullYear());
     else if (p === 'y') replacer = String(date.getFullYear() - 2000);
     else if (p === 'm') replacer = String(date.getMonth() + 1).padStart(2, '0');
@@ -744,6 +784,35 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
 
   return replaceAll(value, searchValue, replacer);
 }
+const formatDateNative = (date: Date, format: string): string => {
+  const map: Record<string, string> = {
+    'YYYY': date.getFullYear().toString(),
+    'YY': (date.getFullYear() % 100).toString().padStart(2, '0'),
+    'MM': (date.getMonth() + 1).toString().padStart(2, '0'),
+    'M': (date.getMonth() + 1).toString(),
+    'DD': date.getDate().toString().padStart(2, '0'),
+    'D': date.getDate().toString(),
+    'HH': date.getHours().toString().padStart(2, '0'),
+    'H': date.getHours().toString(),
+    'hh': (date.getHours() % 12 || 12).toString().padStart(2, '0'),
+    'h': (date.getHours() % 12 || 12).toString(),
+    'mm': date.getMinutes().toString().padStart(2, '0'),
+    'm': date.getMinutes().toString(),
+    'ss': date.getSeconds().toString().padStart(2, '0'),
+    's': date.getSeconds().toString(),
+    'A': date.getHours() >= 12 ? 'PM' : 'AM',
+    'a': date.getHours() >= 12 ? 'pm' : 'am',
+    'X': Math.floor(date.getTime() / 1000).toString(),
+    'x': date.getTime().toString()
+  };
+  
+  let result = format;
+  for (const [key, value] of Object.entries(map)) {
+    result = result.replace(new RegExp(key, 'g'), value);
+  }
+  
+  return result;
+};
 export const handleCodeHelper__diffInDays = ({ data, param, value }:{ value: string, param: string, data: any }) => {
   const code = '@diffInDays';
   
