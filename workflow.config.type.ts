@@ -38,7 +38,9 @@ export interface WorkflowConfigFilterType {
    *  data atual.
    */
   defaultValue?: any,
-  custom_input?: { mode: 'qrcode' }
+  custom_input?: { mode: 'qrcode' },
+  /** Máscara opcional para o valor digitado no input de filtro */
+  mask?: StepItemAttrMaskType
 }
 export interface WorkflowNotificationEffectType{
   /**
