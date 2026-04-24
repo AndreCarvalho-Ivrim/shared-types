@@ -395,9 +395,9 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     else value = replaceAll(value, searchPatternReverse, String(arrayBase[indexReal][searchParamFind]));
                     break;
                   case '@formatDate': 
-                    if (!param) return value;
+                    if (!param) break;
                     const commaIndex = param.indexOf(',');
-                    if (commaIndex === -1) return value;
+                    if (commaIndex === -1) break;
 
                     const fieldPath = param.substring(0, commaIndex);
                     const format = param.substring(commaIndex + 1);
@@ -433,6 +433,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
                     const stringPatternFormatDate = `__${code}(${param})__`;
                     value = replaceAll(value, stringPatternFormatDate, formatted);
+                    break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
               });
