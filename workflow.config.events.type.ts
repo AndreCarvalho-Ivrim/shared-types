@@ -418,7 +418,7 @@ export interface RelationshipWithFlowEntityEventEffect{
     type: 'dynamic' | 'static',
     value?: string,
     format?: IReplaceFormatDate | IReplaceFormatMoney,
-    transform?: IStringTransformation;
+    transforms?: IStringTransformation[];
   }
   export interface FillInPdfTemplateEventType{
     filename: string,
