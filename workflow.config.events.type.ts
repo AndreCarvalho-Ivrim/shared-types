@@ -399,7 +399,7 @@ export interface RelationshipWithFlowEntityEventEffect{
     type: 'money',
     formatting: 'USD'
   }
-  interface IStringTransformation {
+  export interface IStringTransformation {
     /** Texto ou regex a ser buscado no valor original */
     search: string | RegExp;
     /** 
