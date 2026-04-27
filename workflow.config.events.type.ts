@@ -399,27 +399,43 @@ export interface RelationshipWithFlowEntityEventEffect{
     type: 'money',
     formatting: 'USD'
   }
+  interface IStringTransformation {
+    /** Texto ou regex a ser buscado no valor original */
+    search: string | RegExp;
+    /** 
+     * Texto que substituirá o trecho encontrado. \
+     * Se não informado, remove o trecho (equivalente a `replaceWith: ''`).
+     */
+    replaceWith?: string;
+    /** 
+    * Se true, substitui todas as ocorrências (comportamento global). \
+    * Padrão: false (apenas a primeira ocorrência). \
+    */
+    replaceAll?: boolean;
+  }
+
   export interface IReplacerConfig {
     type: 'dynamic' | 'static',
     value?: string,
-    format?: IReplaceFormatDate | IReplaceFormatMoney
+    format?: IReplaceFormatDate | IReplaceFormatMoney,
+    transform?: IStringTransformation;
   }
   export interface FillInPdfTemplateEventType{
-  filename: string,
-  template_url: string,
-  replacers: Record<string, string | IReplacerConfig>,
-  effects: {
-    success: {
-      path_to_save_file: string,
-      is_array?: boolean,
-      /** válido apenas se is_array = true */
-      marge_array?: boolean,
-      append_values?: Record<string, any>
-    },
-    fail: {
-      path_to_save_error: string,
-      append_values?: Record<string, any>
-    },
-    always?: Record<string, any>
+    filename: string,
+    template_url: string,
+    replacers: Record<string, string | IReplacerConfig>,
+    effects: {
+      success: {
+        path_to_save_file: string,
+        is_array?: boolean,
+        /** válido apenas se is_array = true */
+        marge_array?: boolean,
+        append_values?: Record<string, any>
+      },
+      fail: {
+        path_to_save_error: string,
+        append_values?: Record<string, any>
+      },
+      always?: Record<string, any>
+    }
   }
-}
