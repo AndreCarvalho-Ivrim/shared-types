@@ -413,10 +413,14 @@ export interface RelationshipWithFlowEntityEventEffect{
     */
     replaceAll?: boolean;
   }
+  export interface IValueReplaceCondition {
+    condition: string,
+    value: string
+  }
 
   export interface IReplacerConfig {
     type: 'dynamic' | 'static',
-    value?: string,
+    value?: string | IValueReplaceCondition[],
     format?: IReplaceFormatDate | IReplaceFormatMoney,
     transforms?: IStringTransformation[];
   }
