@@ -399,6 +399,15 @@ export interface RelationshipWithFlowEntityEventEffect{
     type: 'money',
     formatting: 'USD'
   }
+  interface IReplaceFormatFlatten {
+    type: 'flatten';
+    /** Separador para concatenar arrays (padrão: ', ') */
+    arraySeparator?: string;
+    /** Caractere usado no lugar do ponto para achatar (padrão: '_') */
+    nestedSeparator?: string;
+    /** Se true, remove a chave original após achatar (padrão: true) */
+    removeOriginal?: boolean;
+  }
   export interface IStringTransformation {
     /** Texto ou regex a ser buscado no valor original */
     search: string | RegExp;
@@ -413,11 +422,16 @@ export interface RelationshipWithFlowEntityEventEffect{
     */
     replaceAll?: boolean;
   }
+  export interface IValueReplaceCondition {
+    condition: string,
+    value: string,
+    type?: 'dynamic' | 'static'
+  }
 
   export interface IReplacerConfig {
     type: 'dynamic' | 'static',
-    value?: string,
-    format?: IReplaceFormatDate | IReplaceFormatMoney,
+    value?: string | IValueReplaceCondition[],
+    format?: IReplaceFormatDate | IReplaceFormatMoney | IReplaceFormatFlatten,
     transforms?: IStringTransformation[];
   }
   export interface FillInPdfTemplateEventType{
