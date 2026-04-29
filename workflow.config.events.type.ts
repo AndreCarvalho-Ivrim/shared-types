@@ -424,7 +424,8 @@ export interface RelationshipWithFlowEntityEventEffect{
   }
   export interface IValueReplaceCondition {
     condition: string,
-    value: string
+    value: string,
+    type?: 'dynamic' | 'static'
   }
 
   export interface IReplacerConfig {
