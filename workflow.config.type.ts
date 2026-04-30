@@ -641,6 +641,8 @@ export interface WorkflowViewModeBase {
   description?: string,
   icon?: AvailableIcons,
   slug: string,
+  /** Utilizado apenas nas outras opções do horizontal_menu quando ativas **/
+  father_slug?: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
   available_steps?: string[],
   horizontal_menu?: {
@@ -996,7 +998,14 @@ export interface WorkflowViewModeDashboardFn{
   data?: { filter?: any, dynamic_filters?: boolean }
 }
 
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup | WorkflowViewModeResume | WorkflowViewModeRedirect;
+export type AvailableViewModesType = (
+  WorkflowViewModeTable |
+  WorkflowViewModeKanban |
+  WorkflowViewModeDashboard |
+  WorkflowViewModeGroup |
+  WorkflowViewModeResume |
+  WorkflowViewModeRedirect
+);
 
 export interface WorkflowAuthTemplateType {
   id: string,
