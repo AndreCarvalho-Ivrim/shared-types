@@ -208,7 +208,7 @@ export type FlowNetworkAppendValues = Record<string, {
    */
   condition?: string
 }>
-export type FlowNetworkFormatters = 'parseArray';
+export type FlowNetworkFormatters = 'parseArray' | `stringToObjectArray:${string}`;
 export interface FlowNetworkParams {
   flow_id: string,
   restrictions?: { where: any }[],
