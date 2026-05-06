@@ -1219,6 +1219,7 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
             return 0;
           });
           break;
+        case '@nowObject': returnValue = new Date() as any; break;
         default: 
           returnValue = 1;
           if(avHandleCodeHelpers.includes(code)){
