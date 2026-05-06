@@ -444,7 +444,8 @@ export interface RelationshipWithFlowEntityEventEffect{
         is_array?: boolean,
         /** válido apenas se is_array = true */
         marge_array?: boolean,
-        append_values?: Record<string, any>
+        append_values?: Record<string, any>,
+        is_temp_path?: boolean
       },
       fail: {
         path_to_save_error: string,
