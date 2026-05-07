@@ -381,6 +381,8 @@ export type StringHandlerType = {
   keep?: 'rest' | 'all';
   /** Se true, interrompe a execução de handlers após este */
   breakExec?: boolean;
+  /** Alterar Local de salvamento */
+  path_to_save?: string;
   reference_this?: string
 };
 
