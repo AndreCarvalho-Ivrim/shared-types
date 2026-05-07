@@ -381,6 +381,7 @@ export type StringHandlerType = {
   keep?: 'rest' | 'all';
   /** Se true, interrompe a execução de handlers após este */
   breakExec?: boolean;
+  reference_this?: string
 };
 
 export type AllHandlersType = (HandlerMapType | HandlerFindType | StringHandlerType)[];
