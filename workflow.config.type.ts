@@ -365,7 +365,28 @@ export type HandlerFindType = {
   not_repeat?: string,
 }
 
-export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
+export type StringHandlerType = {
+  type: 'string';
+  /** Condição opcional para aplicar este handler (usa checkStringConditional) */
+  condition?: string;
+  /** Função a ser aplicada na string, atualmente apenas 'split' */
+  fn: 'split';
+  /** Se true, só executa se o valor de `value` existir na string */
+  if_exists?: boolean;
+  /** Valor usado como separador (no split) ou padrão a ser removido */
+  value: string;
+  /** Número de partes a descartar do início após o split */
+  discard?: number;
+  /** O que manter após o descarte: 'rest' (junção do restante) ou 'all' (array completo) */
+  keep?: 'rest' | 'all';
+  /** Se true, interrompe a execução de handlers após este */
+  breakExec?: boolean;
+  /** Alterar Local de salvamento */
+  path_to_save?: string;
+  reference_this?: string
+};
+
+export type AllHandlersType = (HandlerMapType | HandlerFindType | StringHandlerType)[];
 
 export interface HandlersType {
   handlers: AllHandlersType,
