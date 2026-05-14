@@ -1,4 +1,4 @@
-import { StepItemCustomList, StepItemCustomListDraggable } from ".";
+import { StepItemCustomList, StepItemCustomListDraggable, StepItemType } from ".";
 
 export type IntegrationTypeType = 'excel' | 'pdf' | 'omie';
 export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
@@ -109,7 +109,16 @@ export interface IntegrationExcelType {
     required_associations?: (string | string[] | {
       condition: string,
       ref: string | string[]
-    })[]
+    })[],
+    validate_fields?: {
+      valid_options?: {
+        id: string,
+        options?: { value: string, name: string }[],
+        autocomplete?: StepItemType['autocomplete'],
+        is_multiple?: true,
+        separator?: ',',
+      }[],
+    }
   }
   append_values?: Record<string, any>,
   /**
