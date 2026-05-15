@@ -111,6 +111,7 @@ export interface IntegrationExcelType {
       ref: string | string[]
     })[],
     validate_fields?: {
+      validate_type?: 'all' | string[];
       valid_options?: {
         id: string,
         options?: { value: string, name: string }[],
@@ -143,6 +144,7 @@ export interface IntegrationExcelColumnType {
   required?: boolean,
   rules?: {
     condition?: string,
+    outher_values?: string[],
     /**
      * Modificadores de string, é um array de substituições, onde \
      * cada substituição é composta por duas strings, a str de pesquisa \
