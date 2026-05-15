@@ -349,7 +349,8 @@ export interface StepItemCustomDataEditableTableInline{
     sheets?: {
       export_sheet?: { name: string },
       import_sheet?: { name: string },
-    }
+    },
+    editable_row_condition?: string
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
