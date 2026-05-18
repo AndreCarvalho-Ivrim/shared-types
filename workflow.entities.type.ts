@@ -142,7 +142,38 @@ export interface FlowEntityAssociationColumns{
   /**
    * entity-col-key: excel-col-name 
    */
-  columns: Record<string, string>
+  columns: Record<string, string>,
+  preprocess?: {
+    /** Caso queira salvar a ordem e nome das colunas, especifique o nome da prop que armazenará esses dados */
+    save_order_columns?: string,
+    /** Caso queira salvar dados não conhecidos, especifique o nome da prop que armazerá esses dados */
+    save_outher_fields?: string,
+    /**
+     * Caso haja campos opcionais e que precisem obrigatoriamente ser associados, marcar essa opção.
+     * 
+     * Se a posição do array for um array em vez de string quer dizer que pelo menos um dos valores \
+     * deve ser válido. Exemplo:
+     * 
+     * ``` required_associations: ['field-1', ['field-2', 'field-3']] ```
+     * 
+     * Isso quer dizer que o field-1 é obrigatório, e que é obrigatório preencher o field-2 ou field-3
+     **/
+    required_associations?: (string | string[] | {
+      condition: string,
+      ref: string | string[]
+    })[],
+    validate_fields?: {
+      validate_type?: 'all' | string[];
+      valid_options?: {
+        id: string,
+        options?: { value: string, name: string }[],
+        autocomplete?: FlowEntitySchemaInfo['autocomplete'],
+        is_multiple?: true,
+        separator?: ',',
+      }[],
+    },
+    outher_values?: string[],
+  }
 }
 export interface FlowEntityImportSheet{
   association_columns: FlowEntityAssociationColumns[],
