@@ -142,7 +142,27 @@ export interface FlowEntityAssociationColumns{
   /**
    * entity-col-key: excel-col-name 
    */
-  columns: Record<string, string>,
+  columns: Record<string, string>
+}
+export interface FlowEntityImportSheet{
+  association_columns: FlowEntityAssociationColumns[],
+  can_add_associations?: boolean,
+  restrictMode?: boolean,
+  /**
+   * Se os registros serão adicionados no inicio ou no final. \
+   * Por padrão é append(final)
+   */
+  insert_mode?: 'append' | 'prepend',
+  /**
+   * Aglutinação de linhas \
+   * Utilizado para aglutinar linas de sub-schemas
+   */
+  line_aggregation?: {
+    /**
+   * Quais valores serão utilizado para identificar o registro \
+   */
+    identifier: string[]
+  },
   preprocess?: {
     /** Caso queira salvar a ordem e nome das colunas, especifique o nome da prop que armazenará esses dados */
     save_order_columns?: string,
@@ -174,26 +194,6 @@ export interface FlowEntityAssociationColumns{
     },
     outher_values?: string[],
   }
-}
-export interface FlowEntityImportSheet{
-  association_columns: FlowEntityAssociationColumns[],
-  can_add_associations?: boolean,
-  restrictMode?: boolean,
-  /**
-   * Se os registros serão adicionados no inicio ou no final. \
-   * Por padrão é append(final)
-   */
-  insert_mode?: 'append' | 'prepend',
-  /**
-   * Aglutinação de linhas \
-   * Utilizado para aglutinar linas de sub-schemas
-   */
-  line_aggregation?: {
-    /**
-   * Quais valores serão utilizado para identificar o registro \
-   */
-    identifier: string[]
-  },
 }
 export interface FlowEntityExportDatas{
   title: string,
