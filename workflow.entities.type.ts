@@ -1,7 +1,7 @@
 import { AvailableIcons } from "./icon.type";
 import { StepItemAttrMaskDynamicType, StepItemAttrMaskStringType } from "./step.item.field.type";
 import { StepViewAttrMaskType } from "./step.item.view.type";
-import { WorkflowConfigFilterRefType, WorkflowConfigFilterType, WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
+import { WorkflowConfigActionsType, WorkflowConfigFilterRefType, WorkflowConfigFilterType, WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
 
 interface FlowEntityDataFilters {
   "_key"?: string,
@@ -291,6 +291,7 @@ export interface FlowEntityInfo{
   is_public?: boolean,
   styles_form?: FlowEntityStylesForm,
   relations?: FlowEntityRelations[]
+  actions?: WorkflowConfigActionsType[]
 }
 
 export interface FlowEntityStylesFormGroup{

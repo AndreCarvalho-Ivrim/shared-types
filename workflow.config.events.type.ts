@@ -80,7 +80,8 @@ export interface IAboutReplicateFlowData{
   }>,
   condition?: string,
   exclude_main?: boolean,
-  abort_message?: string
+  abort_message?: string,
+  relate?: boolean
 }
 export interface ReplicateFlowDataType{
   /**
@@ -145,7 +146,7 @@ export interface ConsolidateFlowDataEventType{
      * - merge:array = força a união gerar um array
      * - merge:unique = faz a união de dois arrays e garante que os valores sejam unicos
      **/
-    join: Record<string, 'overwrite' | 'merge:array' | 'merge:unique'>,
+    join: Record<string, 'overwrite' | 'merge:array' | 'merge:unique' | `merge:unique-by:${string}`>,
     /** Se for true interrompe a execução após match */
     breakExec?: boolean
   }>,
@@ -390,22 +391,66 @@ export interface RelationshipWithFlowEntityEventEffect{
       find_by_condition?: string
     }
   }
-  export interface FillInPdfTemplateEventType{
-  filename: string,
-  template_url: string,
-  replacers: Record<string, string>,
-  effects: {
-    success: {
-      path_to_save_file: string,
-      is_array?: boolean,
-      /** válido apenas se is_array = true */
-      marge_array?: boolean,
-      append_values?: Record<string, any>
-    },
-    fail: {
-      path_to_save_error: string,
-      append_values?: Record<string, any>
-    },
-    always?: Record<string, any>
+  interface IReplaceFormatDate {
+    type: 'date',
+    formatting: string
   }
-}
+  interface IReplaceFormatMoney {
+    type: 'money',
+    formatting: 'USD'
+  }
+  interface IReplaceFormatFlatten {
+    type: 'flatten';
+    /** Separador para concatenar arrays (padrão: ', ') */
+    arraySeparator?: string;
+    /** Caractere usado no lugar do ponto para achatar (padrão: '_') */
+    nestedSeparator?: string;
+    /** Se true, remove a chave original após achatar (padrão: true) */
+    removeOriginal?: boolean;
+  }
+  export interface IStringTransformation {
+    /** Texto ou regex a ser buscado no valor original */
+    search: string | RegExp;
+    /** 
+     * Texto que substituirá o trecho encontrado. \
+     * Se não informado, remove o trecho (equivalente a `replaceWith: ''`).
+     */
+    replaceWith?: string;
+    /** 
+    * Se true, substitui todas as ocorrências (comportamento global). \
+    * Padrão: false (apenas a primeira ocorrência). \
+    */
+    replaceAll?: boolean;
+  }
+  export interface IValueReplaceCondition {
+    condition: string,
+    value: string,
+    type?: 'dynamic' | 'static'
+  }
+
+  export interface IReplacerConfig {
+    type: 'dynamic' | 'static',
+    value?: string | IValueReplaceCondition[],
+    format?: IReplaceFormatDate | IReplaceFormatMoney | IReplaceFormatFlatten,
+    transforms?: IStringTransformation[];
+  }
+  export interface FillInPdfTemplateEventType{
+    filename: string,
+    template_url: string,
+    replacers: Record<string, string | IReplacerConfig>,
+    effects: {
+      success: {
+        path_to_save_file: string,
+        is_array?: boolean,
+        /** válido apenas se is_array = true */
+        marge_array?: boolean,
+        append_values?: Record<string, any>,
+        is_temp_path?: boolean
+      },
+      fail: {
+        path_to_save_error: string,
+        append_values?: Record<string, any>
+      },
+      always?: Record<string, any>
+    }
+  }

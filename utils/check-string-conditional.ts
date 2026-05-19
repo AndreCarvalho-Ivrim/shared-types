@@ -85,6 +85,8 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  * - contains (exclusivo para arrays)
  * - like
  * - likei
+ * - nlike
+ * - nlikei
  * 
  * **Operadores Lógicos**
  * - and
@@ -203,6 +205,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
       case 'not': return val_1 !== val_2;
       case 'like': return String(val_1).includes(String(val_2));
       case 'likei': return String(val_1).toLowerCase().includes(String(val_2).toLowerCase());
+      case 'nlike': return !String(val_1).includes(String(val_2));
+      case 'nlikei': return !String(val_1).toLowerCase().includes(String(val_2).toLowerCase());
     }
     return false;
   }
@@ -331,6 +335,38 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     const stringPattern = `__@every(${pathArray},${condition})__`;
                     value =  replaceAll(value, stringPattern, String(everyonePassed));
                     break;
+                  case '@some':
+                    if (!param) {
+                      value = 'false';
+                      break;
+                    }
+                    const commaIndexSome = param.indexOf(',');
+                    if (commaIndexSome === -1) {
+                      value = 'false';
+                      break;
+                    }
+                    const pathArraySome = param.substring(0, commaIndexSome);
+                    const conditionSome = param.substring(commaIndexSome + 1);
+                    if (!pathArraySome || !conditionSome) {
+                      value = 'false';
+                      break;
+                    }
+                    const getArraySome = getRecursiveValue(pathArraySome, { data: datas });
+                    if (!Array.isArray(getArraySome)) {
+                      value = 'false';
+                      break;
+                    }
+                    const somePassed = getArraySome.some(arrData => {
+                      if (arrData === null || typeof arrData !== 'object' || Array.isArray(arrData)) {
+                        return false;
+                      }
+                      const normalizedCondition = conditionSome.replace(/\\\\;/g, '\\;');
+                      return checkStringConditional(normalizedCondition, { ...datas, this: arrData });
+                    });
+
+                    const stringPatternSome = `__@some(${pathArraySome},${conditionSome})__`;
+                    value = replaceAll(value, stringPatternSome, String(somePassed));
+                    break;
                   case '@findIndexLast':
                     if (!param) {
                       value = '-1';
@@ -357,6 +393,46 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
                     if (!searchParamFind) value =  replaceAll(value, searchPatternReverse, String(indexReal));
                     else value = replaceAll(value, searchPatternReverse, String(arrayBase[indexReal][searchParamFind]));
+                    break;
+                  case '@formatDate': 
+                    if (!param) break;
+                    const commaIndex = param.indexOf(',');
+                    if (commaIndex === -1) break;
+
+                    const fieldPath = param.substring(0, commaIndex);
+                    const format = param.substring(commaIndex + 1);
+                    const rawValue = getRecursiveValue(fieldPath, { data: datas });
+
+                    let formatted = '';
+                    
+                    if (rawValue) {
+                      try {
+                        let date: Date;
+                        if (typeof rawValue === 'number') {
+                          date = new Date(rawValue);
+                        } 
+                        else if (typeof rawValue === 'string') {
+                          date = new Date(rawValue);
+                        } 
+                        else if (rawValue instanceof Date) {
+                          date = rawValue;
+                        }
+                        else {
+                          date = new Date(rawValue);
+                        }
+                        if (!isNaN(date.getTime())) {
+                          formatted = formatDateNative(date, format);
+                        } else {
+                          console.warn(`[formatDate] Data inválida: ${rawValue}`);
+                        }
+                        
+                      } catch (error) {
+                        console.error(`[formatDate] Erro ao formatar data: ${rawValue}`, error);
+                      }
+                    }
+
+                    const stringPatternFormatDate = `__${code}(${param})__`;
+                    value = replaceAll(value, stringPatternFormatDate, formatted);
                     break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
@@ -501,7 +577,7 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 };
 export const makeStrc = (arrStrc: Array<{
   '$'?: string,
-  '#'?: 'eq' | 'eqi' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains' | 'like' | 'likei',
+  '#'?: 'eq' | 'eqi' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains' | 'like' | 'likei' | 'nlike' | 'nlikei',
   '*'?: string,
   /** Se o -end for mais de 2 fechamentos use o as any para ignorar o erro de tipagem */
   '&'?: 'and' | 'or' | 'and-begin' | 'or-begin' | 'and-end' | 'or-end' | 'and-end-end' | 'or-end-end'
@@ -615,10 +691,11 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
   var replacer = '';
 
   //#region HELPERS
-  const chars = ['isostring', 'Y', 'y', 'm', 'd', 'h', 'i', 's']
+  const chars = ['timestamp', 'isostring', 'Y', 'y', 'm', 'd', 'h', 'i', 's']
   const replaceDateChar = (p: string, value: string, date: Date) => {
     let replacer = '';
     if (p === 'isostring') replacer = String(date.toISOString());
+    else if (p === 'timestamp') replacer = String(date.getTime());
     else if (p === 'Y') replacer = String(date.getFullYear());
     else if (p === 'y') replacer = String(date.getFullYear() - 2000);
     else if (p === 'm') replacer = String(date.getMonth() + 1).padStart(2, '0');
@@ -708,6 +785,35 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
 
   return replaceAll(value, searchValue, replacer);
 }
+const formatDateNative = (date: Date, format: string): string => {
+  const map: Record<string, string> = {
+    'YYYY': date.getFullYear().toString(),
+    'YY': (date.getFullYear() % 100).toString().padStart(2, '0'),
+    'MM': (date.getMonth() + 1).toString().padStart(2, '0'),
+    'M': (date.getMonth() + 1).toString(),
+    'DD': date.getDate().toString().padStart(2, '0'),
+    'D': date.getDate().toString(),
+    'HH': date.getHours().toString().padStart(2, '0'),
+    'H': date.getHours().toString(),
+    'hh': (date.getHours() % 12 || 12).toString().padStart(2, '0'),
+    'h': (date.getHours() % 12 || 12).toString(),
+    'mm': date.getMinutes().toString().padStart(2, '0'),
+    'm': date.getMinutes().toString(),
+    'ss': date.getSeconds().toString().padStart(2, '0'),
+    's': date.getSeconds().toString(),
+    'A': date.getHours() >= 12 ? 'PM' : 'AM',
+    'a': date.getHours() >= 12 ? 'pm' : 'am',
+    'X': Math.floor(date.getTime() / 1000).toString(),
+    'x': date.getTime().toString()
+  };
+  
+  let result = format;
+  for (const [key, value] of Object.entries(map)) {
+    result = result.replace(new RegExp(key, 'g'), value);
+  }
+  
+  return result;
+};
 export const handleCodeHelper__diffInDays = ({ data, param, value }:{ value: string, param: string, data: any }) => {
   const code = '@diffInDays';
   
@@ -1113,6 +1219,7 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
             return 0;
           });
           break;
+        case '@nowObject': returnValue = new Date() as any; break;
         default: 
           returnValue = 1;
           if(avHandleCodeHelpers.includes(code)){
@@ -1152,8 +1259,21 @@ export const isMatchCaseInsensitiveWithoutAccentuation = (matchs: string[], valu
   return matchs.some(match => normalizeText(match) === normalizedMessage);
 }
 export const handleLinearArithmetic = (params: string, data: any) => {
-  const values = params.split(/[+\-*/]/); 
-  const operators = params.match(/[+\-*/]/g) || [];
+  let expression = params.trim();
+  let roundDigits: number | undefined;
+
+  // Parâmetro opcional: @ROUND:n (ex.: industry.validity.in_day*0.6@ROUND:0)
+  const roundMatch = expression.match(/@ROUND\s*:\s*(-?\d+)/i);
+  if (roundMatch) {
+    roundDigits = Number(roundMatch[1]);
+    if (Number.isNaN(roundDigits)) roundDigits = undefined;
+    else roundDigits = Math.max(0, roundDigits);
+
+    expression = expression.replace(/@ROUND\s*:\s*-?\d+/ig, '').trim();
+  }
+
+  const values = expression.split(/[+\-*/]/); 
+  const operators = expression.match(/[+\-*/]/g) || [];
 
   const parsedValues = values.map((v) => {
     let parsed = v.trim();
@@ -1181,6 +1301,11 @@ export const handleLinearArithmetic = (params: string, data: any) => {
     if (operator === '-') finalResult -= nextValue;
     if (operator === '*') finalResult *= nextValue;
     if (operator === '/') finalResult /= nextValue;
+  }
+
+  if (roundDigits !== undefined) {
+    const factor = 10 ** roundDigits;
+    finalResult = Math.round((finalResult + Number.EPSILON) * factor) / factor;
   }
 
   return finalResult;

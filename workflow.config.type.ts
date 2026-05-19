@@ -38,7 +38,9 @@ export interface WorkflowConfigFilterType {
    *  data atual.
    */
   defaultValue?: any,
-  custom_input?: { mode: 'qrcode' }
+  custom_input?: { mode: 'qrcode' },
+  /** Máscara opcional para o valor digitado no input de filtro */
+  mask?: StepItemAttrMaskType
 }
 export interface WorkflowNotificationEffectType{
   /**
@@ -81,7 +83,7 @@ export interface WorkflowConfigNotificationType {
    * e após os : o valor de substituição
    */
   params: Record<string, string>,
-  replacers: Record<string, string | {
+  replacers?: Record<string, string | {
     codition?: string,
     value: string,
     static?: boolean
@@ -106,11 +108,68 @@ export interface WorkflowConfigNotificationType {
   separate_shipping?: true | {
     /** O $this e o target */
     condition?: string,
-    handlers?: AllHandlersType
+    /** utilize para substituir o $this como chave */
+    reference_this?: string
+    handlers?: AllHandlersType,
   },
   /** Emails que serão bloqueados de receber essa notificação */
   blacklist?: string[],
-  effects?: Array<WorkflowNotificationEffectType>
+  effects?: Array<WorkflowNotificationEffectType>,
+  calendar?: {
+    /**
+     * Utilizado para identificar o evento dentro do calendário
+     */
+    id: string,
+    /**
+     * Título do evento. Suporta shortcodes: "Reunião com @[supplier_name]"
+     */
+    summary: string,
+    /**
+     * Caminho no flowData.data para a data de início. Ex: "date_start"
+     */
+    start: string,
+    /**
+     * Caminho no flowData.data para a data de fim. Ex: "date_end"
+     * Se não informado, usa o mesmo valor de start + 1 hora
+     */
+    end?: string,
+    /**
+     * Descrição do evento. Suporta shortcodes.
+     */
+    description?: string,
+    /**
+     * Localização do evento. Suporta shortcodes.
+     */
+    location?: string,
+    /**
+     * Caminho no flowData.data para os participantes.
+     * Pode ser um campo string (email único) ou array de strings/objetos.
+     * Se não informado, usa os próprios targets do email.
+     * 
+     * Para objetos, espera: { email: string, name?: string }
+     */
+    attendees?: string,
+    /**
+     * Organizador do evento.
+     * Se não informado, usa o emailFrom da configuração do workflow.
+     */
+    organizer?: {
+      name: string,
+      email: string
+    },
+    /**
+     * Duração em minutos, usado como fallback quando end não é informado.
+     * Default: 60
+     */
+    duration_minutes?: number,
+    /**
+     * Método do convite iCalendar.
+     * - REQUEST: Envia/atualiza o convite (padrão)
+     * - CANCEL: Cancela o evento na agenda do destinatário
+     * - UPDATE: Atualiza um evento existente
+     */
+    method?: 'REQUEST' | 'CANCEL' | 'UPDATE'
+  }
 }
 export interface WorkflowConfigAutocomplete {
   name: string,
@@ -149,6 +208,7 @@ export type FlowNetworkAppendValues = Record<string, {
    */
   condition?: string
 }>
+export type FlowNetworkFormatters = 'parseArray' | `stringToObjectArray:${string}`;
 export interface FlowNetworkParams {
   flow_id: string,
   restrictions?: { where: any }[],
@@ -228,6 +288,7 @@ export interface FlowNetworkParams {
     ref: string,
     condition?: string
   },
+  formatters?: Record<string, FlowNetworkFormatters>;
 }
 export type HandlerAppendType = {
   condition?: string;
@@ -241,6 +302,17 @@ export type HandlerAppendType = {
 
 export type HandlerMapType = {
   type: 'map';
+  should_item?: {
+    /** 
+     * Condição para que o item atual do array seja processado e mantido.
+     */
+    condition: string,
+    /**
+     * Se condition for verdadeira, o item atual do array será processado e mantido. \
+     * Se não, o item atual do array for removido, ou se ele deve ser ignorado.
+     * */
+    mode: 'remove' | 'skip',
+  };
   /**
   * Utilizado para informar que será um novo item dentro do array \
   * Caso já tenha valores dentro do array não serão afetados por esse handler
@@ -266,8 +338,8 @@ export type HandlerMapType = {
     condition?: string;
     mode: 'overwrite' | 'merge';
     local_save: 'current' | 'flow_data',
-    /** Utilize $current para se referir ao valor atual do array */
-    path_to_save: string
+    path_to_save: string,
+    formatter?: 'json-parse'
   }[]
 }
 
@@ -287,12 +359,41 @@ export type HandlerFindType = {
    * Use $current para se referir ao valor atual do array
    * */
   appends?: HandlerAppendType[];
+  /** 
+   * Utilizado para não pegar notificação repetidas.
+   */
+  not_repeat?: string,
 }
 
-export type AllHandlersType = (HandlerMapType | HandlerFindType)[];
+export type StringHandlerType = {
+  type: 'string';
+  /** Condição opcional para aplicar este handler (usa checkStringConditional) */
+  condition?: string;
+  /** Função a ser aplicada na string, atualmente apenas 'split' */
+  fn: 'split';
+  /** Se true, só executa se o valor de `value` existir na string */
+  if_exists?: boolean;
+  /** Valor usado como separador (no split) ou padrão a ser removido */
+  value: string;
+  /** Número de partes a descartar do início após o split */
+  discard?: number;
+  /** O que manter após o descarte: 'rest' (junção do restante) ou 'all' (array completo) */
+  keep?: 'rest' | 'all';
+  /** Se true, interrompe a execução de handlers após este */
+  breakExec?: boolean;
+  /** Alterar Local de salvamento */
+  path_to_save?: string;
+  reference_this?: string
+};
+
+export type AllHandlersType = (HandlerMapType | HandlerFindType | StringHandlerType)[];
 
 export interface HandlersType {
-  handlers: AllHandlersType
+  handlers: AllHandlersType,
+  /**
+   * Utilizado para salvar o array em processamento em outro local (propriedade) \
+   * */
+  path_to_save?: string
 }
 export interface WorkflowConfigObserverFnType {
   /** 
@@ -563,6 +664,8 @@ export interface WorkflowViewModeBase {
   description?: string,
   icon?: AvailableIcons,
   slug: string,
+  /** Utilizado apenas nas outras opções do horizontal_menu quando ativas **/
+  father_slug?: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
   available_steps?: string[],
   horizontal_menu?: {
@@ -918,7 +1021,14 @@ export interface WorkflowViewModeDashboardFn{
   data?: { filter?: any, dynamic_filters?: boolean }
 }
 
-export type AvailableViewModesType = WorkflowViewModeTable | WorkflowViewModeKanban | WorkflowViewModeDashboard | WorkflowViewModeGroup | WorkflowViewModeResume | WorkflowViewModeRedirect;
+export type AvailableViewModesType = (
+  WorkflowViewModeTable |
+  WorkflowViewModeKanban |
+  WorkflowViewModeDashboard |
+  WorkflowViewModeGroup |
+  WorkflowViewModeResume |
+  WorkflowViewModeRedirect
+);
 
 export interface WorkflowAuthTemplateType {
   id: string,
@@ -1155,7 +1265,7 @@ export interface PublicRouteGet{
    * Existe o tipo [count-flow-datas], que ira retorna o total de registro com base no \
    * filtro realizado. Este tipo não tem suporte a prop [body] e [order_by]
    */
-  request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas',
+  request?: 'flow-datas' | 'steps' | 'me' | 'count-flow-datas' | 'users' | 'notes',
   auth?: AuthPublicRouteType,
   /**
    * Query Params disponíveis para pesquisa.
@@ -1829,6 +1939,17 @@ export interface WFActionExportInDynamicSchema{
   default_report_id: string,
   title: string
 }
+export interface IActionDataSegmentation {
+  // ignore_form?(boolean): Faz com que a ação multipla lide somente com os botões de ação, enviando as informações de formulário pré-definidas, caso existam
+  ignore_form?: boolean,
+  // group_by_step_only?(boolean): Quando true, agrupa todos os registros da etapa em um único lote
+  group_by_step_only?: boolean,
+  // available_steps?(string[] : _ids): Faz com que a ação seja válida apenas para as etapas selecionadas
+  available_steps: string[],
+}
+export interface IActionDataMultipleAction {
+  segmentations: IActionDataSegmentation[],
+}
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -1874,6 +1995,9 @@ export interface WorkflowConfigActionsType {
    */
   fn?: WFCActionFnCallStep | WFCActionFnUpdateSelected | WFCActionFnUpdateMainAndSelected | WFActionFnCallTrigger | WFActionFnCallSingleEntity | WFActionFnDownloadFiles | WFActionFnRedirect | WFActionFnCallReport | WFActionFnCallWebhook | WFActionFnCallExternalRequest | WFActionExportInDynamicSchema | WFActionFnCallExceptionModal,
   group_buttons?: WorkflowConfigActionsGroupButtons,
+  /**
+   * Caso a action seja [multiple-action], utilizar IActionDataMultipleAction
+   */
   data?: any
 }
 export interface WorkflowConfigActionsGroupButtons{
@@ -2050,7 +2174,12 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
       descriptions?: {
         condition?: string,
         description: string
-      }[]
+      }[],
+      counter?: {
+        path: string;
+        mode: 'increment' | 'decrement';
+        value?: number;
+      };
     }[],
     event_after_all?: WorkflowRoutinesManageFlowEvent[]
   }
@@ -2137,9 +2266,15 @@ export interface WFActionFnCallExceptionModal{
   type: 'call-exception-modal',
   exception: string
 }
+export interface ISearchTypeFilter {
+  ref: string;
+  name: string;
+  mode: 'compatibility' | 'exact'
+}
 export interface WorkflowConfigOpenDialogType{
   icon?: AvailableIcons,
   title: string,
+  filters?:  Omit<ISearchTypeFilter, 'mode'>[]
 }
 
 export interface WorkflowConfigActivePanel {
