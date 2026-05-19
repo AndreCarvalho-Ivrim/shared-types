@@ -1,4 +1,4 @@
-import { StepItemCustomList, StepItemCustomListDraggable } from ".";
+import { StepItemCustomList, StepItemCustomListDraggable, StepItemType } from ".";
 
 export type IntegrationTypeType = 'excel' | 'pdf' | 'omie';
 export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
@@ -110,7 +110,17 @@ export interface IntegrationExcelType {
     required_associations?: (string | string[] | {
       condition: string,
       ref: string | string[]
-    })[]
+    })[],
+    validate_fields?: {
+      validate_type?: 'all' | string[];
+      valid_options?: {
+        id: string,
+        options?: { value: string, name: string }[],
+        autocomplete?: StepItemType['autocomplete'],
+        is_multiple?: true,
+        separator?: ',',
+      }[],
+    }
   }
   append_values?: Record<string, any>,
   /**
@@ -135,6 +145,7 @@ export interface IntegrationExcelColumnType {
   required?: boolean,
   rules?: {
     condition?: string,
+    outher_values?: string[],
     /**
      * Modificadores de string, é um array de substituições, onde \
      * cada substituição é composta por duas strings, a str de pesquisa \
