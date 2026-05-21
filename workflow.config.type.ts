@@ -1867,7 +1867,7 @@ export interface WFActionFnCallTrigger {
   type: 'call-trigger',
   target: string,
   /** (default) json */
-  response_mode?: 'json' | 'file',
+  response_mode?: 'json' | 'xlsx' | 'csv',
   /** false (default) */
   id_is_required?: boolean,
   /** Este confirm não tem suporte a inserção de dados */
