@@ -1868,11 +1868,17 @@ export interface WFCActionFnUpdateMainAndSelected {
 export interface WFActionFnCallTrigger {
   type: 'call-trigger',
   target: string,
+  /** (default) json */
+  response_mode?: 'json' | 'xlsx' | 'csv',
   /** false (default) */
   id_is_required?: boolean,
   /** Este confirm não tem suporte a inserção de dados */
   confirm?: StepActionConfirmType,
   append_values?: Record<string, any>,
+  restrictions?: {
+    condition: string,
+    message: string
+  }[]
   /**
    * - trigger-flow-alert: é obrigatório informar a key do flow-alert e action \
    * que deve ser 'start' (para inicar o listening de um flow-alert) ou 'open' \
