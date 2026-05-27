@@ -4,11 +4,11 @@ import { getRecursiveValue, replaceAll } from "./recursive-datas";
 export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, prefix: 'flow_data' | 'observer' = 'flow_data') => {
   const pattern = prefix === 'flow_data' ? /\$flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
   const matches = conditional.split(/(?<!\\);/).reduce((acc, curr) => {
-    if (curr.includes('@findIndex')) {
+    if (curr.includes('@findIndex') || curr.includes('@every')) {
       const helpers = getCodeHelpers(conditional);
       const patternFind = prefix === 'flow_data' ? /flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
       (helpers ?? []).forEach(([code, param]) => {
-        if (code === '@findIndex' && param) {
+        if (['@findIndex', '@every'].includes(code) && param) {
           const [arrayPath, conditionFind] = param.split(',') ?? [];
           const arrayPathMatches = arrayPath 
             ? [...(arrayPath.matchAll(patternFind) ?? [])]
@@ -314,7 +314,9 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                       value = 'false';
                       break;
                     }
-                    const [pathArray, condition] = param.split(',');
+                    const parts = param.split(',');
+                    const pathArray = parts[0];
+                    const condition = parts.slice(1).join(',');
                     if (!pathArray || !condition) {
                       value = 'false';
                       break;
