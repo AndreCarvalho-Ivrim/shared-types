@@ -125,4 +125,5 @@ export type AvailableIcons =
   'DeliveryTruckSpeedIcon' |
   'MaintenanceIcon'        |
   'PowerOffIcon'           |
-  'UserAltIcon'
+  'UserAltIcon'            |
+  'DatabaseIcon'

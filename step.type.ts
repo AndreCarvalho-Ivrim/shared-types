@@ -134,7 +134,10 @@ export interface StepTypeRules{
   owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
   /** Seguindo as mesmas regras de owner */
   can_change_owner?: ('@data_creator' | '@current_user' | '@flow_data:n' | string)[],
+  /** se true, apenas um usuário pode ser selecionado */
   sole_owner?: boolean,
+  /** se true, o usuario não pode ser alterado */
+  immutable_owner?: boolean,
   /** Configura permissões personalizadas de ações dentro desta etapa */
   actions?: Record<WorkflowConfigActionsType['id'], {
     group_permission?: ('@data_creator' | '@data_owner' | '@not-allowed' | string)[],
@@ -213,7 +216,7 @@ export interface StepType{
   status?: AvailableWorkflowStatusType,
   is_stateless?: boolean,
   actions?: StepActionType[],
-  action_button?: Omit<StepActionType, 'key' | 'target' | 'isRedirect'>,
+  action_button?: Omit<StepActionType, 'key' | 'target'>,
   descriptions?: StepHistoryDescriptionType[],
   /** Válido apenas quando step.type === 'page' */
   page?: {

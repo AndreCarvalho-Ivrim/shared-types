@@ -2,8 +2,12 @@ import { StepItemType } from "./step.item.field.type"
 import { StepViewType } from "./step.item.view.type"
 import { WorkflowConfigFilterType } from "./workflow.config.type"
 
-/** money inclui o tratamento de casas decimais forçando duas casas */
-export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)' | 'number'
+/**
+ * - money inclui o tratamento de casas decimais forçando duas casas
+ * - primitive-arrays, considera um cenário de um array primitivo dentro de outro array(ex. Array<string[]>), \
+ * realizando o merge, depois a concatenação com virgual
+ * */
+export type ReportFormatTypes = 'date' | 'datetime' | 'money' | 'text' | 'boolean' | '@user(name)' | '@user(email)' | 'number' | 'primitive-arrays'
 export type ReportAnalyticsSearchDynamicColumnType = {
   /**
    * - array-destructuring: Desestruturação de array, irá gerar as colunas dinamicamente, \

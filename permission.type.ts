@@ -12,6 +12,7 @@ export enum PossiblePermissions {
   REPORT               = 'report',
   MANAGE_REPORT        = 'manage-report',
   FINANCIAL_CLOSINGS   = 'financial-closings',
+  ABRIR_CHAMADO        = 'abrir-chamado',
   // descontinuado ===============
   APPROVAL             = 'aprovacao',
   FINANCIAL_APPROVAL   = 'aprovacao-financeiro',

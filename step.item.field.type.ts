@@ -1,6 +1,6 @@
 import { ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration } from ".";
 
-export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse' | 'custom';
+export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse' | 'custom' | 'datetime';
 export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   text: 'Entrada de Texto',
   textarea: 'Entrada de Texto Grande',
@@ -9,13 +9,14 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   radio: 'Caixa de Seleção',
   checkbox: 'Caixa de Multipla Escolha',
   date: 'Date',
+  datetime: 'Data e Hora',
   file: 'Upload de Arquivo',
   'file-multiple': 'Upload de Multiplos Arquivos',
   'group-collapse': 'Grupo de Campos Intercalável',
   custom: 'Customizado'
 };
 
-export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone';
+export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'uppercase';
 export const stepItemAttrMaskType : Record<StepItemAttrMaskType,string> = {
   email: 'E-mail',
   number: 'Número',
@@ -25,6 +26,7 @@ export const stepItemAttrMaskType : Record<StepItemAttrMaskType,string> = {
   'cpf-cnpj': 'CPF/CNPJ',
   cep: 'CEP',
   phone: 'Telefone',
+  uppercase: 'Letras Maiúsculas',
 };
 export type StepItemAttrMaskDynamicType = {
   type: 'number',
@@ -61,7 +63,16 @@ export interface ValueAndNameStringType{
    * Adicione outras chaves com o prefix outhers. para que a seleção \
    * gere o preenchimento de um campo adjacente.
    */
-  [key: string]: any
+  [key: string]: any,
+  disabled?: {
+    disabled: boolean;
+    condition?: string;
+    message?: string;
+  }
+}
+export interface IDefaultValue{
+  value: any,
+  condition: string
 }
 export interface StepItemType{
   key: string,
@@ -77,12 +88,18 @@ export interface StepItemType{
    * quando essa opção for selecionada as outras serão deselecionadas
    * caso essa esteja selecionada e outra seja selecionada essa será deselecionada  */
   single_option?: ValueAndNameStringType[],
+  /** 
+   * Utilizar @flow-data: para adicionar o value do flow data ao value do campo como default \
+   * IDefaultValue[]: utilizado para definir o default value de acordo com condicional
+   * */
   defaultValue?: any;
   required?: boolean,
   required_if?: string,
+  switch_required_if?: string[],
   rules?: {
     min?: number,
     max?: number,
+    conditional_max?: Record<string, number>,
     /**
      * - \@today: Minimo hoje com precisão de dia
      * - \@now: Minimo com precisão de segundos
@@ -92,6 +109,18 @@ export interface StepItemType{
     minDate?: '@today' | '@now' | '@tomorrow' | string
     /** Segue a mesma regra do minDate */
     maxDate?: '@today' | '@now' | '@tomorrow' | string
+    /**
+    * Hora mínima permitida no formato HH:mm
+    * Exemplo: '08:00'
+    */
+    minHour?: `${number}${number}:${number}${number}`
+
+    /**
+    * Hora máxima permitida no formato HH:mm
+    * Exemplo: '18:00'
+    */
+    maxHour?: `${number}${number}:${number}${number}`
+    minuteStep?: number
     render?: string,
     switch_render?: string[],
     /**
@@ -116,7 +145,7 @@ export interface StepItemType{
     /** Se for type string é um strc(string conditional) */
     disabled?: boolean | string,
     dynamic_value?: string,
-    restrictions?:{ condition: string, message: string }[],
+    restrictions?:{ condition: string, message: string, is_alert?: boolean }[],
     /**
      * Número de colunas. Válido para campos checkbox e radio
      */
@@ -124,7 +153,15 @@ export interface StepItemType{
     /**
     * Apenas disponível na pesquisa de satisfação covabra
     */
-    translate_options?: boolean
+    translate_options?: boolean,
+    /**
+    * Apenas disponível para textarea
+    */
+    rows?: number,
+    /**
+    * Esconde o campo
+    */
+    hidden?: boolean | string
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
@@ -144,6 +181,12 @@ export interface StepItemType{
      * - \@fn-exception:\<variation\>: Chamará uma exceção do backend. Caso queira passar parametros, use a prop 'data'
      */
     name: string,
+    /**
+     * Quando utilizada essa função em um checkbox, ele armazena um array de objetos ao invés de um array primitivo \
+     * com os values selecionados ficando em uma prop declarada nesse campo, e os demais outhers que compartilham da \
+     * mesma raiz do caminho.
+     */
+    value_path?: string,
     /**
      * autocomplete.response => field to fill
      * ```
@@ -166,6 +209,23 @@ export interface StepItemType{
      * cada respectivo campo configurar o customData com o \@cep-autocomplete
      */
     toFill?: Record<string, string>,
+    /** 
+     * Mapeia campos da entidade selecionada para preencher automaticamente outros componentes da tela.
+     * 
+     * @example
+     * autoFillTrigger: { 
+     *   'campo_na_entidade': 'id-no-customData-do-destino' 
+     * }
+     * 
+     * O componente de destino deve possuir:
+     * customData: { mode: '@auto-fill', id: 'id-no-customData-do-destino' }
+     */
+    autoFillTrigger?: Record<string, string>,
+    /**  Possibilidade de injetar opções */
+    append_options?: {
+      mode: 'before' | 'after',
+      options: any[]
+    }
     trigger?: { mode: 'keyup' } | {
       mode: 'clickToNext',
       target: string
@@ -183,13 +243,13 @@ export interface StepItemType{
     data?: any
   },
   customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | {
-    mode: '@select-multiple-and-prorating' | '@filter-options',
+    mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores',
     settings?: any
   },
   is_expanded?: boolean
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores'];
 export interface StepItemCustomDataSettings{
   mode: '@list',
   settings: {
@@ -215,6 +275,16 @@ export interface StepItemCustomDataEditableTable{
     initial_value?: Record<string, any>[],
     readonly_if_fillable?: boolean,
     addable?: boolean,
+    /**
+     * Dividir uma coluna em N colunas, para acessar objeto interno
+     */
+    divide_columns?: Record<string, {
+      key: string,
+      label: string,
+      type: StepItemAttrTypeType,
+      mask?: StepItemAttrMaskType,
+      required?: boolean
+    }[]>
     replicate?: boolean | Record<string, string>,
     /**
      * Função que utiliza um item múltiplo como base para gerar multiplas \
@@ -234,8 +304,14 @@ export interface StepItemCustomDataEditableTable{
      * */
     field_blacklist?: string[],
     disable_row_deletion?: boolean,
-    disable_add_row?: boolean
+    disable_add_row?: boolean,
+    restrictions?: EditableTableRestriction[]
   }
+}
+export interface EditableTableRestriction{
+  type: 'exception',
+  name: string, // Nome da exceção de validação
+  data?: any
 }
 export interface EditableTableInlineInputs{
   key: string,
@@ -273,11 +349,12 @@ export interface StepItemCustomDataEditableTableInline{
     sheets?: {
       export_sheet?: { name: string },
       import_sheet?: { name: string },
-    }
+    },
+    editable_row_condition?: string
   }
 }
 export interface StepItemCustomDataCepAutocomplete{
-  mode: '@cep-autocomplete',
+  mode: '@cep-autocomplete' | '@trigger-autocomplete',
   /** NÃO UTILIZADO */
   settings?: any,
   id: string

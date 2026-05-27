@@ -76,7 +76,23 @@ export interface ICircuit {
   target_margin_installation_fee?: number,
   target_margin_monthly_fee?: number,
   network?: { id: string },
-  special_project_with_adjustment?: boolean
+  special_project_with_adjustment?: boolean,
+  overload_info?: {
+    diff_installation_fee: number,
+    diff_monthly_fee: number
+  },
+  _largestGroupSize?: number
+}
+export interface IValidedSingleCircuitResult {
+  hiringCosts: ICalculateHiringCostsResult,
+  recurringSalesPrice: ICalculateRecurringSalesPriceResul,
+  eventualSalePriceOrInstallationFee: ICalculateBaseResult,
+  margin: ICalculateMarginResult,
+  marginRecurring: number,
+  marginEventual: number,
+  linkQtd: number,
+  monthly_fee_margin_of_error: number,
+  installation_fee_margin_of_error: number,
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
@@ -290,7 +306,7 @@ export class CalculatorMatrix {
         operator && icmsByUF[uf]['operators'] &&
         icmsByUF[uf]['operators'][operator] != undefined
       ) icms = icmsByUF[uf]['operators'][operator] / 100;
-      else icms = icmsByUF[uf];
+      else icms = (icmsByUF[uf].tax / 100);
     } 
     if (!icms && icms !== 0) throw new Error(`A alíquota do estado ${uf} não está cadastrada`);
 
@@ -733,13 +749,13 @@ export class CalculatorMatrix {
       (recurringSalesPrice.netPriceTotal - hiringCosts.monthlyCostsWithOverhead)
     ;
 
-    if(calculator === 'margin'){
+    // if(calculator === 'margin'){
       if(valueInProposal === 'net_cotepe') recurring = recurringSalesPrice.netPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
       else if(valueInProposal === 'gross') recurring = recurringSalesPrice.grossPriceTotal - hiringCosts.monthlyCostsWithOverhead;
       else if(valueInProposal === 'gross_cotepe') recurring = recurringSalesPrice.grossPriceTotalCotepe - (
         recurringSalesPrice.grossPriceTotalCotepe * this.pisCofins
       ) - hiringCosts.monthlyCostsWithOverhead;
-    }
+    // }
 
     eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
   
