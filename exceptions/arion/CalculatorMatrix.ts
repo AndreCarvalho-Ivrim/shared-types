@@ -1,7 +1,8 @@
 //#region TYPES
 export type ValueInProposalType =  'net' | 'net_cotepe' | 'gross' |'gross_cotepe'
+export type CircuitStatusType = 'Reprovado' | 'Projeto Especial' | 'Em Negociação' | 'Ag. Retorno Operadora' | 'Cancelado' | 'Validação de Cancelamento' | 'Elaborando Precificação';
 export interface ICircuit {
-  status?: 'Reprovado' | 'Projeto Especial' | 'Em Negociação' | 'Ag. Retorno Operadora' | 'Cancelado',
+  status?: CircuitStatusType,
   special_project_reason?: string,
   possible_selected_providers?: any,
   link_group_key?: string,
