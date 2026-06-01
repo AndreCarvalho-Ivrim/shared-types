@@ -296,6 +296,14 @@ export interface IActNotification {
    * */
   path_to_save?: string,
 }
+export interface IExceptionWarning {
+  condition: string,
+  message: string,
+  /**
+   * Utilizado para fazer a verificação com item adicionado
+   */
+  added?: boolean
+}
 export interface IDataExceptionApproverControl{
   /** Propriedade utilizada para controle de aprovadores */
   ref: string,
@@ -316,7 +324,8 @@ export interface IDataExceptionApproverControl{
     * Utilizado para realizar o salvamento dos dados adicionados ou editados
     * */
     fn_exception?: string,
-    notification?: IActNotification
+    notification?: IActNotification,
+    warnings_condition?: IExceptionWarning[]
   },
   edit_approvers?: boolean,
   /**
@@ -329,7 +338,8 @@ export interface IDataExceptionApproverControl{
     /** 
     * Utilizado para realizar o salvamento dos dados removidos
     **/
-    fn_exception?: string
+    fn_exception?: string,
+    warnings_condition?: IExceptionWarning[]
   },
   /**
    * Se tiver items do tipo select-multiple ou select, essas opções será usada para não permitir selecionar a mesma opção caso já selecionada
