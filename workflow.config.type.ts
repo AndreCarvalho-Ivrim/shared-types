@@ -98,6 +98,7 @@ export interface WorkflowConfigNotificationType {
    * - [@wf_owner]                      Responsável pelo workflow
    * - [@group-permission:<N>[<N>,...]] Apontar para usuários com base na(s) permissão(ões) do wf
    * - [@to:<contact1>[,<contact2>]]    Contato(s) pré-definido(s)
+   * - [@actions:]                      Ações do GroupPermission
    * - 'path-to-contact'                Caminho para o registro dentro do flow_data.data que contenha 
    *                                    o contato
    */
