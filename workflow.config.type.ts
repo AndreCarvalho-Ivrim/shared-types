@@ -1486,7 +1486,24 @@ export interface WorkflowConfigType {
   visual_management?: {
     permission?: string,
     fields: WorkflowConfigVisualManagement[]
-  }
+  },
+  mapping?: Record<string, {
+    name: string,
+    type: MappingTypes,
+  }>
+}
+export type MappingTypes = 'text' | 'email' | 'money' | 'number' | 'phone' | 'date' | 'string[]' | 'any' | { url: 'string', id: 'string', name: 'string' } | [{ url: 'string', id: 'string', name: 'string' }]
+export const availableMappingTypes = {
+  'text': 'Texto',
+  'email': 'Email',
+  'money': 'Moeda',
+  'number': 'Número',
+  'phone': 'Telefone',
+  'date': 'Data',
+  '{"url":"string","id":"string","name":"string"}': 'Arquivo',
+  'string[]': 'Lista de Texto',
+  '[{"url":"string","id":"string","name":"string"}]': 'Lista de Arquivos',
+  'any': 'Qualquer Tipo',
 }
 export interface WorkflowConfigFlowAlert{
   key: string,
