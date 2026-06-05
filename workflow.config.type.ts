@@ -1487,6 +1487,9 @@ export interface WorkflowConfigType {
     permission?: string,
     fields: WorkflowConfigVisualManagement[]
   },
+  /**
+   * Essa funcionalidade serve para auxiliar no mapeamento das variáveis do fluxo.
+   */
   mapping?: Record<string, {
     name: string,
     type: MappingTypes,
