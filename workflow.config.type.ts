@@ -1371,6 +1371,11 @@ export interface WorkflowConfigExceptionView{
     is_public?: boolean,
   },
   whithout_flow_data?: boolean,
+  /**
+   * Quando a opção is_dashboard está marcada, irá fazer uma request na base de \
+   * dashboards para verificar se tem permissão personalizada configurada nela.
+   */
+  is_dashboard?: boolean,
   data?: any
 }
 export interface WorkflowConfigVisualManagement {
