@@ -161,7 +161,9 @@ export interface StepItemType{
     /**
     * Esconde o campo
     */
-    hidden?: boolean | string
+    hidden?: boolean | string,
+    // Valida CNPJ
+    validate_cnpj?: boolean,
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
