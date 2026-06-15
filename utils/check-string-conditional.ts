@@ -1,6 +1,41 @@
 import { StringConditionalTypes } from "..";
 import { getRecursiveValue, replaceAll } from "./recursive-datas";
 
+export type StrcOperators = 
+  'eq'       |
+  'eqi'      |
+  'lt'       |
+  'lte'      |
+  'gt'       |
+  'gte'      |
+  'in'       |
+  'nin'      |
+  'not'      |
+  'filled'   |
+  'contains' |
+  'like'     |
+  'likei'    |
+  'nlike'    |
+  'nlikei'
+;
+export const availableOperators : Record<StrcOperators, string> = {
+  'eq':       'Igual à',
+  'eqi':      'Igual à (ignorando Maiúscula e Minúscula)',
+  'lt':       'Menor que',
+  'lte':      'Menor ou igual à',
+  'gt':       'Maior que',
+  'gte':      'Maior ou igual à',
+  'in':       'Está incluso em',
+  'nin':      'Não está incluso em',
+  'not':      'É diferente de',
+  'filled':   'O número de itens da lista é',
+  'contains': 'A lista contém o valor',
+  'like':     'O texto inclui',
+  'likei':    'O texto inclui (ignorando Maiúscula e Minúscula)',
+  'nlike':    'O texto não inclui',
+  'nlikei':   'O texto não inclui (ignorando Maiúscula e Minúscula)',
+} 
+
 export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, prefix: 'flow_data' | 'observer' = 'flow_data') => {
   const pattern = prefix === 'flow_data' ? /\$flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
   const matches = conditional.split(/(?<!\\);/).reduce((acc, curr) => {
@@ -55,6 +90,7 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
   )
   return data;
 }
+
 /**
  * Condicionais descritas em string, com separador ponto e vírgula. Para explicar a função \
  * de cada bloco da condicional, é necessário iniciar com um préfixo:

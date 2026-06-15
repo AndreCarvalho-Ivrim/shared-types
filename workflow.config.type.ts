@@ -6,7 +6,7 @@ import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 import { WorkflowTriggerType, AvailableTriggerEffects, WorkflowIvrimNotes } from "./workflow.config.triggers.type";
 
 export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'ias';
-export type AvailableViewModeType = 'kanban' | 'table' | 'dashboard';
+export type AvailableViewModeType = 'kanban' | 'table' | 'dashboard' | 'group' | 'resume' | 'redirect';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
   name: string,
@@ -1371,6 +1371,11 @@ export interface WorkflowConfigExceptionView{
     is_public?: boolean,
   },
   whithout_flow_data?: boolean,
+  /**
+   * Quando a opção is_dashboard está marcada, irá fazer uma request na base de \
+   * dashboards para verificar se tem permissão personalizada configurada nela.
+   */
+  is_dashboard?: boolean,
   data?: any
 }
 export interface WorkflowConfigVisualManagement {
@@ -1486,7 +1491,27 @@ export interface WorkflowConfigType {
   visual_management?: {
     permission?: string,
     fields: WorkflowConfigVisualManagement[]
-  }
+  },
+  /**
+   * Essa funcionalidade serve para auxiliar no mapeamento das variáveis do fluxo.
+   */
+  mapping?: Record<string, {
+    name: string,
+    type: MappingTypes,
+  }>
+}
+export type MappingTypes = 'text' | 'email' | 'money' | 'number' | 'phone' | 'date' | 'string[]' | 'any' | { url: 'string', id: 'string', name: 'string' } | [{ url: 'string', id: 'string', name: 'string' }]
+export const availableMappingTypes = {
+  'text': 'Texto',
+  'email': 'Email',
+  'money': 'Moeda',
+  'number': 'Número',
+  'phone': 'Telefone',
+  'date': 'Data',
+  '{"url":"string","id":"string","name":"string"}': 'Arquivo',
+  'string[]': 'Lista de Texto',
+  '[{"url":"string","id":"string","name":"string"}]': 'Lista de Arquivos',
+  'any': 'Qualquer Tipo',
 }
 export interface WorkflowConfigFlowAlert{
   key: string,
