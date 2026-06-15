@@ -319,3 +319,13 @@ export const isValidUrl = (url: string): boolean => {
   
   return isHttpUrl || isRegex;
 };
+
+export const extractRegexUrlParams = (url: string): string[] | null => {
+  const is_valid = isRegexUrl(url);
+  if (!is_valid) return null;
+  const match = url.match(/\(([^)]+)\)/);
+  if (!match || !match[1]) return [];
+
+  const paramsString = match[1];
+  return paramsString.split(',').map(p => p.trim());
+};
