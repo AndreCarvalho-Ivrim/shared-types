@@ -472,6 +472,18 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     const stringPatternFormatDate = `__${code}(${param})__`;
                     value = replaceAll(value, stringPatternFormatDate, formatted);
                     break;
+                  case 'len':
+                    if (!param){
+                      value = '';
+                      break;
+                    }
+
+                    let parsedParam = getRecursiveValue(param, { data: datas });
+                    let arr = parsedParam;
+
+                    if (!Array.isArray(arr)) value = typeof arr === 'string' ? String(arr.length) : '';
+                    else value = String(arr.length);
+                    break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
               });
