@@ -90,7 +90,54 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
   )
   return data;
 }
+//#region STRC
+interface ConditionTypeAndValue{
+  type: StringConditionalTypes,
+  value: string
+}
+const strcToConditionArray = (strc: string) : Array<ConditionTypeAndValue> => {
+  return strc.split(/(?<!\\);/).filter(c => c.length > 0).map((c) => {
+    let identifier = c.substring(0, 1);
+    return {
+      type:
+        identifier === '$' ? 'prop' :
+          identifier === '#' ? 'operator' :
+            identifier === '*' ? 'value' :
+              identifier === '&' ? 'logic' : undefined,
+      value: c.substr(1, c.length - 1)
+    } as {
+      type: StringConditionalTypes | undefined,
+      value: string
+    };
+  }).filter(c => c.type !== undefined) as {
+    type: StringConditionalTypes,
+    value: string
+  }[];
+}
+const groupConditionsByUnion = (condition: ConditionTypeAndValue[], strConditional: string, conditionalName: string) => {
+  const unionConditionals: string[] = [];
+  const groupConditionals: Array<{
+    type: StringConditionalTypes,
+    value: string
+  }[]> = [];
 
+  condition.forEach((c) => {
+    if (c.type === 'logic') {
+      unionConditionals.push(c.value);
+      return;
+    }
+
+    let unionLen = unionConditionals.length;
+    if (groupConditionals[unionLen]) groupConditionals[unionLen].push(c);
+    else groupConditionals[unionLen] = [c];
+  });
+
+  if (unionConditionals.length !== 0 && (unionConditionals.length + 1) !== groupConditionals.length) throw new Error(
+    `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de uniões e grupos não está dentro do esperado. (${strConditional})`
+  );
+
+  return { unionConditionals, groupConditionals }
+}
 /**
  * Condicionais descritas em string, com separador ponto e vírgula. Para explicar a função \
  * de cada bloco da condicional, é necessário iniciar com um préfixo:
@@ -145,49 +192,11 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  *  exemplo: __@every(managers,$approved\\;#eq\\;*true)__;#eq;*true - A condição do codeHealper permanecerar
  */
 export const checkStringConditional = (strConditional: string, datas: Record<string, any>, conditionalName = 'anonymous'): boolean => {
-  let condition: {
-    type: StringConditionalTypes,
-    value: string
-  }[] = strConditional.split(/(?<!\\);/).filter(c => c.length > 0).map((c) => {
-    let identifier = c.substring(0, 1);
-    return {
-      type:
-        identifier === '$' ? 'prop' :
-          identifier === '#' ? 'operator' :
-            identifier === '*' ? 'value' :
-              identifier === '&' ? 'logic' : undefined,
-      value: c.substr(1, c.length - 1)
-    } as {
-      type: StringConditionalTypes | undefined,
-      value: string
-    };
-  }).filter(c => c.type !== undefined) as {
-    type: StringConditionalTypes,
-    value: string
-  }[];
+  let condition = strcToConditionArray(strConditional);
   
   if (condition.length === 0) return false;
 
-  const unionConditionals: string[] = [];
-  const groupConditionals: Array<{
-    type: StringConditionalTypes,
-    value: string
-  }[]> = [];
-
-  condition.forEach((c) => {
-    if (c.type === 'logic') {
-      unionConditionals.push(c.value);
-      return;
-    }
-
-    let unionLen = unionConditionals.length;
-    if (groupConditionals[unionLen]) groupConditionals[unionLen].push(c);
-    else groupConditionals[unionLen] = [c];
-  });
-
-  if (unionConditionals.length !== 0 && (unionConditionals.length + 1) !== groupConditionals.length) throw new Error(
-    `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de uniões e grupos não está dentro do esperado. (${strConditional})`
-  );
+  const { groupConditionals, unionConditionals } = groupConditionsByUnion(condition, strConditional, conditionalName);
 
   const callbackOperator = (val_1: string | number | boolean | any[], val_2: string | number | boolean | any[], operator: string) => {
     //#region HANDLE POSSIBLE BOOL
@@ -624,7 +633,8 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     console.error(e);
     return false;
   }
-};
+}
+//#endregion STRC
 export const makeStrc = (arrStrc: Array<{
   '$'?: string,
   '#'?: 'eq' | 'eqi' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains' | 'like' | 'likei' | 'nlike' | 'nlikei',
@@ -639,6 +649,80 @@ export const makeStrc = (arrStrc: Array<{
     if(strc['&']) return `&${strc['&']}`;
   }).join(';')
 }
+
+//#region STRC TO QUERY
+const parseStrcOperatorToMongoDBOperator = (op: StrcOperators, value: string) => {
+  switch(op){
+    case 'eq':  return value;
+    case 'eqi': return { $regex: `^${value}$`, $options: 'i' };
+    case 'lt':  return { $lt:  value };
+    case 'lte': return { $lte: value };
+    case 'gt':  return { $gt:  value };
+    case 'gte': return { $gte: value };
+    case 'in':  return { $in:  value.split(',') };
+    case 'nin': return { $nin: value.split(',') };
+    case 'not': return { $ne: value };
+    case 'filled': 
+      if(value.includes('>') || value.includes('<')) throw new Error(
+        'Não á suporte para operadores de maior ou menor na comparação de tamanho do mongodb'
+      )
+      return { $size: Number(value) };
+    case 'contains': value;
+    case 'like': return { $regex: value };
+    case 'likei': return { $regex: value, $options: 'i' };
+    case 'nlike': return { $not: { $regex: value } };
+    case 'nlikei': return { $not: { $regex: value, $options: 'i' } };
+  }
+
+}
+export const strcToQuery = (strc: string) => {
+  if(typeof strc !== 'string') return {};
+
+  if(strc.includes('and-begin') || strc.includes('or-begin')) throw new Error(
+    'Ainda não há suporte a controle de precedência'
+  )
+
+  let condition = strcToConditionArray(strc);
+
+  const { groupConditionals, unionConditionals } = groupConditionsByUnion(condition, strc, 'anonymous');
+
+  const makeQuery = (
+    groupConditionals: { type: StringConditionalTypes, value: string }[][],
+    unionConditionals: string[],
+    query: any
+  ) => {
+    for(const [i, condition] of groupConditionals.entries()){
+      if(condition.length !== 3 || condition[0].type !== 'prop' || condition[2].type !== 'value') throw new Error(
+        'Formato não suportado para converter em query, é esperado que a ordem da expressão seja: [propriedade, operador, valor]'
+      );
+  
+      query[condition[0].value] = parseStrcOperatorToMongoDBOperator(
+        condition[1].value as StrcOperators,
+        condition[2].value
+      );
+      
+      if(unionConditionals[i] === 'or'){
+        query = {
+          $or: [
+            query,
+            makeQuery(
+              groupConditionals.slice(i + 1),
+              unionConditionals.slice(i + 1),
+              {}
+            )
+          ]
+        }
+        break;
+      }
+    }
+    return query;
+  }
+
+  let query = makeQuery(groupConditionals, unionConditionals, {});
+  
+  return query;
+}
+//#endregion STRC TO QUERY
 /**
  * Lida com shortcodes do tipo \@[\<variavel>]
  * 
