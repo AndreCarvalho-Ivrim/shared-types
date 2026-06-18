@@ -229,6 +229,17 @@ export interface FlowNetworkParams {
    * 
    * Caso esteja com a funcionalidade one_to_many, existirá o prefixo ```_parent.``` para \
    * acessar dados que estão fora do array
+   * 
+   * O lado esquerdo do match tem suporte aos codehelpers: \
+   * 
+   * - \@find
+   * 
+   * - \@count: A função count pode ser usada com parametros(1 ou no máximo 2) ou sem parametros:
+   * > - sem parametros(que faz um count sem query no wf de destino).
+   * > - Parametro ```padded:N```(valido apenas como primeiro parametro), com N sendo o número de casas que o número deve contemplar.
+   * > - Parametro ```created_this_month``` para que o count conte apenas registros criados no mês atual.
+   * > - String Condition, que será convertida em query.
+   * - \@uppercase
    */
   match: Record<string, string>,
   /** Adicionar um valor no registro de destino */
