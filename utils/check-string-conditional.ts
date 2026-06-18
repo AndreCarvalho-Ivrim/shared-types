@@ -34,7 +34,17 @@ export const availableOperators : Record<StrcOperators, string> = {
   'likei':    'O texto inclui (ignorando Maiúscula e Minúscula)',
   'nlike':    'O texto não inclui',
   'nlikei':   'O texto não inclui (ignorando Maiúscula e Minúscula)',
-} 
+}
+/**
+ * Além do and e or, existem as variações and/or-begin and/or-end
+ * para fazer o funcionamento de parenteses para controlar prescendencia,
+ * mas essas variações estão em teste beta, antes de entrar no painel de condições
+ */
+export type StrcLogicOperators = 'and' | 'or';
+export const availableLogicOperators : Record<StrcLogicOperators, string> = {
+  and: 'E',
+  or: 'Ou'
+}
 
 export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, prefix: 'flow_data' | 'observer' = 'flow_data') => {
   const pattern = prefix === 'flow_data' ? /\$flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
