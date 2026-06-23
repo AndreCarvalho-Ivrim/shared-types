@@ -1,4 +1,4 @@
-export type AvailableTriggerEffects = 'onload-to-fill-the-page-if-necessary' | 'refresh-flow-datas' | 'success-message' | 'clear-flow-entity-cache' | 'trigger-flow-alert' | 'trigger-download-path';
+export type AvailableTriggerEffects = 'onload-to-fill-the-page-if-necessary' | 'refresh-flow-datas' | 'success-message' | 'clear-flow-entity-cache' | 'trigger-flow-alert' | 'trigger-download-path' | 'fill-current-flow-data';
 interface WorkflowTriggerBase{
   /** Referência interna */
   id: string,
