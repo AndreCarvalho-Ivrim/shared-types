@@ -1,5 +1,4 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
-import { FlowDataRequestFilter, QueryFilter } from "../services/flowData";
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { ReportAnalyticsFormatAndOrTranslate } from "./report.type";
@@ -1592,6 +1591,36 @@ export interface WorkflowConfigFlowAlertFnFlowEntity extends WorkflowConfigFlowA
 export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfigFlowAlertFnBase{
   request: 'generic-singleton',
   data: { ref: string }
+}
+type SimpleFilter = {
+  ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[];
+  value: any;
+  type: WorkflowConfigFilterType['type'];
+  without_accentuation?: boolean;
+  group?: 'and' | 'or';      // quando esse filtro é filho de um grupo
+};
+type GroupFilter = {
+  group?: 'and' | 'or';
+  filters: (SimpleFilter | GroupFilter)[];
+};
+
+interface Pagination {
+  page: number,
+  limit: number
+}
+export type QueryFilter = SimpleFilter | GroupFilter;
+export interface FlowDataRequestFilter{
+  view_mode?: string,
+  excludeIds: string[],
+  dynamicOrderBy?: Record<string, 'asc' | 'desc'>
+  include?: { key: string, value: string },
+  subOption?: {
+    title: string,
+    slug: string,
+    [key: string]: any
+  },
+  query?: QueryFilter[],
+  pagination?: Pagination
 }
 export interface WorkflowConfigFlowAlertFnFlowData extends WorkflowConfigFlowAlertFnBase{
   request: 'flow-datas',
