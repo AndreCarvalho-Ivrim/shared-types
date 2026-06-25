@@ -1529,6 +1529,7 @@ export interface WorkflowConfigFlowAlert{
   key: string,
   title: string,
   subtitle?: string,
+  render?: string,
   /** Se o valor for string se refere a uma strc, caso o contrário será considerado valor default */
   status: Partial<Record<(
     'danger' | 'warning' | 'success' | 'info'  | 'light'
@@ -1562,7 +1563,15 @@ export interface WorkflowConfigFlowAlert{
       condition: string,
       [key: string]: any
     }>>,
-  }[]
+  }[],
+  /** 
+   * E verificado se alguma diferença na propriedade informada, se sim e dispardo um evento de atualização
+   * E esperado um array de ids no old e no new
+   * SUPORTE APENAS PARA FLOW-DATA
+   */
+  updates_ids?: {
+    path: string
+  },
 }
 export interface WorkflowConfigMenuGroupType{
   title: string,
