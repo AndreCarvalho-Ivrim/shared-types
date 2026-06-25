@@ -1,4 +1,5 @@
 import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
+import { FlowDataRequestFilter, QueryFilter } from "../services/flowData";
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { ReportAnalyticsFormatAndOrTranslate } from "./report.type";
@@ -1592,7 +1593,13 @@ export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfi
   request: 'generic-singleton',
   data: { ref: string }
 }
-export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton;
+export interface WorkflowConfigFlowAlertFnFlowData extends WorkflowConfigFlowAlertFnBase{
+  request: 'flow-datas',
+  data: {
+    filter: Omit<FlowDataRequestFilter, 'view_mode' | 'subOption'>
+  }
+}
+export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton | WorkflowConfigFlowAlertFnFlowData;
 export interface WorkflowConfigFlowAlertItem{
   /**
    * - indicator: são icones com tooltip para demonstrar estados como progresso/finalizado/falha. \
