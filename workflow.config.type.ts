@@ -1622,10 +1622,13 @@ export interface FlowDataRequestFilter{
   query?: QueryFilter[],
   pagination?: Pagination
 }
+interface FlowDataRequestFilterWithoutViewMode extends Omit<FlowDataRequestFilter, 'view_mode'>{
+  projection: Record<string, 1 | 0>,
+}
 export interface WorkflowConfigFlowAlertFnFlowData extends WorkflowConfigFlowAlertFnBase{
   request: 'flow-datas',
   data: {
-    filter: Omit<FlowDataRequestFilter, 'view_mode' | 'subOption'>
+    filter: FlowDataRequestFilterWithoutViewMode
   }
 }
 export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton | WorkflowConfigFlowAlertFnFlowData;
