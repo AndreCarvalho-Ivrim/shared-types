@@ -51,7 +51,7 @@ export type StepItemAttrMaskStringType = {
    **/
   optional?: boolean
 }
-export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info';
+export type ThemeColorType = 'primary' | 'success' | 'light' | 'danger' | 'warning' | 'info' | 'purple';
 export type TargetModeType = 'single' | 'multiple' | 'trigger' | 'final';
 export type StepItemModeType = 'field' | 'view' | 'widget' | 'integration';
 
