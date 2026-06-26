@@ -103,6 +103,7 @@ export interface FlowEntitySchemaInfo{
      * - $observer:\<variavel>: É uma variável observável alterada em tempo de execução
      */
     filter_condition?: string,
+    required_outhers?: string[],
   }
   required: boolean,
   unique?: boolean
