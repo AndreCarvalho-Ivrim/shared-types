@@ -64,6 +64,22 @@ export interface WorkflowConfigNotificationTargetType {
     target: string
   }[]
 }
+export interface WorkflowConfigNotificationEntityExtensiveType {
+  /** Entidade extensiva para pegar os emails */
+  entity_key: string,
+  /** Campo dentro da entidade que contém os emails */
+  target?: string,
+  conditional_targets?: {
+    condition: string
+    target: string
+  }[],
+  query: {
+    key: string,
+    static?: boolean,
+    value: string,
+    operator: 'eq' | 'ne'
+  }[]
+}
 export interface WorkflowConfigNotificationType {
   name: string,
   condition: string,
@@ -102,7 +118,7 @@ export interface WorkflowConfigNotificationType {
    * - 'path-to-contact'                Caminho para o registro dentro do flow_data.data que contenha 
    *                                    o contato
    */
-  target?: '@data_creator' | '@data_owner' | '@wf_owner' | '@group-permission:<N>' | string | WorkflowConfigNotificationTargetType,
+  target?: '@data_creator' | '@data_owner' | '@wf_owner' | '@group-permission:<N>' | string | WorkflowConfigNotificationTargetType | WorkflowConfigNotificationEntityExtensiveType,
   /** Segue as mesmas regras do target */
   conditional_targets?: { condition: string, target: string }[],
   default_target?: string[],
