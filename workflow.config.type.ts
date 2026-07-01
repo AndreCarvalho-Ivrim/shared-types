@@ -1529,6 +1529,7 @@ export interface WorkflowConfigFlowAlert{
   key: string,
   title: string,
   subtitle?: string,
+  render?: string,
   /** Se o valor for string se refere a uma strc, caso o contrário será considerado valor default */
   status: Partial<Record<(
     'danger' | 'warning' | 'success' | 'info'  | 'light'
@@ -1562,7 +1563,15 @@ export interface WorkflowConfigFlowAlert{
       condition: string,
       [key: string]: any
     }>>,
-  }[]
+  }[],
+  /** 
+   * E verificado se alguma diferença na propriedade informada, se sim e dispardo um evento de atualização
+   * E esperado um array de ids no old e no new
+   * SUPORTE APENAS PARA FLOW-DATA
+   */
+  updates_ids?: {
+    path: string
+  },
 }
 export interface WorkflowConfigMenuGroupType{
   title: string,
@@ -1592,7 +1601,46 @@ export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfi
   request: 'generic-singleton',
   data: { ref: string }
 }
-export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton;
+type SimpleFilter = {
+  ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[];
+  value: any;
+  type: WorkflowConfigFilterType['type'];
+  without_accentuation?: boolean;
+  group?: 'and' | 'or';      // quando esse filtro é filho de um grupo
+};
+type GroupFilter = {
+  group?: 'and' | 'or';
+  filters: (SimpleFilter | GroupFilter)[];
+};
+
+interface Pagination {
+  page: number,
+  limit: number
+}
+export type QueryFilter = SimpleFilter | GroupFilter;
+export interface FlowDataRequestFilter{
+  view_mode?: string,
+  excludeIds: string[],
+  dynamicOrderBy?: Record<string, 'asc' | 'desc'>
+  include?: { key: string, value: string },
+  subOption?: {
+    title: string,
+    slug: string,
+    [key: string]: any
+  },
+  query?: QueryFilter[],
+  pagination?: Pagination
+}
+interface FlowDataRequestFilterWithoutViewMode extends Omit<FlowDataRequestFilter, 'view_mode'>{
+  projection: Record<string, 1 | 0>,
+}
+export interface WorkflowConfigFlowAlertFnFlowData extends WorkflowConfigFlowAlertFnBase{
+  request: 'flow-datas',
+  data: {
+    filter: FlowDataRequestFilterWithoutViewMode
+  }
+}
+export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton | WorkflowConfigFlowAlertFnFlowData;
 export interface WorkflowConfigFlowAlertItem{
   /**
    * - indicator: são icones com tooltip para demonstrar estados como progresso/finalizado/falha. \
