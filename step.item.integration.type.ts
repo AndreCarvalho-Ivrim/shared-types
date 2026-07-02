@@ -218,7 +218,7 @@ export type HandlerPDFType = {
   key: string;
   /** Cada handler deve ter um identificador unico */
   identifier: string;
-  /** Nome de indentificação do handler */
+  /** Nome de identificação do handler */
   name: string
 }
 
