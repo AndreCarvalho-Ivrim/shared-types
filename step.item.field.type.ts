@@ -164,6 +164,10 @@ export interface StepItemType{
     hidden?: boolean | string,
     // Valida CNPJ
     validate_cnpj?: boolean,
+    // Valida CPF
+    validate_cpf?: boolean,
+    // Valida CPF ou CNPJ
+    validate_cpf_cnpj?: boolean,
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
