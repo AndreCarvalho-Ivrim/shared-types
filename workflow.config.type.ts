@@ -2051,6 +2051,8 @@ export interface IActionDataSegmentation {
   group_by_step_only?: boolean,
   // available_steps?(string[] : _ids): Faz com que a ação seja válida apenas para as etapas selecionadas
   available_steps: string[],
+  // only_action_keys?(string[] : action.key): Quando definido, restringe a ação múltipla a mostrar apenas os botões da etapa cujo key está nessa lista
+  only_action_keys?: string[],
 }
 export interface IActionDataMultipleAction {
   segmentations: IActionDataSegmentation[],
