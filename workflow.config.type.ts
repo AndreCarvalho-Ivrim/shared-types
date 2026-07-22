@@ -207,7 +207,9 @@ export type FlowNetworkAppendValues = Record<string, {
    *  _origin: origem (data do wf que fez a conexão) \
    *  _side: utilize para saber em qual lado está fazendo o append, 'target' ou 'origin'
    */
-  condition?: string
+  condition?: string,
+  /** overwrite (default) */
+  mode?: 'overwrite' | 'merge-array'
 }>
 export type FlowNetworkFormatters = 'parseArray' | `stringToObjectArray:${string}`;
 export interface FlowNetworkParams {
@@ -224,13 +226,21 @@ export interface FlowNetworkParams {
   },
   /** 
    * ``` { [data_id]: [target_id] } ``` 
-   * Se usar a notação ``` { ".": "." } ```, ou qualquer variação disso, estará fazendo \
+   * 
+   * - Se usar a notação ``` { ".": "." } ```, ou qualquer variação disso, estará fazendo \
    * referência a raiz do objeto (no caso o flowData.data)
    * 
-   * Caso esteja com a funcionalidade one_to_many, existirá o prefixo ```_parent.``` para \
+   * - Caso esteja com a funcionalidade one_to_many, existirá o prefixo ```_parent.``` para \
    * acessar dados que estão fora do array
    * 
-   * O lado esquerdo do match tem suporte aos codehelpers: \
+   * - É possível adicionar prefixo nas referências, como ```?``` do lado esquerdo para falar que \
+   * o append só será realizado se tiver um valor válido para adicionar, ou +[] do lado direito, para \
+   * falar que a inserção estará fazendo um push nos dados do outro lado no formato de array.
+   * 
+   * - É possível adicionar do lado esquerda ```??``` no meio de duas referências, para adicionar o primeiro \
+   * valor ou o segundo caso o primeiro não seja válido.
+   * 
+   * - O lado esquerdo do match tem suporte aos codehelpers: \
    * 
    * - \@find
    * 
