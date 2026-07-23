@@ -287,7 +287,16 @@ export interface StepActionApproverControlType {
   confirm?: StepActionConfirmType,
   append_values?: Record<string, {
     value: any
-  }>
+  }>,
+  /** Utilize main_item para acessar valores do item principal \
+   * Utilize main_item.is_main_selected para verificar se o item principal foi selecionado \
+   */
+  alter_main?: {
+    condition: string,
+    name: string,
+    value: string,
+    filter_condition?: string
+  }
 }
 export interface IActNotification {
   notify: string,
