@@ -164,6 +164,10 @@ export interface StepItemType{
     hidden?: boolean | string,
     // Valida CNPJ
     validate_cnpj?: boolean,
+    // Valida CPF
+    validate_cpf?: boolean,
+    // Valida CPF ou CNPJ
+    validate_cpf_cnpj?: boolean,
   },
   observer?: boolean,
   items?: ItemOrViewOrWidgetOrIntegration[],
@@ -245,13 +249,13 @@ export interface StepItemType{
     data?: any
   },
   customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | {
-    mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores',
+    mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores' | '@commercial-calculator',
     settings?: any
   },
   is_expanded?: boolean
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores' | '@commercial-calculator';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores', '@commercial-calculator'];
 export interface StepItemCustomDataSettings{
   mode: '@list',
   settings: {
