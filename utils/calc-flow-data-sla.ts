@@ -19,7 +19,7 @@ interface CalcSlaParams{
 interface CalcSlaResponse{
   timeToExpireSla: number | undefined,
   timeToExpireOutherFields: (number | undefined)[] | undefined,
-  closestToExpiration: number,
+  closestToExpiration: number | undefined,
   unit: 'day' | 'hour'
 }
 
@@ -98,7 +98,7 @@ export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:
       timeToExpireOutherFields = undefined
     }
 
-    const closestToExpiration = !timeToExpireOutherFields || timeToExpireOutherFields.length === 0 ? (timeToExpireSla ?? 0) : (timeToExpireOutherFields.filter(
+    const closestToExpiration = !timeToExpireOutherFields || timeToExpireOutherFields.length === 0 ? timeToExpireSla : (timeToExpireOutherFields.filter(
       (d) => d !== undefined
     ) as number[]).reduce((acc, curr) => {
       return Math.max(acc, curr);
