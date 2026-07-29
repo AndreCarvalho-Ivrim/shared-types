@@ -262,7 +262,9 @@ export interface StepType{
       }
     },
     /** Se true, irá adicionar um asterísco em todos campos obrigatórios */
-    asterisk_when_required?: boolean
+    asterisk_when_required?: boolean,
+    omit_navbar?: boolean,
+    omit_title?: boolean,
   }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
   sla?: StepSlaType,
