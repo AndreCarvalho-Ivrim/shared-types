@@ -17,9 +17,9 @@ interface CalcSlaParams{
   exceptionDays?: ExceptionDays[]
 }
 interface CalcSlaResponse{
-  timeToExpireSla: number,
+  timeToExpireSla: number | undefined,
   timeToExpireOutherFields: (number | undefined)[] | undefined,
-  closestToExpiration: number,
+  closestToExpiration: number | undefined,
   unit: 'day' | 'hour'
 }
 
@@ -37,7 +37,7 @@ export function getDataBySlaShortCode(key: string, data: Record<string, any>) {
 
 export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:CalcSlaParams) : (CalcSlaResponse | undefined) {
   try{
-    let timeToExpireSla: number = 0;
+    let timeToExpireSla: number | undefined = undefined;
     let unit: 'day' | 'hour' = 'day';
     const currentDate = new Date()
     currentDate.setHours(0, 0, 0, 0)
@@ -102,7 +102,7 @@ export function calcDaysToExpireSla({ step, flowData, workflow, exceptionDays }:
       (d) => d !== undefined
     ) as number[]).reduce((acc, curr) => {
       return Math.max(acc, curr);
-    }, timeToExpireSla);
+    }, (timeToExpireSla ?? 0));
 
     return {
       timeToExpireSla,
