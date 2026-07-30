@@ -1,3 +1,5 @@
+import { WorkflowConfigFilterType } from "../../workflow.config.type";
+
 export interface AnalysisGroupColumn{
   /**
    * Key do flow-data ou utilitários:
@@ -16,6 +18,7 @@ interface AnalysisGroupBase {
   key: string,
   title: string,
   columns: AnalysisGroupColumn[],
+  filter?: WorkflowConfigFilterType[]
 }
 
 export interface AnalysisGroupQuantityPerStep extends AnalysisGroupBase {
