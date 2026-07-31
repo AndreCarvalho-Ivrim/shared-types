@@ -107,6 +107,8 @@ export interface FlowEntitySchemaInfo{
   }
   required: boolean,
   unique?: boolean
+  /** Mensagem de erro exibida quando a validação de `unique` falhar. Se não informada, usa a mensagem genérica padrão. */
+  unique_error_message?: string
   rule?: {
     format_str?: {
       replace?: [string, string],
