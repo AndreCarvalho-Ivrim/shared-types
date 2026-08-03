@@ -142,8 +142,9 @@ export interface StepViewTasksType extends StepViewBaseType{
   type: 'tasks',
   /** Id do array de tarefas */
   id: string,
-  /** Id dentro do arrey referenciando o vencimento da tarefa */
+  /** Id dentro do array referenciando o vencimento da tarefa */
   expiration: string,
+  step_id?: string,
   resume: StepViewColumnType[],
   columns: StepViewColumnType[],
   /**
