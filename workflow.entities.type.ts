@@ -21,7 +21,7 @@ interface FlowEntityDataFilters {
 }
 export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom" | 'time' | 'file-multiple';
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
-export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
+export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md', 'uppercase-nfd'];
 export interface FlowEntitySubSchema{
   type: 'sub-schema',
   label: string,
@@ -71,7 +71,7 @@ export interface FlowEntitySchemaInfo{
    * front-end, e não permite atualização, apenas sobreescrita. Além \
    * de ter recursos de geração de token automática
    */
-  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe' | 'access-token' | 'percent',
+  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe' | 'access-token' | 'percent' | 'uppercase-nfd',
   condition_mask?: {
     type: StepViewAttrMaskType,
     condition: string,
