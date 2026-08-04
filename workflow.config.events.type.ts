@@ -454,3 +454,42 @@ export interface RelationshipWithFlowEntityEventEffect{
       always?: Record<string, any>
     }
   }
+
+/**
+ * Evento genérico de interpretação de documento via N8N.
+ * Não conhece estrutura de empresa (ex.: IA Tax). Os caminhos vêm em `params`.
+ *
+ * Exemplo de path com índice de array (padrão do projeto):
+ * `documentos.notas_de_venda[0].url`
+ */
+export interface InterpretInvoiceEventType {
+  /** URL base do N8N. Ex: https://ivrim.app.n8n.cloud */
+  baseUrl: string;
+  /** Path do webhook. Ex: /webhook/nf-analysis */
+  path: string;
+  /** De onde ler o arquivo dentro do `data` do flowData */
+  file: {
+    /** Caminho até a URL do arquivo. Ex: documento.url */
+    url_path: string;
+    /** Caminho até o nome do arquivo (opcional). Default: documento.pdf */
+    filename_path?: string;
+  };
+  effects: {
+    success: {
+      /** Onde gravar a interpretação retornada pelo N8N */
+      path_to_save_interpretation: string;
+      /** Onde gravar o status (opcional) */
+      path_to_save_status?: string;
+      /** Valor do status em sucesso. Ex: "concluida" */
+      status_value?: string;
+    };
+    fail: {
+      /** Onde gravar a mensagem de erro (opcional) */
+      path_to_save_error?: string;
+      /** Onde gravar o status (opcional) */
+      path_to_save_status?: string;
+      /** Valor do status em falha. Ex: "erro" */
+      status_value?: string;
+    };
+  };
+}
