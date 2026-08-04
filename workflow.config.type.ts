@@ -1406,11 +1406,17 @@ export interface WorkflowConfigVisualManagement {
   values: string[],
   translate?: Record<string, string>
 }
-interface WorkflowConfigBadge{
+export interface ViewModeBadge{
+  slug: string,
+  sub_option?: string,
+  amount: number,
+  tooltip?: string
+}
+export interface WorkflowConfigBadge{
   condition?: string,
   type: 'flow' | 'view-mode',
   keep_filter_scope?: boolean,
-  query: any,
+  query: Record<string, any>,
   tooltip?: {
     single: string,
     plural: string
