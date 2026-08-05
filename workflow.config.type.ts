@@ -666,7 +666,7 @@ export interface WorkflowViewModeFilterScope {
 export interface ViewModeOrderBy{
   ref: string,
   orientation?: 'desc' | 'asc',
-  /** Utilizado apenas quando ViewMode é do tipo kanban e deseja ter um tipo de ordenação diferente por coluna */
+  /** Utilizado quando ViewMode é do tipo kanban ou table e deseja ter um tipo de ordenação diferente por etapa (coluna no kanban) */
   available_steps?: string[]
 }
 export interface WorkflowViewModeBaseSubOptions {
