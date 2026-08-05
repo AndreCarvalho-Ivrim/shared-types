@@ -648,6 +648,33 @@ type WorkflowFilterScopeFilter = Record<string, string | {
    */
   value: any
 }>
+export interface WorkflowFilterScopeSearchType {
+  /** Por enquanto só suporta busca em flow-entities. Futuramente pode suportar flow-data etc. */
+  request: 'flow-entities',
+  /** [flow_id, entity_key], já resolvidos em tempo de config (ex: this.getId('workflow'), this.utils.flow_matrix_id) */
+  target: [string, string],
+  /**
+   * Query pra encontrar o(s) registro(s) na entidade alvo. Suporta o \
+   * shortcode \@user_id (id do usuário logado).
+   */
+  query: Record<string, any>,
+  effect: (
+    | { mode: 'fail', error_message: string }
+    | { mode: 'not-found', error_message: string }
+    | {
+      mode: 'success',
+      /**
+       * - find-first: pega o primeiro registro encontrado
+       * - find-last: pega o último registro encontrado
+       * - find-where:<strc>: pega o primeiro registro cuja string-conditional seja verdadeira
+       * - merge: combina todos os registros encontrados, cada campo vira um array com os valores de todos eles
+       */
+      handle_result: 'find-first' | 'find-last' | 'merge' | `find-where:${string}`,
+      /** Mesmo formato do WorkflowFilterScopeFilter, mas os shortcodes @[campo] resolvem contra o resultado da busca */
+      filter: WorkflowFilterScopeFilter
+    }
+  )[]
+}
 export interface WorkflowViewModeFilterScope {
   /**
    * String-conditional, com os hardcodes:
@@ -658,6 +685,7 @@ export interface WorkflowViewModeFilterScope {
    */
   condition?: string,
   filter?: Record<'$or', Array<WorkflowFilterScopeFilter>> | WorkflowFilterScopeFilter,
+  search?: WorkflowFilterScopeSearchType,
   /**
    * Se for true, e a condição for verdadeira, interrompera a validação dos próximos filtros
    */
@@ -666,7 +694,7 @@ export interface WorkflowViewModeFilterScope {
 export interface ViewModeOrderBy{
   ref: string,
   orientation?: 'desc' | 'asc',
-  /** Utilizado apenas quando ViewMode é do tipo kanban e deseja ter um tipo de ordenação diferente por coluna */
+  /** Utilizado quando ViewMode é do tipo kanban ou table e deseja ter um tipo de ordenação diferente por etapa (coluna no kanban) */
   available_steps?: string[]
 }
 export interface WorkflowViewModeBaseSubOptions {
