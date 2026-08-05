@@ -1434,9 +1434,26 @@ export interface WorkflowConfigVisualManagement {
   values: string[],
   translate?: Record<string, string>
 }
+export interface ViewModeBadge{
+  slug: string,
+  sub_option?: string,
+  amount: number,
+  tooltip?: string
+}
+export interface WorkflowConfigBadge{
+  condition?: string,
+  type: 'flow' | 'view-mode',
+  keep_filter_scope?: boolean,
+  query: Record<string, any>,
+  tooltip?: {
+    single: string,
+    plural: string
+  }
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
+  badges?: WorkflowConfigBadge[],
   exception_views?: WorkflowConfigExceptionView[],
   /**
    * A chave é o slug dos view_modes ou "painel-sla" para a tela de sla
