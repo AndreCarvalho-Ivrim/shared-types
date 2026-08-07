@@ -196,6 +196,7 @@ export interface StepViewTimelineType extends StepViewBaseType{
   /** Texto principal da entrada. default: { id: 'description' } */
   description?: StepViewTimelineSlotType,
   /** Campos adicionais exibidos em cada registro, além de data, responsável e descrição */
+  header?: StepViewColumnType[],
   fields?: StepViewColumnType[],
   /** Quantidade de registros exibidos por vez, antes do "Ver mais". default: 3 */
   per_page?: number,
@@ -206,7 +207,14 @@ export interface StepViewTimelineType extends StepViewBaseType{
   order_by?: {
     field: string,
     order: 'asc' | 'desc'
-  }
+  },
+  placeholders?: {
+    _empty_history?: string,
+    _trigger_form?: string,
+    description?: string,
+  },
+  /** Caso for falso, e não tiver nenhum registro e não tiver a prop addable ocultara o elemento */
+  required?: boolean
 }
 export interface StepViewListType extends StepViewBaseType{
   id: string,
