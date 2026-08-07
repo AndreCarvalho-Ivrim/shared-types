@@ -15,7 +15,7 @@ interface StepViewBaseType{
     render?: string,
   }
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'exception' | 'thumbnail';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'timeline' | 'exception' | 'thumbnail';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   description: 'Descrição',
   table: 'Tabela',
@@ -26,6 +26,7 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   markdown: 'Markdown',
   html: 'Conteúdo Customizado',
   tasks: 'Tarefas',
+  timeline: 'Timeline',
   exception: 'Exceção',
   thumbnail: 'Thumbnail'
 };
@@ -85,7 +86,7 @@ export interface StepViewColumnType{
    */
   data?: any
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType | StepViewThumbnailType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewTimelineType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType | StepViewThumbnailType;
 export type AdditionalTablesType = {
   label: string,
   columns: StepViewColumnType[],
@@ -158,6 +159,54 @@ export interface StepViewTasksType extends StepViewBaseType{
   }[]
   /** Se for required vai mostrar o item mesmo que não haja tasks */
   required?: boolean
+}
+/**
+ * Zona fixa da entrada da timeline(data, responsável, descrição). Mesma ideia \
+ * do [identifier]/[avatar] no resume do kanban: aponta para o campo do registro \
+ * que alimenta aquela zona, com o rótulo junto.
+ **/
+export interface StepViewTimelineSlotType{
+  /** Id do campo dentro do registro */
+  id: string,
+  /** Rótulo. Sem ele, o valor é exibido sem título */
+  name?: string
+}
+export interface StepViewTimelineType extends StepViewBaseType{
+  type: 'timeline',
+  /** Id do array de registros da timeline */
+  id: string,
+  /**
+   * Habilita a adição manual de registros. Quando desabilitado(default), a \
+   * timeline é somente leitura, sendo alimentada por observers/exceptions.
+   **/
+  addable?: boolean,
+  /**
+   * Etapa que carrega os campos do modal de adição de registros. Os items dela \
+   * devem ser prefixados pelo id do array(ex: history_contracts.description). \
+   * Sem step_id, a adição usa um campo simples de descrição.
+   **/
+  step_id?: string,
+  /** Data exibida no topo da entrada. default: { id: 'created_at' } */
+  date?: StepViewTimelineSlotType,
+  /**
+   * Responsável pela entrada. O valor do [id] é resolvido para o nome do \
+   * usuário. default: { id: 'user_id' }
+   **/
+  responsible?: StepViewTimelineSlotType,
+  /** Texto principal da entrada. default: { id: 'description' } */
+  description?: StepViewTimelineSlotType,
+  /** Campos adicionais exibidos em cada registro, além de data, responsável e descrição */
+  fields?: StepViewColumnType[],
+  /** Quantidade de registros exibidos por vez, antes do "Ver mais". default: 3 */
+  per_page?: number,
+  /**
+   * Ordenação dos registros. Quando não informado, ordena pelo campo do slot \
+   * [date] de forma decrescente, ou seja, do mais recente para o mais antigo.
+   **/
+  order_by?: {
+    field: string,
+    order: 'asc' | 'desc'
+  }
 }
 export interface StepViewListType extends StepViewBaseType{
   id: string,
