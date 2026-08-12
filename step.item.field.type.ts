@@ -16,7 +16,7 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   custom: 'Customizado'
 };
 
-export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'uppercase';
+export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'uppercase' | 'navbar';
 export const stepItemAttrMaskType : Record<StepItemAttrMaskType,string> = {
   email: 'E-mail',
   number: 'Número',
@@ -27,6 +27,8 @@ export const stepItemAttrMaskType : Record<StepItemAttrMaskType,string> = {
   cep: 'CEP',
   phone: 'Telefone',
   uppercase: 'Letras Maiúsculas',
+  /** Apenas para radio: renderiza as opções como barra de abas */
+  navbar: 'Barra de Abas',
 };
 export type StepItemAttrMaskDynamicType = {
   type: 'number',
@@ -282,6 +284,13 @@ export interface StepItemCustomDataEditableTable{
     readonly_if_fillable?: boolean,
     addable?: boolean,
     /**
+     * - table(default): linhas clicáveis, botão "+" no rodapé.
+     * - card: cada registro num card(primeira coluna em negrito, as \
+     * demais numa linha de apoio), com busca e botão de adicionar no \
+     * header — mesmo padrão da tela de Cliente do CRM.
+     **/
+    variant?: 'table' | 'card',
+    /**
      * Dividir uma coluna em N colunas, para acessar objeto interno
      */
     divide_columns?: Record<string, {
@@ -311,6 +320,8 @@ export interface StepItemCustomDataEditableTable{
     field_blacklist?: string[],
     disable_row_deletion?: boolean,
     disable_add_row?: boolean,
+    /** Remove as duas <hr> que separam o campo do resto do formulário(acima do label, abaixo do bloco) */
+    disable_separators?: boolean,
     restrictions?: EditableTableRestriction[]
   }
 }

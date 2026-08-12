@@ -265,6 +265,40 @@ export interface StepType{
     asterisk_when_required?: boolean,
     omit_navbar?: boolean,
     omit_title?: boolean,
+    /** Substitui o título do slide-over, que por padrão é o título da etapa */
+    custom_title?: string,
+    /**
+     * Controla onde o bloco de ações é renderizado. Sem esta configuração, \
+     * as ações seguem no rodapé e sem possibilidade de recolher.
+     **/
+    setting_actions?: {
+      /**
+       * default: bottom
+       * - bottom: bloco de ações empilhado no rodapé, ocupando a largura total.
+       * - header: ações compactas ao lado do título do slide-over. As \
+       * excedentes(além de max_visible_actions) vão para um menu dropdown.
+       **/
+      render_in?: 'bottom' | 'header',
+      /**
+       * Quantidade de ações da etapa exibidas diretamente. As excedentes vão \
+       * para um menu. Sem esta configuração, todas são exibidas.
+       **/
+      max_visible_actions?: number
+    },
+    /**
+     * Exibe o progresso do registro dentro do fluxo. Etapas stateless nunca \
+     * entram na contagem, por não fazerem parte do funil.
+     **/
+    progress_flow?: {
+      /** Ids de etapas que não entram na contagem(ex: perdido, standby) */
+      exclude_steps?: string[],
+      /** Exibe qual é a próxima etapa */
+      show_next_step?: boolean,
+      /** Exibe há quanto tempo o registro está na etapa atual */
+      show_changed_step_at?: boolean,
+      /** Exibe o nome da etapa atual */
+      show_step_title?: boolean
+    },
   }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
   sla?: StepSlaType,

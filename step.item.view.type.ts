@@ -15,7 +15,7 @@ interface StepViewBaseType{
     render?: string,
   }
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'timeline' | 'exception' | 'thumbnail';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'timeline' | 'group-views' | 'checklist' | 'exception' | 'thumbnail';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   description: 'Descrição',
   table: 'Tabela',
@@ -27,6 +27,8 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   html: 'Conteúdo Customizado',
   tasks: 'Tarefas',
   timeline: 'Timeline',
+  'group-views': 'Grupo de Itens',
+  checklist: 'Checklist',
   exception: 'Exceção',
   thumbnail: 'Thumbnail'
 };
@@ -86,7 +88,7 @@ export interface StepViewColumnType{
    */
   data?: any
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewTimelineType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType | StepViewThumbnailType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewTimelineType | StepViewGroupViewsType | StepViewChecklistType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType | StepViewThumbnailType;
 export type AdditionalTablesType = {
   label: string,
   columns: StepViewColumnType[],
@@ -216,12 +218,37 @@ export interface StepViewTimelineType extends StepViewBaseType{
   /** Caso for falso, e não tiver nenhum registro e não tiver a prop addable ocultara o elemento */
   required?: boolean
 }
+/**
+ * Agrupa itens sob um único bloco. O [rules.render] é avaliado no próprio \
+ * grupo, então os filhos não precisam saber de render condicional — é o que \
+ * permite usar o grupo como aba, inclusive com views que não tratam render.
+ **/
+export interface StepViewGroupViewsType extends StepViewBaseType{
+  type: 'group-views',
+  views: (ItemOrViewOrWidgetOrIntegration | string)[]
+}
+export interface StepViewChecklistItemType{
+  label: string,
+  /**
+   * Condição que marca o item como concluído. Aceita [$flow_data:] para o \
+   * registro salvo e [$] para o que está sendo preenchido em tela.
+   **/
+  condition: string,
+  /** Texto exibido quando pendente. default: Adicionar… */
+  action_label?: string
+}
+export interface StepViewChecklistType extends StepViewBaseType{
+  type: 'checklist',
+  items: StepViewChecklistItemType[],
+  /** Exibe contagem e barra de progresso no topo. default: true */
+  show_progress?: boolean
+}
 export interface StepViewListType extends StepViewBaseType{
   id: string,
   type: 'list',
   required?: boolean
 }
-export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar' | 'code';
+export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar' | 'code' | 'fieldset';
 export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
   'none':          'Sem máscara',
   'alert-danger':  'Alerta Perigo (Vermelho)',
@@ -230,7 +257,8 @@ export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
   'alert-light':   'Alerta Leve (Cinza Claro)',
   'alert-success': 'Alerta Sucesso (Verde)',
   'progress-bar':  'Barra de Progresso',
-  'code':          'Código'
+  'code':          'Código',
+  'fieldset':      'Separador de Seção'
 }
 
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
