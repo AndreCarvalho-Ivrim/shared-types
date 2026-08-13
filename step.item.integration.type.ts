@@ -216,9 +216,9 @@ export type HandlerPDFType = {
   columns: SubhandlerType[];
   /** Local onde será adicionado o valor */
   key: string;
-  /** Cada handler deve ter um indetificador unico */
+  /** Cada handler deve ter um identificador unico */
   identifier: string;
-  /** Nome de indentificação do handler */
+  /** Nome de identificação do handler */
   name: string
 }
 

@@ -223,7 +223,9 @@ export type FlowNetworkAppendValues = Record<string, {
    *  _origin: origem (data do wf que fez a conexão) \
    *  _side: utilize para saber em qual lado está fazendo o append, 'target' ou 'origin'
    */
-  condition?: string
+  condition?: string,
+  /** overwrite (default) */
+  mode?: 'overwrite' | 'merge-array'
 }>
 export type FlowNetworkFormatters = 'parseArray' | `stringToObjectArray:${string}`;
 export interface FlowNetworkParams {
@@ -240,13 +242,21 @@ export interface FlowNetworkParams {
   },
   /** 
    * ``` { [data_id]: [target_id] } ``` 
-   * Se usar a notação ``` { ".": "." } ```, ou qualquer variação disso, estará fazendo \
+   * 
+   * - Se usar a notação ``` { ".": "." } ```, ou qualquer variação disso, estará fazendo \
    * referência a raiz do objeto (no caso o flowData.data)
    * 
-   * Caso esteja com a funcionalidade one_to_many, existirá o prefixo ```_parent.``` para \
+   * - Caso esteja com a funcionalidade one_to_many, existirá o prefixo ```_parent.``` para \
    * acessar dados que estão fora do array
    * 
-   * O lado esquerdo do match tem suporte aos codehelpers: \
+   * - É possível adicionar prefixo nas referências, como ```?``` do lado esquerdo para falar que \
+   * o append só será realizado se tiver um valor válido para adicionar, ou +[] do lado direito, para \
+   * falar que a inserção estará fazendo um push nos dados do outro lado no formato de array.
+   * 
+   * - É possível adicionar do lado esquerda ```??``` no meio de duas referências, para adicionar o primeiro \
+   * valor ou o segundo caso o primeiro não seja válido.
+   * 
+   * - O lado esquerdo do match tem suporte aos codehelpers: \
    * 
    * - \@find
    * 
@@ -654,6 +664,33 @@ type WorkflowFilterScopeFilter = Record<string, string | {
    */
   value: any
 }>
+export interface WorkflowFilterScopeSearchType {
+  /** Por enquanto só suporta busca em flow-entities. Futuramente pode suportar flow-data etc. */
+  request: 'flow-entities',
+  /** [flow_id, entity_key], já resolvidos em tempo de config (ex: this.getId('workflow'), this.utils.flow_matrix_id) */
+  target: [string, string],
+  /**
+   * Query pra encontrar o(s) registro(s) na entidade alvo. Suporta o \
+   * shortcode \@user_id (id do usuário logado).
+   */
+  query: Record<string, any>,
+  effect: (
+    | { mode: 'fail', error_message: string }
+    | { mode: 'not-found', error_message: string }
+    | {
+      mode: 'success',
+      /**
+       * - find-first: pega o primeiro registro encontrado
+       * - find-last: pega o último registro encontrado
+       * - find-where:<strc>: pega o primeiro registro cuja string-conditional seja verdadeira
+       * - merge: combina todos os registros encontrados, cada campo vira um array com os valores de todos eles
+       */
+      handle_result: 'find-first' | 'find-last' | 'merge' | `find-where:${string}`,
+      /** Mesmo formato do WorkflowFilterScopeFilter, mas os shortcodes @[campo] resolvem contra o resultado da busca */
+      filter: WorkflowFilterScopeFilter
+    }
+  )[]
+}
 export interface WorkflowViewModeFilterScope {
   /**
    * String-conditional, com os hardcodes:
@@ -664,6 +701,7 @@ export interface WorkflowViewModeFilterScope {
    */
   condition?: string,
   filter?: Record<'$or', Array<WorkflowFilterScopeFilter>> | WorkflowFilterScopeFilter,
+  search?: WorkflowFilterScopeSearchType,
   /**
    * Se for true, e a condição for verdadeira, interrompera a validação dos próximos filtros
    */
@@ -672,7 +710,7 @@ export interface WorkflowViewModeFilterScope {
 export interface ViewModeOrderBy{
   ref: string,
   orientation?: 'desc' | 'asc',
-  /** Utilizado apenas quando ViewMode é do tipo kanban e deseja ter um tipo de ordenação diferente por coluna */
+  /** Utilizado quando ViewMode é do tipo kanban ou table e deseja ter um tipo de ordenação diferente por etapa (coluna no kanban) */
   available_steps?: string[]
 }
 export interface WorkflowViewModeBaseSubOptions {
@@ -1412,9 +1450,26 @@ export interface WorkflowConfigVisualManagement {
   values: string[],
   translate?: Record<string, string>
 }
+export interface ViewModeBadge{
+  slug: string,
+  sub_option?: string,
+  amount: number,
+  tooltip?: string
+}
+export interface WorkflowConfigBadge{
+  condition?: string,
+  type: 'flow' | 'view-mode',
+  keep_filter_scope?: boolean,
+  query: Record<string, any>,
+  tooltip?: {
+    single: string,
+    plural: string
+  }
+}
 export interface WorkflowConfigType {
   actions?: WorkflowConfigActionsType[],
   view_modes?: AvailableViewModesType[],
+  badges?: WorkflowConfigBadge[],
   exception_views?: WorkflowConfigExceptionView[],
   /**
    * A chave é o slug dos view_modes ou "painel-sla" para a tela de sla
@@ -1545,6 +1600,7 @@ export interface WorkflowConfigFlowAlert{
   key: string,
   title: string,
   subtitle?: string,
+  render?: string,
   /** Se o valor for string se refere a uma strc, caso o contrário será considerado valor default */
   status: Partial<Record<(
     'danger' | 'warning' | 'success' | 'info'  | 'light'
@@ -1578,7 +1634,15 @@ export interface WorkflowConfigFlowAlert{
       condition: string,
       [key: string]: any
     }>>,
-  }[]
+  }[],
+  /** 
+   * E verificado se alguma diferença na propriedade informada, se sim e dispardo um evento de atualização
+   * E esperado um array de ids no old e no new
+   * SUPORTE APENAS PARA FLOW-DATA
+   */
+  updates_ids?: {
+    path: string
+  },
 }
 export interface WorkflowConfigMenuGroupType{
   title: string,
@@ -1608,7 +1672,46 @@ export interface WorkflowConfigFlowAlertFnGenericSingleton extends WorkflowConfi
   request: 'generic-singleton',
   data: { ref: string }
 }
-export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton;
+type SimpleFilter = {
+  ref: WorkflowConfigFilterRefType | WorkflowConfigFilterRefType[];
+  value: any;
+  type: WorkflowConfigFilterType['type'];
+  without_accentuation?: boolean;
+  group?: 'and' | 'or';      // quando esse filtro é filho de um grupo
+};
+type GroupFilter = {
+  group?: 'and' | 'or';
+  filters: (SimpleFilter | GroupFilter)[];
+};
+
+interface Pagination {
+  page: number,
+  limit: number
+}
+export type QueryFilter = SimpleFilter | GroupFilter;
+export interface FlowDataRequestFilter{
+  view_mode?: string,
+  excludeIds: string[],
+  dynamicOrderBy?: Record<string, 'asc' | 'desc'>
+  include?: { key: string, value: string },
+  subOption?: {
+    title: string,
+    slug: string,
+    [key: string]: any
+  },
+  query?: QueryFilter[],
+  pagination?: Pagination
+}
+interface FlowDataRequestFilterWithoutViewMode extends Omit<FlowDataRequestFilter, 'view_mode'>{
+  projection: Record<string, 1 | 0>,
+}
+export interface WorkflowConfigFlowAlertFnFlowData extends WorkflowConfigFlowAlertFnBase{
+  request: 'flow-datas',
+  data: {
+    filter: FlowDataRequestFilterWithoutViewMode
+  }
+}
+export type WorkflowConfigFlowAlertFn = WorkflowConfigFlowAlertFnFlowEntity | WorkflowConfigFlowAlertFnGenericSingleton | WorkflowConfigFlowAlertFnFlowData;
 export interface WorkflowConfigFlowAlertItem{
   /**
    * - indicator: são icones com tooltip para demonstrar estados como progresso/finalizado/falha. \
@@ -2009,6 +2112,8 @@ export interface IActionDataSegmentation {
   group_by_step_only?: boolean,
   // available_steps?(string[] : _ids): Faz com que a ação seja válida apenas para as etapas selecionadas
   available_steps: string[],
+  // only_action_keys?(string[] : action.key): Quando definido, restringe a ação múltipla a mostrar apenas os botões da etapa cujo key está nessa lista
+  only_action_keys?: string[],
 }
 export interface IActionDataMultipleAction {
   segmentations: IActionDataSegmentation[],

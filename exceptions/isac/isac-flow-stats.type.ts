@@ -1,3 +1,5 @@
+import { WorkflowConfigFilterType } from "../../workflow.config.type";
+
 export interface AnalysisGroupColumn{
   /**
    * Key do flow-data ou utilitários:
@@ -11,11 +13,14 @@ export interface AnalysisGroupColumn{
    */
   name: string
   formating?: 'percent'
+  /** Label exibido quando o valor da coluna vier vazio/nulo (ex. agrupamento sem valor definido) */
+  emptyLabel?: string
 }
 interface AnalysisGroupBase {
   key: string,
   title: string,
   columns: AnalysisGroupColumn[],
+  filter?: WorkflowConfigFilterType[]
 }
 
 export interface AnalysisGroupQuantityPerStep extends AnalysisGroupBase {

@@ -119,6 +119,10 @@ export interface StepTypeRules{
    * 
    * - [enable-flow-alert-listeners]: Ativa o listener de um ou mais alertas do workflow. Para este efeito é 
    * obrigatório informar a prop keys no objeto de configuração com a chave dos alerts que quer habilitar
+   * 
+   * - [trigger-flow-alert]: Chama um flow-alert. Para este efeito, você deve passar a key do flow-alert e escolher \
+   * a action = open/start. Caso você não tenha a key exata, pode passar o shortcode \@visible, que irá habilitar o \
+   * primeiro flow-alert visível.
    * */
   effects?: StepTypeRulesEffects,
   /**
@@ -258,7 +262,9 @@ export interface StepType{
       }
     },
     /** Se true, irá adicionar um asterísco em todos campos obrigatórios */
-    asterisk_when_required?: boolean
+    asterisk_when_required?: boolean,
+    omit_navbar?: boolean,
+    omit_title?: boolean,
   }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
   sla?: StepSlaType,
