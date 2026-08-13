@@ -1,14 +1,59 @@
 import { StringConditionalTypes } from "..";
 import { getRecursiveValue, replaceAll } from "./recursive-datas";
 
+export type StrcOperators = 
+  'eq'       |
+  'eqi'      |
+  'lt'       |
+  'lte'      |
+  'gt'       |
+  'gte'      |
+  'in'       |
+  'nin'      |
+  'not'      |
+  'filled'   |
+  'contains' |
+  'like'     |
+  'likei'    |
+  'nlike'    |
+  'nlikei'
+;
+export const availableOperators : Record<StrcOperators, string> = {
+  'eq':       'Igual à',
+  'eqi':      'Igual à (ignorando Maiúscula e Minúscula)',
+  'lt':       'Menor que',
+  'lte':      'Menor ou igual à',
+  'gt':       'Maior que',
+  'gte':      'Maior ou igual à',
+  'in':       'Está incluso em',
+  'nin':      'Não está incluso em',
+  'not':      'É diferente de',
+  'filled':   'O número de itens da lista é',
+  'contains': 'A lista contém o valor',
+  'like':     'O texto inclui',
+  'likei':    'O texto inclui (ignorando Maiúscula e Minúscula)',
+  'nlike':    'O texto não inclui',
+  'nlikei':   'O texto não inclui (ignorando Maiúscula e Minúscula)',
+}
+/**
+ * Além do and e or, existem as variações and/or-begin and/or-end
+ * para fazer o funcionamento de parenteses para controlar prescendencia,
+ * mas essas variações estão em teste beta, antes de entrar no painel de condições
+ */
+export type StrcLogicOperators = 'and' | 'or';
+export const availableLogicOperators : Record<StrcLogicOperators, string> = {
+  and: 'E',
+  or: 'Ou'
+}
+
 export const handleStringConditionalExtendingFlowData = (conditional: string, data: Record<string, any>, flow_data: { data: any, [key: string]: any }, prefix: 'flow_data' | 'observer' = 'flow_data') => {
   const pattern = prefix === 'flow_data' ? /\$flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
   const matches = conditional.split(/(?<!\\);/).reduce((acc, curr) => {
-    if (curr.includes('@findIndex')) {
+    if (curr.includes('@findIndex') || curr.includes('@every')) {
       const helpers = getCodeHelpers(conditional);
       const patternFind = prefix === 'flow_data' ? /flow_data:([^ ]+)/g : /\$observer:([^ ]+)/g;
       (helpers ?? []).forEach(([code, param]) => {
-        if (code === '@findIndex' && param) {
+        if (['@findIndex', '@every'].includes(code) && param) {
           const [arrayPath, conditionFind] = param.split(',') ?? [];
           const arrayPathMatches = arrayPath 
             ? [...(arrayPath.matchAll(patternFind) ?? [])]
@@ -55,6 +100,54 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
   )
   return data;
 }
+//#region STRC
+interface ConditionTypeAndValue{
+  type: StringConditionalTypes,
+  value: string
+}
+const strcToConditionArray = (strc: string) : Array<ConditionTypeAndValue> => {
+  return strc.split(/(?<!\\);/).filter(c => c.length > 0).map((c) => {
+    let identifier = c.substring(0, 1);
+    return {
+      type:
+        identifier === '$' ? 'prop' :
+          identifier === '#' ? 'operator' :
+            identifier === '*' ? 'value' :
+              identifier === '&' ? 'logic' : undefined,
+      value: c.substr(1, c.length - 1)
+    } as {
+      type: StringConditionalTypes | undefined,
+      value: string
+    };
+  }).filter(c => c.type !== undefined) as {
+    type: StringConditionalTypes,
+    value: string
+  }[];
+}
+const groupConditionsByUnion = (condition: ConditionTypeAndValue[], strConditional: string, conditionalName: string) => {
+  const unionConditionals: string[] = [];
+  const groupConditionals: Array<{
+    type: StringConditionalTypes,
+    value: string
+  }[]> = [];
+
+  condition.forEach((c) => {
+    if (c.type === 'logic') {
+      unionConditionals.push(c.value);
+      return;
+    }
+
+    let unionLen = unionConditionals.length;
+    if (groupConditionals[unionLen]) groupConditionals[unionLen].push(c);
+    else groupConditionals[unionLen] = [c];
+  });
+
+  if (unionConditionals.length !== 0 && (unionConditionals.length + 1) !== groupConditionals.length) throw new Error(
+    `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de uniões e grupos não está dentro do esperado. (${strConditional})`
+  );
+
+  return { unionConditionals, groupConditionals }
+}
 /**
  * Condicionais descritas em string, com separador ponto e vírgula. Para explicar a função \
  * de cada bloco da condicional, é necessário iniciar com um préfixo:
@@ -83,6 +176,10 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  * - not
  * - filled (exclusivo para arrays)
  * - contains (exclusivo para arrays)
+ * - like
+ * - likei
+ * - nlike
+ * - nlikei
  * 
  * **Operadores Lógicos**
  * - and
@@ -105,49 +202,11 @@ export const handleSTRCExtendingFlowDataAndObserver = (conditional: string, data
  *  exemplo: __@every(managers,$approved\\;#eq\\;*true)__;#eq;*true - A condição do codeHealper permanecerar
  */
 export const checkStringConditional = (strConditional: string, datas: Record<string, any>, conditionalName = 'anonymous'): boolean => {
-  let condition: {
-    type: StringConditionalTypes,
-    value: string
-  }[] = strConditional.split(/(?<!\\);/).filter(c => c.length > 0).map((c) => {
-    let identifier = c.substring(0, 1);
-    return {
-      type:
-        identifier === '$' ? 'prop' :
-          identifier === '#' ? 'operator' :
-            identifier === '*' ? 'value' :
-              identifier === '&' ? 'logic' : undefined,
-      value: c.substr(1, c.length - 1)
-    } as {
-      type: StringConditionalTypes | undefined,
-      value: string
-    };
-  }).filter(c => c.type !== undefined) as {
-    type: StringConditionalTypes,
-    value: string
-  }[];
+  let condition = strcToConditionArray(strConditional);
   
   if (condition.length === 0) return false;
 
-  const unionConditionals: string[] = [];
-  const groupConditionals: Array<{
-    type: StringConditionalTypes,
-    value: string
-  }[]> = [];
-
-  condition.forEach((c) => {
-    if (c.type === 'logic') {
-      unionConditionals.push(c.value);
-      return;
-    }
-
-    let unionLen = unionConditionals.length;
-    if (groupConditionals[unionLen]) groupConditionals[unionLen].push(c);
-    else groupConditionals[unionLen] = [c];
-  });
-
-  if (unionConditionals.length !== 0 && (unionConditionals.length + 1) !== groupConditionals.length) throw new Error(
-    `[string-conditional: ${conditionalName}]: Padrão de condicional fora do esperado. Proporção de uniões e grupos não está dentro do esperado. (${strConditional})`
-  );
+  const { groupConditionals, unionConditionals } = groupConditionsByUnion(condition, strConditional, conditionalName);
 
   const callbackOperator = (val_1: string | number | boolean | any[], val_2: string | number | boolean | any[], operator: string) => {
     //#region HANDLE POSSIBLE BOOL
@@ -199,6 +258,10 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
         return !val_2.includes(String(val_1));
       case 'not': return val_1 !== val_2;
+      case 'like': return String(val_1).includes(String(val_2));
+      case 'likei': return String(val_1).toLowerCase().includes(String(val_2).toLowerCase());
+      case 'nlike': return !String(val_1).includes(String(val_2));
+      case 'nlikei': return !String(val_1).toLowerCase().includes(String(val_2).toLowerCase());
     }
     return false;
   }
@@ -306,7 +369,9 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                       value = 'false';
                       break;
                     }
-                    const [pathArray, condition] = param.split(',');
+                    const parts = param.split(',');
+                    const pathArray = parts[0];
+                    const condition = parts.slice(1).join(',');
                     if (!pathArray || !condition) {
                       value = 'false';
                       break;
@@ -326,6 +391,38 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
                     const stringPattern = `__@every(${pathArray},${condition})__`;
                     value =  replaceAll(value, stringPattern, String(everyonePassed));
+                    break;
+                  case '@some':
+                    if (!param) {
+                      value = 'false';
+                      break;
+                    }
+                    const commaIndexSome = param.indexOf(',');
+                    if (commaIndexSome === -1) {
+                      value = 'false';
+                      break;
+                    }
+                    const pathArraySome = param.substring(0, commaIndexSome);
+                    const conditionSome = param.substring(commaIndexSome + 1);
+                    if (!pathArraySome || !conditionSome) {
+                      value = 'false';
+                      break;
+                    }
+                    const getArraySome = getRecursiveValue(pathArraySome, { data: datas });
+                    if (!Array.isArray(getArraySome)) {
+                      value = 'false';
+                      break;
+                    }
+                    const somePassed = getArraySome.some(arrData => {
+                      if (arrData === null || typeof arrData !== 'object' || Array.isArray(arrData)) {
+                        return false;
+                      }
+                      const normalizedCondition = conditionSome.replace(/\\\\;/g, '\\;');
+                      return checkStringConditional(normalizedCondition, { ...datas, this: arrData });
+                    });
+
+                    const stringPatternSome = `__@some(${pathArraySome},${conditionSome})__`;
+                    value = replaceAll(value, stringPatternSome, String(somePassed));
                     break;
                   case '@findIndexLast':
                     if (!param) {
@@ -353,6 +450,58 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
 
                     if (!searchParamFind) value =  replaceAll(value, searchPatternReverse, String(indexReal));
                     else value = replaceAll(value, searchPatternReverse, String(arrayBase[indexReal][searchParamFind]));
+                    break;
+                  case '@formatDate': 
+                    if (!param) break;
+                    const commaIndex = param.indexOf(',');
+                    if (commaIndex === -1) break;
+
+                    const fieldPath = param.substring(0, commaIndex);
+                    const format = param.substring(commaIndex + 1);
+                    const rawValue = getRecursiveValue(fieldPath, { data: datas });
+
+                    let formatted = '';
+                    
+                    if (rawValue) {
+                      try {
+                        let date: Date;
+                        if (typeof rawValue === 'number') {
+                          date = new Date(rawValue);
+                        } 
+                        else if (typeof rawValue === 'string') {
+                          date = new Date(rawValue);
+                        } 
+                        else if (rawValue instanceof Date) {
+                          date = rawValue;
+                        }
+                        else {
+                          date = new Date(rawValue);
+                        }
+                        if (!isNaN(date.getTime())) {
+                          formatted = formatDateNative(date, format);
+                        } else {
+                          console.warn(`[formatDate] Data inválida: ${rawValue}`);
+                        }
+                        
+                      } catch (error) {
+                        console.error(`[formatDate] Erro ao formatar data: ${rawValue}`, error);
+                      }
+                    }
+
+                    const stringPatternFormatDate = `__${code}(${param})__`;
+                    value = replaceAll(value, stringPatternFormatDate, formatted);
+                    break;
+                  case 'len':
+                    if (!param){
+                      value = '';
+                      break;
+                    }
+
+                    let parsedParam = getRecursiveValue(param, { data: datas });
+                    let arr = parsedParam;
+
+                    if (!Array.isArray(arr)) value = typeof arr === 'string' ? String(arr.length) : '';
+                    else value = String(arr.length);
                     break;
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
@@ -494,10 +643,11 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
     console.error(e);
     return false;
   }
-};
+}
+//#endregion STRC
 export const makeStrc = (arrStrc: Array<{
   '$'?: string,
-  '#'?: 'eq' | 'eqi' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains',
+  '#'?: 'eq' | 'eqi' |'lt' |'lte' |'gt' |'gte' |'in' |'nin' |'not' |'filled' | 'contains' | 'like' | 'likei' | 'nlike' | 'nlikei',
   '*'?: string,
   /** Se o -end for mais de 2 fechamentos use o as any para ignorar o erro de tipagem */
   '&'?: 'and' | 'or' | 'and-begin' | 'or-begin' | 'and-end' | 'or-end' | 'and-end-end' | 'or-end-end'
@@ -509,6 +659,80 @@ export const makeStrc = (arrStrc: Array<{
     if(strc['&']) return `&${strc['&']}`;
   }).join(';')
 }
+
+//#region STRC TO QUERY
+const parseStrcOperatorToMongoDBOperator = (op: StrcOperators, value: string) => {
+  switch(op){
+    case 'eq':  return value;
+    case 'eqi': return { $regex: `^${value}$`, $options: 'i' };
+    case 'lt':  return { $lt:  value };
+    case 'lte': return { $lte: value };
+    case 'gt':  return { $gt:  value };
+    case 'gte': return { $gte: value };
+    case 'in':  return { $in:  value.split(',') };
+    case 'nin': return { $nin: value.split(',') };
+    case 'not': return { $ne: value };
+    case 'filled': 
+      if(value.includes('>') || value.includes('<')) throw new Error(
+        'Não á suporte para operadores de maior ou menor na comparação de tamanho do mongodb'
+      )
+      return { $size: Number(value) };
+    case 'contains': value;
+    case 'like': return { $regex: value };
+    case 'likei': return { $regex: value, $options: 'i' };
+    case 'nlike': return { $not: { $regex: value } };
+    case 'nlikei': return { $not: { $regex: value, $options: 'i' } };
+  }
+
+}
+export const strcToQuery = (strc: string) => {
+  if(typeof strc !== 'string') return {};
+
+  if(strc.includes('and-begin') || strc.includes('or-begin')) throw new Error(
+    'Ainda não há suporte a controle de precedência'
+  )
+
+  let condition = strcToConditionArray(strc);
+
+  const { groupConditionals, unionConditionals } = groupConditionsByUnion(condition, strc, 'anonymous');
+
+  const makeQuery = (
+    groupConditionals: { type: StringConditionalTypes, value: string }[][],
+    unionConditionals: string[],
+    query: any
+  ) => {
+    for(const [i, condition] of groupConditionals.entries()){
+      if(condition.length !== 3 || condition[0].type !== 'prop' || condition[2].type !== 'value') throw new Error(
+        'Formato não suportado para converter em query, é esperado que a ordem da expressão seja: [propriedade, operador, valor]'
+      );
+  
+      query[condition[0].value] = parseStrcOperatorToMongoDBOperator(
+        condition[1].value as StrcOperators,
+        condition[2].value
+      );
+      
+      if(unionConditionals[i] === 'or'){
+        query = {
+          $or: [
+            query,
+            makeQuery(
+              groupConditionals.slice(i + 1),
+              unionConditionals.slice(i + 1),
+              {}
+            )
+          ]
+        }
+        break;
+      }
+    }
+    return query;
+  }
+
+  let query = makeQuery(groupConditionals, unionConditionals, {});
+  
+  return query;
+}
+//#endregion STRC TO QUERY
 /**
  * Lida com shortcodes do tipo \@[\<variavel>]
  * 
@@ -611,10 +835,11 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
   var replacer = '';
 
   //#region HELPERS
-  const chars = ['isostring', 'Y', 'y', 'm', 'd', 'h', 'i', 's']
+  const chars = ['timestamp', 'isostring', 'Y', 'y', 'm', 'd', 'h', 'i', 's']
   const replaceDateChar = (p: string, value: string, date: Date) => {
     let replacer = '';
     if (p === 'isostring') replacer = String(date.toISOString());
+    else if (p === 'timestamp') replacer = String(date.getTime());
     else if (p === 'Y') replacer = String(date.getFullYear());
     else if (p === 'y') replacer = String(date.getFullYear() - 2000);
     else if (p === 'm') replacer = String(date.getMonth() + 1).padStart(2, '0');
@@ -704,6 +929,35 @@ export const handleCodeHelper__now = (value: string, code: string, param?: strin
 
   return replaceAll(value, searchValue, replacer);
 }
+const formatDateNative = (date: Date, format: string): string => {
+  const map: Record<string, string> = {
+    'YYYY': date.getFullYear().toString(),
+    'YY': (date.getFullYear() % 100).toString().padStart(2, '0'),
+    'MM': (date.getMonth() + 1).toString().padStart(2, '0'),
+    'M': (date.getMonth() + 1).toString(),
+    'DD': date.getDate().toString().padStart(2, '0'),
+    'D': date.getDate().toString(),
+    'HH': date.getHours().toString().padStart(2, '0'),
+    'H': date.getHours().toString(),
+    'hh': (date.getHours() % 12 || 12).toString().padStart(2, '0'),
+    'h': (date.getHours() % 12 || 12).toString(),
+    'mm': date.getMinutes().toString().padStart(2, '0'),
+    'm': date.getMinutes().toString(),
+    'ss': date.getSeconds().toString().padStart(2, '0'),
+    's': date.getSeconds().toString(),
+    'A': date.getHours() >= 12 ? 'PM' : 'AM',
+    'a': date.getHours() >= 12 ? 'pm' : 'am',
+    'X': Math.floor(date.getTime() / 1000).toString(),
+    'x': date.getTime().toString()
+  };
+  
+  let result = format;
+  for (const [key, value] of Object.entries(map)) {
+    result = result.replace(new RegExp(key, 'g'), value);
+  }
+  
+  return result;
+};
 export const handleCodeHelper__diffInDays = ({ data, param, value }:{ value: string, param: string, data: any }) => {
   const code = '@diffInDays';
   
@@ -1109,6 +1363,7 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
             return 0;
           });
           break;
+        case '@nowObject': returnValue = new Date() as any; break;
         default: 
           returnValue = 1;
           if(avHandleCodeHelpers.includes(code)){
@@ -1147,3 +1402,55 @@ export const isMatchCaseInsensitiveWithoutAccentuation = (matchs: string[], valu
   const normalizedMessage = normalizeText(value);
   return matchs.some(match => normalizeText(match) === normalizedMessage);
 }
+export const handleLinearArithmetic = (params: string, data: any) => {
+  let expression = params.trim();
+  let roundDigits: number | undefined;
+
+  // Parâmetro opcional: @ROUND:n (ex.: industry.validity.in_day*0.6@ROUND:0)
+  const roundMatch = expression.match(/@ROUND\s*:\s*(-?\d+)/i);
+  if (roundMatch) {
+    roundDigits = Number(roundMatch[1]);
+    if (Number.isNaN(roundDigits)) roundDigits = undefined;
+    else roundDigits = Math.max(0, roundDigits);
+
+    expression = expression.replace(/@ROUND\s*:\s*-?\d+/ig, '').trim();
+  }
+
+  const values = expression.split(/[+\-*/]/); 
+  const operators = expression.match(/[+\-*/]/g) || [];
+
+  const parsedValues = values.map((v) => {
+    let parsed = v.trim();
+
+    if (isNaN(Number(parsed))) {
+      const newValue = getRecursiveValue(parsed, { data });
+
+      if (isNaN(Number(newValue))) {
+        throw new Error(`O valor "${parsed}" não é um número e não pôde ser resolvido a partir dos dados`);
+      }
+      return Number(newValue);
+    } 
+    
+    return Number(parsed);
+  });
+
+  let finalResult = parsedValues[0];
+
+  for (let i = 0; i < operators.length; i++) {
+    const operator = operators[i];
+    
+    const nextValue = parsedValues[i + 1];
+
+    if (operator === '+') finalResult += nextValue;
+    if (operator === '-') finalResult -= nextValue;
+    if (operator === '*') finalResult *= nextValue;
+    if (operator === '/') finalResult /= nextValue;
+  }
+
+  if (roundDigits !== undefined) {
+    const factor = 10 ** roundDigits;
+    finalResult = Math.round((finalResult + Number.EPSILON) * factor) / factor;
+  }
+
+  return finalResult;
+};

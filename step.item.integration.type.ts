@@ -1,3 +1,5 @@
+import { StepItemCustomList, StepItemCustomListDraggable, StepItemType } from ".";
+
 export type IntegrationTypeType = 'excel' | 'pdf' | 'omie';
 export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   excel: 'Excel (Importação)',
@@ -5,8 +7,8 @@ export const integrationTypeFormatted: Record<IntegrationTypeType, string> = {
   pdf: 'PDF'
 };
 
-export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj';
-export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'time', 'datetime', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj'];
+export type IntegrationExcelColumnTypeType = 'text' | 'date' | 'time' | 'datetime' | 'email' | 'phone' | 'percent' | 'money' | 'number' | 'cpf-cnpj' | 'thumbnail' | 'custom';
+export const integrationExcelColumnType: IntegrationExcelColumnTypeType[] = ['text', 'date', 'time', 'datetime', 'email', 'phone', 'percent', 'money', 'number', 'cpf-cnpj', 'thumbnail', 'custom'];
 export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnTypeType, string> = {
   text: 'Texto',
   date: 'Data',
@@ -17,7 +19,9 @@ export const integrationExcelColumnTypeFormatted: Record<IntegrationExcelColumnT
   percent: 'Percentual',
   money: 'Moeda',
   number: 'Numérico',
-  'cpf-cnpj': 'CPF/CNPJ'
+  'cpf-cnpj': 'CPF/CNPJ',
+  'thumbnail': 'thumbnail',
+  custom: 'Customizado'
 };
 
 export interface IntegrationExcelRulesFormatterType{
@@ -57,7 +61,8 @@ export interface IntegrationExcelType {
     formatter?: IntegrationExcelRulesFormatterType,
     /** Filtra os dados de importação */
     filters?: IntegrationExcelFilterRule[],
-    is_update?: boolean
+    is_update?: boolean,
+    accumulate_errors?: boolean
   },
   scope: string,
   columns?: IntegrationExcelColumnType[],
@@ -105,7 +110,17 @@ export interface IntegrationExcelType {
     required_associations?: (string | string[] | {
       condition: string,
       ref: string | string[]
-    })[]
+    })[],
+    validate_fields?: {
+      validate_type?: 'all' | string[];
+      valid_options?: {
+        id: string,
+        options?: { value: string, name: string }[],
+        autocomplete?: StepItemType['autocomplete'],
+        is_multiple?: true,
+        separator?: ',',
+      }[],
+    }
   }
   append_values?: Record<string, any>,
   /**
@@ -130,13 +145,18 @@ export interface IntegrationExcelColumnType {
   required?: boolean,
   rules?: {
     condition?: string,
+    outher_values?: string[],
     /**
      * Modificadores de string, é um array de substituições, onde \
      * cada substituição é composta por duas strings, a str de pesquisa \
      * e o valor a ser substituido.
      */
     str_replacers?: Array<[string, string]>
-  }
+  },
+  customData?: StepItemCustomListDraggable | StepItemCustomList | {
+      mode: "@list-draggable";
+      settings?: any;
+  } | undefined
 }
 export interface IntegrationOmieType {
   key: string,
@@ -196,9 +216,9 @@ export type HandlerPDFType = {
   columns: SubhandlerType[];
   /** Local onde será adicionado o valor */
   key: string;
-  /** Cada handler deve ter um indetificador unico */
+  /** Cada handler deve ter um identificador unico */
   identifier: string;
-  /** Nome de indentificação do handler */
+  /** Nome de identificação do handler */
   name: string
 }
 

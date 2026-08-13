@@ -1,6 +1,7 @@
 import { AvailableIcons } from "./icon.type";
+import { StepItemAttrMaskDynamicType, StepItemAttrMaskStringType } from "./step.item.field.type";
 import { StepViewAttrMaskType } from "./step.item.view.type";
-import { WorkflowConfigFilterRefType, WorkflowConfigFilterType, WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
+import { WorkflowConfigActionsType, WorkflowConfigFilterRefType, WorkflowConfigFilterType, WorkflowConfigObserverFnType, WorkflowViewModeDashboardModuleBlock } from "./workflow.config.type";
 
 interface FlowEntityDataFilters {
   "_key"?: string,
@@ -18,9 +19,9 @@ interface FlowEntityDataFilters {
     group?: 'and' | 'or'
   }[]
 }
-export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom" | 'time';
+export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom" | 'time' | 'file-multiple';
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
-export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md'];
+export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md', 'uppercase-nfd'];
 export interface FlowEntitySubSchema{
   type: 'sub-schema',
   label: string,
@@ -70,7 +71,7 @@ export interface FlowEntitySchemaInfo{
    * front-end, e não permite atualização, apenas sobreescrita. Além \
    * de ter recursos de geração de token automática
    */
-  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe' | 'access-token' | 'percent',
+  mask?: 'email' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'url' | 'whatsapp-md' | 'image-url' | 'hidden' | 'iframe' | 'access-token' | 'percent' | 'uppercase-nfd',
   condition_mask?: {
     type: StepViewAttrMaskType,
     condition: string,
@@ -93,10 +94,21 @@ export interface FlowEntitySchemaInfo{
     /** Valida se o valor inserido na importação existe na base do autocomplete */
     restricted?: boolean,
     /** Adiciona uma opção no final para adicionar registro na base  informada */
-    add_more_options?: boolean
+    add_more_options?: boolean,
+    /**
+     * String condition, para filtrar os dados do autocomplete. \
+     * Para acessar variáveis considere que:
+     * - $\<variavel>: É uma variável dentro do valor retornado
+     * - $flow_data:\<variavel>: É uma variável dentro do flow_data
+     * - $observer:\<variavel>: É uma variável observável alterada em tempo de execução
+     */
+    filter_condition?: string,
+    required_outhers?: string[],
   }
   required: boolean,
   unique?: boolean
+  /** Mensagem de erro exibida quando a validação de `unique` falhar. Se não informada, usa a mensagem genérica padrão. */
+  unique_error_message?: string
   rule?: {
     format_str?: {
       replace?: [string, string],
@@ -124,7 +136,8 @@ export interface FlowEntitySchemaInfo{
     settings?: any
   },
   rules?: FlowEntitySchemaInfoRule,
-  observer?: boolean
+  observer?: boolean,
+  dynamic_mask?: StepItemAttrMaskDynamicType | StepItemAttrMaskStringType,
 }
 export interface FlowEntityAssociationColumns{
   name: string,
@@ -153,6 +166,37 @@ export interface FlowEntityImportSheet{
    */
     identifier: string[]
   },
+  preprocess?: {
+    /** Caso queira salvar a ordem e nome das colunas, especifique o nome da prop que armazenará esses dados */
+    save_order_columns?: string,
+    /** Caso queira salvar dados não conhecidos, especifique o nome da prop que armazerá esses dados */
+    save_outher_fields?: string,
+    /**
+     * Caso haja campos opcionais e que precisem obrigatoriamente ser associados, marcar essa opção.
+     * 
+     * Se a posição do array for um array em vez de string quer dizer que pelo menos um dos valores \
+     * deve ser válido. Exemplo:
+     * 
+     * ``` required_associations: ['field-1', ['field-2', 'field-3']] ```
+     * 
+     * Isso quer dizer que o field-1 é obrigatório, e que é obrigatório preencher o field-2 ou field-3
+     **/
+    required_associations?: (string | string[] | {
+      condition: string,
+      ref: string | string[]
+    })[],
+    validate_fields?: {
+      validate_type?: 'all' | string[];
+      valid_options?: {
+        id: string,
+        options?: { value: string, name: string }[],
+        autocomplete?: FlowEntitySchemaInfo['autocomplete'],
+        is_multiple?: true,
+        separator?: ',',
+      }[],
+    },
+    outher_values?: string[],
+  }
 }
 export interface FlowEntityExportDatas{
   title: string,
@@ -281,6 +325,7 @@ export interface FlowEntityInfo{
   is_public?: boolean,
   styles_form?: FlowEntityStylesForm,
   relations?: FlowEntityRelations[]
+  actions?: WorkflowConfigActionsType[]
 }
 
 export interface FlowEntityStylesFormGroup{

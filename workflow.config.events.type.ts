@@ -69,6 +69,20 @@ export interface ReplicateFlowDataEffectType{
   breakExec?: boolean,
   replace: Record<string, any>
 }
+export interface IAboutReplicateFlowData{
+  mode: 'query' | 'condition',
+  query?: Record<string, {
+    type: 'in' | 'nin' | 'not' | 'text',
+    /** REF */
+    value: any,
+    /** Se for true, o value será um valor direto e não uma referência. */
+    static?: boolean
+  }>,
+  condition?: string,
+  exclude_main?: boolean,
+  abort_message?: string,
+  relate?: boolean
+}
 export interface ReplicateFlowDataType{
   /**
    * Adicionar explicitamente a regra de replicação, Para usá-lo preencha a prop e \
@@ -97,7 +111,15 @@ export interface ReplicateFlowDataType{
   enriched_main?: {
     condition?: string,
     breakExec?: boolean
-  }
+  },
+  /**
+   * Abortar replicação \
+   * mode: tipo de validação \
+   * query: utilizado para fazer uma busca no banco de dados e validar se já existe um registro nesses parametros, se sim não será criado, o main será ignorado na busca \
+   * condition: utilizado para validar se o registro deverá ser criado \
+   * exclude_main: utilizado para excluir o registro principal caso a condição ou query não seja atendida (necessario o enriched_main para que faça sentido), 
+   */
+  abort?: IAboutReplicateFlowData | IAboutReplicateFlowData[]
 }
 export interface ConsolidateFlowDataEventType{
   query?: any,
@@ -124,7 +146,7 @@ export interface ConsolidateFlowDataEventType{
      * - merge:array = força a união gerar um array
      * - merge:unique = faz a união de dois arrays e garante que os valores sejam unicos
      **/
-    join: Record<string, 'overwrite' | 'merge:array' | 'merge:unique'>,
+    join: Record<string, 'overwrite' | 'merge:array' | 'merge:unique' | `merge:unique-by:${string}`>,
     /** Se for true interrompe a execução após match */
     breakExec?: boolean
   }>,
@@ -369,22 +391,110 @@ export interface RelationshipWithFlowEntityEventEffect{
       find_by_condition?: string
     }
   }
+  interface IReplaceFormatDate {
+    type: 'date',
+    formatting: string
+  }
+  interface IReplaceFormatMoney {
+    type: 'money',
+    formatting: 'USD'
+  }
+  interface IReplaceFormatFlatten {
+    type: 'flatten';
+    /** Separador para concatenar arrays (padrão: ', ') */
+    arraySeparator?: string;
+    /** Caractere usado no lugar do ponto para achatar (padrão: '_') */
+    nestedSeparator?: string;
+    /** Se true, remove a chave original após achatar (padrão: true) */
+    removeOriginal?: boolean;
+  }
+  export interface IStringTransformation {
+    /** Texto ou regex a ser buscado no valor original */
+    search: string | RegExp;
+    /** 
+     * Texto que substituirá o trecho encontrado. \
+     * Se não informado, remove o trecho (equivalente a `replaceWith: ''`).
+     */
+    replaceWith?: string;
+    /** 
+    * Se true, substitui todas as ocorrências (comportamento global). \
+    * Padrão: false (apenas a primeira ocorrência). \
+    */
+    replaceAll?: boolean;
+  }
+  export interface IValueReplaceCondition {
+    condition: string,
+    value: string,
+    type?: 'dynamic' | 'static'
+  }
+
+  export interface IReplacerConfig {
+    type: 'dynamic' | 'static',
+    value?: string | IValueReplaceCondition[],
+    format?: IReplaceFormatDate | IReplaceFormatMoney | IReplaceFormatFlatten,
+    transforms?: IStringTransformation[];
+  }
   export interface FillInPdfTemplateEventType{
-  filename: string,
-  template_url: string,
-  replacers: Record<string, string>,
+    filename: string,
+    template_url: string,
+    replacers: Record<string, string | IReplacerConfig>,
+    effects: {
+      success: {
+        path_to_save_file: string,
+        is_array?: boolean,
+        /** válido apenas se is_array = true */
+        marge_array?: boolean,
+        append_values?: Record<string, any>,
+        is_temp_path?: boolean
+      },
+      fail: {
+        path_to_save_error: string,
+        append_values?: Record<string, any>
+      },
+      always?: Record<string, any>
+    }
+  }
+
+/**
+ * Interpretação de documento via N8N, persistindo na linha da FlowEntity
+ * (não no FlowData do cliente). Paths de leitura/gravação vêm em `params`.
+ *
+ * Exemplo flat (IA Tax): url_path = "url", path_to_save_interpretation = "ai_interpretation"
+ */
+export interface InterpretInvoiceEventType {
+  /** URL base do N8N. Ex: https://ivrim.app.n8n.cloud */
+  baseUrl: string;
+  /** Path do webhook. Ex: /webhook/nf-analysis */
+  path: string;
+  /** Workflow dono da entity */
+  flow_id: string;
+  /** Chave da entity (ex.: sales_records) */
+  entity_key: string;
+  /** _id da linha do documento na entity */
+  document_id: string;
+  /** De onde ler o arquivo dentro do `data` (row da entity) */
+  file: {
+    /** Caminho até a URL do arquivo. Ex: url */
+    url_path: string;
+    /** Caminho até o nome do arquivo (opcional). Default: documento.pdf */
+    filename_path?: string;
+  };
   effects: {
     success: {
-      path_to_save_file: string,
-      is_array?: boolean,
-      /** válido apenas se is_array = true */
-      marge_array?: boolean,
-      append_values?: Record<string, any>
-    },
+      /** Onde gravar a interpretação retornada pelo N8N */
+      path_to_save_interpretation: string;
+      /** Onde gravar o status (opcional) */
+      path_to_save_status?: string;
+      /** Valor do status em sucesso. Default: completed */
+      status_value?: string;
+    };
     fail: {
-      path_to_save_error: string,
-      append_values?: Record<string, any>
-    },
-    always?: Record<string, any>
-  }
+      /** Onde gravar a mensagem de erro (opcional) */
+      path_to_save_error?: string;
+      /** Onde gravar o status (opcional) */
+      path_to_save_status?: string;
+      /** Valor do status em falha. Default: error */
+      status_value?: string;
+    };
+  };
 }

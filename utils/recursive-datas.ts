@@ -124,6 +124,13 @@ export const getRecursiveValue = (id: string, item: { data: any }) : any => {
   }
   //#endregion HANDLE ARRAY
 
+  let defaultIds : string[] = [];
+  if(id.includes('??')){
+    const [firstId, ...restIds] = id.split('??');
+    id = firstId;
+    defaultIds = restIds;
+  }
+
 
   if(item.data[id] !== undefined) value = item.data[id];
   else if(id.includes('.')){
@@ -137,10 +144,19 @@ export const getRecursiveValue = (id: string, item: { data: any }) : any => {
           return data[id] ?? undefined;
         }
 
+        if(data[[id, ...ids].join('.')] !== undefined) return data[[id, ...ids].join('.')];
+
         return recursiveValue(data[id], ids[0], ids.slice(1));
       }
 
       value = recursiveValue(item.data, ids[0], ids.slice(1));
+    }
+  }
+
+  if(value == undefined && defaultIds.length){
+    for(const defaultId of defaultIds){
+      const v = getRecursiveValue(defaultId, item);
+      if(v != undefined) return v;
     }
   }
 

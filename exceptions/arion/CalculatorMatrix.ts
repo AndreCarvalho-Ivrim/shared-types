@@ -1,7 +1,8 @@
 //#region TYPES
 export type ValueInProposalType =  'net' | 'net_cotepe' | 'gross' |'gross_cotepe'
+export type CircuitStatusType = 'Reprovado' | 'Projeto Especial' | 'Em Negociação' | 'Ag. Retorno Operadora' | 'Cancelado' | 'Validação de Cancelamento' | 'Elaborando Precificação';
 export interface ICircuit {
-  status?: 'Reprovado' | 'Projeto Especial' | 'Em Negociação' | 'Ag. Retorno Operadora' | 'Cancelado',
+  status?: CircuitStatusType,
   special_project_reason?: string,
   possible_selected_providers?: any,
   link_group_key?: string,
@@ -76,7 +77,23 @@ export interface ICircuit {
   target_margin_installation_fee?: number,
   target_margin_monthly_fee?: number,
   network?: { id: string },
-  special_project_with_adjustment?: boolean
+  special_project_with_adjustment?: boolean,
+  overload_info?: {
+    diff_installation_fee: number,
+    diff_monthly_fee: number
+  },
+  _largestGroupSize?: number
+}
+export interface IValidedSingleCircuitResult {
+  hiringCosts: ICalculateHiringCostsResult,
+  recurringSalesPrice: ICalculateRecurringSalesPriceResul,
+  eventualSalePriceOrInstallationFee: ICalculateBaseResult,
+  margin: ICalculateMarginResult,
+  marginRecurring: number,
+  marginEventual: number,
+  linkQtd: number,
+  monthly_fee_margin_of_error: number,
+  installation_fee_margin_of_error: number,
 }
 export type CustomerProfile = 'Operadora' | 'Corporativo';
 export type CalculatorMatrixUF = 'AC' | 'AL' | 'AP' | 'AM' | 'BA' | 'CE' | 'DF' | 'ES' | 'GO' | 'MA' | 'MT' | 'MS' | 'MG' | 'PA' | 'PB' | 'PR' | 'PE' | 'PI' | 'RJ' | 'RN' | 'RS' | 'RO' | 'RR' | 'SC' | 'SP' | 'SE' | 'TO';
@@ -733,13 +750,13 @@ export class CalculatorMatrix {
       (recurringSalesPrice.netPriceTotal - hiringCosts.monthlyCostsWithOverhead)
     ;
 
-    if(calculator === 'margin'){
+    // if(calculator === 'margin'){
       if(valueInProposal === 'net_cotepe') recurring = recurringSalesPrice.netPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
       else if(valueInProposal === 'gross') recurring = recurringSalesPrice.grossPriceTotal - hiringCosts.monthlyCostsWithOverhead;
       else if(valueInProposal === 'gross_cotepe') recurring = recurringSalesPrice.grossPriceTotalCotepe - (
         recurringSalesPrice.grossPriceTotalCotepe * this.pisCofins
       ) - hiringCosts.monthlyCostsWithOverhead;
-    }
+    // }
 
     eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
   

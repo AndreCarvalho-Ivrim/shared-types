@@ -1,5 +1,6 @@
-import { ColumnBadgeType } from "../types";
-import { AvailableCustomItemModeType, ThemeColorType } from "./step.item.field.type";
+import { ColumnBadgeType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType } from "../types";
+import { AvailableIcons } from "./icon.type";
+import { AvailableCustomItemModeType, StepItemAttrMaskType, StepItemAttrTypeType, ThemeColorType } from "./step.item.field.type";
 import { IntegrationExcelColumnTypeType } from "./step.item.integration.type";
 
 interface StepViewBaseType{
@@ -14,7 +15,7 @@ interface StepViewBaseType{
     render?: string,
   }
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'exception';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'timeline' | 'exception' | 'thumbnail';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   description: 'Descrição',
   table: 'Tabela',
@@ -25,7 +26,9 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   markdown: 'Markdown',
   html: 'Conteúdo Customizado',
   tasks: 'Tarefas',
+  timeline: 'Timeline',
   exception: 'Exceção',
+  thumbnail: 'Thumbnail'
 };
 export interface StepViewColumnType{
   /** 
@@ -83,7 +86,7 @@ export interface StepViewColumnType{
    */
   data?: any
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewTimelineType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType | StepViewThumbnailType;
 export type AdditionalTablesType = {
   label: string,
   columns: StepViewColumnType[],
@@ -140,8 +143,9 @@ export interface StepViewTasksType extends StepViewBaseType{
   type: 'tasks',
   /** Id do array de tarefas */
   id: string,
-  /** Id dentro do arrey referenciando o vencimento da tarefa */
+  /** Id dentro do array referenciando o vencimento da tarefa */
   expiration: string,
+  step_id?: string,
   resume: StepViewColumnType[],
   columns: StepViewColumnType[],
   /**
@@ -156,12 +160,68 @@ export interface StepViewTasksType extends StepViewBaseType{
   /** Se for required vai mostrar o item mesmo que não haja tasks */
   required?: boolean
 }
+/**
+ * Zona fixa da entrada da timeline(data, responsável, descrição). Mesma ideia \
+ * do [identifier]/[avatar] no resume do kanban: aponta para o campo do registro \
+ * que alimenta aquela zona, com o rótulo junto.
+ **/
+export interface StepViewTimelineSlotType{
+  /** Id do campo dentro do registro */
+  id: string,
+  /** Rótulo. Sem ele, o valor é exibido sem título */
+  name?: string
+}
+export interface StepViewTimelineType extends StepViewBaseType{
+  type: 'timeline',
+  /** Id do array de registros da timeline */
+  id: string,
+  /**
+   * Habilita a adição manual de registros. Quando desabilitado(default), a \
+   * timeline é somente leitura, sendo alimentada por observers/exceptions.
+   **/
+  addable?: boolean,
+  /**
+   * Etapa que carrega os campos do modal de adição de registros. Os items dela \
+   * devem ser prefixados pelo id do array(ex: history_contracts.description). \
+   * Sem step_id, a adição usa um campo simples de descrição.
+   **/
+  step_id?: string,
+  /** Data exibida no topo da entrada. default: { id: 'created_at' } */
+  date?: StepViewTimelineSlotType,
+  /**
+   * Responsável pela entrada. O valor do [id] é resolvido para o nome do \
+   * usuário. default: { id: 'user_id' }
+   **/
+  responsible?: StepViewTimelineSlotType,
+  /** Texto principal da entrada. default: { id: 'description' } */
+  description?: StepViewTimelineSlotType,
+  /** Campos adicionais exibidos em cada registro, além de data, responsável e descrição */
+  header?: StepViewColumnType[],
+  fields?: StepViewColumnType[],
+  /** Quantidade de registros exibidos por vez, antes do "Ver mais". default: 3 */
+  per_page?: number,
+  /**
+   * Ordenação dos registros. Quando não informado, ordena pelo campo do slot \
+   * [date] de forma decrescente, ou seja, do mais recente para o mais antigo.
+   **/
+  order_by?: {
+    field: string,
+    order: 'asc' | 'desc'
+  },
+  placeholders?: {
+    _empty_history?: string,
+    _trigger_form?: string,
+    description?: string,
+  },
+  /** Caso for falso, e não tiver nenhum registro e não tiver a prop addable ocultara o elemento */
+  required?: boolean
+}
 export interface StepViewListType extends StepViewBaseType{
   id: string,
   type: 'list',
   required?: boolean
 }
-export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar'
+export type StepViewAttrMaskType = 'none' | 'alert-danger' | 'alert-warning' | 'alert-info' | 'alert-light' | 'alert-success' | 'progress-bar' | 'code';
 export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
   'none':          'Sem máscara',
   'alert-danger':  'Alerta Perigo (Vermelho)',
@@ -169,7 +229,8 @@ export const stepViewAttrMaskType : Record<StepViewAttrMaskType, string>= {
   'alert-info':    'Alerta Informação (Azul Claro)',
   'alert-light':   'Alerta Leve (Cinza Claro)',
   'alert-success': 'Alerta Sucesso (Verde)',
-  'progress-bar':  'Barra de Progresso'
+  'progress-bar':  'Barra de Progresso',
+  'code':          'Código'
 }
 
 export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
@@ -233,6 +294,10 @@ export interface StepViewRedirectType extends StepViewBaseType{
    * suporta objetos, ou arrays(neste caso, gerando replicações de si mesmo)
    */
   id?: string,
+  /**
+   * Caso o valor seja um array, adicione o filter_condition para delimitar as repetições
+   */
+  filter_condition?: string,
   resume: StepViewColumnType[],
   /** 
    * Se o [to] começar com @hub: ou @isac: será usada a função \
@@ -245,16 +310,169 @@ export interface StepViewRedirectType extends StepViewBaseType{
     /** STRING-CONDITIONAL */
     render?: string
   }
+  /** Icone de redirecionamento. Default = ChevronDownIcon.-rotate-90 */
+  icon?: AvailableIcons,
+  /** Default = medium (medium = py-4 | small = py-2) */
+  size?: 'medium' | 'small'
 }
 export interface StepViewMarkdownType extends StepViewBaseType{
   type: 'markdown',
   url: string
 }
-
+export interface AvailableColumnsBadgeOption {
+  value: string,
+  color: 'gray' | 'red' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'indigo',
+}
+export interface AvailableColumnsApproverControlType {
+  key: string,
+  label: string,
+  type: StepItemAttrTypeType,
+  mask?: StepItemAttrMaskType,
+  required?: boolean,
+  badge?: AvailableColumnsBadgeOption[]
+}
+export interface StepActionApproverControlType {
+  label: string,
+  type: ThemeColorType,
+  key: string,
+  icon?: AvailableIcons,
+  target_exception: string,
+  /** Utilizado para verificar se tem acesso ao botão \
+   * Propriedades reservadas: \@group-permission, \@user-permission
+   */
+  condition?: string,
+  isRedirect?: boolean,
+  confirm?: StepActionConfirmType,
+  append_values?: Record<string, {
+    value: any
+  }>,
+  /** Utilize main_item para acessar valores do item principal \
+   * Utilize main_item.is_main_selected para verificar se o item principal foi selecionado \
+   */
+  alter_main?: {
+    condition: string,
+    name: string,
+    value: string,
+    filter_condition?: string
+  }
+}
+export interface IActNotification {
+  notify: string,
+  /** 
+   * Utilizado para definir onde será salvo o item adicionado, editado ou removido \
+   * */
+  path_to_save?: string,
+}
+export interface IExceptionWarning {
+  condition: string,
+  message: string,
+  /**
+   * Utilizado para fazer a verificação com item adicionado
+   */
+  added?: boolean
+}
+export interface IDataExceptionApproverControl{
+  /** Propriedade utilizada para controle de aprovadores */
+  ref: string,
+  /** Itens do modal a serem preenchidos */
+  items?: ItemOrViewOrWidgetOrIntegration[],
+  /** 
+   * Utilizado para definir os valores do header e body \
+   * Caso o não utlizado será definido pelo items*/
+  render_items?: AvailableColumnsApproverControlType[],
+  /** 
+   * Utilizado para definir quem pode adicionar e editar
+   * */
+  add_approvers?: {
+    type: '@group-permission',
+    permission: string | string[],
+    condition?: string,
+    /** 
+    * Utilizado para realizar o salvamento dos dados adicionados ou editados
+    * */
+    fn_exception?: string,
+    notification?: IActNotification,
+    warnings_condition?: IExceptionWarning[]
+  },
+  edit_approvers?: boolean,
+  /**
+   * Utilizado para definir quem pode remover
+   * */
+  remove_approvers?: {
+    type: '@group-permission',
+    permission: string | string[],
+    condition?: string,
+    /** 
+    * Utilizado para realizar o salvamento dos dados removidos
+    **/
+    fn_exception?: string,
+    warnings_condition?: IExceptionWarning[]
+  },
+  /**
+   * Se tiver items do tipo select-multiple ou select, essas opções será usada para não permitir selecionar a mesma opção caso já selecionada
+   **/
+  not_repeat_option?: boolean,
+  actions?: StepActionApproverControlType[],
+  /** 
+   * Utilizado para filtrar as fichas \
+   * Propriedades reservadas: \@group-permission, \@user-permission
+   * */
+  filters?: {
+    condition: string,
+    filter_condition?: string,
+    break?: boolean
+  }[],
+  /** 
+   * Utilizado para definir quem e o aprovador principal \
+   * Propriedades reservadas: \@group-permission, \@user-permission
+   * */
+  main_approver?: {
+    key: string,
+    label: string,
+    /** 
+     * Utilizado para se tem acesso a funcionalidade
+     * */
+    condition?: string,
+    /** 
+   * Utilizado para fazer uma request em uma fnException
+   * */
+    fn_exception?: string,
+    /** 
+   * Utilizado para salvar o main no flowData
+   * */
+    path?: string,
+    /** 
+   * Utilizado desabilitar a edição
+   * */
+    disabled?: string
+  }
+}
+export interface IDataExceptionCallExceptionObservers{
+  fn_exception: string,
+  get_values?: string[],
+  type: ThemeColorType,
+  /** 
+   * Utilizado para salvar os valores retornado nos campos
+   * */
+  update_fields?: {
+    flow_data_key: string,
+    field_key: string,
+  }[]
+}
 export interface StepViewExceptionType extends StepViewBaseType{
   type: 'exception',
   customCSS?: any,
-  /** Parametros adicionais para a exception */
+  /** 
+   * Parametros adicionais para a exception \
+   * Para controle de aprovadores utilize a paramentrização IDataExceptionApproverControl
+   * */
   data?: any,
   exception: string
+}
+
+export interface StepViewThumbnailType extends StepViewBaseType{
+  type: 'thumbnail',
+  url: string,
+  /** Texto alternativo da imagem */
+  alt_text?: string,
 }
