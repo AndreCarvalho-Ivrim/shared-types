@@ -187,6 +187,7 @@ export interface StepItemType{
      * - \@cep-autocomplete: Autocomplete de CEP
      * - \@options: A lista será determinada no options do item
      * - \@fn-exception:\<variation\>: Chamará uma exceção do backend. Caso queira passar parametros, use a prop 'data'
+     * - \@flow-data:\<path-on-flow-data\>: Usuário uma propriedade de dentro do próprio flow-data para gerar as opções
      */
     name: string,
     /**
@@ -199,14 +200,16 @@ export interface StepItemType{
      * autocomplete.response => field to fill
      * ```
      * interface ToFillOnSelect{
-     *   // Valor mostrado na option do select
+     *   // Valor mostrado na option do select 
      *   name: '<path-na-resposta>',
      *   // Valor no value da option do select
      *   value: '<path-na-resposta>',
      *   // Gerar preenchimento em outros campos, com base no selecionar
      *   [outhers.<path-no-flow-data>]?: '<path-na-resposta>'
      * }
+     * // * (caso seja um array primitivo pode usar o valor this para se referir ao próprio conteúdo)
      * ```
+     * 
      * 
      * Quando autocomplete do tipo \@cep, o segundo parametro do record será \
      * o id dos campos que serão preenchidos, com o primeiro parametro tendo \

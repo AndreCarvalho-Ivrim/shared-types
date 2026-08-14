@@ -5,7 +5,7 @@ import { ReportAnalyticsFormatAndOrTranslate } from "./report.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 import { WorkflowTriggerType, AvailableTriggerEffects, WorkflowIvrimNotes } from "./workflow.config.triggers.type";
 
-export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'ias';
+export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'ias' | 'n8n';
 export type AvailableViewModeType = 'kanban' | 'table' | 'dashboard' | 'group' | 'resume' | 'redirect';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
@@ -1786,6 +1786,7 @@ export interface WorkflowConfigIntegrationsType {
     access_token?: string,
     expires_in?: number
   },
+  n8n?: { base_url: string },
   outhers?: {
     key: string,
     name: string,
