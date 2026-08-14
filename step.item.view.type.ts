@@ -225,7 +225,7 @@ export interface StepViewTimelineType extends StepViewBaseType{
  **/
 export interface StepViewGroupViewsType extends StepViewBaseType{
   type: 'group-views',
-  views: (ItemOrViewOrWidgetOrIntegration | string)[]
+  views: string[]
 }
 export interface StepViewChecklistItemType{
   label: string,
