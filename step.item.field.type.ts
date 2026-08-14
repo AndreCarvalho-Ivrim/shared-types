@@ -27,8 +27,8 @@ export const stepItemAttrMaskType : Record<StepItemAttrMaskType,string> = {
   cep: 'CEP',
   phone: 'Telefone',
   uppercase: 'Letras Maiúsculas',
-  /** Apenas para radio: renderiza as opções como barra de abas */
-  navbar: 'Barra de Abas',
+  /** Apenas para radio: renderiza as opções como barra de navegação */
+  navbar: 'Barra de Navegação',
 };
 export type StepItemAttrMaskDynamicType = {
   type: 'number',
