@@ -225,7 +225,11 @@ export interface StepViewTimelineType extends StepViewBaseType{
  **/
 export interface StepViewGroupViewsType extends StepViewBaseType{
   type: 'group-views',
-  views: string[]
+  /**
+   * Salvo no backend deve estar sempre no formato string[], o formato ItemOrViewOrWidgetOrIntegration[]
+   * é utilizado apenas no SwitchItems.tsx
+   **/
+  views: (ItemOrViewOrWidgetOrIntegration | string)[]
 }
 export interface StepViewChecklistItemType{
   label: string,
