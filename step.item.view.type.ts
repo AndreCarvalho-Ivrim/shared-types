@@ -13,6 +13,8 @@ interface StepViewBaseType{
   is_collapsed?: boolean ,
   rules?: {
     render?: string,
+    /** strc */
+    class_hidden?: string
   }
 }
 export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'timeline' | 'group-views' | 'checklist' | 'exception' | 'thumbnail';
