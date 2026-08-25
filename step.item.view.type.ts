@@ -212,6 +212,11 @@ export interface StepViewTimelineType extends StepViewBaseType{
     field: string,
     order: 'asc' | 'desc'
   },
+  /**
+   * Agrupamento dos registros. Quando não será mantido o formato original
+   **/
+  group_by?: string
+
   placeholders?: {
     _empty_history?: string,
     _trigger_form?: string,

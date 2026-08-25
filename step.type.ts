@@ -227,7 +227,8 @@ export interface StepType{
     step_links?: Array<{
       to: string,
       tooltip?: string,
-      is_current?: boolean
+      is_current?: boolean,
+      disabled?: boolean
     }>,
     classNames?: {
       /** SLIDEOVER quando a página é renderizada no Executer */
