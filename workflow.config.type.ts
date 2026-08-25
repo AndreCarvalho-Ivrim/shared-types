@@ -1480,6 +1480,12 @@ export interface WorkflowConfigType {
   webhooks?: WorkflowWebhookType,
   notifications?: WorkflowConfigNotificationType[],
   integrations?: WorkflowConfigIntegrationsType,
+  calendar?: {
+    /**
+     * @default: client
+     */
+    by: 'client' | 'user',
+  },
   services?: {
     auth?: WorkflowAuthType,
     autocomplete?: WorkflowConfigAutocomplete[],
