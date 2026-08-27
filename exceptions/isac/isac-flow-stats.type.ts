@@ -17,8 +17,7 @@ export interface AnalysisGroupColumn{
   emptyLabel?: string
 }
 export interface IControlQuery {
-  query: Record<string, any>,
-  constants?: Record<string, any>
+  query: Record<string, any>
 }
 interface AnalysisGroupBase {
   key: string,
