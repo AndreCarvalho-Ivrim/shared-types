@@ -16,7 +16,7 @@ export interface AnalysisGroupColumn{
   /** Label exibido quando o valor da coluna vier vazio/nulo (ex. agrupamento sem valor definido) */
   emptyLabel?: string
 }
-interface IControlQuery {
+export interface IControlQuery {
   query: Record<string, any>,
   constants: Record<string, any>
 }
