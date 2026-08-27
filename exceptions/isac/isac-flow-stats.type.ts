@@ -18,7 +18,7 @@ export interface AnalysisGroupColumn{
 }
 export interface IControlQuery {
   query: Record<string, any>,
-  constants: Record<string, any>
+  constants?: Record<string, any>
 }
 interface AnalysisGroupBase {
   key: string,
