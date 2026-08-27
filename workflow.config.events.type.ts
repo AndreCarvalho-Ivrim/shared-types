@@ -464,6 +464,8 @@ export interface RelationshipWithFlowEntityEventEffect{
 export interface InterpretInvoiceEventType {
   /** URL base do N8N. Ex: https://ivrim.app.n8n.cloud */
   baseUrl: string;
+  /** Bearer token para autenticação no webhook N8N */
+  token?: string;
   /** Path do webhook. Ex: /webhook/nf-analysis */
   path: string;
   /** Workflow dono da entity */

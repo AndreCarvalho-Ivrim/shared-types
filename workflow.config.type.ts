@@ -1792,7 +1792,7 @@ export interface WorkflowConfigIntegrationsType {
     access_token?: string,
     expires_in?: number
   },
-  n8n?: { base_url: string },
+  n8n?: { base_url: string; token?: string },
   outhers?: {
     key: string,
     name: string,
