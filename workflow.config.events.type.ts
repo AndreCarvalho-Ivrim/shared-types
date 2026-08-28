@@ -91,6 +91,11 @@ export interface ReplicateFlowDataType{
   inner_data?: Record<string, any>[],
   /** Campo referência para replicação */
   ref: string,
+  /**
+   * Por padrão a função limpa o campo utilizado para gerar as replicações, \
+   * mas caso esta opção seja marcada como true, o valor será mantido
+   */
+  keep_ref_value?: boolean
   /** 
    * { 'campo-replicado': 'destino-do-campo' }
    * Utilize _parent na 'campo-replicado' para referenciar o flowData principal
