@@ -1423,7 +1423,12 @@ export const handleLinearArithmetic = (params: string, data: any) => {
     let parsed = v.trim();
 
     if (isNaN(Number(parsed))) {
-      const newValue = getRecursiveValue(parsed, { data });
+      let newValue = getRecursiveValue(parsed, { data });
+
+      if(
+        typeof newValue === 'string' &&
+        newValue.includes('R$')
+      ) newValue = unmaskMoney(newValue);
 
       if (isNaN(Number(newValue))) {
         throw new Error(`O valor "${parsed}" não é um número e não pôde ser resolvido a partir dos dados`);
@@ -1454,3 +1459,13 @@ export const handleLinearArithmetic = (params: string, data: any) => {
 
   return finalResult;
 };
+
+export const unmaskMoney = (value: string) : number | undefined => {
+  const unmasked = typeof value === 'string' && value.includes('R$') ? Number(
+    String(value ?? '').replace('R$ ', '')
+      .replaceAll('.','')
+      .replace(',','.')
+  ) : Number(value)
+
+  return isNaN(unmasked) ? undefined : unmasked;
+}
