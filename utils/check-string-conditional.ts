@@ -1463,7 +1463,7 @@ export const handleLinearArithmetic = (params: string, data: any) => {
 export const unmaskMoney = (value: string) : number | undefined => {
   const unmasked = typeof value === 'string' && value.includes('R$') ? Number(
     String(value ?? '').replace('R$ ', '')
-      .replaceAll('.','')
+      .replace(/\./g, '')
       .replace(',','.')
   ) : Number(value)
 
