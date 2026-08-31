@@ -418,6 +418,7 @@ export interface StepItemCustomDataBudgetIndicator{
     value_key?: string,
     cost_centers_key?: string,
     nature_key?: string,
-    nature_id_key?: string
+    nature_id_key?: string,
+    due_date_key?: string
   }
 }
