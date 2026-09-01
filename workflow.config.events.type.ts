@@ -61,6 +61,8 @@ export interface ReplicateFlowDataRelateType{
   id: string,
   /**
    * Por padrão a referência trará o _id
+   * 
+   * ```{ 'prop-to-save': 'ref-value' }```
    */
   resume?: Record<string, string>
 }
@@ -89,11 +91,33 @@ export interface ReplicateFlowDataType{
    * adicione ```_inner_data``` na ```ref```.
    **/
   inner_data?: Record<string, any>[],
-  /** Campo referência para replicação */
+  /**
+   * Campo referência para replicação, podendo ser um array ou number(que será usado \
+   * Array.from({ length: number }) para converter em array)
+   **/
   ref: string,
+  /**
+   * Por padrão a função limpa o campo utilizado para gerar as replicações, \
+   * mas caso esta opção seja marcada como true, o valor será mantido
+   */
+  keep_ref_value?: boolean
   /** 
    * { 'campo-replicado': 'destino-do-campo' }
-   * Utilize _parent na 'campo-replicado' para referenciar o flowData principal
+   * 
+   * 
+   * **Utilitários**
+   *
+   * - A referência considera valores dentro do array, e para acessar valores fora \
+   * do array utilize _parent na 'campo-replicado'.
+   * - Você pode usar '_' para passar o conteúdo inteiro da posição (caso o valor da \
+   * posição for undefined será considerado o valor 0).
+   * - No valor 'destino-do-campo' você pode usar o prefixo '+' para concatenar valores \
+   * de string ou number com o index do loop.
+   * - No valor 'destino-do-campo' você pode declarar outras agregações como de data com \
+   * a notação ```{ '-- key --': '(date:+1m)target' }```. Neste exemplo buscaria uma data \
+   * e somaria o valor de 1 mês.
+   * - No key 'campo-replicado' você pode iniciar a string com o prefixo '?' para que só \
+   * seja adicionado o valor caso a referência seja um valor válido
    * */
   replace: Record<string, string>
   effects?: ReplicateFlowDataEffectType[],

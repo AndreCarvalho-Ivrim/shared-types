@@ -273,6 +273,8 @@ export interface StepItemCustomDataSettings{
       key: string,
       separator: string
     }
+    disable_separators?: boolean,
+    omit_label?: boolean,
   }
 }
 export interface StepItemCDETTableType extends ConfigViewModeColumnsType{

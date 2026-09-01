@@ -1,3 +1,4 @@
+import moment from "moment";
 import { StringConditionalTypes } from "..";
 import { getRecursiveValue, replaceAll } from "./recursive-datas";
 
@@ -1272,6 +1273,53 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
     for (const [code, param, parsedParams] of extractedContents) {
       switch (code) {
         case '@now': returnValue = handleCodeHelper__now(returnValue, code, param); break;
+        case 'date':
+          if(!param || !parsedParams || parsedParams.length < 2) return '';
+
+          const operator = param.slice(parsedParams[0].length, parsedParams[0].length + 1);
+          const finalModifier = parsedParams[parsedParams.length - 1].slice(-1);
+
+          let increment = ((increments: string[], operator: string[]) : string | number => {
+            let values = [];
+
+            if(increments.length !== operator.length + 1) return '';
+
+            for(const incr of increments){
+              let v : any = incr;
+              if(typeof incr === 'string' && incr.includes('@[')) v = getRecursiveValue(incr.slice(2,-1), { data });
+
+              if(v == undefined || v == '' || isNaN(Number(v))) return '';
+              v = Number(v);
+
+              values.push(v);
+            }
+
+            const finalValue = values.reduce((acc, curr, index) => {
+              if(index === 0) return curr;
+              const op = operator[index - 1];
+              switch(op) {
+                case '+': return acc + curr;
+                case '-': return acc - curr;
+                case '*': return acc * curr;
+                case '/': return acc / curr;
+                default: return acc;
+              }
+            }, 0);
+            if(isNaN(finalValue)) return '';
+            return finalValue;
+          })([
+            ...parsedParams.slice(1, -1),
+            parsedParams[parsedParams.length - 1].slice(0, -1)
+          ], param.slice(parsedParams[0].length+1).match(/[+\-*\/]/g) ?? []);
+
+
+          const dateString = parsedParams[0].includes('@[') ? getRecursiveValue(parsedParams[0].slice(2,-1), { data }) : '';
+          
+          if(!increment || !dateString) return '';
+
+          const modifier = `${operator}${increment}${finalModifier}`;
+
+          return modifyDate(dateString, modifier, false);
         case 'sum':
           if(!param) throw new Error(errorRequiredParam(code))
 
@@ -1391,6 +1439,50 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
 
   return returnValue;
 }
+export const modifyDate = (dateString: string, modifier: string, restrict = true) => {
+  const isBrazilian = /^\d{2}[/-]\d{2}[/-]\d{4}$/.test(dateString);
+  const isAmerican = /^\d{4}[/-]\d{2}[/-]\d{2}$/.test(dateString);
+
+  if (!isBrazilian && !isAmerican) {
+    if(restrict) throw new Error(`Formato de data inválido: ${dateString}`);
+    return '';
+  }
+
+  // Identifica o separador utilizado
+  const separator = dateString.includes('/') ? '/' : '-';
+
+  // Monta o formato do Moment
+  const format = isBrazilian
+    ? `DD${separator}MM${separator}YYYY`
+    : `YYYY${separator}MM${separator}DD`;
+
+  const date = moment(dateString, format, true);
+
+  if (!date.isValid()) {
+    if(restrict) throw new Error(`Data inválida: ${dateString}`);
+    return '';
+  }
+
+  // Valida o modificador: +1d, -2m, +10y, etc.
+  const match = modifier.match(/^([+-])(\d+)([dmy])$/i);
+
+  if (!match) {
+    if(restrict) throw new Error(`Modificador inválido: ${modifier}`);
+    return ''
+  }
+
+  let [, operation, amountString, unit] = match;
+
+  unit = unit.toLowerCase();
+  if(unit === 'm') unit = 'M';
+  
+  const amount = Number(amountString);
+  const value = operation === '+' ? amount : -amount;
+
+  date.add(value, unit as any);
+
+  return date.format(format);
+}
 export const isMatchCaseInsensitiveWithoutAccentuation = (matchs: string[], value: string) => {
   const normalizeText = (text: string) => (
     text.toLowerCase()
@@ -1423,7 +1515,12 @@ export const handleLinearArithmetic = (params: string, data: any) => {
     let parsed = v.trim();
 
     if (isNaN(Number(parsed))) {
-      const newValue = getRecursiveValue(parsed, { data });
+      let newValue = getRecursiveValue(parsed, { data });
+
+      if(
+        typeof newValue === 'string' &&
+        newValue.includes('R$')
+      ) newValue = unmaskMoney(newValue);
 
       if (isNaN(Number(newValue))) {
         throw new Error(`O valor "${parsed}" não é um número e não pôde ser resolvido a partir dos dados`);
@@ -1454,3 +1551,13 @@ export const handleLinearArithmetic = (params: string, data: any) => {
 
   return finalResult;
 };
+
+export const unmaskMoney = (value: string) : number | undefined => {
+  const unmasked = typeof value === 'string' && value.includes('R$') ? Number(
+    String(value ?? '').replace('R$ ', '')
+      .replace(/\./g, '')
+      .replace(',','.')
+  ) : Number(value)
+
+  return isNaN(unmasked) ? undefined : unmasked;
+}

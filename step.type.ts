@@ -230,38 +230,7 @@ export interface StepType{
       is_current?: boolean,
       disabled?: boolean
     }>,
-    classNames?: {
-      /** SLIDEOVER quando a página é renderizada no Executer */
-      slide?: {
-        /** DIV que abraça todo conteúdo */
-        wrapper?: string,
-        /** DIV que abraça o corpo do slideover */
-        container?: string,
-      }
-      /** DIV que abraça todo o conteúdo da etapa */
-      wrapper?: string,
-      /** FORM que contem os itens, os botões, e os select searcheds */
-      form?: string,
-      /** DIV que abraça apenas os itens */
-      container?: string,
-      /** Classe personalizada por item ```{ item-key: string }``` */
-      items?: Record<string, {
-        wrapper?: string,
-        /** Apenas alguns itens, como o group collapse tem suporte ao container */
-        container?: string,
-        label?: string,
-        /** Válido apenas quando o item é do tipo table */
-        tr?: string,
-        /** Válido para tabelas como Horizontal Table */
-        th?: string,
-        /** Estilizações condicionais ```{ strc: { ...options } }``` */
-        conditional?: Record<string, { wrapper?: string, container?: string, tr?: string }>
-      }>,
-      footer?: {
-        container?: string,
-        buttons?: string
-      }
-    },
+    classNames?: StepPageClassNames,
     /** Se true, irá adicionar um asterísco em todos campos obrigatórios */
     asterisk_when_required?: boolean,
     omit_navbar?: boolean,
@@ -304,6 +273,38 @@ export interface StepType{
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
   sla?: StepSlaType,
   color?: ThemeColorType
+}
+export interface StepPageClassNames{
+  /** SLIDEOVER quando a página é renderizada no Executer */
+  slide?: {
+    /** DIV que abraça todo conteúdo */
+    wrapper?: string,
+    /** DIV que abraça o corpo do slideover */
+    container?: string,
+  }
+  /** DIV que abraça todo o conteúdo da etapa */
+  wrapper?: string,
+  /** FORM que contem os itens, os botões, e os select searcheds */
+  form?: string,
+  /** DIV que abraça apenas os itens */
+  container?: string,
+  /** Classe personalizada por item ```{ item-key: string }``` */
+  items?: Record<string, {
+    wrapper?: string,
+    /** Apenas alguns itens, como o group collapse tem suporte ao container */
+    container?: string,
+    label?: string,
+    /** Válido apenas quando o item é do tipo table */
+    tr?: string,
+    /** Válido para tabelas como Horizontal Table */
+    th?: string,
+    /** Estilizações condicionais ```{ strc: { ...options } }``` */
+    conditional?: Record<string, { wrapper?: string, container?: string, tr?: string }>
+  }>,
+  footer?: {
+    container?: string,
+    buttons?: string
+  }
 }
 export interface StepHistoryDescriptionType{
   execute: ExecuteDescriptionType,
