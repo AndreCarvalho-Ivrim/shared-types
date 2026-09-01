@@ -291,6 +291,8 @@ export interface StepViewDescriptionOrHtmlType extends StepViewBaseType{
    * dois números separados por virgula(,)
    */
   mask?: StepViewAttrMaskType,
+  /** Ícone ao lado do título — válido só para `mask: 'fieldset'`. */
+  icon?: AvailableIcons,
   condition_mask?: {
     type: StepViewAttrMaskType,
     condition: string
