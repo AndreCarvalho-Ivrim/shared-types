@@ -62,6 +62,11 @@ export interface ValueAndNameStringType{
   name: string,
   condition?: string,
   /**
+   * Cor de um badge/indicador exibido no início da opção (select).
+   * Tem prioridade sobre o `options_color` do item.
+   */
+  color?: ThemeColorType,
+  /**
    * Adicione outras chaves com o prefix outhers. para que a seleção \
    * gere o preenchimento de um campo adjacente.
    */
@@ -86,6 +91,13 @@ export interface StepItemType{
   placeholder?: string,
   subtitle?: string,
   options?: ValueAndNameStringType[],
+  /**
+   * Exibe um badge colorido no início de cada opção do select, reaproveitando o
+   * mapa valor→cor de uma coluna dos view_modes (mantido pela Gestão Visual).
+   * Notação: `@view-mode:<id-da-coluna>` (ex.: `@view-mode:status`).
+   * Uma opção com `color` próprio sobrescreve esse mapa.
+   */
+  options_color?: string,
   /** a single_option deve existir em options,
    * quando essa opção for selecionada as outras serão deselecionadas
    * caso essa esteja selecionada e outra seja selecionada essa será deselecionada  */
