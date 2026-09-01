@@ -1,4 +1,4 @@
-import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
+import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, QuickUpdateConfigType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { ReportAnalyticsFormatAndOrTranslate } from "./report.type";
@@ -627,7 +627,27 @@ export interface ConfigViewModeColumnsType {
    */
   translate?: Record<string, string>,
   badge?: ColumnBadgeType,
+  /**
+   * "Edição Rápida" na coluna: o valor da coluna passa a funcionar como um
+   * select — o usuário escolhe uma opção e a alteração é salva no backend com
+   * uma request unitária (sem abrir o registro). Se a coluna também for `badge`,
+   * o badge colorido vira o "gatilho" do select; senão, é o texto do valor.
+   */
+  quick_update?: ColumnQuickUpdateConfigType,
   data?: any
+}
+export interface ColumnQuickUpdateOptionType{
+  value: string | number,
+  name: string | number,
+  /**
+   * String conditional opcional — a opção só aparece quando satisfeita.
+   */
+  condition?: string,
+}
+export interface ColumnQuickUpdateConfigType extends QuickUpdateConfigType{
+  options: ColumnQuickUpdateOptionType[],
+  /** Texto do chip quando ainda não há valor (default: `Selecionar`). */
+  placeholder?: string,
 }
 export interface ColumnBadgeType{
   light?: string[],
