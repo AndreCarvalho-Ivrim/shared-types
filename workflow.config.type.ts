@@ -643,6 +643,11 @@ export interface ColumnQuickUpdateOptionType{
    * String conditional opcional — a opção só aparece quando satisfeita.
    */
   condition?: string,
+  /**
+   * Gates: se alguma `condition` for satisfeita, a opção fica desabilitada
+   * (visível, não selecionável) com a `message` num tooltip.
+   */
+  disabled_if?: { condition: string, message: string }[],
 }
 export interface ColumnQuickUpdateConfigType extends QuickUpdateConfigType{
   options: ColumnQuickUpdateOptionType[],
