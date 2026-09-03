@@ -253,14 +253,14 @@ export interface StepItemType{
     add_more_options?: boolean,
     data?: any
   },
-  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | {
+  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | StepItemCustomDataBudgetIndicator | {
     mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores' | '@commercial-calculator',
     settings?: any
   },
   is_expanded?: boolean
 }
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores' | '@commercial-calculator';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores', '@commercial-calculator'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores' | '@commercial-calculator' | '@budget-indicator';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores', '@commercial-calculator', '@budget-indicator'];
 export interface StepItemCustomDataSettings{
   mode: '@list',
   settings: {
@@ -411,4 +411,14 @@ export interface StepItemCustomDataNumberWithUnitOfMeasurement{
 export interface StepItemCustomJson{
   mode: '@json',
   settings: { hidden?: boolean }
+}
+export interface StepItemCustomDataBudgetIndicator{
+  mode: '@budget-indicator',
+  settings?: {
+    value_key?: string,
+    cost_centers_key?: string,
+    nature_key?: string,
+    nature_id_key?: string,
+    due_date_key?: string
+  }
 }
