@@ -62,6 +62,11 @@ export interface ValueAndNameStringType{
   name: string,
   condition?: string,
   /**
+   * Cor de um badge/indicador exibido no início da opção (select).
+   * Tem prioridade sobre o `options_color` do item.
+   */
+  color?: ThemeColorType,
+  /**
    * Adicione outras chaves com o prefix outhers. para que a seleção \
    * gere o preenchimento de um campo adjacente.
    */
@@ -86,6 +91,13 @@ export interface StepItemType{
   placeholder?: string,
   subtitle?: string,
   options?: ValueAndNameStringType[],
+  /**
+   * Exibe um badge colorido no início de cada opção do select, reaproveitando o
+   * mapa valor→cor de uma coluna dos view_modes (mantido pela Gestão Visual).
+   * Notação: `@view-mode:<id-da-coluna>` (ex.: `@view-mode:status`).
+   * Uma opção com `color` próprio sobrescreve esse mapa.
+   */
+  options_color?: string,
   /** a single_option deve existir em options,
    * quando essa opção for selecionada as outras serão deselecionadas
    * caso essa esteja selecionada e outra seja selecionada essa será deselecionada  */
@@ -257,8 +269,28 @@ export interface StepItemType{
     mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores' | '@commercial-calculator',
     settings?: any
   },
+  /**
+   * "Edição Rápida": ao alterar o valor do campo, dispara uma request unitária
+   * para o backend (sem submeter o formulário) salvando só esse campo. Enquanto
+   * a request está em andamento o submit do formulário fica bloqueado.
+   * Suportado hoje em campos `select`.
+   */
+  quick_update?: QuickUpdateConfigType,
   is_expanded?: boolean
 }
+export interface QuickUpdateConfigType{
+  /** Nome da fn-exception que grava o campo. Default: `isac-quick-update`. */
+  exception?: string,
+  /**
+   * Ação (`flow_actions_permitted`) exigida para ENVIAR a request. Sem ela o
+   * campo ainda muda localmente (e vai junto no submit normal do formulário),
+   * mas nenhuma request unitária é disparada.
+   */
+  permission?: string,
+  /** Params estáticos extras enviados no body da request. */
+  additional_params?: Record<string, any>,
+}
+
 export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores' | '@commercial-calculator' | '@budget-indicator';
 export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores', '@commercial-calculator', '@budget-indicator'];
 export interface StepItemCustomDataSettings{
