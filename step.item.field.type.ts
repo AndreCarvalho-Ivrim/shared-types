@@ -67,6 +67,12 @@ export interface ValueAndNameStringType{
    */
   color?: ThemeColorType,
   /**
+   * Gates da opção: se alguma `condition` for satisfeita, a opção fica
+   * **desabilitada** (visível, não selecionável) e mostra a `message` num
+   * tooltip ao passar o mouse num ícone.
+   */
+  disabled_if?: { condition: string, message: string }[],
+  /**
    * Adicione outras chaves com o prefix outhers. para que a seleção \
    * gere o preenchimento de um campo adjacente.
    */
