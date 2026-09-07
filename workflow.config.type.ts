@@ -2140,6 +2140,7 @@ export interface IActionDataDeleteDatasNetworkType {
   canDelete?: boolean;
   isFinded?: boolean;
   mode: 'flow_datas' | 'flow_entity_datas';
+  entity_key?: string;
   /**
    * Referências que devem ser seguidas a partir do workflow destino.
    * Aqui a tipagem é recursiva: cada nó pode ter seus próprios filhos.
