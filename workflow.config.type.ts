@@ -2138,6 +2138,7 @@ export interface IActionDataDeleteDatasNetworkType {
   /** Caminho no documento atual onde está(ão) o(s) ID(s) relacionado(s) */
   path: string;
   canDelete?: boolean;
+  isFinded?: boolean;
   /**
    * Referências que devem ser seguidas a partir do workflow destino.
    * Aqui a tipagem é recursiva: cada nó pode ter seus próprios filhos.
