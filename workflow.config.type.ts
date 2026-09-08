@@ -2145,7 +2145,7 @@ export interface IActionDataDeleteDatasNetworkType {
    * Referências que devem ser seguidas a partir do workflow destino.
    * Aqui a tipagem é recursiva: cada nó pode ter seus próprios filhos.
    */
-  network?: IActionDataDeleteDatasNetworkType[];
+  networks?: IActionDataDeleteDatasNetworkType[];
 }
 
 // Tipo principal: uma lista de referências que serão usadas a partir de um workflow inicial
