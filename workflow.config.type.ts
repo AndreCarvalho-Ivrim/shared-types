@@ -2150,7 +2150,7 @@ export interface IActionDataDeleteDatasNetworkType {
 
 // Tipo principal: uma lista de referências que serão usadas a partir de um workflow inicial
 export type IActionDataDeleteDatasNetwork = {
-  network: IActionDataDeleteDatasNetworkType[];
+  networks: IActionDataDeleteDatasNetworkType[];
 }
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
