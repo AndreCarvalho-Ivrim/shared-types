@@ -739,6 +739,7 @@ export interface WorkflowViewModeBase {
   description?: string,
   icon?: AvailableIcons,
   slug: string,
+  hidden?: boolean,
   /** Utilizado apenas nas outras opções do horizontal_menu quando ativas **/
   father_slug?: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
