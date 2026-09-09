@@ -28,6 +28,11 @@ export interface FlowEntitySubSchema{
   placeholder: string,
   schema: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
   required?: boolean,
+  /**
+   * Torna o campo obrigatório apartir do momento em que já foi preenchido anteriormente. \
+   * impedindo que uma vez preenchido, o campo não possa ser esvaziado.
+   */
+  required_once_filled?: boolean,
   observer?: boolean,
   /** Restrições de dados */
   restrictions?: {
@@ -106,6 +111,13 @@ export interface FlowEntitySchemaInfo{
     required_outhers?: string[],
   }
   required: boolean,
+  /**
+   * Torna o campo obrigatório apenas se o registro já existente (antes desta atualização) \
+   * já possuía valor preenchido nele. Registros que nunca tiveram esse campo preenchido \
+   * continuam podendo ser salvos sem ele, mas depois de preenchido uma vez não pode mais \
+   * ser esvaziado.
+   */
+  required_once_filled?: boolean,
   unique?: boolean
   /** Mensagem de erro exibida quando a validação de `unique` falhar. Se não informada, usa a mensagem genérica padrão. */
   unique_error_message?: string
