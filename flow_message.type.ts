@@ -190,6 +190,7 @@ export interface FlowMessageContact{
   }>,
   interaction?: IFlowMessageContactInteraction
   provider_id?: string,
+  chatbot_key: string,
   pending_messages?: FlowMessageContactPendingMessage[]
   created_at?: Date,
   updated_at?: Date,
