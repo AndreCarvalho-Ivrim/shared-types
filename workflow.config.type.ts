@@ -1115,6 +1115,7 @@ export interface WorkflowAuthTemplateType {
 export type WorkFlowTemplateKeyType = 'first_access' | 'forgot_password';
 
 export interface WorkflowAuthType {
+  origin?: string,
   props: {
     email: string,
     name: string,
