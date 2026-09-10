@@ -2053,7 +2053,7 @@ export interface WFActionFnCallTrigger {
   restrictions?: {
     condition: string,
     message: string
-  }[]
+  }[],
   /**
    * - trigger-flow-alert: é obrigatório informar a key do flow-alert e action \
    * que deve ser 'start' (para inicar o listening de um flow-alert) ou 'open' \
@@ -2063,6 +2063,7 @@ export interface WFActionFnCallTrigger {
     condition?: string,
     [key: string]: any
   }>>,
+  prevent_close_current?: boolean
 }
 export interface WFActionFnCallSingleEntity {
   type: 'call-single-entity',
