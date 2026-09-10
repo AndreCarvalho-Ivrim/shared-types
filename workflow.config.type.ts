@@ -1848,6 +1848,7 @@ export type WorkflowConfigIntegrationsChatbotBalanceType = WorkflowConfigIntegra
 export interface WorkflowConfigIntegrationsChatbot{
   /** Obrigatório caso utilize balanceamento */
   key?: string,
+  chatbot_key: string,
   delay_after_contact_creation?: boolean,
   /** Token do Mensagex, se não for informado utilizará o token do hub */
   token?: string,
