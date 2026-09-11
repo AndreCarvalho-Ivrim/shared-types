@@ -2136,6 +2136,24 @@ export interface IActionDataSegmentation {
 export interface IActionDataMultipleAction {
   segmentations: IActionDataSegmentation[],
 }
+export interface IActionDataDeleteDatasNetworkType {
+  /** Caminho no documento atual onde está(ão) o(s) ID(s) relacionado(s) */
+  path: string;
+  canDelete?: boolean;
+  isFinded?: boolean;
+  mode: 'flow_datas' | 'flow_entity_datas';
+  entity_key?: string;
+  /**
+   * Referências que devem ser seguidas a partir do workflow destino.
+   * Aqui a tipagem é recursiva: cada nó pode ter seus próprios filhos.
+   */
+  networks?: IActionDataDeleteDatasNetworkType[];
+}
+
+// Tipo principal: uma lista de referências que serão usadas a partir de um workflow inicial
+export type IActionDataDeleteDatasNetwork = {
+  networks: IActionDataDeleteDatasNetworkType[];
+}
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -2183,6 +2201,7 @@ export interface WorkflowConfigActionsType {
   group_buttons?: WorkflowConfigActionsGroupButtons,
   /**
    * Caso a action seja [multiple-action], utilizar IActionDataMultipleAction
+   * Caso a action seja [delete-datas], utilizar IActionDataDeleteDatasNetwork para mais opções
    */
   data?: any
 }
