@@ -269,6 +269,17 @@ export interface StepType{
       /** Exibe o nome da etapa atual */
       show_step_title?: boolean
     },
+    /**
+     * Barra horizontal segmentada com as sub-etapas da macro atual etapa
+     **/
+    sub_steps_progress?: {
+      steps: {
+        /** Status que representam essa sub-etapa */
+        statuses: string[],
+        /** Rótulo exibido abaixo da célula */
+        label: string
+      }[]
+    },
   }
   /** VALIDO APENAS P/ ETAPAS NÃO STATELESS */
   sla?: StepSlaType,

@@ -739,6 +739,7 @@ export interface WorkflowViewModeBase {
   description?: string,
   icon?: AvailableIcons,
   slug: string,
+  hidden?: boolean,
   /** Utilizado apenas nas outras opções do horizontal_menu quando ativas **/
   father_slug?: string,
   order_by?: ViewModeOrderBy | ViewModeOrderBy[],
@@ -2053,7 +2054,7 @@ export interface WFActionFnCallTrigger {
   restrictions?: {
     condition: string,
     message: string
-  }[]
+  }[],
   /**
    * - trigger-flow-alert: é obrigatório informar a key do flow-alert e action \
    * que deve ser 'start' (para inicar o listening de um flow-alert) ou 'open' \
@@ -2063,6 +2064,7 @@ export interface WFActionFnCallTrigger {
     condition?: string,
     [key: string]: any
   }>>,
+  prevent_close_current?: boolean
 }
 export interface WFActionFnCallSingleEntity {
   type: 'call-single-entity',
@@ -2135,6 +2137,24 @@ export interface IActionDataSegmentation {
 export interface IActionDataMultipleAction {
   segmentations: IActionDataSegmentation[],
 }
+export interface IActionDataDeleteDatasNetworkType {
+  /** Caminho no documento atual onde está(ão) o(s) ID(s) relacionado(s) */
+  path: string;
+  canDelete?: boolean;
+  isFinded?: boolean;
+  mode: 'flow_datas' | 'flow_entity_datas';
+  entity_key?: string;
+  /**
+   * Referências que devem ser seguidas a partir do workflow destino.
+   * Aqui a tipagem é recursiva: cada nó pode ter seus próprios filhos.
+   */
+  networks?: IActionDataDeleteDatasNetworkType[];
+}
+
+// Tipo principal: uma lista de referências que serão usadas a partir de um workflow inicial
+export type IActionDataDeleteDatasNetwork = {
+  networks: IActionDataDeleteDatasNetworkType[];
+}
 export interface WorkflowConfigActionsType {
   icon?: 'new' | 'delete' | AvailableIcons, /* [obsoletos]: | 'update' | 'alarm' | 'search' | 'models' */
   /** Os ids pré-definidos possuem funções e comportamentos pré-definidos
@@ -2182,6 +2202,7 @@ export interface WorkflowConfigActionsType {
   group_buttons?: WorkflowConfigActionsGroupButtons,
   /**
    * Caso a action seja [multiple-action], utilizar IActionDataMultipleAction
+   * Caso a action seja [delete-datas], utilizar IActionDataDeleteDatasNetwork para mais opções
    */
   data?: any
 }
