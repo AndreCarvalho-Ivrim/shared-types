@@ -22,12 +22,22 @@ interface FlowEntityDataFilters {
 export type FlowEntitySchemaTypes = "text" | "textarea" | "number" | "date" | "money" | "file" | "file-image" | "boolean" | "select" | "select-multiple" | "any" | "custom" | 'time' | 'file-multiple';
 export const availableFlowEntitySchema : FlowEntitySchemaTypes[] = ["text", "textarea", "number", "date", "money", "file", "file-image", "boolean", "select", "select-multiple", "any"];
 export const availableFlowEntityMasks : Array<FlowEntitySchemaInfo['mask']> = ['email', 'cpf', 'cnpj', 'cpf-cnpj', 'cep', 'phone', 'url', 'whatsapp-md', 'uppercase-nfd'];
+export interface FlowEntityUpdatedByUser {
+  _user_id: string,
+  _updated_at: Date,
+  origin?: string,
+}
 export interface FlowEntitySubSchema{
   type: 'sub-schema',
   label: string,
   placeholder: string,
   schema: Record<string, FlowEntitySubSchema | FlowEntitySchemaInfo>,
   required?: boolean,
+  /**
+   * Torna o campo obrigatório apartir do momento em que já foi preenchido anteriormente. \
+   * impedindo que uma vez preenchido, o campo não possa ser esvaziado.
+   */
+  required_once_filled?: boolean,
   observer?: boolean,
   /** Restrições de dados */
   restrictions?: {
@@ -106,6 +116,13 @@ export interface FlowEntitySchemaInfo{
     required_outhers?: string[],
   }
   required: boolean,
+  /**
+   * Torna o campo obrigatório apenas se o registro já existente (antes desta atualização) \
+   * já possuía valor preenchido nele. Registros que nunca tiveram esse campo preenchido \
+   * continuam podendo ser salvos sem ele, mas depois de preenchido uma vez não pode mais \
+   * ser esvaziado.
+   */
+  required_once_filled?: boolean,
   unique?: boolean
   /** Mensagem de erro exibida quando a validação de `unique` falhar. Se não informada, usa a mensagem genérica padrão. */
   unique_error_message?: string
