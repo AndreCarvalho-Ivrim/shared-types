@@ -94,6 +94,7 @@ export interface IntegrationExcelType {
    * (Recomendado utilizar em conjunto com o dynamic_schema)
    */
   preprocess?: {
+    condition?: string,
     /** Caso queira salvar a ordem e nome das colunas, especifique o nome da prop que armazenará esses dados */
     save_order_columns?: string,
     /** Caso queira salvar dados não conhecidos, especifique o nome da prop que armazerá esses dados */
