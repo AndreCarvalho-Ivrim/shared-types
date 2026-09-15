@@ -84,7 +84,8 @@ export interface IntegrationExcelType {
      **/
     store_outher_fields?: string,
     /** Caso queira armazenar a versão da dynamic_schema importada, especifique o nome do caminho */
-    imported_version?: string
+    imported_version?: string,
+    condition?: string
   },
   /**
    * Faz o pré-processamento do excel no frontend, interpretando a planilha e lidando com os erros no lado do front antes \
@@ -120,7 +121,8 @@ export interface IntegrationExcelType {
         is_multiple?: true,
         separator?: ',',
       }[],
-    }
+    },
+    ignore_download_template?: boolean | string
   }
   append_values?: Record<string, any>,
   /**
