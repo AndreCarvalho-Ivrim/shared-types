@@ -2386,6 +2386,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
         mode: 'increment' | 'decrement';
         value?: number;
       };
+      handlers?: HandlersType & { path: string }
     }[],
     event_after_all?: WorkflowRoutinesManageFlowEvent[]
   }
