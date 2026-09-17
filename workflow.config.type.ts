@@ -2343,7 +2343,10 @@ export interface WfRoutinesManageFlowEventSendWhatsappMessages {
   id?: '@send-whatsapp-messages',
   data?: any
 }
-export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages;
+export interface WfRoutinesManageFlowEventNotify {
+  id: '@notify',
+}
+export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages | WfRoutinesManageFlowEventNotify;
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
   type: 'manage-flow',
   data: {
