@@ -140,7 +140,11 @@ export interface StepItemType{
     * Exemplo: '18:00'
     */
     maxHour?: `${number}${number}:${number}${number}`
-    minuteStep?: number
+    minuteStep?: number,
+    /**
+     * Válido apenas para file-multiple
+     */
+    file_accept?: AvailableFileAccept[],
     render?: string,
     switch_render?: string[],
     /**
@@ -284,6 +288,7 @@ export interface StepItemType{
   quick_update?: QuickUpdateConfigType,
   is_expanded?: boolean
 }
+export type AvailableFileAccept = 'pdf';
 export interface QuickUpdateConfigType{
   /** Nome da fn-exception que grava o campo. Default: `isac-quick-update`. */
   exception?: string,
