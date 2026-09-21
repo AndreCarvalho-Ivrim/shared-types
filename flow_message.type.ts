@@ -4,6 +4,8 @@ interface FlowMessageBase{
   flow_id?: string,
   /** Id do template do whatsapp, caso seja uma mensagem cadastrada */
   template_id?: string,
+  /** Id do template do whatsapp, caso seja uma mensagem cadastrada */
+  template_ids?: Record<string, string>,
   /** É para ser usada como referência de chamada por outras funções */
   key: string,
   /**
