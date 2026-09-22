@@ -1,6 +1,6 @@
 import { ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration } from ".";
 
-export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse' | 'custom' | 'datetime';
+export type StepItemAttrTypeType = 'text' | 'textarea' | 'select' | 'select-multiple' | 'radio' | 'checkbox' | 'date' | 'file' |  'file-multiple' |  'group-collapse' | 'custom' | 'datetime' | 'select-details';
 export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   text: 'Entrada de Texto',
   textarea: 'Entrada de Texto Grande',
@@ -13,7 +13,8 @@ export const stepItemAttrTypeFormatted : Record<StepItemAttrTypeType,string> = {
   file: 'Upload de Arquivo',
   'file-multiple': 'Upload de Multiplos Arquivos',
   'group-collapse': 'Grupo de Campos Intercalável',
-  custom: 'Customizado'
+  custom: 'Customizado',
+  'select-details': 'Entrada de Seleção com Detalhes'
 };
 
 export type StepItemAttrMaskType = 'email' | 'number' | 'money' | 'cpf' | 'cnpj' | 'cpf-cnpj' | 'cep' | 'phone' | 'uppercase' | 'navbar';
@@ -77,6 +78,7 @@ export interface ValueAndNameStringType{
    * gere o preenchimento de um campo adjacente.
    */
   [key: string]: any,
+  description?: string,
   disabled?: {
     disabled: boolean;
     condition?: string;

@@ -38,7 +38,8 @@ export type ReportAnalyticsSearchDynamicColumnType = {
      */
     condition: string,
     value: string
-  }[]>
+  }[]>,
+  translate?: Record<string, string | Record<string, string>>
 }
 export interface ReportAnalyticsSearchType{
   request: 'flow_datas' | 'flow_entities' | 'fn-exceptions',

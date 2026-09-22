@@ -30,6 +30,15 @@ export interface FlowMessageIfError {
   count: number,
   default_response: string
 }
+/** Botão de escolha no ask. Clique envia `value` ao findAnswer. */
+export interface FlowMessageOption {
+  /** Texto gravado / enviado ao findAnswer. */
+  value: string,
+  /** Texto mostrado no botão. */
+  name: string,
+  /** Condição ISAC; se falhar, o botão não aparece. */
+  condition?: string
+}
 export interface FlowMessageInfoType extends FlowMessageBase{
   /** info: Informação apenas envia uma mensagem sem esperar retorno */
   mode: 'info',
@@ -61,6 +70,8 @@ export interface FlowMessageAskType extends FlowMessageBase{
   mode: 'ask',
   condition?: string,
   if_error?: FlowMessageIfError,
+  /** Botões de escolha. Clique envia `value` ao findAnswer. */
+  options?: FlowMessageOption[],
   /** respostas possíveis do usuário */
   responses: FlowMessageResponse[]
 }
