@@ -277,7 +277,7 @@ export interface StepItemType{
     add_more_options?: boolean,
     data?: any
   },
-  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | StepItemCustomDataBudgetIndicator | {
+  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | StepItemCustomDataBudgetIndicator | StepItemCustomDataQuotationMap | {
     mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores' | '@commercial-calculator',
     settings?: any
   },
@@ -304,8 +304,8 @@ export interface QuickUpdateConfigType{
   additional_params?: Record<string, any>,
 }
 
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores' | '@commercial-calculator' | '@budget-indicator';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores', '@commercial-calculator', '@budget-indicator'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores' | '@commercial-calculator' | '@budget-indicator' | '@quotation-map';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores', '@commercial-calculator', '@budget-indicator', '@quotation-map'];
 export interface StepItemCustomDataSettings{
   mode: '@list',
   settings: {
@@ -465,5 +465,20 @@ export interface StepItemCustomDataBudgetIndicator{
     nature_key?: string,
     nature_id_key?: string,
     due_date_key?: string
+  }
+}
+export interface StepItemCustomDataQuotationMap{
+  mode: '@quotation-map',
+  settings?: {
+    items_key?: string,
+    supplier_autocomplete?: {
+      entity: string,
+      map: {
+        name: string,
+        cnpj?: string,
+        contact?: string,
+        payment_term?: string
+      }
+    }
   }
 }
