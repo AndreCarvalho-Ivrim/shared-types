@@ -2349,7 +2349,10 @@ export interface WfRoutinesManageFlowEventSendWhatsappMessages {
   id?: '@send-whatsapp-messages',
   data?: any
 }
-export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages;
+export interface WfRoutinesManageFlowEventNotify {
+  id: '@notify',
+}
+export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages | WfRoutinesManageFlowEventNotify;
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
   type: 'manage-flow',
   data: {
@@ -2392,6 +2395,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
         mode: 'increment' | 'decrement';
         value?: number;
       };
+      handlers?: HandlersType & { path: string }
     }[],
     event_after_all?: WorkflowRoutinesManageFlowEvent[]
   }
