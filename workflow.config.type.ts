@@ -2351,6 +2351,7 @@ export interface WfRoutinesManageFlowEventSendWhatsappMessages {
 }
 export interface WfRoutinesManageFlowEventNotify {
   id: '@notify',
+  data?: any
 }
 export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages | WfRoutinesManageFlowEventNotify;
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
