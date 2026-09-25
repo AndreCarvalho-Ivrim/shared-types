@@ -770,6 +770,12 @@ export interface WorkflowViewModeBase {
    *  usuário para o step abaixo, a não ser se o target for um stateless_step
    */
   redirect_to_stateless_step?: string
+  /**
+   * Marca este item como a view padrão do `horizontal_menu` do pai: ao abrir o módulo
+   * sem `view_mode`/`_hm` explícito na URL, o executor redireciona pra ele em vez de
+   * cair na aba base. Opcional — sem nenhum item marcado, comportamento é o de sempre.
+   */
+  default_view?: boolean
 }
 export interface KanbanFlagType{
   condition: string,
@@ -2343,7 +2349,11 @@ export interface WfRoutinesManageFlowEventSendWhatsappMessages {
   id?: '@send-whatsapp-messages',
   data?: any
 }
-export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages;
+export interface WfRoutinesManageFlowEventNotify {
+  id: '@notify',
+  data?: any
+}
+export type WorkflowRoutinesManageFlowEvent = WfRoutinesManageFlowEventIfmFinalizeTechnicianCalls | WfRoutinesManageFlowEventResetContactStep | WfRoutinesManageFlowEventSendWhatsappMessages | WfRoutinesManageFlowEventNotify;
 export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase {
   type: 'manage-flow',
   data: {
@@ -2386,6 +2396,7 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
         mode: 'increment' | 'decrement';
         value?: number;
       };
+      handlers?: HandlersType & { path: string }
     }[],
     event_after_all?: WorkflowRoutinesManageFlowEvent[]
   }
