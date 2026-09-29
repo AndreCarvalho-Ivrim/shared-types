@@ -5,6 +5,7 @@ export const galleryAvailableTypesFormatted : Record<GalleryAvailableType, strin
   template: 'Modelos de Mensagem',
   personal: 'Pessoal'
 } 
+export type GalleryPrivacy = 'public' | 'private';
 export interface GalleryItemRefs{
   url: string,
   type: GalleryAvailableType,
@@ -17,6 +18,7 @@ export interface GalleryType{
   client_id: string,
   external_id? : string,
   type : GalleryAvailableType,
+  privacy?: GalleryPrivacy,
   num_items?: number,
   total_size?: number,
   items?: GalleryItemType[]
@@ -31,6 +33,7 @@ export interface GalleryItemType{
   size : number,
   refs? : GalleryItemRefs[],
   type : GalleryAvailableType,
+  privacy?: GalleryPrivacy,
   created_at: string,
   updated_at: string,
   gallery_name?: string,
