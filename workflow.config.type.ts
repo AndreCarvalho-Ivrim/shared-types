@@ -634,6 +634,8 @@ export interface ConfigViewModeColumnsType {
    * o badge colorido vira o "gatilho" do select; senão, é o texto do valor.
    */
   quick_update?: ColumnQuickUpdateConfigType,
+  /** _id do step */
+  available_steps?: string[]
   data?: any
 }
 export interface ColumnQuickUpdateOptionType{
