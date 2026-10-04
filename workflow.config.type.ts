@@ -5,7 +5,7 @@ import { ReportAnalyticsFormatAndOrTranslate } from "./report.type";
 import { WorkflowConfigRulesType } from "./workflow.config.rules.type";
 import { WorkflowTriggerType, AvailableTriggerEffects, WorkflowIvrimNotes } from "./workflow.config.triggers.type";
 
-export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'ias' | 'n8n';
+export type AvailableServicesType = 'email' | 'whatsapp' | 'sms' | 'chatbot' | 'omie' | 'rds_marketing' | 'ias' | 'n8n' | 'clicksign';
 export type AvailableViewModeType = 'kanban' | 'table' | 'dashboard' | 'group' | 'resume' | 'redirect';
 export type WorkflowConfigFilterRefType = '@user.name' | '@user.email' | '@owner.name' | '@owner.email' | '@created_at' | '@step_id' | string
 export interface WorkflowConfigFilterType {
@@ -1832,6 +1832,14 @@ export interface WorkflowConfigIntegrationsType {
     expires_in?: number
   },
   n8n?: { base_url: string; token?: string },
+  /** Assinatura digital de contratos */
+  clicksign?: {
+    access_token: string,
+    /** Secret HMAC gerado pelo ClickSign ao cadastrar o webhook, usado pra validar a origem das chamadas */
+    webhook_secret?: string,
+    /** Quando `true` usa `sandbox.clicksign.com`, senão `app.clicksign.com` (produção) */
+    sandbox?: boolean,
+  },
   outhers?: {
     key: string,
     name: string,
