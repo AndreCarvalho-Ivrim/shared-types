@@ -92,6 +92,9 @@ export interface CrmRadarAxis {
    * caso o front não desenha a linha da meta em nenhum eixo (tudo ou nada).
    */
   targetScore?: number;
+  newScore?: number;
+  newReadout?: string;
+  newReadoutImpact?: string;
 }
 
 export interface CrmOverviewGoal {
@@ -296,6 +299,8 @@ export interface CrmOverviewConfig {
     leadOrigin?: string;
     /** Grupo econômico do cliente, usado no card "Grupo econômico". Default "client.economic_group_name". */
     economicGroup?: string;
+    /** Etapas do fluxo que sera buscado os Leads */
+    steps_leads?: string[];
   };
   /** Chave do flow-entity `single` que guarda a meta comercial (eixo Valor). Default "commercial_goal". */
   goalEntityKey?: string;
