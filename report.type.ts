@@ -128,7 +128,7 @@ export interface ReportAnalyticsType{
   /** default: csv */
   convert_to?: 'csv' | 'xlsx'
 }
-export type ReportPermissionMode = 'selected' | 'user-category';
+export type ReportPermissionMode = 'selected' | 'user-category' | 'workflow-action';
 export interface ReportType{
   _id: string,
   title: string,
@@ -156,7 +156,9 @@ export interface ReportType{
   }
   permissions?: {
     mode: ReportPermissionMode,
-    allowed: string[]
+    allowed: string[],
+    /** Fluxo cujas ações valem como permissão, quando mode é workflow-action */
+    flow_id?: string
   }
   client_id: string;
   user_id: string;  
