@@ -301,6 +301,7 @@ export interface CrmOverviewConfig {
     economicGroup?: string;
     /** Etapas do fluxo que sera buscado os Leads */
     steps_leads?: string[];
+    steps_sold?: string[];
   };
   /** Chave do flow-entity `single` que guarda a meta comercial (eixo Valor). Default "commercial_goal". */
   goalEntityKey?: string;
