@@ -108,10 +108,13 @@ export interface CrmOverviewGoal {
   periodEnd?: string;
   /** Meta de quantidade de leads no funil. */
   number_of_leads?: number;
+  numberOfLeads?: number;
   /** Meta de quantidade de propostas enviadas ao cliente */
   number_of_proposals_submitted?: number;
+  numberOfProposalsSubmitted?: number;
   /** Meta de % das propostas convertidas em vendas */
   conversion_rate?: number;
+  conversionRate?: number;
 }
 
 export interface CrmOverviewRadar {
