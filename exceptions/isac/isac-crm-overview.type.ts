@@ -159,7 +159,7 @@ export interface CrmTaskResponsible {
 }
 
 /**
- * Tarefa do CRM (mesma base do "Minhas Tarefas"), no recorte da visão gerencial:
+ * Tarefa do Gerenciador Comercial (mesma base do "Minhas Tarefas"), no recorte da visão gerencial:
  * etapa · nome do lead · vencimento · responsável.
  */
 export interface CrmOverviewTask {
