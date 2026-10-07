@@ -43,7 +43,10 @@ export interface CrmSetupConfigGroup {
   key: string;
   title: string;
   hint?: string;
-  /** Chave em `template_params` com o id do fluxo dos itens. Ausente = fluxo do próprio CRM. */
+  /**
+   * Chave em `template_params` com o id do fluxo dos itens. \
+   * Ausente = fluxo do próprio Gerenciador Comercial.
+   */
   sourceParam?: string;
   /**
    * `key` de itens de OUTROS grupos que precisam estar `done` antes deste
@@ -98,7 +101,10 @@ export interface CrmSetupItem {
   missingChecklist?: string[];
   /** `entity_key` pra abrir a tela da entidade. Ausente em `param` e `permission`. */
   entityKey?: string;
-  /** Fluxo onde a entidade mora (nem sempre o do CRM — Verticais ficam na Matriz). Ausente junto com `entityKey`. */
+  /** 
+   * Fluxo onde a entidade mora (nem sempre o do Gerenciador Comercial \
+   * — Verticais ficam na Matriz). Ausente junto com `entityKey`.
+   */
   entityFlowId?: string;
 }
 

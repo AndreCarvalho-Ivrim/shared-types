@@ -337,7 +337,7 @@ export interface StepItemCustomDataEditableTable{
      * - table(default): linhas clicáveis, botão "+" no rodapé.
      * - card: cada registro num card(primeira coluna em negrito, as \
      * demais numa linha de apoio), com busca e botão de adicionar no \
-     * header — mesmo padrão da tela de Cliente do CRM.
+     * header — mesmo padrão da tela de Cliente do Gerenciador Comercial.
      **/
     variant?: 'table' | 'card',
     /**
