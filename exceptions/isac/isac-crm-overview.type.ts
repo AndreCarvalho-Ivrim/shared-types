@@ -76,7 +76,7 @@ export interface CrmOverviewFlow {
 //#region Radar comercial
 
 /** Ordem fixa: value (topo) → margin (dir.) → vertical (base) → segment (esq.). */
-export type CrmRadarAxisKey = 'value' | 'margin' | 'vertical' | 'segment';
+export type CrmRadarAxisKey = 'value' | 'numberLeads' | 'numberProposalsSubmitted' | 'segment';
 
 export interface CrmRadarAxis {
   key: CrmRadarAxisKey;
@@ -106,8 +106,8 @@ export interface CrmOverviewGoal {
   periodStart?: string;
   /** Fim do período da meta (ISO date), inclusive o mês. Pode cruzar anos (ex.: jan/26 a jan/27). */
   periodEnd?: string;
-  /** Meta de margem média (%). */
-  marginTarget?: number;
+  /** Meta de quantidade de leads no funil. */
+  number_of_leads?: number;
   /** Vertical acompanhada pelo eixo Vertical (não é mais "a dominante"). */
   targetVertical?: string;
   /** Meta de quantidade (número bruto de negócios, não %) da `targetVertical` no funil. */
