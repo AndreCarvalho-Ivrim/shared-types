@@ -76,7 +76,7 @@ export interface CrmOverviewFlow {
 //#region Radar comercial
 
 /** Ordem fixa: value (topo) → margin (dir.) → vertical (base) → segment (esq.). */
-export type CrmRadarAxisKey = 'value' | 'numberLeads' | 'numberProposalsSubmitted' | 'segment';
+export type CrmRadarAxisKey = 'value' | 'numberLeads' | 'numberProposalsSubmitted' | 'conversionRate';
 
 export interface CrmRadarAxis {
   key: CrmRadarAxisKey;
@@ -108,14 +108,10 @@ export interface CrmOverviewGoal {
   periodEnd?: string;
   /** Meta de quantidade de leads no funil. */
   number_of_leads?: number;
-  /** Vertical acompanhada pelo eixo Vertical (não é mais "a dominante"). */
-  targetVertical?: string;
-  /** Meta de quantidade (número bruto de negócios, não %) da `targetVertical` no funil. */
-  verticalTarget?: number;
-  /** Segmento acompanhado pelo eixo Segmento (não é mais "o dominante"). */
-  targetSegment?: string;
-  /** Meta de quantidade (número bruto de negócios, não %) do `targetSegment` no funil. */
-  segmentTarget?: number;
+  /** Meta de quantidade de propostas enviadas ao cliente */
+  number_of_proposals_submitted?: number;
+  /** Meta de % das propostas convertidas em vendas */
+  conversion_rate?: number;
 }
 
 export interface CrmOverviewRadar {
