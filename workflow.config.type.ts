@@ -1839,6 +1839,8 @@ export interface WorkflowConfigIntegrationsType {
     webhook_secret?: string,
     /** Quando `true` usa `sandbox.clicksign.com`, senão `app.clicksign.com` (produção) */
     sandbox?: boolean,
+    /** Quando `false` a integração fica desligada */
+    active?: boolean,
   },
   outhers?: {
     key: string,
