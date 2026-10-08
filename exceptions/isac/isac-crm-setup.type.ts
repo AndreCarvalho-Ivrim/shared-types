@@ -154,5 +154,6 @@ export interface CrmSetupData {
 
 export interface CrmSetupRequestBody {
   flow_id: string;
-  config: CrmSetupConfig;
+  /** Ausente quando chamada pela rotina: o back usa o `data` da view do Assistente ISAC. */
+  config?: CrmSetupConfig;
 }

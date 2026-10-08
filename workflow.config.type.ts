@@ -1465,6 +1465,7 @@ export interface WorkflowConfigExceptionView{
    * dashboards para verificar se tem permissão personalizada configurada nela.
    */
   is_dashboard?: boolean,
+  is_isac_assistant?: boolean,
   data?: any
 }
 export interface WorkflowConfigVisualManagement {
