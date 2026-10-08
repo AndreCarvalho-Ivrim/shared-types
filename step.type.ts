@@ -233,6 +233,7 @@ export interface StepType{
     classNames?: StepPageClassNames,
     /** Se true, irá adicionar um asterísco em todos campos obrigatórios */
     asterisk_when_required?: boolean,
+    sticky_top?: boolean,
     omit_navbar?: boolean,
     omit_title?: boolean,
     /** Substitui o título do slide-over, que por padrão é o título da etapa */
