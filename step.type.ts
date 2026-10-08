@@ -1,4 +1,5 @@
 import { AvailableWorkflowStatusType, ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
+import { AvailableIcons } from "./icon.type";
 import { AvailableTriggerEffects } from "./workflow.config.triggers.type";
 
 export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
@@ -278,7 +279,8 @@ export interface StepType{
         /** Status que representam essa sub-etapa */
         statuses: string[],
         /** Rótulo exibido abaixo da célula */
-        label: string
+        label: string,
+        icon?: AvailableIcons
       }[]
     },
   }

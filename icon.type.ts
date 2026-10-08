@@ -126,4 +126,7 @@ export type AvailableIcons =
   'MaintenanceIcon'        |
   'PowerOffIcon'           |
   'UserAltIcon'            |
-  'DatabaseIcon'
+  'DatabaseIcon'           |
+  'PersonAddIcon'          |
+  'PersonSearchIcon'       |
+  'AdsClickIcon'
