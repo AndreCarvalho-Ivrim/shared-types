@@ -129,4 +129,5 @@ export type AvailableIcons =
   'DatabaseIcon'           |
   'PersonAddIcon'          |
   'PersonSearchIcon'       |
-  'AdsClickIcon'
+  'AdsClickIcon'           |
+  'DrawIcon'
