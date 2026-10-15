@@ -38,6 +38,8 @@ export interface WorkflowType{
   config?: WorkflowConfigType,
   template?: string,
   template_params?: any,
+  /** Percentual (0–100) de configuração do fluxo, gravado pela fn-exception do Assistente ISAC. */
+  setting_percentual?: number,
   resume?: {
     permissions?: WorkflowConfigType['permissions'],
     integrations?: { email?: boolean, chatbot?: boolean, sms?: boolean, whatsapp?: boolean },

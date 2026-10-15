@@ -1,4 +1,5 @@
 import { AvailableWorkflowStatusType, ConfigViewModeColumnsType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType, StepActionType, StepTriggerType, TargetModeType, ThemeColorType, WorkflowConfigActionsType, WorkflowType } from "."
+import { AvailableIcons } from "./icon.type";
 import { AvailableTriggerEffects } from "./workflow.config.triggers.type";
 
 export type ExecuteDescriptionType = '@create' | '@update' | '@delete' | '@always';
@@ -233,6 +234,7 @@ export interface StepType{
     classNames?: StepPageClassNames,
     /** Se true, irá adicionar um asterísco em todos campos obrigatórios */
     asterisk_when_required?: boolean,
+    sticky_top?: boolean,
     omit_navbar?: boolean,
     omit_title?: boolean,
     /** Substitui o título do slide-over, que por padrão é o título da etapa */
@@ -277,7 +279,8 @@ export interface StepType{
         /** Status que representam essa sub-etapa */
         statuses: string[],
         /** Rótulo exibido abaixo da célula */
-        label: string
+        label: string,
+        icon?: AvailableIcons
       }[]
     },
   }
