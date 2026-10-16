@@ -1,3 +1,4 @@
+import { AvailableIcons } from "./icon.type";
 import { NotificationPreferenceByType } from "./notification.type";
 import { WorkflowConfigType } from "./workflow.config.type";
 
@@ -28,6 +29,7 @@ export interface WorkflowType{
   title: string,
   description: string,
   index?: number,
+  home_icon?: AvailableIcons | null,
   user_id: string,
   payment_status?: 'up-to-date' | 'expired',
   active: boolean,
