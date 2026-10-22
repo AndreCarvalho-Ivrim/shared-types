@@ -1,5 +1,3 @@
-import { id } from "date-fns/locale";
-import { helper } from "showdown";
 import { ColumnBadgeType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType } from "../types";
 import { AvailableIcons } from "./icon.type";
 import { AvailableCustomItemModeType, StepItemAttrMaskType, StepItemAttrTypeType, ThemeColorType } from "./step.item.field.type";
