@@ -1,3 +1,5 @@
+import { id } from "date-fns/locale";
+import { helper } from "showdown";
 import { ColumnBadgeType, ItemOrViewOrWidgetOrIntegration, StepActionConfirmType } from "../types";
 import { AvailableIcons } from "./icon.type";
 import { AvailableCustomItemModeType, StepItemAttrMaskType, StepItemAttrTypeType, ThemeColorType } from "./step.item.field.type";
@@ -17,7 +19,7 @@ interface StepViewBaseType{
     class_hidden?: string
   }
 }
-export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'timeline' | 'group-views' | 'checklist' | 'exception' | 'thumbnail';
+export type AvailableStepItemViewTypeType = 'table' | 'group-table' | 'horizontal-table' | 'description' | 'html' | 'redirect' | 'list' | 'markdown' | 'tasks' | 'timeline' | 'group-views' | 'checklist' | 'exception' | 'thumbnail' | 'notes';
 export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTypeType, string> = {
   description: 'Descrição',
   table: 'Tabela',
@@ -32,7 +34,8 @@ export const availableStepItemViewTypeFormatted : Record<AvailableStepItemViewTy
   'group-views': 'Grupo de Itens',
   checklist: 'Checklist',
   exception: 'Exceção',
-  thumbnail: 'Thumbnail'
+  thumbnail: 'Thumbnail',
+  notes: 'Notas'
 };
 export interface StepViewColumnType{
   /** 
