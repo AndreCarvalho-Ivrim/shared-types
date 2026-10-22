@@ -90,7 +90,7 @@ export interface StepViewColumnType{
    */
   data?: any
 }
-export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewTimelineType | StepViewGroupViewsType | StepViewChecklistType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType | StepViewThumbnailType;
+export type StepViewType = StepViewTableType | StepViewGroupTableType | StepViewHorizontalTableType | StepViewTasksType | StepViewTimelineType | StepViewGroupViewsType | StepViewChecklistType | StepViewDescriptionOrHtmlType | StepViewRedirectType | StepViewListType | StepViewMarkdownType | StepViewExceptionType | StepViewThumbnailType | StepViewNotesType;
 export type AdditionalTablesType = {
   label: string,
   columns: StepViewColumnType[],
@@ -161,6 +161,19 @@ export interface StepViewTasksType extends StepViewBaseType{
     type: ThemeColorType,
     is_default?: boolean
   }[]
+  /** Se for required vai mostrar o item mesmo que não haja tasks */
+  required?: boolean
+}
+export interface StepViewNotesType extends StepViewBaseType{
+  /**
+   * Para funcionamento correto do item view-tasks, é obrigatório adicionar um id único
+   **/
+  type: 'notes',
+  /** Id do array de notas */
+  id: string,
+  step_id?: string,
+  resume: StepViewColumnType[],
+  columns: StepViewColumnType[],
   /** Se for required vai mostrar o item mesmo que não haja tasks */
   required?: boolean
 }

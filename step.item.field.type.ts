@@ -147,6 +147,11 @@ export interface StepItemType{
      * Válido apenas para file-multiple
      */
     file_accept?: AvailableFileAccept[],
+    /**
+     * Válido apenas para file-multiple. Arquivos privados só podem ser acessados por usuários logados da empresa.
+     * Quando omitido, usa a privacidade padrão da galeria (public).
+     */
+    privacy?: 'public' | 'private',
     render?: string,
     switch_render?: string[],
     /**
