@@ -1,5 +1,3 @@
-import { IBranch } from "../../../pages/ExceptionViews/Exceptions/Arion/utils";
-
 //#region TYPES
 export type ValueInProposalType =  'net' | 'net_cotepe' | 'gross' |'gross_cotepe'
 export type CircuitStatusType = 'Reprovado' | 'Projeto Especial' | 'Em Negociação' | 'Ag. Retorno Operadora' | 'Cancelado' | 'Validação de Cancelamento' | 'Elaborando Precificação';
@@ -276,6 +274,24 @@ export interface ICalculateMarginResult {
   recurring: number,
   /** Margem Eventual */
   eventual: number,
+}
+export interface IBranch {
+  _id: string,
+  name: string,
+  cnpj: string,
+  type: string,
+  city: string,
+  uf: string,
+  icms_recurring: number,
+  pis_recurring: number,
+  cofins_recurring: number,
+  fust_recurring: number,
+  funttel_recurring: number,
+  iss_eventual: number,
+  pis_eventual: number,
+  cofins_eventual: number,
+  ibs_eventual: number,
+  cbs_eventual: number,
 }
 //#endregion
 
@@ -803,11 +819,17 @@ export class CalculatorMatrix {
         if (!hasNewAliquota) recurring = recurringSalesPrice.grossPriceTotalCotepe - (
           recurringSalesPrice.grossPriceTotalCotepe * this.pisCofins
         ) - hiringCosts.monthlyCostsWithOverhead;
+        // foi alterado para calcular a diferença entre o custo com overhead e bruto ato copetepe
         else recurring = recurringSalesPrice.grossPriceTotalCotepe - hiringCosts.monthlyCostsWithOverhead;
       }
     // }
 
-    eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
+      if (!hasNewAliquota) eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
+      else {
+        if (valueInProposal && ['gross', 'gross_cotepe'].includes(valueInProposal)) {
+          eventual = eventualSalePriceOrInstallationFee.grossPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
+        } else eventual = eventualSalePriceOrInstallationFee.netPriceTotal - ( hiringCosts.possibleOverheadCosts * linkQtd );
+      }
   
     return {
       recurring: this.convertDecimals(recurring),
