@@ -42,6 +42,9 @@ export const isacRoutes = {
     }`,
     flowchat: (flow_id: string, flow_data_id: string, owner_id: string, email_guest: string, message_id: string) => `/public/flowchat/${flow_id}/${flow_data_id}/${owner_id}/${email_guest}/${message_id}`,
     exception: (flow_id: string, exception: string) => `/public/exception/${flow_id}/${exception}`,
+  },
+  activity_panel: {
+    home: () => '/painel-de-atividades',
   }
 }
 export const hubRoutes = {
