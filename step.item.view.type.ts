@@ -160,7 +160,8 @@ export interface StepViewTasksType extends StepViewBaseType{
   status: {
     name: string,
     type: ThemeColorType,
-    is_default?: boolean
+    is_default?: boolean,
+    condition?: string
   }[]
   /** Se for required vai mostrar o item mesmo que não haja tasks */
   required?: boolean
