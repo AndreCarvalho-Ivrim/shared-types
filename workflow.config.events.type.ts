@@ -485,13 +485,19 @@ export interface RelationshipWithFlowEntityEventEffect{
  *
  * Exemplo flat (IA Tax): url_path = "url", path_to_save_interpretation = "ai_interpretation"
  */
-export interface InterpretInvoiceEventType {
+export interface InterpretDocumentEventType {
   /** URL base do N8N. Ex: https://ivrim.app.n8n.cloud */
   baseUrl: string;
   /** Bearer token para autenticação no webhook N8N */
   token?: string;
   /** Path do webhook. Ex: /webhook/nf-analysis */
   path: string;
+  /**
+   * Valor do campo tipo_documento no formulário do N8N.
+   * Vazio em /webhook/nf-analysis: o evento usa a extensão (pdf ou xml).
+   * Em /webhook/financial-statements: obrigatório e só livro_caixa, dre ou balanco.
+   */
+  tipo_documento?: string;
   /** Workflow dono da entity */
   flow_id: string;
   /** Chave da entity (ex.: sales_records) */
