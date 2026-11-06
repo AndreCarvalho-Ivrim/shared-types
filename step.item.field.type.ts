@@ -283,7 +283,7 @@ export interface StepItemType{
     data?: any
   },
   customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | StepItemCustomDataBudgetIndicator | StepItemCustomDataSpotSellingSummary | {
-    mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores' | '@commercial-calculator',
+    mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores' | '@commercial-calculator' | '@network-array-table',
     settings?: any
   },
   /**
