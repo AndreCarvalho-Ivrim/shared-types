@@ -171,7 +171,9 @@ export interface StepTypeRules{
     exception?: 'ability-check-dates',
     data?: any
   },
-  badges?: BadgeType[]
+  badges?: BadgeType[],
+  /** Utilizado para bloquear a etapa no painel de atividades. */
+  no_activities?: boolean,
 }
 export interface StepSlaType{
   /** Tempo esperado de permanência em uma etapa */
