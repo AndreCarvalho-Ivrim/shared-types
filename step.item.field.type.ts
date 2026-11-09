@@ -280,7 +280,22 @@ export interface StepItemType{
     filter_condition?: string,
     /** Adiciona uma opção no final para adicionar registro na base  informada */
     add_more_options?: boolean,
-    data?: any
+    data?: any,
+    /**
+     * Mensagem que será mostrada quando o autocomplete não retornar nenhum resultado.
+     */
+    empty_raw?: string | {
+      message: string,
+      /**
+       * Possui suporte as variáveis:
+       * - \@flow_actions : string[]
+       * - \@group_permission : string
+       * - \@can_add_more_options : boolean
+       * - flow_data:\<variavel>
+       * - <variavel> (variáveis do observer)
+       **/
+      condition: string
+    }[],
   },
   customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | StepItemCustomDataBudgetIndicator | StepItemCustomDataSpotSellingSummary | {
     mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores' | '@commercial-calculator' | '@network-array-table',

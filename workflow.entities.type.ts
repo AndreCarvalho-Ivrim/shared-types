@@ -123,6 +123,21 @@ export interface FlowEntitySchemaInfo{
      */
     filter_condition?: string,
     required_outhers?: string[],
+    /**
+     * Mensagem que será mostrada quando o autocomplete não retornar nenhum resultado.
+     */
+    empty_raw?: string | {
+      message: string,
+      /**
+       * Possui suporte as variáveis:
+       * - \@flow_actions : string[]
+       * - \@group_permission : string
+       * - \@can_add_more_options : boolean
+       * - flow_data:\<variavel>
+       * - <variavel> (variáveis do observer)
+       **/
+      condition: string
+    }[],
   }
   required: boolean,
   /**
