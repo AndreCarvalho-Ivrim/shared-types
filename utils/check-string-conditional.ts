@@ -504,6 +504,26 @@ export const checkStringConditional = (strConditional: string, datas: Record<str
                     if (!Array.isArray(arr)) value = typeof arr === 'string' ? String(arr.length) : '';
                     else value = String(arr.length);
                     break;
+                  case '@isMonthYear':
+                    const stringPatternIsMonthYear = `__${code}(${param})__`;
+
+                    if(!param){
+                      console.error(`[helper: ${code}] Valores inválidos`);
+                      value = replaceAll(value, stringPatternIsMonthYear, '');
+                      break;
+                    }
+                    
+                    const mY = getRecursiveValue(param, { data: datas });
+
+                    const isMY = moment(mY, [
+                      'MM/YYYY',
+                      'MM-YYYY',
+                      'YYYY-MM'
+                    ], true).isValid();
+
+                    
+                    value = replaceAll(value, stringPatternIsMonthYear, String(isMY));
+
                   default: console.error(`[helper: ${code}] Helper inválido ou ainda não possui tratamento`); break;
                 }
               });
