@@ -1,4 +1,4 @@
-import { ExternalRequestSchema, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, QuickUpdateConfigType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
+import { ExternalRequestSchema, FlowEntityInfo, FlowEntitySchemaInfo, FlowEntitySubSchema, IntegrationExcelColumnTypeType, PermissionType, QuickUpdateConfigType, StepActionConfirmType, StepItemAttrMaskType, StepItemType, StepSlaType, StepViewTasksType, ThemeColorType } from "."
 import { FlowMessageFnCallTrigger } from "./flow_message.type";
 import { AvailableIcons } from "./icon.type";
 import { ReportAnalyticsFormatAndOrTranslate } from "./report.type";
@@ -1503,6 +1503,11 @@ export interface WorkflowConfigType {
   permissions?: ConfigPermissionType,
   menu?: {
     /**
+     * Usa a sidebar do fluxo informado (mesmos itens e ordem). \
+     * A ordenation deste fluxo passa a definir só a tela inicial.
+     */
+    extends?: WorkflowConfigExtendsType,
+    /**
      * Id de todas as configurações que podem gerar botões para acesso no menu. \
      * Abaixo terá um exemplo do prefixo de uma view, entidade, entre outros:
      * 
@@ -2234,9 +2239,26 @@ export interface WorkflowConfigActionsGroupButtons{
   alt: string,
   icon?: AvailableIcons,
 }
+export interface WorkflowConfigExtendsType {
+  flow_id: string
+}
 export interface ConfigPermissionType {
+  /**
+   * Usa 100% as permissões (usuários, grupos e ações) do fluxo informado. \
+   * Com extends, groups e actions ficam vazios e são preenchidos com os do pai na leitura.
+   */
+  extends?: WorkflowConfigExtendsType,
   groups: PermissionType[]
   actions: string[]
+}
+/** Sidebar do fluxo pai, enviada na execução quando o fluxo tem `menu.extends`. */
+export interface WorkflowMenuSourceType {
+  flow_id: string,
+  title: string,
+  config: Pick<WorkflowConfigType, 'view_modes' | 'exception_views' | 'menu' | 'slas' | 'calendar' | 'visual_management' | 'open_dialog'>,
+  entities?: Record<string, FlowEntityInfo>,
+  /** Ações do usuário no fluxo pai */
+  flow_actions_permitted: string[]
 }
 export interface WorkflowRoutinesType {
   view?: {
