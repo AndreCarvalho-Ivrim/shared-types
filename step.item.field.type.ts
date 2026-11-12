@@ -89,6 +89,41 @@ export interface IDefaultValue{
   value: any,
   condition: string
 }
+export interface IDynamicEntityQueryExtend {
+  /** Propriedade que armazenará o resultado no objeto local. */
+  ref: string;
+  entity: string;
+
+  /** Futuramente, poderá suportar o modo find-many. */
+  mode: "find-one";
+
+  /**
+   * Suporta code-helpers e shortcodes:
+   * - <variável>: busca no observer.
+   * - flow_data:<variável>: busca no flow-data.
+   * - extends:<ref.variável>: busca nos dados do extends.
+   */
+  query: any;
+  break_if_empty?: boolean;
+}
+
+export interface IDynamicEntityQuery {
+  condition?: string;
+
+  /**
+   * Requisições adicionais cujos resultados ficam disponíveis
+   * em um objeto local para injeção na query principal.
+   */
+  extends: IDynamicEntityQueryExtend[];
+
+  /**
+   * Suporta code-helpers e shortcodes:
+   * - <variável>: busca no observer.
+   * - flow_data:<variável>: busca no flow-data.
+   * - extends:<ref.variável>: busca nos dados do extends.
+   */
+  query: any;
+}
 export interface StepItemType{
   key: string,
   type: StepItemAttrTypeType,
@@ -296,6 +331,11 @@ export interface StepItemType{
        **/
       condition: string
     }[],
+    /**
+     * Cada posição do array que não tiver condition ou a condition for verdadeira \
+     * ira agragar na query que será enviada na requisição da entidade dinâmica
+     **/
+    queries?: IDynamicEntityQuery[];
   },
   customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | StepItemCustomDataBudgetIndicator | StepItemCustomDataSpotSellingSummary | {
     mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores' | '@commercial-calculator' | '@network-array-table',
