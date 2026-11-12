@@ -533,6 +533,7 @@ export interface StepItemCustomDataSpotSellingSummary{
     people_key: string,
     materials_key: string,
     equipments_key: string,
+    taxes_percent_key: string,
     /** Chave do campo com o valor do faturamento */
     billing_value_key: string
   }
