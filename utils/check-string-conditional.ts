@@ -1432,6 +1432,65 @@ export const handleAndReplaceSyncCodeHelpers = (value: string, data: any) : any 
           });
           break;
         case '@nowObject': returnValue = new Date() as any; break;
+        case 'dateDiff': {
+          if (!param) throw new Error(errorRequiredParam(code));
+          const fields = param.split(',').map((field) => field.trim());
+
+          if (fields.length !== 2 || fields.some((field) => !field)) {
+            throw new Error('O codehelper dateDiff exige dois campos: data inicial e data final');
+          }
+          const resolveDate = (field: string): Date | null => {
+            // Aceita tanto campo quanto @[campo].
+            const path =
+              field.startsWith('@[') && field.endsWith(']')
+                ? field.slice(2, -1)
+                : field;
+
+            const value = getRecursiveValue(path, { data });
+
+            if (value === undefined || value === null || value === '') {
+              return null;
+            }
+
+            const date =
+              value instanceof Date
+                ? new Date(value.getTime())
+                : typeof value === 'string'
+                  ? new Date(
+                      /^\d{4}-\d{2}-\d{2}$/.test(value)
+                        ? `${value}T00:00:00`
+                        : value
+                    )
+                  : null;
+
+            return date && !Number.isNaN(date.getTime()) ? date : null;
+          };
+
+          const startDate = resolveDate(fields[0]);
+          const endDate = resolveDate(fields[1]);
+
+          if (!startDate || !endDate) {
+            returnValue = '';
+            break;
+          }
+
+          // Compara os dias do calendário, desconsiderando o horário.
+          // UTC evita diferenças causadas por dias com horário de verão.
+          const startDay = Date.UTC(
+            startDate.getFullYear(),
+            startDate.getMonth(),
+            startDate.getDate()
+          );
+
+          const endDay = Date.UTC(
+            endDate.getFullYear(),
+            endDate.getMonth(),
+            endDate.getDate()
+          );
+
+          returnValue = Math.round((endDay - startDay) / (24 * 60 * 60 * 1000));
+          break;
+        }
         default: 
           returnValue = 1;
           if(avHandleCodeHelpers.includes(code)){
