@@ -21,7 +21,8 @@ export interface FlowDataNote{
   user?: User,
   /** (formatação) Data de atualização formatada */
   smart_updated_at?: string,
-  status?: 'viewed' | 'unviewed'
+  status?: 'viewed' | 'unviewed',
+  flow?: string
 }
 export interface FlowDataNotesType{
   _id: string,
