@@ -337,7 +337,7 @@ export interface StepItemType{
      **/
     queries?: IDynamicEntityQuery[];
   },
-  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | StepItemCustomDataBudgetIndicator | StepItemCustomDataSpotSellingSummary | {
+  customData?: StepItemCustomDataSettings | StepItemCustomDataEditableTable | StepItemCustomDataCepAutocomplete | StepItemCustomDataCheckboxInHierarchy | StepItemCustomDataNumberWithUnitOfMeasurement | StepItemCustomDataEditableTableInline | StepItemCustomJson | StepItemCustomDataBudgetIndicator | StepItemCustomDataSpotSellingSummary | StepItemCustomDataSpotSellingEquipments | {
     mode: '@select-multiple-and-prorating' | '@filter-options' | '@cluster-stores' | '@commercial-calculator' | '@network-array-table',
     settings?: any
   },
@@ -364,8 +364,8 @@ export interface QuickUpdateConfigType{
   additional_params?: Record<string, any>,
 }
 
-export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores' | '@commercial-calculator' | '@budget-indicator' | '@spot-selling-summary';
-export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores', '@commercial-calculator', '@budget-indicator', '@spot-selling-summary'];
+export type AvailableCustomItemModeType = '@select-multiple-and-prorating' | '@filter-options' | '@list' | '@editable-table' | '@checkbox-in-hierarchy' | '@link' | '@redirect-to' | '@json' | '@cluster-stores' | '@commercial-calculator' | '@budget-indicator' | '@spot-selling-summary' | '@spot-selling-equipments';
+export const availableCustomItemMode : AvailableCustomItemModeType[] = ['@select-multiple-and-prorating', '@filter-options', '@list', '@editable-table', '@checkbox-in-hierarchy', '@link', '@redirect-to', '@cluster-stores', '@commercial-calculator', '@budget-indicator', '@spot-selling-summary', '@spot-selling-equipments'];
 export interface StepItemCustomDataSettings{
   mode: '@list',
   settings: {
@@ -536,5 +536,13 @@ export interface StepItemCustomDataSpotSellingSummary{
     taxes_percent_key: string,
     /** Chave do campo com o valor do faturamento */
     billing_value_key: string
+  }
+}
+export interface StepItemCustomDataSpotSellingEquipments{
+  mode: '@spot-selling-equipments',
+  settings: {
+    start_date_key: string,
+    end_date_key: string,
+    client_vertical_key?: string
   }
 }
