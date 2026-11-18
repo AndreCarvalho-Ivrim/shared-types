@@ -188,6 +188,7 @@ export interface ICalculateRecurringSalesPriceFullAndPercentualParams {
   monthlyCostsWithOverhead?: number,
   /** Margem Recorrente */
   recurringMargin: number,
+  recurringOH: number,
   /** ICMS da filial da Arion */
   icmsArion: number,
   valueInProposal: ValueInProposalType | null,
@@ -230,6 +231,7 @@ export interface ICalculateRecurringSalesPriceParams {
   hasNewAliquota?: boolean,
   /** Novo modelo de impostos */
   defaultBranch?: IBranch,
+  recurringOH: number,
 }
 export interface ICalculateRecurringSalesPriceResul extends ICalculateBaseResult {
   /** Líquido (ATO COTEPE) Unitário */
@@ -250,6 +252,8 @@ export interface ICalculateEventualSalePriceOrInstallationFeeParams {
   possibleOverheadCosts: number,
   /** Margem Eventual */
   eventualMargin: number,
+  unitCostInstallationWithTax: number,
+  eventualOH: number,
   valueInProposal: ValueInProposalType | null,
   calculator: 'direct' | 'indirect' | 'margin',
   target_installation_fee: number | null,
@@ -364,6 +368,7 @@ export class CalculatorMatrix {
       monthlyRecoveryICMS: hiringCosts.monthlyRecoveryICMS,
       icmsArion,
       recurringMargin,
+      recurringOH,
       monthlyCostsWithOverhead: hiringCosts.monthlyCostsWithOverhead,
       linkQtd,
       valueInProposal,
@@ -379,6 +384,8 @@ export class CalculatorMatrix {
       monthlyRecoveryICMS: hiringCosts.monthlyRecoveryICMS,
       possibleOverheadCosts: hiringCosts.possibleOverheadCosts,
       eventualMargin,
+      eventualOH,
+      unitCostInstallationWithTax,
       linkQtd,
       valueInProposal,
       calculator,
@@ -481,6 +488,7 @@ export class CalculatorMatrix {
     linkQtd,
     monthlyCostsWithOverhead,
     recurringMargin,
+    recurringOH,
     icmsArion,
     calculator,
     valueInProposal,
@@ -496,29 +504,27 @@ export class CalculatorMatrix {
     // novos impostos
     const pis = (defaultBranch?.pis_recurring ?? 0) / 100;
     const cofins = (defaultBranch?.cofins_recurring ?? 0) / 100;
-    const fust = (defaultBranch?.fust_recurring ?? 0) / 100;
-    const funttel = (defaultBranch?.funttel_recurring ?? 0) / 100;
 
     const totalTaxes = hasNewAliquota
-      ? (recurringMargin + icmsArion + pis + cofins + fust + funttel)
+      ? (recurringMargin + recurringOH + icmsArion + pis + cofins)
       : (recurringMargin + icmsArion + this.pisCofins);
 
     if (recurringUnitCostWithTax) {
-      grossPriceTotal = this.convertDecimals(monthlyCostsWithOverhead! / (1 - totalTaxes));
-      let grossCotepePriceTotal = monthlyCostsWithOverhead! / (
-        1 - (recurringMargin + this.pisCofins)
+      // define o custo base
+      const baseCost = hasNewAliquota
+        ? recurringUnitCostWithTax * linkQtd
+        : monthlyCostsWithOverhead!;
+      
+      // calcula o valor bruto
+      grossPriceTotal = this.convertDecimals(
+        baseCost / (1 - totalTaxes)
       );
       grossPriceUnit = grossPriceTotal / linkQtd;
-      let grossCotepePriceUnit = grossCotepePriceTotal / linkQtd;
 
       if(calculator === 'margin' && target_monthly_fee){
         if(valueInProposal === 'gross'){
           grossPriceUnit = target_monthly_fee;
           grossPriceTotal = target_monthly_fee * linkQtd;
-        }
-        else if(valueInProposal === 'gross_cotepe'){
-          grossCotepePriceUnit = target_monthly_fee;
-          grossCotepePriceTotal = target_monthly_fee * linkQtd;
         }
       }
     }
@@ -607,7 +613,8 @@ export class CalculatorMatrix {
     valueInProposal,
     recurringUnitCostWithTax,
     hasNewAliquota,
-    defaultBranch
+    defaultBranch,
+    recurringOH,
   }: ICalculateRecurringSalesPriceParams & Pick<ICalculateRecurringSalesPriceFullAndPercentualParams, 'recurringMargin' | 'linkQtd' | 'monthlyCostsWithOverhead' | 'icmsArion' | 'recurringUnitCostWithTax'>): ICalculateRecurringSalesPriceResul {
     //#region DECLARATION
     /** Bruto total */
@@ -642,6 +649,7 @@ export class CalculatorMatrix {
         target_monthly_fee,
         defaultBranch,
         hasNewAliquota,
+        recurringOH,
       });
 
       grossPriceTotal = recurringSalesPriceFull.grossPriceTotal;
@@ -649,20 +657,11 @@ export class CalculatorMatrix {
       
       const pis = (defaultBranch?.pis_recurring ?? 0) / 100;
       const cofins = (defaultBranch?.cofins_recurring ?? 0) / 100;
-      const fust = (defaultBranch?.fust_recurring ?? 0) / 100;
-      const funttel = (defaultBranch?.funttel_recurring ?? 0) / 100;
 
-      const PIS_COFINS = pis + cofins
-      const FUST_FUNTTEL = fust + funttel;
-      
-      const icmsValue = grossPriceTotal * icmsArion;
-      const baseAfterIcms = grossPriceTotal - icmsValue;
-      const pisCofinsValue = baseAfterIcms * PIS_COFINS;
-      const baseAfterPisCofins = baseAfterIcms - pisCofinsValue;
-      const fustFunttelValue = baseAfterPisCofins * FUST_FUNTTEL;
+      const PIS_COFINS = pis + cofins;
 
       const discount = hasNewAliquota
-        ? icmsValue + pisCofinsValue + fustFunttelValue
+        ? grossPriceTotal * (icmsArion + pis + cofins)
         : (grossPriceTotal * icmsArion) + ((grossPriceTotal - (grossPriceTotal * icmsArion)) * this.pisCofins);
       netPriceTotal = grossPriceTotal - discount;
       netPriceUnit = netPriceTotal / linkQtd;
@@ -674,11 +673,15 @@ export class CalculatorMatrix {
       }
       
       const PIS_COFINS_COTEPE = hasNewAliquota ? PIS_COFINS : this.pisCofins;
-      const FUST_FUNTTEL_COTEPE = hasNewAliquota ? FUST_FUNTTEL : 0;
-      grossPriceTotalCotepe = (grossPriceTotal * (monthlyCostsWithOverhead! / grossPriceTotal)) / (
-        // avaliar se deve aplicar novos impotos (FUST_FUNTTEL_COTEPE)
-        1 - (recurringMargin + PIS_COFINS_COTEPE)
-      );
+      
+      const baseCost = hasNewAliquota
+        ? recurringUnitCostWithTax * linkQtd
+        : monthlyCostsWithOverhead!;
+      const totalAliquotasCotepe = hasNewAliquota
+        ? recurringMargin + recurringOH + PIS_COFINS_COTEPE
+        : recurringMargin + PIS_COFINS_COTEPE;
+      
+      grossPriceTotalCotepe = baseCost / (1 - totalAliquotasCotepe);
       grossPriceUnitCotepe = grossPriceTotalCotepe / linkQtd;
 
       if(calculator === 'margin' && valueInProposal === 'gross_cotepe' && target_monthly_fee){
@@ -708,7 +711,8 @@ export class CalculatorMatrix {
         icmsArion,
         valueInProposal,
         calculator,
-        target_monthly_fee
+        target_monthly_fee,
+        recurringOH,
       });
 
       marginOfError = recurringSalesPriceWithPercentual.marginOfError;
@@ -741,6 +745,8 @@ export class CalculatorMatrix {
   private static calculateEventualSalePriceOrInstallationFee({
     possibleOverheadCosts,
     eventualMargin,
+    eventualOH,
+    unitCostInstallationWithTax,
     linkQtd,
     valueInProposal,
     calculator,
@@ -763,13 +769,17 @@ export class CalculatorMatrix {
     const cofins = (defaultBranch?.cofins_eventual ?? 0) / 100;
 
     const totalTaxes = hasNewAliquota
-      ? (eventualMargin + iss + cofins + pis)
+      ? eventualMargin + eventualOH + iss + cofins + pis
       : (eventualMargin + this.iss + this.cofins + this.pis);
     const taxesOnly = hasNewAliquota
-      ? (iss + cofins + pis)
-      : (this.iss + this.cofins + this.pis);
+      ? iss + cofins + pis
+      : this.iss + this.cofins + this.pis;
 
-    grossPriceUnit = possibleOverheadCosts / (1 - totalTaxes);
+    const baseCost = hasNewAliquota
+      ? unitCostInstallationWithTax
+      : possibleOverheadCosts;
+
+    grossPriceUnit = baseCost / (1 - totalTaxes);
     if(calculator === 'margin' && target_installation_fee){
       if(valueInProposal === 'gross' || valueInProposal === 'gross_cotepe'){
         marginOfError =  grossPriceUnit - target_installation_fee;
