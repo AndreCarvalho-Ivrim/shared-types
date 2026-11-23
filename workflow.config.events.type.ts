@@ -329,7 +329,11 @@ export interface SendWhatsappMessagesEvent{
    * o conteúdo na prop value. Se passar static = false, o value continuará sendo usado para ref \
    * do flowData
    **/
-  dynamic_contact_data?: Record<string, string | SendWhatsappMessageDynamicContactDataValue>
+  dynamic_contact_data?: Record<string, string | SendWhatsappMessageDynamicContactDataValue>,
+  data_exception?: {
+    exception: string,
+    additional_datas?: Record<string, any>
+  }
 }
 export interface SendWhatsappMessageDynamicContactDataValue{
     static: boolean,
