@@ -2477,7 +2477,7 @@ export interface WorkflowRoutinesMakeNotifications extends WorkflowRoutinesExecu
     separate_shipping?: boolean
   }>
 }
-export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external' | 'ability-scheduling'; 
+export type WorkflowRoutinesBotExceptions = 'ability-retorization' | 'ability-retorization-external' | 'ability-scheduling' | 'ability-verify-queue'; 
 export interface WorkflowRoutinesBot extends WorkflowRoutinesExecutorBase {
   type: 'bot',
   exception?: WorkflowRoutinesBotExceptions,
