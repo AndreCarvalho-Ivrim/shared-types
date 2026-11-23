@@ -70,7 +70,7 @@ export interface WidgetWorkerThreadAbilityRoterization extends WidgetWorkerThrea
   exception?: 'ifm-roterization' | 'ifm-roterization-external' | 'ifm-anticipation',
   variation?: string
 }
-export type WidgetWorkerThread = WidgetWorkerThreadAbilityRoterization | (WidgetWorkerThreadBase & { exception: 'send-whatsapp-messages' });
+export type WidgetWorkerThread = WidgetWorkerThreadAbilityRoterization | (WidgetWorkerThreadBase & { exception: 'send-whatsapp-messages' | 'generic-singleton' });
 export type WidgetType = WidgetEmailType | WidgetWhatsappType | WidgetSmsType | WidgetChatbotType | WidgetRoutineType | WidgetWorkerThread;
 export const widgetTypeFormatted : Record<WidgetType['type'], string>= {
   'widget-email': 'Email',
