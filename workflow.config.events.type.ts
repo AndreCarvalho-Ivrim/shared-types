@@ -504,6 +504,12 @@ export interface InterpretDocumentEventType {
   entity_key: string;
   /** _id da linha do documento na entity */
   document_id: string;
+  /**
+   * Ajuste opcional do JSON antes de gravar o sucesso.
+   * Só existe na chamada em runtime; não faz parte da config persistida do workflow.
+   * A falha não passa por aqui.
+   */
+  normalizeInterpretation?: (interpretation: unknown) => unknown;
   /** De onde ler o arquivo dentro do `data` (row da entity) */
   file: {
     /** Caminho até a URL do arquivo. Ex: url */
