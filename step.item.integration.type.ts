@@ -132,8 +132,10 @@ export interface IntegrationExcelType {
    * na parametrização das colunas.
    */
   model_url?: string,
-  /** Entitidade para salvar o registro de importação da planilha */
+  /** Entitidade para salvar o status de importação da planilha */
   import_registration?: string,
+  /** Armazena as colunas da importação junto com a key e posição */
+  auto_template_import?: string
 }
 export interface IntegrationExcelFilterRule{
   /** Nome da coluna a ser filtrada, deve ser o mesmo usado na planilha */
