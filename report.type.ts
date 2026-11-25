@@ -75,7 +75,9 @@ export interface ReportAnalyticsSearchType{
   cumulative?: string[],
   dynamicColumns?: ReportAnalyticsSearchDynamicColumnType[],
   /** Válido quando request = fn-exceptions */
-  additional_params?: any
+  additional_params?: any,
+  /** Se habilitado utilizara os dados da importação para gera o columns */
+  auto_template_import?: string,
 }
 export interface ReportAnalyticsSearchQuery{
   /** strc */
