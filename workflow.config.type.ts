@@ -2010,6 +2010,9 @@ export type WFCActionRenderIn = 'top' | 'filter-bar' | 'slide-over' | 'footer-sl
 export interface WFCActionFnCallStep {
   type: 'call-step',
   target: string
+  append_values?: Record<string, {
+    value: any
+  }>
 }
 export interface WFCActionFnUpdateSelected {
   type: 'update-selected',
