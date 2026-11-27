@@ -2416,6 +2416,8 @@ export interface WorkflowRoutinesManageFlow extends WorkflowRoutinesExecutorBase
      * ```
      */
     query: any,
+    /** Se true, grava sem gerar histórico e sem atualizar o updated_at */
+    skip_history?: boolean,
     /** Efeitos colaterais nos registros encontrados */
     effects: {
       condition?: string,
